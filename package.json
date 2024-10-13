@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-helmet": "^6.1.0",
     "react-hook-form": "^7.53.0",
     "react-router-dom": "^6.26.2",
     "socket.io-client": "^4.8.0",
@@ -22,8 +24,10 @@
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/lodash": "^4.17.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/react-helmet": "^6.1.11",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "commitizen": "^4.3.1",
