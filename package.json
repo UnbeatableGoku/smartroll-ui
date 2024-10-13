@@ -8,18 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "prettier --write */**/*.{js,jsx,json,ts,tsx,scss,css,md}",
-    "commit": "git-cz"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/@digitalroute/cz-conventional-changelog-for-jira",
-      "jiraPrepend": "[",
-      "jiraAppend": "]",
-      "jiraPrefix": "SMR",
-      "skipBreaking": true,
-      "customScope": true
-    }
+    "format": "prettier --write */**/*.{js,jsx,json,ts,tsx,scss,css,md}"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -31,9 +20,6 @@
     "tailwind-merge": "^2.5.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
     "@eslint/js": "^9.9.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/react": "^18.3.3",
