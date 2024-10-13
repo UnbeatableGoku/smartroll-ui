@@ -13,7 +13,7 @@ const MainLayout = () => {
         {/* Right Section - Header and Main Content */}
         <div className="relative flex w-full flex-col">
           <Header />
-          <main className="mx-auto h-screen w-full overflow-y-auto bg-[#f7f7f7] p-8">
+          <main className="bg-shade mx-auto h-screen w-full overflow-y-auto p-8">
             <Outlet />
           </main>
         </div>
