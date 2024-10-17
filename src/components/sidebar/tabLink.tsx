@@ -43,6 +43,7 @@ const TabLink = ({
 }: TabLinkType) => {
   const [togglemenu, setTogglemenu] = useState(false)
   const { pathname } = useLocation()
+  console.log(path)
 
   //to open the first dropdown
   const handleInitialToggle = useCallback(() => {
@@ -78,12 +79,14 @@ const TabLink = ({
           }
         >
           <div
-            className={`hover:bg-hover-primary flex items-center rounded-md ${parentPath === path ? 'bg-hover-primary font-bold' : 'font-semibold'}`}
+            className={`hover:bg-hover-primary flex items-center rounded-md transition-all duration-0 ${parentPath === path ? 'bg-hover-primary font-bold' : 'font-normal'}`}
           >
             <div
               className={`flex min-h-[40px] flex-1 items-center gap-3 px-3 py-2.5 text-sm transition-all duration-300 ${path ? 'text-sidebar-primary' : 'text-sidebar-secondary'}${className} `}
             >
-              <span className="inline-flex h-4 w-4 items-center justify-center text-sidebar-secondary">
+              <span
+                className={`inline-flex h-4 w-4 items-center justify-center ${parentPath === path ? 'text-sidebar-primary' : 'text-sidebar-secondary'}`}
+              >
                 {icon !== undefined && icon}
               </span>
 

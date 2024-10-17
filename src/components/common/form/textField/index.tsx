@@ -55,7 +55,7 @@ const TextField = <T extends FieldValues>({
             <input
               id={name}
               className={cn(
-                'text-primary h-full w-full appearance-none text-sm focus:border-gray-500 focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
+                'h-full w-full appearance-none text-sm text-primary focus:border-gray-500 focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
                 {
                   'border-secondary': error,
                 },

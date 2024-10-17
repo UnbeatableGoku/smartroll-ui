@@ -9,6 +9,10 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { PAGE_DASHBOARD, PAGE_LOGIN } from '@constants/page'
 
+import PageAccessWrapper from '@components/common/pageAccessWrapper'
+
+import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
+
 const router = createBrowserRouter([
   {
     path: PAGE_DASHBOARD.path,
@@ -31,6 +35,14 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Dashboard />,
+          },
+          {
+            element: <PageAccessWrapper />,
+            children: VIEW_ONLY_ROUTES,
+          },
+          {
+            element: <PageAccessWrapper checkEditAccess />,
+            children: EDITOR_ROUTES,
           },
         ],
       },

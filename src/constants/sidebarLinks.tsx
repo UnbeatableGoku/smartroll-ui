@@ -9,7 +9,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     id: 'DASHBOARD',
     name: 'Dashboard',
     icon: <DashboardIcon />,
-    children: [],
+    path: '/',
   },
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]
