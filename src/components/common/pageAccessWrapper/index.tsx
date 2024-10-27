@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
-import { PAGE_DASHBOARD, PAGE_LOGIN, PAGE_NOT_FOUND } from '@constants/page'
+import { PAGE_DASHBOARD, PAGE_LOGIN, PAGE_NOT_FOUND } from '@constants'
 
 import { checkPageAccess, getPageInfoByPathName } from '@utils/helpers'
 

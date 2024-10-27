@@ -8,7 +8,7 @@ import {
   PAGE_EDIT_USER,
   PAGE_NOT_FOUND,
   PAGE_USER_MANAGEMENT,
-} from '@constants/page'
+} from '@constants'
 
 const VIEW_ONLY_ROUTES: RouteObject[] = [
   // ----------------- User management -----------------
@@ -27,6 +27,8 @@ const EDITOR_ROUTES: RouteObject[] = [
     element: <EditUserPage />,
     loader: async ({ params }) => {
       try {
+        console.log(params)
+
         // const { data } = await getUser(params.userId!)
         // return data
       } catch {

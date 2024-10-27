@@ -3,12 +3,30 @@ import { Control, FieldErrors, FieldValues, Path } from 'react-hook-form'
 /**
  * -------------------- HOOK FORM --------------------
  */
-interface CommonForm<T extends FieldValues> {
+interface CommonFormProps<T extends FieldValues> {
   name: Path<T>
   control: Control<T>
   error?: string
 }
 
+/**
+ * -------------------- Common UI Props --------------------
+ */
+interface BaseUIProps {
+  label?: string
+  hintText?: string
+  className?: string
+  required?: boolean
+}
+
+/**
+ * -------------------- ICON Props --------------------
+ */
+interface IconProps {
+  icon?: React.ReactNode
+  iconPosition?: 'start' | 'end'
+  iconClass?: string
+}
 /**
  * -------------------- LABEL --------------------
  */
@@ -39,18 +57,16 @@ export interface ButtonIconProps {
   icon: React.ReactNode
   className?: string
 }
-
 /**
  * -------------------- INPUT : Text --------------------
  */
 export interface TextFieldProps<T extends FieldValues>
-  extends CommonForm<T>,
+  extends Omit<CommonFormProps<T>, 'control'>,
+    BaseUIProps,
+    IconProps,
     React.InputHTMLAttributes<HTMLInputElement> {
-  label: string
   containerClass?: string
-  icon?: JSX.Element
-  iconPosition?: 'start' | 'end'
-  hintText?: string
+  register: UseFormRegister<T>
 }
 
 /**
@@ -58,7 +74,7 @@ export interface TextFieldProps<T extends FieldValues>
  */
 export interface InputOption {
   label: string
-  value: string
+  value: string | boolean
   disabled?: boolean
 }
 
@@ -66,26 +82,26 @@ type WithSelectAll = {
   selectAllLabel?: string
   includeSelectAll?: boolean
 }
-
 export interface CheckboxGroupProps<T extends FieldValues>
-  extends CommonForm<T>,
+  extends CommonFormProps<T>,
+    BaseUIProps,
     WithSelectAll {
-  label?: string
   labelClassName?: string
   parentClassName?: string
-  required?: boolean
   columns?: 1 | 2 | 3
   options: InputOption[]
+  defaultSelected?: string[]
 }
 
-export interface DropdownInput<T extends FieldValues> extends CommonForm<T> {
-  label?: string
-  hintText?: string
+/**
+ * -------------------- Dropdown --------------------
+ */
+export interface DropdownInputProps<T extends FieldValues>
+  extends CommonFormProps<T>,
+    BaseUIProps {
   options: InputOption[]
-  defaultValue?: string | boolean | undefined
-  required?: boolean
+  defaultValue?: string | boolean
   parentClassName?: string
-  className?: string
 }
 
 export interface MultiselectDropdownInput<T extends FieldValues>

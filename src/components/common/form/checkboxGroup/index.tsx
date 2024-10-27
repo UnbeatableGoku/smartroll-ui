@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import Checkbox from '../checkbox'
+import InputHint from '../inputHint'
 import { FieldValues, Path, PathValue, useController } from 'react-hook-form'
 
 import { toggleArrayValues } from '@utils'
@@ -35,13 +36,16 @@ const CheckboxGroup = <T extends FieldValues>({
   columns = 1,
   includeSelectAll = false,
   selectAllLabel = 'Select All',
+  error,
+  hintText,
+  defaultSelected = [],
 }: CheckboxGroupProps<T>) => {
   const {
     field: { onChange, value },
   } = useController({
     name,
     control,
-    defaultValue: [] as PathValue<T, Path<T>>,
+    defaultValue: defaultSelected as PathValue<T, Path<T>>,
   })
 
   const [selectAll, setSelectAll] = useState(false)
@@ -85,10 +89,10 @@ const CheckboxGroup = <T extends FieldValues>({
   }, [value, options])
 
   return (
-    <div className={`${parentClassName} relative w-full min-w-[150px]`}>
+    <div className={`${parentClassName || ''} relative w-full min-w-[150px]`}>
       {/* Label */}
       {label && (
-        <Label className={labelClassName} required={required}>
+        <Label className={labelClassName || ''} required={required}>
           {label}
         </Label>
       )}
@@ -112,16 +116,18 @@ const CheckboxGroup = <T extends FieldValues>({
       <div className={`my-2 grid ${GRID_COLUMNS[columns]} gap-x-4 gap-y-2`}>
         {options.map((option) => (
           <Checkbox
-            key={option.value}
-            name={option.value}
+            key={option.value as string}
+            name={option.value as string}
             label={option.label}
-            value={option.value}
+            value={option.value as string}
             checked={value.includes(option.value)}
-            onChange={() => handleCheckboxChange(option.value)}
+            onChange={() => handleCheckboxChange(option.value as string)}
             reverse={columns === 1}
           />
         ))}
       </div>
+
+      <InputHint error={error} hintText={hintText} />
     </div>
   )
 }

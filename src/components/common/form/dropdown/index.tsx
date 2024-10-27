@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 import DropdownButton from '../dropdownButton'
 import InputHint from '../inputHint'
@@ -7,7 +7,7 @@ import { FieldValues, Path, PathValue, useController } from 'react-hook-form'
 
 import { useClickOutsideAndEscape } from '@hooks'
 
-import { DropdownInput, InputOption } from 'types/form'
+import { DropdownInputProps, InputOption } from 'types/form'
 
 const Dropdown = <T extends FieldValues>({
   parentClassName = '',
@@ -19,13 +19,14 @@ const Dropdown = <T extends FieldValues>({
   options,
   error,
   required = false,
-}: DropdownInput<T>) => {
+  defaultValue,
+}: DropdownInputProps<T>) => {
   const {
     field: { onChange, value },
   } = useController({
     name,
     control,
-    defaultValue: options[0].label as PathValue<T, Path<T>>,
+    defaultValue: defaultValue as PathValue<T, Path<T>>,
   })
 
   // To toggle the dropdown visibility

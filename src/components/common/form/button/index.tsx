@@ -1,8 +1,8 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 
-import { cn } from '@utils'
+import { cn } from '@utils/helpers'
 
-import { ButtonIconProps, ButtonProps } from 'types/form'
+import { ButtonProps, IconProps } from 'types/form'
 
 const sizeClasses = {
   small: 'px-1.5 py-1 text-xs',
@@ -15,12 +15,12 @@ const disableClasses = {
   outline: 'disabled:border-gray-400 disabled:text-gray-400 disabled:bg-white',
 }
 
-const ButtonIcon = ({ icon: Icon, className = '' }: ButtonIconProps) => {
+const ButtonIcon = ({ icon: Icon, iconClass = '' }: IconProps) => {
   return (
     <span
       className={cn(
         'inline-flex h-4 w-4 shrink-0 items-center justify-center',
-        className,
+        iconClass,
       )}
     >
       {Icon}
@@ -28,7 +28,7 @@ const ButtonIcon = ({ icon: Icon, className = '' }: ButtonIconProps) => {
   )
 }
 
-const Button: React.FC<ButtonProps> = ({
+const Button = ({
   label = '',
   labelClass = '',
   className = '',
@@ -43,7 +43,7 @@ const Button: React.FC<ButtonProps> = ({
   startIconClass = '',
   endIconClass = '',
   ...props
-}) => {
+}: ButtonProps) => {
   const colors = {
     primary: {
       filled: cn(
@@ -76,7 +76,7 @@ const Button: React.FC<ButtonProps> = ({
   const buttonClasses = cn(
     'inline-flex justify-center gap-2 items-center transition-all duration-300 outline-none focus:outline-none antialiased',
     { 'flex-row-reverse': iconPosition === 'end' },
-    variant !== 'custom' && 'border-2 rounded-md font-semibold capitalize',
+    variant !== 'custom' && 'border rounded-md font-semibold capitalize',
     className,
     variant !== 'custom' && colors[theme][variant],
     sizeClasses[size],
@@ -89,7 +89,7 @@ const Button: React.FC<ButtonProps> = ({
       ) : (
         <>
           {startIcon && (
-            <ButtonIcon className={startIconClass} icon={startIcon} />
+            <ButtonIcon iconClass={startIconClass} icon={startIcon} />
           )}
 
           {label && (
@@ -98,7 +98,7 @@ const Button: React.FC<ButtonProps> = ({
             </span>
           )}
 
-          {endIcon && <ButtonIcon className={endIconClass} icon={endIcon} />}
+          {endIcon && <ButtonIcon iconClass={endIconClass} icon={endIcon} />}
         </>
       )}
     </button>
