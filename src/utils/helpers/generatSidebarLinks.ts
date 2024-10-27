@@ -1,6 +1,6 @@
 import size from 'lodash/size'
 
-import { SIDEBAR_LINKS } from '@constants/sidebarLinks'
+import { SIDEBAR_LINKS } from '@constants'
 
 import { SidebarLink } from 'types/common'
 

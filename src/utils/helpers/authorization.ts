@@ -1,4 +1,4 @@
-import { PROTECTED_PAGES } from '@constants/page'
+import { PROTECTED_PAGES } from '@constants'
 
 /**
  * Verifies the user have access to page or not

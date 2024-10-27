@@ -7,7 +7,7 @@ import NotFound from '@pages/NotFound'
 import ErrorPage from '@pages/errorPage'
 import { createBrowserRouter } from 'react-router-dom'
 
-import { PAGE_DASHBOARD, PAGE_LOGIN } from '@constants/page'
+import { PAGE_DASHBOARD, PAGE_LOGIN } from '@constants'
 
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 

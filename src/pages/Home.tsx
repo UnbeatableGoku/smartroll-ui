@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { useSocketConnectionContext } from '@context/socket/context'
 
 const Home = () => {

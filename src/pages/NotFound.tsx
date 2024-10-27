@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
 
-import { PAGE_DASHBOARD } from '@constants/page'
+import { PAGE_DASHBOARD } from '@constants'
 
 import { Button } from '@components/common/form'
 

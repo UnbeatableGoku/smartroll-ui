@@ -1,9 +1,7 @@
-import React from 'react'
-
 import logo from '@assets/images/smartroll.png'
 import { Link } from 'react-router-dom'
 
-import { PAGE_DASHBOARD } from '@constants/page'
+import { PAGE_DASHBOARD } from '@constants'
 
 import UsernameSection from './usernameSection'
 

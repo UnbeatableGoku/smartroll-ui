@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet'
 import { Navigate } from 'react-router-dom'
 
-import { PAGE_LOGIN } from '@constants/page'
+import { PAGE_LOGIN } from '@constants'
 
 const Dashboard = () => {
   // const { isAuthenticated } = useAuth()

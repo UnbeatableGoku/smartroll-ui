@@ -2,7 +2,7 @@ import { PlusIcon } from '@icons'
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
 
-import { PAGE_ADD_USER } from '@constants/page'
+import { PAGE_ADD_USER } from '@constants'
 
 import { Button } from '@components/common/form'
 
