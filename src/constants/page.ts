@@ -18,6 +18,7 @@ export const PAGE_NOT_FOUND: Page = {
   name: 'Page Not Found',
 }
 
+
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES
@@ -34,6 +35,7 @@ export const PAGE_USER_MANAGEMENT: Page = {
   path: '/user-management',
   name: 'User Management',
 }
+
 
 export const PAGE_ADD_USER: Page = {
   id: 'CREATE_USER',

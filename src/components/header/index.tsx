@@ -5,6 +5,7 @@ import { PAGE_DASHBOARD } from '@constants'
 
 import UsernameSection from './usernameSection'
 
+
 const Header = () => {
   return (
     <header className="header-top flex items-center justify-between gap-3 px-10 py-3">
