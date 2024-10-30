@@ -82,9 +82,9 @@ const Sidebar = () => {
             </button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px] dark:bg-black">
-            <DialogHeader >
+            {/* <DialogHeader >
               <DialogTitle className='dark:text-white'>Options</DialogTitle>
-            </DialogHeader>
+            </DialogHeader> */}
             <div className="grid gap-4 py-4 dark:bg-black dark:text-white" >
               {[...menuItems, { icon: Menu, label: 'Profile' }].map((item, index) => (
                 <Button key={item.label} variant="ghost" className="w-full justify-start">
