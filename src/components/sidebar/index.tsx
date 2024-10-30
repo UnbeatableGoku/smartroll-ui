@@ -54,12 +54,12 @@ const Sidebar = () => {
   return (
 
 
-    <div className="fixed bottom-4 left-0 right-0 flex justify-center">
-      <div className="flex items-center gap-1 rounded-full bg-black/80  transition-transform duration-300 ease-in-out hover:scale-105">
+    <div className="fixed bottom-4 left-0 right-0 flex justify-center ">
+      <div className="flex items-center gap-1 rounded-full bg-black/80  transition-transform duration-300 ease-in-out hover:scale-105 dark:bg-black border border-zinc-300/60">
         {menuItems.map((item, index) => (
           <button
             key={item.label}
-            className="group relative flex h-12 w-12 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="group relative flex h-12 w-12 transition-transform duration-300 ease-in-out hover:scale-110 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             onMouseEnter={() => setActiveIndex(index)}
             onMouseLeave={() => setActiveIndex(null)}
             aria-label={item.label}
@@ -72,7 +72,7 @@ const Sidebar = () => {
             )}
           </button>
         ))}
-        <Dialog>
+         <Dialog>
           <DialogTrigger asChild>
             <button
               className="group relative flex h-12 w-12 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
@@ -81,11 +81,11 @@ const Sidebar = () => {
               <Menu className="h-6 w-6 transition-transform duration-200 ease-in-out group-hover:scale-110" />
             </button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Options</DialogTitle>
+          <DialogContent className="sm:max-w-[425px] dark:bg-black">
+            <DialogHeader >
+              <DialogTitle className='dark:text-white'>Options</DialogTitle>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-4 py-4 dark:bg-black dark:text-white" >
               {[...menuItems, { icon: Menu, label: 'Profile' }].map((item, index) => (
                 <Button key={item.label} variant="ghost" className="w-full justify-start">
                   <item.icon className="mr-2 h-4 w-4" />
@@ -96,7 +96,7 @@ const Sidebar = () => {
             </div>
           </DialogContent>
         </Dialog>
-      </div>
+        </div>
     </div>
     // <div className='cursor-pointer fixed bottom-4 left-1/2 transform -translate-x-1/2 rounded shadow-lg'>
     // <Dialog open={open} onOpenChange={setOpen}>

@@ -8,13 +8,13 @@ import UsernameSection from './usernameSection'
 
 const Header = () => {
   return (
-    <header className="header-top flex items-center justify-between gap-3 px-10 py-3">
+    <header className="header-top flex items-center justify-center gap-3 px-10 py-3 dark:bg-black border-none">
       <div className="h-8 shrink-0">
         <Link to={PAGE_DASHBOARD.path}>
           <img src={logo} alt="logo" className="h-full w-full object-contain" />
         </Link>
       </div>
-      <UsernameSection />
+      {/* <UsernameSection /> */}
     </header>
   )
 }

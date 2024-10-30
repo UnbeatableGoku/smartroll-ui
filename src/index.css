@@ -128,3 +128,22 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Add custom global styles for dark mode */
+:root {
+  /* Default (light) mode colors */
+  --bg-color: white;
+  --text-color: black;
+}
+
+.dark :root {
+  /* Dark mode colors */
+  --bg-color: #121212;
+  --text-color: #e4e4e7;
+}
+
+/* Applying variables */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}

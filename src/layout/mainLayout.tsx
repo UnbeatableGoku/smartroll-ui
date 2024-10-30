@@ -9,9 +9,9 @@ const MainLayout = () => {
        
 
         {/* Right Section - Header and Main Content */}
-        <div className="relative flex w-full flex-col">
+        <div className="relative flex w-full flex-col ">
           <Header />
-          <main className="bg-shade mx-auto h-screen w-full overflow-y-auto p-8">
+          <main className="bg-shade mx-auto h-screen w-full overflow-y-auto p-8 dark:bg-black">
             <Outlet />
           </main>
           <Sidebar />
