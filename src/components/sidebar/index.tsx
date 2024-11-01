@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 // import { CloseIcon, MenuIcon} from '@icons'
 // import LogoutIcon from '@icons/logouticon'
@@ -9,12 +9,10 @@ import { useMemo, useState } from 'react'
 
 // import TabLink from './tabLink'
 // import { Button } from "@/components/ui/button"
-import { Home, Search, Bell, Settings, User, ChevronRight, Menu , LogOut } from 'lucide-react'
+import { User, ChevronRight, Menu , LogOut } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 
@@ -59,7 +57,7 @@ const Sidebar = () => {
         {menuItems.map((item, index) => (
           <button
             key={item.label}
-            className="group relative flex h-12 w-12 transition-transform duration-300 ease-in-out hover:scale-110 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="group relative flex h-12 w-12 duration-300 ease-in-out hover:scale-110 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             onMouseEnter={() => setActiveIndex(index)}
             onMouseLeave={() => setActiveIndex(null)}
             aria-label={item.label}
@@ -86,7 +84,7 @@ const Sidebar = () => {
               <DialogTitle className='dark:text-white'>Options</DialogTitle>
             </DialogHeader> */}
             <div className="grid gap-4 py-4 dark:bg-black dark:text-white" >
-              {[...menuItems, { icon: Menu, label: 'Profile' }].map((item, index) => (
+              {[...menuItems, { icon: Menu, label: 'Profile' }].map((item) => (
                 <Button key={item.label} variant="ghost" className="w-full justify-start">
                   <item.icon className="mr-2 h-4 w-4" />
                   {item.label}
