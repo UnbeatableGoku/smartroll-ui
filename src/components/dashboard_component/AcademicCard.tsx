@@ -38,7 +38,7 @@ const AcademicCard = () => {
                       {batches.map((batch) => (
                         <CommandItem
                           key={batch}
-                          onSelect={() => {
+                          onSelect={() => { 
                             setSelectedBatch(batch);
                             setSelectedSemester(undefined);
                             setSelectedDivision(undefined);
