@@ -12,8 +12,7 @@ const CountCards = () => {
     
   return (
     <>
-    <div className='flex flex-col space-y-2 border border-zinc-600/40 p-4 rounded-xl'>
-        <h1 className='text-3xl'>Academic Data</h1>
+    <div className='flex flex-col space-y-2 rounded-xl'>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 ">
       {countCards.map((card, index) => (
         <Card key={index} className='dark:bg-black'>

@@ -4,7 +4,9 @@ import { Outlet } from 'react-router-dom'
 const LogoLayout = () => {
   return (
     <>
-      <header className="flex items-center justify-end border-2 px-10 py-3">
+    <div className="relative h-screen">
+      <div className="wrapper flex flex-col h-full overflow-hidden">
+      <header className="relative flex items-center justify-center px-10 py-3 dark:bg-black">
         <div className="w-28 shrink-0">
           <img
             src={logo}
@@ -13,9 +15,12 @@ const LogoLayout = () => {
           />
         </div>
       </header>
-      <main>
+      <main className='relative'>
         <Outlet />
       </main>
+      </div>
+      </div>
+      
     </>
   )
 }

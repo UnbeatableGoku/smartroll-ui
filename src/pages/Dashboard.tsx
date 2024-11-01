@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import AcademicCard from '@components/dashboard_component/AcademicCard'
 import CountCards from '@components/dashboard_component/CountCards'
+import { AnalysisCard } from '@components/dashboard_component/AnalysisCard'
 
 const Dashboard = () => {
   // const { isAuthenticated } = useAuth()
@@ -38,6 +39,7 @@ const Dashboard = () => {
 
       {/* Analysis Charts */}
       
+      <AnalysisCard/>
     </div>
     </>
   )

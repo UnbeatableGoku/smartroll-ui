@@ -1,7 +1,12 @@
 import { Outlet } from 'react-router-dom'
 import Header from '@components/header'
 import Sidebar from '@components/sidebar'
+import { useSelector } from 'react-redux'
+import { RootState } from '../redux/Store'
 const MainLayout = () => {
+
+  const isAuth = useSelector((state : RootState) => state.auth.isAuth)
+  console.log(isAuth)
   return (
     <div className="relative h-screen">
       <div className="wrapper flex h-full overflow-hidden">
