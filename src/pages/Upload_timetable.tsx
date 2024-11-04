@@ -53,7 +53,7 @@ const EventCard = ({ title, time, description, location }: EventCardProps) => (
   </Popover>
 );
 export default function Upload_timetable() {
-  const [time_table, set_time_table] = useState(true);
+  const [time_table, set_time_table] = useState(false);
   const [load_time_table, set_load_time_table] = useState(false);
   const [fileName, setFileName] = React.useState<string | null>(null)
 
