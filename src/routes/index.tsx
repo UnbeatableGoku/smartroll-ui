@@ -7,11 +7,12 @@ import NotFound from '@pages/NotFound'
 import ErrorPage from '@pages/errorPage'
 import { createBrowserRouter } from 'react-router-dom'
 
-import { PAGE_DASHBOARD, PAGE_LOGIN } from '@constants'
+import { PAGE_DASHBOARD, PAGE_LOGIN , PAGE_TIMETABLE } from '@constants'
 
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
 import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
+import Upload_timetable from '@pages/Upload_timetable'
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
+      // for display the login page layout 
       {
         element: <LogoLayout />,
         children: [
@@ -28,6 +30,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // for display the dashboard page layout with access control
       {
         path: PAGE_DASHBOARD.path,
         element: <MainLayout />,
@@ -43,6 +46,15 @@ const router = createBrowserRouter([
           {
             element: <PageAccessWrapper checkEditAccess />,
             children: EDITOR_ROUTES,
+          },
+        ],
+      },
+      {
+        element: <MainLayout />,
+        children: [
+          {
+            path: PAGE_TIMETABLE.path,
+            element: <Upload_timetable />,
           },
         ],
       },

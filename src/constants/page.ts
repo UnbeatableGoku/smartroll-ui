@@ -12,6 +12,12 @@ export const PAGE_DASHBOARD: Page = {
   name: 'Dashboard',
 }
 
+export const PAGE_TIMETABLE: Page = {
+  id: 'TIMETABLE',
+  path: '/timetable',
+  name: 'Time-Table',
+}
+
 export const PAGE_NOT_FOUND: Page = {
   id: 'NOT_FOUND',
   path: '/not-found',

@@ -10,7 +10,7 @@ const Home = lazy(() => import('@pages/Home'))
 const Dashboard = lazy(() => import('@pages/Dashboard'))
 const Login = lazy(() => import('@pages/Login'))
 const NotFound = lazy(() => import('@pages/NotFound'))
-
+const Timetable = lazy(() => import('@pages/Upload_timetable'))
 interface RouteConfig {
   path: string
   element: LazyExoticComponent<() => ReactElement>
@@ -32,6 +32,11 @@ export const routeConfig: RouteConfig[] = [
   {
     path: '/dashboard',
     element: Dashboard,
+    guard: ProtectedRoute, // Protected route (requires authentication)
+  },
+  {
+    path: '/timetable',
+    element: Timetable,
     guard: ProtectedRoute, // Protected route (requires authentication)
   },
   {
