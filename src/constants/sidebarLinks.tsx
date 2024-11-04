@@ -16,7 +16,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   {
     id: 'TIMETABLE',
     name: 'Time-Table',
-    icon: <Upload className='dark:text-[#707070]' />,
+    icon: <Upload className='dark:text-[#8a8686] w-24 h-24' strokeWidth={3} absoluteStrokeWidth={false} />,
     path: '/timetable',
   },
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },

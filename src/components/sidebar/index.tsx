@@ -1,20 +1,10 @@
-import { useState } from 'react'
-
-import { CloseIcon, MenuIcon} from '@icons'
-import LogoutIcon from '@icons/logouticon'
+import { useState, useMemo } from 'react'
 
 import { generateSidebarLinks } from '@utils/helpers'
-import { RxHamburgerMenu } from "react-icons/rx";
 
 
-<<<<<<< HEAD
-// import TabLink from './tabLink'
-// import { Button } from "@/components/ui/button"
-=======
 import TabLink from './tabLink'
-import { Button } from "@/components/ui/button"
->>>>>>> b4e8019b567a8c995be6da375af29f3de118902e
-import { User, ChevronRight, Menu , LogOut } from 'lucide-react'
+import { User, Menu , LogOut } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -90,14 +80,6 @@ const Sidebar = () => {
               <DialogTitle className='dark:text-white'>Options</DialogTitle>
             </DialogHeader> */}
             <div className="grid gap-4 py-4 dark:bg-black dark:text-white" >
-<<<<<<< HEAD
-              {[...menuItems, { icon: Menu, label: 'Profile' }].map((item) => (
-                <Button key={item.label} variant="ghost" className="w-full justify-start">
-                  <item.icon className="mr-2 h-4 w-4" />
-                  {item.label}
-                  <ChevronRight className="ml-auto h-4 w-4" />
-                </Button>
-=======
               <ul>
               {[...validLinks].map((page, index) => (
                 <TabLink
@@ -111,7 +93,6 @@ const Sidebar = () => {
                 defalutOpen={firstParentWithChild === index}
                 onClick={() => setOpen(false)} // Close dialog on item click
               />
->>>>>>> b4e8019b567a8c995be6da375af29f3de118902e
               ))}
               </ul>
             </div>

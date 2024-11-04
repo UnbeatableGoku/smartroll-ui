@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label"
 import { Upload } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
+import axios, { AxiosInstance, AxiosRequestHeaders, AxiosResponse } from "axios";
+import {useForm} from 'react-hook-form'
 import {
   Select,
   SelectContent,
@@ -23,6 +25,11 @@ type EventCardProps = {
   description: string;
   location: string;
 }
+
+type FormValues = {
+  file: File | null;
+};
+
 
 const EventCard = ({ title, time, description, location }: EventCardProps) => (
   <Popover>
@@ -53,19 +60,57 @@ const EventCard = ({ title, time, description, location }: EventCardProps) => (
   </Popover>
 );
 export default function Upload_timetable() {
+
   const [time_table, set_time_table] = useState(false);
   const [load_time_table, set_load_time_table] = useState(false);
   const [fileName, setFileName] = React.useState<string | null>(null)
+  // const [file, setFile] = React.useState<string | null>(null)
 
   const [selectedSemester, setSelectedSemester] = useState<string>()
   const [selectedDivision, setSelectedDivision] = useState<string>()
   const [selectedBranch, setSelectedBranch] = useState<string>()
 
+  const { register, handleSubmit, setValue } = useForm<FormValues>();
 
+
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODI4ODM4LCJpYXQiOjE3MzA3NDI0MzgsImp0aSI6IjFlMTkyZWUxZDllNTQzZGNhMDVhMmRkOTRkYTQ0NzhhIiwidXNlcl9pZCI6MSwib2JqIjp7ImlkIjoxLCJwcm9maWxlIjp7Im5hbWUiOm51bGwsImVtYWlsIjoibWFuYXZzaGFoMTAxMS5tc0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4ifSwiYnJhbmNoIjp7ImJyYW5jaF9uYW1lIjoiQ29tcHV0ZXIgRW5naW5lZXJpbmciLCJicmFuY2hfY29kZSI6IjA3Iiwic2x1ZyI6IjMwODQ4MF8xNzMwMjkzMTM5In19fQ.TMpncL7oMrD3SZa8iqMZN3UhDylDoCRx0IbT6IFOO-c"
+
+  const onSubmit = async (data: any) => {
+    const formData = new FormData();
+    if(data.file){
+      // data.file.name = "master_tt.csv"
+      formData.append("master_tt.csv", data.file);
+      
+    }
+  
+    try {
+      const response = await axios.post(
+        `https://8cd3-2405-201-2024-b91e-7bbc-2edc-7d07-2a01.ngrok-free.app/manage/upload_master_timetable/`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`,
+          }
+        }
+      );
+      set_time_table(true)
+      console.log("File Uploaded Successfully", response.data);
+    } catch (error) {
+      console.error("Error Uploading File", error);
+      if (axios.isAxiosError(error)) {
+        console.error("Error response:", error.response?.data);
+        console.error("Error status:", error.response?.status);
+      }
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    setFileName(file ? file.name : null)
+    if(file){
+      setFileName(file ? file.name : null)
+      setValue("file", file);
+    }
   }
 
   const semesters = ["2", "4", "6"]
@@ -115,6 +160,9 @@ export default function Upload_timetable() {
     }
   ];
 
+
+
+
   return (
     <>
       {
@@ -124,20 +172,20 @@ export default function Upload_timetable() {
             <div className="max-w-md w-full space-y-8">
               <div>
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-                  Uplad Master Time-Table
+                  Upload Master Time-Table
                 </h2>
                 <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
                   Select a file from your computer to upload
                 </p>
               </div>
-              <form className="mt-8 space-y-6">
+              <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
                 <div className="rounded-md shadow-sm -space-y-px">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md dark:border-gray-600">
-                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                    <div className="flex text-sm text-gray-600 dark:text-gray-400">
+                    <Upload className="mx-auto h-12 w-12 text-gray-400 " />
+                    <div className="flex text-sm text-gray-600 dark:text-gray-400 ">
                       <Label
                         htmlFor="file-upload"
-                        className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500 dark:bg-gray-800 dark:text-indigo-400 dark:hover:text-indigo-300"
+                        className="relative w-20 h-6 flex items-center justify-center cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500 dark:bg-gray-800 dark:text-indigo-400 dark:hover:text-indigo-300"
                       >
                         <span>Select a file</span>
                         <Input
@@ -145,7 +193,9 @@ export default function Upload_timetable() {
                           name="file-upload"
                           type="file"
                           className="sr-only"
+                          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                           onChange={handleFileChange}
+
                         />
                       </Label>
                       <p className="pl-1">or drag and drop</p>
