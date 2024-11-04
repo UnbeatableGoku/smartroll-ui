@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../redux/Store'
 const MainLayout = () => {
 
-  const isAuth = useSelector((state : RootState) => state.auth.isAuth)
-  console.log(isAuth)
+  // const isAuth = useSelector((state : RootState) => state.auth.isAuth)
+  // console.log(isAuth)
   return (
     <div className="relative h-screen">
       <div className="wrapper flex h-full overflow-hidden">

@@ -15,7 +15,7 @@ const PageAccessWrapper = ({ checkEditAccess = false }: Props) => {
   // const { user, isAuthenticated } = useAuth()
   const user = {
     isEditor: true,
-    pageAccess: ['USER_MANAGEMENT', 'DASHBOARD'],
+    pageAccess: ['USER_MANAGEMENT', 'DASHBOARD','TIMETABLE'],
   }
   const isAuthenticated = true
   const { pathname } = useLocation()
