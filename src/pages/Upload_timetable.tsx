@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Upload } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import axios, { AxiosInstance, AxiosRequestHeaders, AxiosResponse } from "axios";
+import axios from "axios";
 import {useForm} from 'react-hook-form'
 import {
   Select,
@@ -22,7 +22,7 @@ import {
 type EventCardProps = {
   title: string;
   time: string;
-  description: string;
+  batches: Array<any>;
   location: string;
 }
 
@@ -30,8 +30,25 @@ type FormValues = {
   file: File | null;
 };
 
+interface Branch{
+  branch_name: string;
+  branch_code: string;
+  slug: string;
+}
 
-const EventCard = ({ title, time, description, location }: EventCardProps) => (
+interface Stream {
+  title: string;
+  slug: string;
+  branch: Branch;
+}
+
+interface Division{
+  full_name: string;
+  slug: string;
+}
+
+
+const EventCard = ({ title, time, batches, location }: EventCardProps) => (
   <Popover>
     <PopoverTrigger asChild>
       <div className="bg-gray-200 p-3 md:p-4 rounded-md dark:bg-black dark:border-gray-800 border cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900 transition-colors">
@@ -51,8 +68,8 @@ const EventCard = ({ title, time, description, location }: EventCardProps) => (
             <span className="col-span-3 text-sm">{location}</span>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <span className="text-sm font-medium">Description:</span>
-            <span className="col-span-3 text-sm">{description}</span>
+            <span className="text-sm font-medium">Description:  </span>
+            <span className="col-span-3 text-sm">&nbsp;{batches?.map((batch) => {return " " + batch.batch_name + " "})}</span>
           </div>
         </div>
       </div>
@@ -64,38 +81,106 @@ export default function Upload_timetable() {
   const [time_table, set_time_table] = useState(false);
   const [load_time_table, set_load_time_table] = useState(false);
   const [fileName, setFileName] = React.useState<string | null>(null)
+  // const [isLoading, setIsLoading] = useState<Boolean>(false);
   // const [file, setFile] = React.useState<string | null>(null)
 
   const [selectedSemester, setSelectedSemester] = useState<string>()
   const [selectedDivision, setSelectedDivision] = useState<string>()
   const [selectedBranch, setSelectedBranch] = useState<string>()
+  const [stream, setStream] = useState<Stream[]>([]);
+  const [divison,setDivision] = useState<Division[]>([])
+  const [timeTable, setTimeTable] = useState<any>([])
 
-  const { register, handleSubmit, setValue } = useForm<FormValues>();
-
-
+  const { handleSubmit, setValue } = useForm<FormValues>();
+  const baseUrl = "https://64e7-2405-201-2024-b91e-28ee-181d-8963-d036.ngrok-free.app"
   const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODI4ODM4LCJpYXQiOjE3MzA3NDI0MzgsImp0aSI6IjFlMTkyZWUxZDllNTQzZGNhMDVhMmRkOTRkYTQ0NzhhIiwidXNlcl9pZCI6MSwib2JqIjp7ImlkIjoxLCJwcm9maWxlIjp7Im5hbWUiOm51bGwsImVtYWlsIjoibWFuYXZzaGFoMTAxMS5tc0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4ifSwiYnJhbmNoIjp7ImJyYW5jaF9uYW1lIjoiQ29tcHV0ZXIgRW5naW5lZXJpbmciLCJicmFuY2hfY29kZSI6IjA3Iiwic2x1ZyI6IjMwODQ4MF8xNzMwMjkzMTM5In19fQ.TMpncL7oMrD3SZa8iqMZN3UhDylDoCRx0IbT6IFOO-c"
+
+  useEffect(() => {
+    const handleStream =  async () => {
+      try{
+        const response = await axios.get(`${baseUrl}/manage/get_streams`, {
+          headers: {
+            'ngrok-skip-browser-warning': true,
+            'Authorization': `Bearer ${token}`,
+          }
+        })
+        const data = response?.data?.data
+        if(data && data.length > 0){
+          setStream(data)
+          console.log(data)
+        }
+      }catch(e){
+        console.error("Error fetching streams", e);
+      }
+      }
+
+      handleStream();
+  },[])
+
+  const handleDivison = async (slug:string) => {
+    try{
+      const response = await axios.get(`${baseUrl}/manage/get_divisions_from_stream/${slug}`, {
+        headers: {
+          'ngrok-skip-browser-warning': true,
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+      // console.log(response?.data?.data)
+      const data = response?.data?.data
+      if(data && data.length > 0){
+
+        setDivision(data)
+        console.log(data)
+
+      }
+    }catch(e){
+      console.error("Error fetching streams", e);
+    }
+  }
+
+  const handleTimeTable = async (slug: string) => { 
+    try{
+      const response = await axios.get(`${baseUrl}/manage/get_timetable/${slug}`, {
+        headers: {
+          'ngrok-skip-browser-warning': true,
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+      // console.log(response?.data?.data)
+      const data = response?.data?.data
+      setTimeTable(data?.schedules)
+
+    }catch(e){
+      console.error("Error fetching streams", e);
+    }
+  }
+
 
   const onSubmit = async (data: any) => {
     const formData = new FormData();
-    if(data.file){
+    console.log(data)
+    if(data.file) {
       // data.file.name = "master_tt.csv"
       formData.append("master_tt.csv", data.file);
-      
     }
+
+
   
     try {
       const response = await axios.post(
-        `https://8cd3-2405-201-2024-b91e-7bbc-2edc-7d07-2a01.ngrok-free.app/manage/upload_master_timetable/`,
+        `${baseUrl}/manage/upload_master_timetable/`,
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`,
+            'ngrok-skip-browser-warning': true,
           }
         }
       );
-      set_time_table(true)
-      console.log("File Uploaded Successfully", response.data);
+      set_time_table(true);
+    
+      console.log("File Uploaded Successfully", response.data); 
     } catch (error) {
       console.error("Error Uploading File", error);
       if (axios.isAxiosError(error)) {
@@ -112,55 +197,6 @@ export default function Upload_timetable() {
       setValue("file", file);
     }
   }
-
-  const semesters = ["2", "4", "6"]
-  const divisions = ["A", "B", "C"]
-  const branches = ["A1", "A2", "A3"]
-
-  const days = [
-    {
-      name: "Monday",
-      events: [
-        { title: "Team Meeting", time: "9:00 AM - 10:00 AM", description: "Weekly team sync-up", location: "Conference Room A" },
-        { title: "Project Review", time: "2:00 PM - 3:00 PM", description: "Review project milestones", location: "Meeting Room 2" }
-      ]
-    },
-    {
-      name: "Tuesday",
-      events: [
-        { title: "Design Review", time: "1:00 PM - 2:00 PM", description: "Review new UI designs", location: "Design Lab" },
-        { title: "Client Call", time: "3:00 PM - 4:00 PM", description: "Discuss project progress with client", location: "Video Conference" }
-      ]
-    },
-    {
-      name: "Wednesday",
-      events: [
-        { title: "Weekly Standup", time: "10:00 AM - 11:00 AM", description: "Team standup meeting", location: "Main Office Area" }
-      ]
-    },
-    {
-      name: "Thursday",
-      events: [
-        { title: "Code Review", time: "11:00 AM - 12:00 PM", description: "Review pull requests", location: "Dev Room" }
-      ]
-    },
-    {
-      name: "Friday",
-      events: [
-        { title: "Sprint Planning", time: "9:00 AM - 10:00 AM", description: "Plan next sprint tasks", location: "Conference Room B" }
-      ]
-    },
-    {
-      name: "Saturday",
-      events: []
-    },
-    {
-      name: "Sunday",
-      events: []
-    }
-  ];
-
-
 
 
   return (
@@ -243,17 +279,19 @@ export default function Upload_timetable() {
                         value={selectedSemester}
                         onValueChange={(value) => {
                           setSelectedSemester(value)
-                          setSelectedDivision(undefined)
-                          setSelectedBranch(undefined)
+                          setSelectedDivision(value)
+                          // setSelectedBranch(undefined)
+                          console.log("Selected slug:", value);
+                          handleDivison(value)
                         }}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Stream" />
                         </SelectTrigger>
                         <SelectContent>
-                          {semesters.map((semester) => (
-                            <SelectItem key={semester} value={semester}>
-                              Semester {semester}
+                          {stream?.map((stream: Stream) => (
+                            <SelectItem key={stream.slug} value={stream.slug}>
+                             {stream.title} - {stream.branch.branch_code} {stream.branch.branch_name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -261,48 +299,8 @@ export default function Upload_timetable() {
                     </CardContent>
                   </Card>
                   {/* Connecting Lines */}
-                  <div className="absolute hidden md:block right-[-2rem] lg:right-[-3.5rem] top-1/2 w-8 lg:w-14 h-[3px] bg-gray-400" />
-                  <div className="absolute md:hidden bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 w-[3px] h-6 bg-gray-400" />
-                </div>
-
-                {/* Semester Selection Card */}
-                <div className="relative w-full md:w-[240px] lg:w-[320px]">
-                  <Card className="w-full h-auto dark:bg-black">
-                    <CardHeader className="pb-2 space-y-0 pt-2">
-                      <div className="flex justify-between items-center">
-                        <CardTitle className="text-base sm:text-lg text-center">Semester</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-3">
-                      {selectedSemester ? (
-                        <Select
-                          value={selectedDivision}
-                          onValueChange={(value) => {
-                            setSelectedDivision(value)
-                            setSelectedBranch(undefined)
-                          }}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select semester" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {divisions.map((division) => (
-                              <SelectItem key={division} value={division}>
-                                Semester {division}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      ) : (
-                        <div className="space-y-2 sm:space-y-3">
-                          <Skeleton className="w-full h-9 sm:h-9" />
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                  {/* Connecting Lines */}
-                  <div className="absolute hidden md:block right-[-2rem] lg:right-[-3.0rem] top-1/2 w-8 lg:w-12 h-[3px] bg-gray-400" />
-                  <div className="absolute md:hidden bottom-[-1.0rem] left-1/2 transform -translate-x-1/2 w-[3px] h-4 bg-gray-400" />
+                  <div className="absolute hidden md:block right-[-2rem] lg:right-[-3rem] top-1/2 w-8 lg:w-12 h-[3px] bg-gray-400" />
+                  <div className="absolute md:hidden bottom-[-1em] left-1/2 transform -translate-x-1/2 w-[3px] h-4 bg-gray-400" />
                 </div>
 
                 {/* Division Selection Card */}
@@ -317,15 +315,19 @@ export default function Upload_timetable() {
                       {selectedDivision ? (
                         <Select
                           value={selectedBranch}
-                          onValueChange={()=>{set_load_time_table(true)}}
+                          onValueChange={(value)=>{
+                            set_load_time_table(true)
+                            handleTimeTable(value)
+                          }}
+
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Division" />
                           </SelectTrigger>
                           <SelectContent>
-                            {branches.map((branch) => (
-                              <SelectItem key={branch} value={branch}>
-                                Division {branch}
+                            {divison?.map((division: Division) => (
+                              <SelectItem key={division.slug} value={division.slug}>
+                                {division.full_name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -343,23 +345,23 @@ export default function Upload_timetable() {
             {/* time table view  */}
             {
               load_time_table == true ? (
-                <Card className="w-full min-h-[400px] max-h-max dark:bg-black dark:border-gray-800">
+            <Card className="w-full min-h-[400px] max-h-max dark:bg-black dark:border-gray-800">
               <CardHeader className="flex flex-row justify-between items-center px-4 md:px-6 py-3 md:py-4 border-b dark:border-gray-800">
                 <h2 className="text-base md:text-lg font-semibold dark:text-white">Timetable</h2>
               </CardHeader>
               <ScrollArea className="h-[calc(100%-70px)]">
-                <CardContent className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4 p-4">
-                  {days.map((day, index) => (
-                    <div key={day.name} className="flex flex-col gap-3 md:gap-4 ">
-                      <h3 className="font-medium dark:text-white text-center">{day.name}</h3>
-                      {day.events.length > 0 ? (
-                        day.events.map((event, eventIndex) => (
+                <CardContent className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 p-4">
+                  {timeTable?.map((timeTable:any) => (
+                    <div key={timeTable.day} className="flex flex-col gap-3 md:gap-4 ">
+                      <h3 className="font-medium dark:text-white text-center">{timeTable.day}</h3>
+                      {timeTable?.lectures?.length > 0 ? (
+                        timeTable?.lectures?.map((lecture: any) => (
                           <EventCard
-                            key={eventIndex}
-                            title={event.title}
-                            time={event.time}
-                            description={event.description}
-                            location={event.location}
+                            key={lecture?.slug}
+                            title={`${lecture?.subject?.subject_name} (${lecture?.teacher?.teacher_code})` }
+                            time={ `${lecture?.start_time} - ${lecture?.end_time}` }
+                            batches={lecture?.batches}
+                            location={lecture?.classroom?.class_name}
                           />
                         ))
                       ) : (
