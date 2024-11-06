@@ -10,7 +10,7 @@ const Home = lazy(() => import('@pages/Home'))
 const Dashboard = lazy(() => import('@pages/Dashboard'))
 const Login = lazy(() => import('@pages/Login'))
 const NotFound = lazy(() => import('@pages/NotFound'))
-const Timetable = lazy(() => import('@pages/Upload_timetable'))
+const Timetable = lazy(() => import('@pages/UploadTimeTable/UploadTimeTable'))
 interface RouteConfig {
   path: string
   element: LazyExoticComponent<() => ReactElement>

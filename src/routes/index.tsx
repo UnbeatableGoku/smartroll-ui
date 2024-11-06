@@ -12,7 +12,7 @@ import { PAGE_DASHBOARD, PAGE_LOGIN , PAGE_TIMETABLE } from '@constants'
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
 import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
-import Upload_timetable from '@pages/Upload_timetable'
+import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 
 const router = createBrowserRouter([
   {
@@ -54,7 +54,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: PAGE_TIMETABLE.path,
-            element: <Upload_timetable />,
+            element: <UploadTimeTable />,
           },
         ],
       },
