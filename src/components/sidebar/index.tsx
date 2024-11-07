@@ -11,6 +11,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 
+import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
+
 
 const menuItems = [
   { icon: User, label: 'Profile' },  
@@ -19,15 +21,11 @@ const menuItems = [
 
 
 const Sidebar = () => {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const [open, setOpen] = useState(false)
-  const [colllapsed, setCollapsed] = useState(false)
-
-  const user = { pageAccess: ['DASHBOARD','USER_MANAGEMENT','TIMETABLE'] }
-
+  
+  const {activeIndex,collapsed,open,setActiveIndex,setCollapsed,setOpen,setSidebarLinks} = useSidebarLinkSelector()
   const validLinks = useMemo(
-    () => generateSidebarLinks(user!.pageAccess),
-    [user!.pageAccess],
+    () => generateSidebarLinks(setSidebarLinks()),
+    [setSidebarLinks()],
   )
 
   // will get the index of first parent with children for defalut open
@@ -37,13 +35,9 @@ const Sidebar = () => {
     [validLinks],
   )
 
-  const logout = async () => {
-    console.log('logout')
-  }
+ 
 
-  // if (!isAuthenticated) {
-  //   return <></>
-  // }
+ 
 
   return (
 
@@ -88,7 +82,7 @@ const Sidebar = () => {
                 path={page.path}
                 key={page.id}
                 subTabs={page.children}
-                collapsed={colllapsed}
+                collapsed={collapsed}
                 //Returns true for first parent with children
                 defalutOpen={firstParentWithChild === index}
                 onClick={() => setOpen(false)} // Close dialog on item click

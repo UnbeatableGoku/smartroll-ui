@@ -5,6 +5,7 @@ import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import { base_url } from '@utils/base_url'
+import useAPI from '@hooks/useApi'
 
 interface Schedule {
   id: number
@@ -14,22 +15,37 @@ interface Schedule {
 }
 const useShowTimeTable = () => {
   const [masterTimeTable, setMasterTimeTable] = useState<Schedule[]>([])
-  const token = localStorage.getItem('accessToken')
+  const [StoredTokens,CallAPI] = useAPI()
 
   const handleTimeTable = async (slug: string) => {
     try {
-      const response = await axios.get(
-        `${base_url}/manage/get_timetable/${slug}`,
-        {
-          headers: {
-            'ngrok-skip-browser-warning': true,
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      // console.log(response?.data?.data)
-      const data = get(response, 'data.data', [])
-      setMasterTimeTable(data?.schedules)
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_timetable/${slug}`
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      // const response = await axios.get(
+      //   `${base_url}/manage/get_timetable/${slug}`,
+      //   {
+      //     headers: {
+      //       'ngrok-skip-browser-warning': true,
+      //       Authorization: `Bearer ${StoredTokens.accessToken}`,
+      //     },
+      //   },
+      // )
+      const response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,header)
+      if(response_obj.error == false) {
+        const data = get(response_obj, 'response.data.data.schedules', [])
+        setMasterTimeTable(data)
+      }
+      else{
+        console.log(response_obj.errorMessage?.message)
+        toast.error(response_obj.errorMessage?.message)  
+      }
+      
+      
     } catch (e) {
       console.error('Error fetching streams', e)
       toast.error('Error fetching timetable. See console for more information.')

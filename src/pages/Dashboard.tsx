@@ -10,10 +10,6 @@ import CountCards from '@components/dashboard_component/CountCards'
 const Dashboard = () => {
   // const { isAuthenticated } = useAuth()
 
-  const isAuthenticated = true
-  if (!isAuthenticated) {
-    return <Navigate replace to={PAGE_LOGIN.path} />
-  }
   return (
     <>
       <Helmet>

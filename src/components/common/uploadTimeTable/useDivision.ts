@@ -5,6 +5,7 @@ import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import { base_url } from '@utils/base_url'
+import useAPI from '@hooks/useApi'
 
 interface Division {
   full_name: string
@@ -14,25 +15,26 @@ interface Division {
 const useDivision = () => {
   const [division, setDivision] = useState<Division[]>([])
 
-  const token = localStorage.getItem('accessToken')
+  const [StoredTokens,CallAPI] = useAPI()
 
   const handleDivision = async (slug: string) => {
     try {
-      const response = await axios.get(
-        `${base_url}/manage/get_divisions_from_stream/${slug}`,
-        {
-          headers: {
-            'ngrok-skip-browser-warning': true,
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      // console.log(response?.data?.data)
-      const data = get(response, 'data.data', [])
-      if (data.length > 0) {
-        setDivision(data)
-        console.log(data)
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_divisions_from_stream/${slug}`
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
       }
+      const response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,header)
+      if (response_obj.error == false){
+        const data = get(response_obj, 'response.data.data', [])
+        setDivision(data)
+      }
+      else{
+        toast.error(response_obj.errorMessage?.message)  
+      }
+      
     } catch (e) {
       console.error('Error fetching streams', e)
       toast.error('Error fetching division. See console for more information.')

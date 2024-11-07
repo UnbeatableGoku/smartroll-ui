@@ -12,6 +12,18 @@ export const PAGE_DASHBOARD: Page = {
   name: 'Dashboard',
 }
 
+export const PAGE_TEACHER_DASHBOARD: Page = {
+  id: 'TEACHER-DASHBOARD',
+  path: '/teacher-dashboard',
+  name: 'Teacher Dashboard',
+}
+
+export const PAGE_STUDENT_DASHBOARD: Page = {
+  id: 'STUDENT-DASHBOARD',
+  path: '/student-dashboard',
+  name: 'Student Dashboard',
+}
+
 export const PAGE_TIMETABLE: Page = {
   id: 'TIMETABLE',
   path: '/timetable',

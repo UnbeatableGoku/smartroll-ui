@@ -19,14 +19,14 @@ const AcademicCard = () => {
     const stream = ["B.Tech", "M.Tech", "MCA", "MBA"]
     const semesters = ["2", "4", "6"]
     const divisions = ["A", "B", "C"]
-    const batchNumbers = ["B1", "B2", "B3"]
+    const batchNumbers = ["B1", "B2", "B3","B4"]
 
     return (
         <div className="flex flex-col space-y-2 md:space-y-4 rounded-xl">
-        <div className="w-full flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-8 lg:space-x-12">
-          {/* Batch Selection Card */}
-          <div className="relative w-full md:w-[240px] lg:w-[320px]">
-            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[260px] lg:h-[280px] dark:bg-black">
+        <div className="w-full flex flex-col lg:flex-row items-center md:items-start space-y-4 lg:space-y-0  lg:space-x-12">
+          {/* term Selection Card */}
+          <div className="relative w-full lg:w-[320px]">
+            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[240px] lg:h-[280px] dark:bg-black">
               <CardHeader className="pb-2 space-y-0">
                 <CardTitle className="text-base sm:text-lg text-center">Academic Year</CardTitle>
               </CardHeader>
@@ -57,12 +57,12 @@ const AcademicCard = () => {
               </CardContent>
             </Card>
             {/* Connecting Lines */}
-            <div className="absolute hidden md:block right-[-2rem] lg:right-[-3.5rem] top-1/2 w-8 lg:w-14 h-[3px] bg-gray-400" />
-            <div className="absolute md:hidden bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 w-[3px] h-6 bg-gray-400" />
+            <div className="absolute hidden lg:block right-[-2rem] lg:right-[-3.5rem] top-1/2 w-8 lg:w-14 h-[3px] bg-gray-400" />
+            <div className="absolute md:block lg:hidden bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 w-[3px] h-6 bg-gray-400" />
           </div>
           {/* Stream Selection Card */}
-          <div className="relative w-full md:w-[240px] lg:w-[320px]">
-            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[260px] lg:h-[280px] dark:bg-black">
+          <div className="relative w-full  lg:w-[320px]">
+            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[240px] lg:h-[280px] dark:bg-black">
               <CardHeader className="pb-2 space-y-0">
                 <CardTitle className="text-base sm:text-lg text-center">Streams</CardTitle>
               </CardHeader>
@@ -93,21 +93,21 @@ const AcademicCard = () => {
                   </Command>
                 ) : (
                   <div className="space-y-2 sm:space-y-3">
-                    <Skeleton className="w-full h-10 sm:h-12" />
-                    <Skeleton className="w-full h-10 sm:h-12" />
-                    <Skeleton className="w-full h-10 sm:h-12" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
                   </div>
                 )}
               </CardContent>
             </Card>
             {/* Connecting Lines */}
-            <div className="absolute hidden md:block right-[-2rem] lg:right-[-3.5rem] top-1/2 w-8 lg:w-14 h-[3px] bg-gray-400" />
-            <div className="absolute md:hidden bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 w-[3px] h-6 bg-gray-400" />
+            <div className="absolute hidden lg:block right-[-2rem] lg:right-[-3.5rem] top-1/2 w-8 lg:w-14 h-[3px] bg-gray-400" />
+            <div className="absolute md:block lg:hidden bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 w-[3px] h-6 bg-gray-400" />
           </div>
 
           {/* Semester Selection Card */}
-          <div className="relative w-full md:w-[240px] lg:w-[320px]">
-            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[260px] lg:h-[280px] dark:bg-black">
+          <div className="relative w-full lg:w-[320px]">
+            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[240px] lg:h-[280px] dark:bg-black">
               <CardHeader className="pb-2 space-y-0">
                 <CardTitle className="text-base sm:text-lg text-center">Semester</CardTitle>
               </CardHeader>
@@ -137,21 +137,21 @@ const AcademicCard = () => {
                   </Command>
                 ) : (
                   <div className="space-y-2 sm:space-y-3">
-                    <Skeleton className="w-full h-10 sm:h-12" />
-                    <Skeleton className="w-full h-10 sm:h-12" />
-                    <Skeleton className="w-full h-10 sm:h-12" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
                   </div>
                 )}
               </CardContent>
             </Card>
             {/* Connecting Lines */}
-            <div className="absolute hidden md:block right-[-2rem] lg:right-[-3.5rem] top-1/2 w-8 lg:w-14 h-[3px] bg-gray-400" />
-            <div className="absolute md:hidden bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 w-[3px] h-6 bg-gray-400" />
+            <div className="absolute hidden lg:block right-[-2rem] lg:right-[-3.5rem] top-1/2 w-8 lg:w-14 h-[3px] bg-gray-400" />
+            <div className="absolute md:block lg:hidden bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 w-[3px] h-6 bg-gray-400" />
           </div>
   
           {/* Division Selection Card */}
-          <div className="relative w-full md:w-[240px] lg:w-[320px]">
-            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[260px] lg:h-[280px] dark:bg-black">
+          <div className="relative w-full  lg:w-[320px]">
+            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[240px] lg:h-[280px] dark:bg-black">
               <CardHeader className="pb-2 space-y-0">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base sm:text-lg text-center">Division</CardTitle>
@@ -181,21 +181,21 @@ const AcademicCard = () => {
                   </Command>
                 ) : (
                   <div className="space-y-2 sm:space-y-3">
-                    <Skeleton className="w-full h-10 sm:h-12" />
-                    <Skeleton className="w-full h-10 sm:h-12" />
-                    <Skeleton className="w-full h-10 sm:h-12" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
                   </div>
                 )}
               </CardContent>
             </Card>
             {/* Connecting Lines */}
-            <div className="absolute hidden md:block right-[-2rem] lg:right-[-3.0rem] top-1/2 w-8 lg:w-12 h-[3px] bg-gray-400" />
-            <div className="absolute md:hidden bottom-[-1.0rem] left-1/2 transform -translate-x-1/2 w-[3px] h-4 bg-gray-400" />
+            <div className="absolute hidden lg:block right-[-2rem] lg:right-[-3.0rem] top-1/2 w-8 lg:w-12 h-[3px] bg-gray-400" />
+            <div className="absolute md:block lg:hidden bottom-[-1.0rem] left-1/2 transform -translate-x-1/2 w-[3px] h-4 bg-gray-400" />
           </div>
   
           {/* Batch Number Selection Card */}
-          <div className="w-full md:w-[240px] lg:w-[320px]">
-            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[260px] lg:h-[280px] dark:bg-black">
+          <div className="w-full lg:w-[320px]">
+            <Card className="w-full border-2 h-[220px] sm:h-[240px] md:h-[240px] lg:h-[280px] dark:bg-black">
               <CardHeader className="pb-2 space-y-0">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base sm:text-lg text-center">Batch Number</CardTitle>
@@ -222,9 +222,9 @@ const AcademicCard = () => {
                   </Command>
                 ) : (
                   <div className="space-y-2 sm:space-y-3 ">
-                    <Skeleton className="w-full h-10 sm:h-12" />
-                    <Skeleton className="w-full h-10 sm:h-12" />
-                    <Skeleton className="w-full h-10 sm:h-12" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
+                    <Skeleton className="w-full h-10 sm:h-10" />
                   </div>
                 )}
               </CardContent>

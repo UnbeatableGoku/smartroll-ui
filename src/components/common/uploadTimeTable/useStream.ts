@@ -5,6 +5,7 @@ import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import { base_url } from '@utils/base_url'
+import useAPI from '@hooks/useApi'
 
 interface Branch {
   branch_name: string
@@ -20,23 +21,27 @@ interface Stream {
 
 const useStream = () => {
   const [stream, setStream] = useState<Stream[]>([])
-
-  const token = localStorage.getItem('accessToken')
+  const [StoredTokens,CallAPI] = useAPI()
 
   const handleStream = async () => {
     try {
-      const response = await axios.get(`${base_url}/manage/get_streams`, {
-        headers: {
-          'ngrok-skip-browser-warning': true,
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = get(response, 'data.data', [])
-
-      if (data.length > 0) {
-        setStream(data)
-        console.log(data)
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = "/manage/get_streams"
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
       }
+
+      const response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,header)
+      if (response_obj.error == false){
+        const data = get(response_obj, 'response.data.data', [])  
+        setStream(data)
+      }
+      else{
+        toast.error(response_obj.errorMessage?.message)  
+      }
+      
     } catch (e) {
       console.error('Error fetching streams', e)
       toast.error('Error fetching streams. See console for more information.')

@@ -31,8 +31,14 @@ const Login = () => {
       }
       return alert(response.message)
     }
-    //TODO: NAVIGATE THE STACKHOLDER TO DASHBOARD
-    navigate('/')
+    
+    if(response.profile?.profile.role === "admin")
+      navigate('/')
+    else if (response.profile?.profile.role === "teacher")
+      navigate('/teacher-dashboard')
+    else if(response.profile?.profile.role === "student")
+      navigate('/student-dashboard')
+
     reset() //? Reset the form fields after submission
   }
 

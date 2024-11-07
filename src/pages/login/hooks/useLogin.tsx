@@ -1,13 +1,16 @@
 import React from 'react'
 
 //?slices
-import { setAuth } from '@data/redux/slices/authSlice'
-//? axios
-import axios from 'axios'
-import { useDispatch } from 'react-redux'
+import { setAuth , setUserProfile } from '@data/redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
-//? utils
-import { base_url } from '@utils/base_url'
+//? axios
+import axios from 'axios';
+
+import {jwtDecode} from 'jwt-decode'
+import { DecodedToken } from 'types/common'
+import { base_url } from '@utils/base_url';
+
 
 //? TYPES AND INTERFACES
 type UserData = {
@@ -44,14 +47,18 @@ const useLogin = () => {
       localStorage.setItem('accessToken', token.access)
       localStorage.setItem('refreshToken', token.refresh)
 
+      //TODO: DEOCODE THE ACCESS TOKEN AND STORE THE PROFILE OF STACKHOLDER IN REDUX STORE
+      const decode = jwtDecode<DecodedToken>(response.data.access)
+      dispatch(setUserProfile(decode));
       //? return success message and the token
       return {
         error: false,
         message: 'Login successful',
         data: token,
         status: response.status,
-      }
-    } catch (error: any) {
+        profile : decode.obj
+      };
+    } catch (error:any) {
       // Safely access error.response
       const message = error.response?.data?.message || 'An error occurred'
       if (error.code === 'ERR_NETWORK') {
@@ -59,15 +66,17 @@ const useLogin = () => {
           error: true,
           message,
           data: null,
-          status: 404,
-        }
+          status : 404,
+          profile : null
+        };
       }
       return {
         error: true,
         message,
         data: null,
-        status: 500,
-      }
+        status : 500,
+        profile : null
+      };
     }
   }
 

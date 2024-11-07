@@ -3,7 +3,7 @@ import { MouseEventHandler, useCallback, useEffect, useState } from 'react'
 import { ChevronIcon } from '@icons'
 import { Link, useLocation } from 'react-router-dom'
 
-import { Page } from 'types/common'
+import { Page  } from 'types/common'
 
 type TabLinkCommon = {
   buttonAction?: MouseEventHandler<HTMLButtonElement>
