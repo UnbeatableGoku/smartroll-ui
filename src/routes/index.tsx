@@ -1,11 +1,13 @@
 // src/routerConfig.ts
 import App from '@App'
+import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
 import Dashboard from '@pages/Dashboard'
-import Login from '@pages/login/Login'
 import NotFound from '@pages/NotFound'
+import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
+import Login from '@pages/login/Login'
 import { createBrowserRouter } from 'react-router-dom'
 
 import { PAGE_DASHBOARD, PAGE_LOGIN, PAGE_TIMETABLE } from '@constants'
@@ -14,18 +16,13 @@ import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
 import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
 
-import  ProtectedRoute  from '@auth/ProtectedRoute'
-
-
-import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
-
 const router = createBrowserRouter([
   {
     path: PAGE_DASHBOARD.path,
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      // for display the login page layout 
+      // for display the login page layout
       {
         element: <LogoLayout />,
         children: [
@@ -62,12 +59,10 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
           {
-            
             path: PAGE_TIMETABLE.path,
-            element: 
-            (
+            element: (
               <ProtectedRoute roleRequired="admin">
-              <UploadTimeTable />
+                <UploadTimeTable />
               </ProtectedRoute>
             ),
           },

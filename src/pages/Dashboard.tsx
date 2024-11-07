@@ -3,10 +3,9 @@ import { Navigate } from 'react-router-dom'
 
 import { PAGE_LOGIN } from '@constants'
 
-
 import AcademicCard from '@components/dashboard_component/AcademicCard'
-import CountCards from '@components/dashboard_component/CountCards'
 import { AnalysisCard } from '@components/dashboard_component/AnalysisCard'
+import CountCards from '@components/dashboard_component/CountCards'
 
 const Dashboard = () => {
   // const { isAuthenticated } = useAuth()
@@ -21,21 +20,21 @@ const Dashboard = () => {
         <title>Smart Roll | Home</title>
       </Helmet>
 
-      <div className="container mx-auto p-4 space-y-6">
-      {/* Count Cards */}
-      <CountCards/>
+      <div className="container mx-auto space-y-6 p-4">
+        {/* Count Cards */}
+        <CountCards />
 
-      {/* <Separator className="my-6" /> */}
+        {/* <Separator className="my-6" /> */}
 
-      {/* Selection Cards */}
-      <AcademicCard/>
+        {/* Selection Cards */}
+        <AcademicCard />
 
-      {/* <Separator className="my-6" /> */}
+        {/* <Separator className="my-6" /> */}
 
-      {/* Analysis Charts */}
-      
-      <AnalysisCard/>
-    </div>
+        {/* Analysis Charts */}
+
+        <AnalysisCard />
+      </div>
     </>
   )
 }
