@@ -15,24 +15,26 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { Upload } from 'lucide-react'
 
+import useDivision from '@components/common/uploadTimeTable/useDivision'
+import useShowTimeTable from '@components/common/uploadTimeTable/useShowTimeTable'
+import useStream from '@components/common/uploadTimeTable/useStream'
+
 import EventCard from './EventCard'
 import useTimeTable from './useTimeTable'
 
 export default function UploadTimeTable() {
+  const { stream, handleStream } = useStream()
+  const { division, handleDivision } = useDivision()
+  const { handleTimeTable, masterTimeTable } = useShowTimeTable()
+
   const {
-    handleStream,
     handleSubmit,
     onSubmit,
     handleFileChange,
     fileName,
-    handleDivision,
-    stream,
-    handleTimeTable,
     timeTable,
-    division,
     loadTimeTable,
     setLoadTimeTable,
-    masterTimeTable,
   } = useTimeTable()
 
   const [selectedStream, setSelectedStream] = useState<string>()
