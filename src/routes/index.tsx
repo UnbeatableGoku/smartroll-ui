@@ -1,27 +1,28 @@
 // src/routerConfig.ts
 import App from '@App'
-
+import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
 import Dashboard from '@pages/Dashboard'
-import TeacherDashboard from '@pages/TeacherDashboard'
-import Login from '@pages/login/Login'
 import NotFound from '@pages/NotFound'
-
-import ErrorPage from '@pages/errorPage'
-import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import StudentDashboard from '@pages/StudentDashboard'
+import TeacherDashboard from '@pages/TeacherDashboard'
+import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
+import ErrorPage from '@pages/errorPage'
+import Login from '@pages/login/Login'
 import { createBrowserRouter } from 'react-router-dom'
 
-import { PAGE_DASHBOARD, PAGE_LOGIN, PAGE_STUDENT_DASHBOARD, PAGE_TEACHER_DASHBOARD, PAGE_TIMETABLE } from '@constants'
+import {
+  PAGE_DASHBOARD,
+  PAGE_LOGIN,
+  PAGE_STUDENT_DASHBOARD,
+  PAGE_TEACHER_DASHBOARD,
+  PAGE_TIMETABLE,
+} from '@constants'
 
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
 import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
-
-import ProtectedRoute from '@auth/ProtectedRoute'
-
-
 
 const router = createBrowserRouter([
   {
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      // for displaying the login page layout 
+      // for displaying the login page layout
       {
         element: <LogoLayout />,
         children: [
@@ -41,15 +42,15 @@ const router = createBrowserRouter([
       },
       // for displaying the dashboard page layout with access control
       {
-        path: PAGE_DASHBOARD.path,  // Use relative path here
+        path: PAGE_DASHBOARD.path, // Use relative path here
         element: <MainLayout />,
         children: [
           {
             index: true,
             element: (
-              <ProtectedRoute roleRequired="admin">
+              // <ProtectedRoute roleRequired="admin">
               <Dashboard />
-                </ProtectedRoute>
+              // </ProtectedRoute>
             ),
           },
           {
@@ -66,27 +67,23 @@ const router = createBrowserRouter([
       {
         path: PAGE_TIMETABLE.path,
 
-        element: (
-          <MainLayout />
-        ),
+        element: <MainLayout />,
         children: [
           {
             index: true,
             element: (
-              <ProtectedRoute roleRequired="admin">
-                <UploadTimeTable />
-              </ProtectedRoute>
+              // <ProtectedRoute roleRequired="admin">
+              <UploadTimeTable />
+              // </ProtectedRoute>
             ),
           },
-        ]
+        ],
       },
       // teacher dashboard route
       {
         path: PAGE_TEACHER_DASHBOARD.path,
 
-        element: (
-          <MainLayout />
-        ),
+        element: <MainLayout />,
         children: [
           {
             index: true,
@@ -96,14 +93,12 @@ const router = createBrowserRouter([
               //  </ProtectedRoute>
             ),
           },
-        ]
+        ],
       },
       {
         path: PAGE_STUDENT_DASHBOARD.path,
 
-        element: (
-          <MainLayout />
-        ),
+        element: <MainLayout />,
         children: [
           {
             index: true,
@@ -113,7 +108,7 @@ const router = createBrowserRouter([
               // </ProtectedRoute>
             ),
           },
-        ]
+        ],
       },
     ],
   },

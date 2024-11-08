@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
 
 import axios from 'axios'
+import { get } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { base_url } from '@utils/base_url'
+import useAPI from '@hooks/useApi'
 
 type FormValues = {
   file: File | null
 }
 
-const token = localStorage.getItem('accessToken')
-const useTimeTable = () => {
+const useUploadTimeTable = () => {
   interface SubmitData {
     file: File | null
   }
@@ -20,6 +20,8 @@ const useTimeTable = () => {
   const [loadTimeTable, setLoadTimeTable] = useState(false)
 
   const [fileName, setFileName] = React.useState<string | null>(null)
+
+  const [StoredTokens, CallAPI] = useAPI()
 
   const {
     handleSubmit,
@@ -42,33 +44,36 @@ const useTimeTable = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${base_url}/manage/upload_master_timetable/`,
+      const axiosInstance = axios.create()
+      const method = 'post'
+      const endpoint = '/manage/upload_master_timetable/'
+      const header = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+        'ngrok-skip-browser-warning': true,
+      }
+
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
         formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-            'ngrok-skip-browser-warning': true,
-          },
-        },
       )
 
-      console.log('File uploaded successfully', response.data)
-      // Successfully uploaded
-      setTimeout(() => {
+      if (response_obj.error == false) {
+        // const data = get(response_obj, 'response.data.data.schedules', [])
         setTimeTable(true)
         toast.success('File uploaded successfully')
-      }, 1000)
+      } else {
+        console.log(response_obj.errorMessage?.message)
+        toast.error(response_obj?.errorMessage?.message)
+        setLoadTimeTable(false)
+      }
     } catch (error) {
       console.error('Error Uploading File', error)
-      if (axios.isAxiosError(error)) {
-        setTimeout(() => {
-          setTimeTable(false)
-          setLoadTimeTable(false)
-          toast.error('File upload failed. See console for more information.')
-        }, 1000)
-      }
+      toast.error(`File upload failed. See console for more information.`)
     }
   }
 
@@ -93,4 +98,4 @@ const useTimeTable = () => {
     setError,
   }
 }
-export default useTimeTable
+export default useUploadTimeTable

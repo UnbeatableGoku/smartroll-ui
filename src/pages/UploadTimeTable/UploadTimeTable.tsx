@@ -1,30 +1,25 @@
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Upload } from 'lucide-react'
 
+import DivisionSelection from '@components/common/uploadTimeTable/DivisionSelection'
+import StreamSelection from '@components/common/uploadTimeTable/StreamSelection'
 import useDivision from '@components/common/uploadTimeTable/useDivision'
 import useShowTimeTable from '@components/common/uploadTimeTable/useShowTimeTable'
 import useStream from '@components/common/uploadTimeTable/useStream'
 
 import EventCard from './EventCard'
-import useTimeTable from './useTimeTable'
+import useUploadTimeTable from './useUploadTimeTable'
 
 export default function UploadTimeTable() {
-  const { stream, handleStream } = useStream()
-  const { division, handleDivision } = useDivision()
+  const { handleStream } = useStream()
+  const { handleDivision } = useDivision()
   const { handleTimeTable, masterTimeTable } = useShowTimeTable()
 
   const {
@@ -35,10 +30,22 @@ export default function UploadTimeTable() {
     timeTable,
     loadTimeTable,
     setLoadTimeTable,
-  } = useTimeTable()
+  } = useUploadTimeTable()
 
-  const [selectedStream, setSelectedStream] = useState<string>()
-  const [selectedDivision, setSelectedDivision] = useState<string>()
+  const [selectedStream, setSelectedStream] = useState<string>('')
+  const [selectedDivision, setSelectedDivision] = useState<string>('')
+
+  const handleOnValueChangeStreams = (value: string) => {
+    setSelectedStream(value)
+    setSelectedDivision('')
+    handleDivision(value)
+  }
+
+  const handlenValueChangeDivision = (value: string) => {
+    setSelectedDivision(value)
+    setLoadTimeTable(true)
+    handleTimeTable(value)
+  }
 
   useEffect(() => {
     if (timeTable === true) {
@@ -124,88 +131,20 @@ export default function UploadTimeTable() {
           <div className="flex flex-col space-y-2 rounded-xl md:space-y-4">
             <div className="flex w-full flex-col items-center justify-center space-y-4 md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
               {/* Stream Selection Card */}
-              <div className="relative w-full md:w-[240px] lg:w-[320px]">
-                <Card className="h-auto w-full dark:bg-black">
-                  <CardHeader className="space-y-0 pb-2 pt-2">
-                    <CardTitle className="text-center text-base sm:text-lg">
-                      Stream
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-3">
-                    <Select
-                      value={selectedStream}
-                      onValueChange={(value) => {
-                        setSelectedStream(value)
-                        setSelectedDivision('')
-                        handleDivision(value)
-                      }}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Stream" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {stream?.map((stream) => (
-                          <SelectItem
-                            key={stream.slug}
-                            value={stream.slug}
-                            className="cursor-pointer"
-                          >
-                            {stream.title} - {stream.branch.branch_code}{' '}
-                            {stream.branch.branch_name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </CardContent>
-                </Card>
-                {/* Connecting Lines */}
-                <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
-                <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
-              </div>
-
+              <StreamSelection
+                title="Stream"
+                selectedValue={selectedStream}
+                onValueChange={handleOnValueChangeStreams}
+                placeholder="Select Stream"
+              />
               {/* Division Selection Card */}
-              <div className="w-full md:w-[240px] lg:w-[320px]">
-                <Card className="h-auto w-full dark:bg-black">
-                  <CardHeader className="space-y-0 pb-2 pt-2">
-                    <div className="flex items-center justify-center">
-                      <CardTitle className="text-center text-base sm:text-lg">
-                        Division
-                      </CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-3">
-                    {selectedStream ? (
-                      <Select
-                        value={selectedDivision}
-                        onValueChange={(value) => {
-                          setSelectedDivision(value)
-                          setLoadTimeTable(true)
-                          handleTimeTable(value)
-                        }}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Division" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {division?.map((div) => (
-                            <SelectItem
-                              key={div.slug}
-                              value={div.slug}
-                              className="cursor-pointer"
-                            >
-                              {div.full_name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <div className="space-y-2 sm:space-y-3">
-                        <Skeleton className="h-10 w-full sm:h-9" />
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
+              <DivisionSelection
+                title="Division"
+                selectedValue={selectedDivision}
+                selectedValue2={selectedStream}
+                onValueChange={handlenValueChangeDivision}
+                placeholder="Select Division"
+              />
             </div>
           </div>
 
