@@ -45,7 +45,7 @@ const TabLink = ({
 }: TabLinkType) => {
   const [togglemenu, setTogglemenu] = useState(false)
   const { pathname } = useLocation()
-  console.log(path)
+  
 
   //to open the first dropdown
   const handleInitialToggle = useCallback(() => {

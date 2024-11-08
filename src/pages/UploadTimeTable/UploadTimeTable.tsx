@@ -18,8 +18,8 @@ import EventCard from './EventCard'
 import useUploadTimeTable from './useUploadTimeTable'
 
 export default function UploadTimeTable() {
-  const { handleStream } = useStream()
-  const { handleDivision } = useDivision()
+  const { stream, handleStream } = useStream()
+  const { division, handleDivision } = useDivision()
   const { handleTimeTable, masterTimeTable } = useShowTimeTable()
 
   const {
@@ -103,9 +103,8 @@ export default function UploadTimeTable() {
               <div>
                 <Button
                   type="submit"
-                  className={`relative flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium hover:bg-zinc-600 dark:border-gray-800 dark:bg-white dark:text-black dark:hover:bg-black dark:hover:text-white ${
-                    loadTimeTable ? 'cursor-not-allowed dark:bg-white' : ''
-                  }`}
+                  className={`relative flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium hover:bg-zinc-600 dark:border-gray-800 dark:bg-white dark:text-black dark:hover:bg-black dark:hover:text-white ${loadTimeTable ? 'cursor-not-allowed dark:bg-white' : ''
+                    }`}
                   disabled={loadTimeTable}
                 >
                   {loadTimeTable ? (
@@ -130,21 +129,41 @@ export default function UploadTimeTable() {
           {/* time table selection */}
           <div className="flex flex-col space-y-2 rounded-xl md:space-y-4">
             <div className="flex w-full flex-col items-center justify-center space-y-4 md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
-              {/* Stream Selection Card */}
-              <StreamSelection
-                title="Stream"
-                selectedValue={selectedStream}
-                onValueChange={handleOnValueChangeStreams}
-                placeholder="Select Stream"
-              />
+              {stream && (
+                <>
+                  <div className="relative w-full md:w-[240px] lg:w-[320px]">
+                    {/* Stream Selection Card */}
+                    <StreamSelection
+                      title="Stream"
+                      selectedValue={selectedStream}
+                      onValueChange={handleOnValueChangeStreams}
+                      placeholder="Select Stream"
+                      data={stream}
+                    />
+                    {/* Connecting Lines */}
+                    <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
+                    <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
+                  </div>
+                </>)
+              }
               {/* Division Selection Card */}
-              <DivisionSelection
-                title="Division"
-                selectedValue={selectedDivision}
-                selectedValue2={selectedStream}
-                onValueChange={handlenValueChangeDivision}
-                placeholder="Select Division"
-              />
+              {
+                division && (
+                  <>
+                    <div className="relative w-full md:w-[240px] lg:w-[320px]">
+                      <DivisionSelection
+                        title="Division"
+                        selectedValue={selectedDivision}
+                        selectedValue2={selectedStream}
+                        onValueChange={handlenValueChangeDivision}
+                        placeholder="Select Division"
+                        data={division}
+                      />
+                    </div>
+                  </>
+                )
+              }
+
             </div>
           </div>
 

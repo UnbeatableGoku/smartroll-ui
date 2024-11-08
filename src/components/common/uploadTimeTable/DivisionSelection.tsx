@@ -18,11 +18,12 @@ const DivisionSelection = ({
   selectedValue2,
   onValueChange,
   placeholder,
+  data
 }: SelectionProps) => {
-  const { division } = useDivision()
+  
 
   return (
-    <div className="w-full md:w-[240px] lg:w-[320px]">
+    
       <Card className="h-auto w-full dark:bg-black">
         <CardHeader className="space-y-0 pb-2 pt-2">
           <div className="flex items-center justify-center">
@@ -43,7 +44,7 @@ const DivisionSelection = ({
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
               <SelectContent>
-                {division?.map((div) => (
+                {data?.map((div) => (
                   <SelectItem
                     key={div.slug}
                     value={div.slug}
@@ -61,7 +62,6 @@ const DivisionSelection = ({
           )}
         </CardContent>
       </Card>
-    </div>
   )
 }
 

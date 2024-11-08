@@ -18,6 +18,12 @@ export const PAGE_TEACHER_DASHBOARD: Page = {
   name: 'Teacher Dashboard',
 }
 
+export const PAGE_SUBJECT_SELECT : Page = {
+  id: 'SUBJECT-SELECT',
+  path: '/subject-select',
+  name: 'subject',
+}
+
 export const PAGE_STUDENT_DASHBOARD: Page = {
   id: 'STUDENT-DASHBOARD',
   path: '/student-dashboard',

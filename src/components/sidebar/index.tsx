@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react'
 import { generateSidebarLinks } from '@utils/helpers'
 
 
+
 import TabLink from './tabLink'
 import { User, Menu , LogOut } from 'lucide-react'
 import {
@@ -12,15 +13,32 @@ import {
 } from "@/components/ui/dialog"
 
 import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
+import { useDispatch } from 'react-redux'
+import { setAuth } from '@data/redux/slices/authSlice'
+import { useNavigate } from 'react-router-dom'
 
 
-const menuItems = [
-  { icon: User, label: 'Profile' },  
-  { icon: LogOut, label: 'Logout' },
-]
+
+
 
 
 const Sidebar = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const handelLogout = ()=>{
+    //clear local storage 
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    // clear redux state 
+    dispatch(setAuth({access : "" , refresh : "",isAuth : false}))
+    // redirect to login page
+      navigate('/login')
+  }
+
+  const menuItems = [
+    { icon: User, label: 'Profile',event : ()=>{} },  
+    { icon: LogOut, label: 'Logout',event: handelLogout },
+  ]
   
   const {activeIndex,collapsed,open,setActiveIndex,setCollapsed,setOpen,setSidebarLinks} = useSidebarLinkSelector()
   const validLinks = useMemo(
@@ -50,6 +68,8 @@ const Sidebar = () => {
             className="group relative flex h-12 w-12 transition-transform duration-300 ease-in-out hover:scale-110 items-center justify-center rounded-full text-white  hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             onMouseEnter={() => setActiveIndex(index)}
             onMouseLeave={() => setActiveIndex(null)}
+            onClick={() =>{item.event()}}
+
             aria-label={item.label}
           >
             <item.icon className="h-5 w-5 transition-transform duration-200 ease-in-out group-hover:scale-110" />

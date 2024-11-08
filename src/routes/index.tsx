@@ -7,18 +7,14 @@ import Dashboard from '@pages/Dashboard'
 import NotFound from '@pages/NotFound'
 import StudentDashboard from '@pages/StudentDashboard'
 import TeacherDashboard from '@pages/TeacherDashboard'
-import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
+import SubjectSelection from '@pages/Sbuject/SubjectSelection'
 import ErrorPage from '@pages/errorPage'
+import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
+
 import Login from '@pages/login/Login'
 import { createBrowserRouter } from 'react-router-dom'
 
-import {
-  PAGE_DASHBOARD,
-  PAGE_LOGIN,
-  PAGE_STUDENT_DASHBOARD,
-  PAGE_TEACHER_DASHBOARD,
-  PAGE_TIMETABLE,
-} from '@constants'
+import { PAGE_DASHBOARD, PAGE_LOGIN, PAGE_STUDENT_DASHBOARD, PAGE_SUBJECT_SELECT, PAGE_TEACHER_DASHBOARD, PAGE_TIMETABLE } from '@constants'
 
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
@@ -48,9 +44,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
+              
               // <ProtectedRoute roleRequired="admin">
               <Dashboard />
-              // </ProtectedRoute>
+                
             ),
           },
           {
@@ -72,6 +69,7 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
+             
               // <ProtectedRoute roleRequired="admin">
               <UploadTimeTable />
               // </ProtectedRoute>
@@ -95,6 +93,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // student dashboard
       {
         path: PAGE_STUDENT_DASHBOARD.path,
 
@@ -109,6 +108,24 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      // subject selection route
+      {
+        path: PAGE_SUBJECT_SELECT.path,
+
+        element: (
+          <MainLayout />
+        ),
+        children: [
+          {
+            index: true,
+            element: (
+              // <ProtectedRoute roleRequired="student">
+              <SubjectSelection />
+              // </ProtectedRoute>
+            ),
+          },
+        ]
       },
     ],
   },

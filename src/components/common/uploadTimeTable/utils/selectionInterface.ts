@@ -4,4 +4,5 @@ export interface SelectionProps {
   selectedValue2?: string
   onValueChange: (value: string) => void
   placeholder: string
+  data : Array<any> | null
 }

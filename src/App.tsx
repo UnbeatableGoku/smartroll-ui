@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="min-h-screen overflow-hidden text-gray-100 dark:bg-black">
       <Outlet />
-      <Toaster richColors position="bottom-center" />
+      <Toaster richColors position="top-right" />
     </div>
   )
 }
