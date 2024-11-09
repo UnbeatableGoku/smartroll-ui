@@ -1,51 +1,47 @@
-import React, { useState } from 'react'
-import { Card, CardHeader, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
-const SubjectCard = ({day,selectedCards,toggleCardSelection,events}:any) => {
-    
-    const getCategoryColor = (category: string) => {
-        switch (category) {
-          case 'Work': return 'bg-blue-400 text-blue-900'
-          case 'Personal': return 'bg-green-400 text-green-900'
-          case 'Health': return 'bg-red-400 text-red-900'
-          default: return 'bg-yellow-400 text-yellow-900'
-        }
-      }
+import { getCategoryColor } from '@utils/helpers'
 
+const SubjectCard = ({
+  day,
+  selectedCards,
+  toggleCardSelection,
+  events,
+}: any) => {
   return (
-   <>
-        <Card 
-          key={day}
-          className={`cursor-pointer transition-all duration-200 relative bg-gray-800 ${
-            selectedCards.includes(day) 
-              ? 'bg-gray-700' 
-              : 'hover:bg-gray-750'
-          }`}
-          onClick={() => toggleCardSelection(day)}
-        >
-          {selectedCards.includes(day) && (
-            <div className="absolute top-2 right-2 bg-gray-600 text-gray-200 text-xs font-semibold py-1 px-2 rounded-full">
-              Selected
-            </div>
-          )}
-          <CardHeader>
-            <h3 className="font-bold text-xl text-gray-100">{day}</h3>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-2">
-              {events.map((event:any, index:any) => (
-                <div key={index} className="flex justify-between items-center">
-                  <p className="font-medium text-gray-300">{event.time} - {event.description}</p>
-                  <Badge className={`${getCategoryColor(event.category)}`}>
-                    {event.category}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-   </>
+    <>
+      <Card
+        key={day}
+        className={`relative cursor-pointer bg-gray-800 transition-all duration-200 ${
+          selectedCards.includes(day) ? 'bg-gray-700' : 'hover:bg-gray-750'
+        }`}
+        onClick={() => toggleCardSelection(day)}
+      >
+        {selectedCards.includes(day) && (
+          <div className="absolute right-2 top-2 rounded-full bg-gray-600 px-2 py-1 text-xs font-semibold text-gray-200">
+            Selected
+          </div>
+        )}
+        <CardHeader>
+          <h3 className="text-xl font-bold text-gray-100">{day}</h3>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-2">
+            {events.map((event: any, index: any) => (
+              <div key={index} className="flex items-center justify-between">
+                <p className="font-medium text-gray-300">
+                  {event.time} - {event.description}
+                </p>
+                <Badge className={`${getCategoryColor(event.category)}`}>
+                  {event.category}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </>
   )
 }
 
