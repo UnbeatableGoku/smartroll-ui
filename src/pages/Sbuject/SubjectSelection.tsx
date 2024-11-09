@@ -5,13 +5,17 @@ import useStream from '@components/common/uploadTimeTable/useStream'
 import StreamSelection from '@components/common/uploadTimeTable/StreamSelection'
 import DivisionSelection from '@components/common/uploadTimeTable/DivisionSelection'
 import useDivision from '@components/common/uploadTimeTable/useDivision'
+import useSemester from '@components/common/uploadTimeTable/useSemester'
+import SemesterSelection from '@components/common/uploadTimeTable/SemesterSelection'
 const SubjectSelection = () => {
   const [selectedCards, setSelectedCards] = useState<string[]>([])
   const [selectedStream, setSelectedStream] = useState<string>('')
   const [selectedDivision, setSelectedDivision] = useState<string>('')
+  const [selectedSemester , setSelectedSemester] = useState<string>('')
 
   const { stream, handleStream } = useStream()
-  const { division, handleDivision } = useDivision()
+  // const { division, handleDivision } = useDivision()
+  const {semester,loadSemesterByStream} = useSemester()
   const toggleCardSelection = (day: string) => {
     setSelectedCards(prev =>
       prev.includes(day)
@@ -23,11 +27,12 @@ const SubjectSelection = () => {
   const handleOnValueChangeStreams = (value: string) => {
     setSelectedStream(value)
     setSelectedDivision('')
-    handleDivision(value)
+    loadSemesterByStream(value)
   }
 
   const handlenValueChangeDivision = (value: string) => {
-    setSelectedDivision(value)
+    setSelectedSemester(value)
+    
     // setLoadTimeTable(true)
     // handleTimeTable(value)
   }
@@ -109,23 +114,24 @@ const SubjectSelection = () => {
                 </>
               )
             }
-            {
-              division && (
-                <>
-                  <div className="relative w-full md:w-[240px] lg:w-[320px]">
+            <div className="relative w-full md:w-[240px] lg:w-[320px]">
                     {/* Semester Selection Card */}
-                    <DivisionSelection
+                    <SemesterSelection
                       title="Semester"
-                      selectedValue={selectedDivision}
+                      selectedValue={selectedSemester}
                       selectedValue2={selectedStream}
                       onValueChange={handlenValueChangeDivision}
                       placeholder="Select Semester"
-                      data={division}
+                      data={semester}
                     />
                     {/* Connecting Lines */}
                     <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
                     <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
                   </div>
+            {
+              semester && (
+                <>
+                  
                 </>
               )
             }
@@ -133,7 +139,7 @@ const SubjectSelection = () => {
 
             {/* Year Selection Card */}
             {
-              division && (
+              semester && (
                 <>
                   <div className="relative w-full md:w-[240px] lg:w-[320px]">
                     <DivisionSelection
@@ -142,7 +148,7 @@ const SubjectSelection = () => {
                       selectedValue2={selectedStream}
                       onValueChange={handlenValueChangeDivision}
                       placeholder="Select Year"
-                      data={division}
+                      data={semester}
                     />
                   </div>
                 </>
@@ -155,36 +161,7 @@ const SubjectSelection = () => {
           {days.map((dayData) => (
             <>
               <SubjectCard day={dayData.day} selectedCards={selectedCards} toggleCardSelection={toggleCardSelection} events={dayData.events}></SubjectCard>
-              {/* <Card 
-          key={dayData.day}
-          className={`cursor-pointer transition-all duration-200 relative bg-gray-800 ${
-            selectedCards.includes(dayData.day) 
-            ? 'bg-gray-700' 
-            : 'hover:bg-gray-750'
-          }`}
-          onClick={() => toggleCardSelection(dayData.day)}
-          >
-          {selectedCards.includes(dayData.day) && (
-            <div className="absolute top-2 right-2 bg-gray-600 text-gray-200 text-xs font-semibold py-1 px-2 rounded-full">
-              Selected
-            </div>
-          )}
-          <CardHeader>
-            <h3 className="font-bold text-xl text-gray-100">{dayData.day}</h3>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-2">
-              {dayData.events.map((event, index) => (
-                <div key={index} className="flex justify-between items-center">
-                  <p className="font-medium text-gray-300">{event.time} - {event.description}</p>
-                  <Badge className={`${getCategoryColor(event.category)}`}>
-                    {event.category}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card> */}
+              
             </>
           ))}
         </main>
