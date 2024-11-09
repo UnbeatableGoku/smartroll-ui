@@ -18,7 +18,7 @@ export const PAGE_TEACHER_DASHBOARD: Page = {
   name: 'Teacher Dashboard',
 }
 
-export const PAGE_SUBJECT_SELECT : Page = {
+export const PAGE_SUBJECT_SELECT: Page = {
   id: 'SUBJECT-SELECT',
   path: '/subject-select',
   name: 'subject',
@@ -42,7 +42,6 @@ export const PAGE_NOT_FOUND: Page = {
   name: 'Page Not Found',
 }
 
-
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES
@@ -59,7 +58,6 @@ export const PAGE_USER_MANAGEMENT: Page = {
   path: '/user-management',
   name: 'User Management',
 }
-
 
 export const PAGE_ADD_USER: Page = {
   id: 'CREATE_USER',

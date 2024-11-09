@@ -1,6 +1,8 @@
 // src/routeConfig.ts
 import { lazy } from 'react'
 
+import NewPassword from '@pages/NewPassword/NewPassword'
+
 // Lazy load components
 const Home = lazy(() => import('@pages/Home'))
 const Dashboard = lazy(() => import('@pages/Dashboard'))
@@ -26,6 +28,7 @@ export const routeConfig: RouteConfig[] = [
     element: Login,
     guard: null, // No guard for Login (public route)
   },
+
   {
     path: '/dashboard',
     element: Dashboard,

@@ -5,16 +5,22 @@ import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
 import Dashboard from '@pages/Dashboard'
 import NotFound from '@pages/NotFound'
+import SubjectSelection from '@pages/Sbuject/SubjectSelection'
 import StudentDashboard from '@pages/StudentDashboard'
 import TeacherDashboard from '@pages/TeacherDashboard'
-import SubjectSelection from '@pages/Sbuject/SubjectSelection'
-import ErrorPage from '@pages/errorPage'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
-
+import ErrorPage from '@pages/errorPage'
 import Login from '@pages/login/Login'
 import { createBrowserRouter } from 'react-router-dom'
 
-import { PAGE_DASHBOARD, PAGE_LOGIN, PAGE_STUDENT_DASHBOARD, PAGE_SUBJECT_SELECT, PAGE_TEACHER_DASHBOARD, PAGE_TIMETABLE } from '@constants'
+import {
+  PAGE_DASHBOARD,
+  PAGE_LOGIN,
+  PAGE_STUDENT_DASHBOARD,
+  PAGE_SUBJECT_SELECT,
+  PAGE_TEACHER_DASHBOARD,
+  PAGE_TIMETABLE,
+} from '@constants'
 
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
@@ -44,10 +50,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              
-              // <ProtectedRoute roleRequired="admin">
-              <Dashboard />
-                
+              <ProtectedRoute roleRequired="admin">
+                <Dashboard />
+              </ProtectedRoute>
             ),
           },
           {
@@ -69,7 +74,6 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-             
               // <ProtectedRoute roleRequired="admin">
               <UploadTimeTable />
               // </ProtectedRoute>
@@ -102,20 +106,19 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              // <ProtectedRoute roleRequired="student">
-              <StudentDashboard />
-              // </ProtectedRoute>
+              <ProtectedRoute roleRequired="student">
+                <StudentDashboard />
+              </ProtectedRoute>
             ),
           },
         ],
       },
+
       // subject selection route
       {
         path: PAGE_SUBJECT_SELECT.path,
 
-        element: (
-          <MainLayout />
-        ),
+        element: <MainLayout />,
         children: [
           {
             index: true,
@@ -125,7 +128,7 @@ const router = createBrowserRouter([
               // </ProtectedRoute>
             ),
           },
-        ]
+        ],
       },
     ],
   },

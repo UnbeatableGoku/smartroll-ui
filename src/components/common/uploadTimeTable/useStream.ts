@@ -6,8 +6,6 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { base_url } from '@utils/base_url'
-
 interface Branch {
   branch_name: string
   branch_code: string

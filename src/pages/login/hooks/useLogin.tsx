@@ -1,9 +1,12 @@
 //?slices
+import { RootState } from '@data/redux/Store'
 import { setAuth, setUserProfile } from '@data/redux/slices/authSlice'
 //? axios
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import { base_url } from '@utils/base_url'
 
@@ -17,6 +20,9 @@ type UserData = {
 
 //? HOOK
 const useLogin = () => {
+  const access_token = useSelector((state: RootState) => state.auth.accessToken)
+  const navigate = useNavigate()
+
   const dispatch = useDispatch()
   //? LOGIN FUNCTIONALITY
 
@@ -37,6 +43,14 @@ const useLogin = () => {
         isAuth: true,
       }
 
+      if (response?.data?.student_slug) {
+        return {
+          error: true,
+          message: 'Temporary password. Please set a new password.',
+          student_slug: response?.data?.student_slug,
+        }
+      }
+
       //? set the tokens in the rdux store
       dispatch(setAuth(token))
 
@@ -47,6 +61,7 @@ const useLogin = () => {
       //TODO: DEOCODE THE ACCESS TOKEN AND STORE THE PROFILE OF STACKHOLDER IN REDUX STORE
       const decode = jwtDecode<DecodedToken>(response.data.access)
       dispatch(setUserProfile(decode))
+
       //? return success message and the token
       return {
         error: false,
@@ -67,6 +82,19 @@ const useLogin = () => {
           profile: null,
         }
       }
+
+      if (error.response) {
+        return {
+          error: true,
+          message:
+            error?.response?.data?.detail ||
+            error?.response?.data?.message ||
+            'An error occurred',
+          data: null,
+          status: error?.response?.status || 500,
+          profile: null,
+        }
+      }
       return {
         error: true,
         message,
@@ -77,8 +105,27 @@ const useLogin = () => {
     }
   }
 
+  const redirectLogin = () => {
+    if (access_token) {
+      const decode = jwtDecode<DecodedToken>(access_token)
+      console.log(decode)
+      if (decode?.obj?.profile?.role === 'admin') {
+        navigate('/')
+      } else if (decode?.obj?.profile?.role === 'student') {
+        navigate('/student-dashboard')
+      } else if (decode?.obj?.profile?.role === 'teacher') {
+        navigate('/teacher-dashboard')
+      } else {
+        navigate('/login')
+      }
+    } else {
+      navigate('/login')
+    }
+  }
+
   return {
     handleLogin,
+    redirectLogin,
   }
 }
 
