@@ -1,18 +1,38 @@
-// src/auth/ProtectedRoute.tsx
+// src/components/common/ProtectedRoute.tsx
 import React from 'react'
 
 import { Navigate } from 'react-router-dom'
 
+import { PAGE_LOGIN } from '@constants'
+
+import useAuth from '@hooks/useAuth'
+
 interface ProtectedRouteProps {
-  children: React.ReactElement // Define children as a React element
+  children: React.ReactElement // This is the content that will be protected
+  roleRequired?: string // Optional: you can specify which role is required
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const isAuthenticated = false
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  roleRequired,
+}) => {
+  const { role, loading } = useAuth()
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
+  if (loading) {
+    return <div>Loading...</div> // Show a loading state until role is determined
   }
 
-  return children
+  // Redirect to login if no role or invalid role
+  if (!role) {
+    return <Navigate to={PAGE_LOGIN.path} replace />
+  }
+
+  // Optionally check for specific roles if roleRequired is provided
+  if (roleRequired && role !== roleRequired) {
+    return <Navigate to={PAGE_LOGIN.path} replace />
+  }
+
+  return children // Render the protected content
 }
+
+export default ProtectedRoute

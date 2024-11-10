@@ -3,7 +3,7 @@ import { MouseEventHandler, useCallback, useEffect, useState } from 'react'
 import { ChevronIcon } from '@icons'
 import { Link, useLocation } from 'react-router-dom'
 
-import { Page } from 'types/common'
+import { Page  } from 'types/common'
 
 type TabLinkCommon = {
   buttonAction?: MouseEventHandler<HTMLButtonElement>
@@ -18,6 +18,7 @@ interface TabLinkType extends TabLinkCommon {
   subTabs?: Page[]
   className?: string
   defalutOpen?: boolean
+  onClick?: () => void;
 }
 
 interface LinkWrapperType extends TabLinkCommon {
@@ -40,10 +41,11 @@ const TabLink = ({
   icon,
   collapsed = false,
   buttonAction,
+  onClick,
 }: TabLinkType) => {
   const [togglemenu, setTogglemenu] = useState(false)
   const { pathname } = useLocation()
-  console.log(path)
+  
 
   //to open the first dropdown
   const handleInitialToggle = useCallback(() => {
@@ -71,7 +73,7 @@ const TabLink = ({
 
   return (
     <>
-      <li className="my-1">
+      <li className="my-1" onClick={onClick} >
         <LinkWrapper
           path={path}
           buttonAction={
@@ -91,7 +93,7 @@ const TabLink = ({
               </span>
 
               <span
-                className={`origin-left whitespace-nowrap transition-opacity duration-300 ${collapsed && 'hidden scale-0'} capitalize`}
+                className={`origin-left whitespace-nowrap transition-opacity duration-300 ${collapsed && 'hidden scale-0'} capitalize dark:text-white`}
               >
                 {name}
               </span>

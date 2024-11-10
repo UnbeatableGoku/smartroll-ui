@@ -1,38 +1,35 @@
 // src/routeConfig.ts
-import { LazyExoticComponent, ReactElement, lazy } from 'react'
-
-import { ProtectedRoute } from '@auth/ProtectedRoute'
-
-// HOC for route guarding
+import { lazy } from 'react'
 
 // Lazy load components
 const Home = lazy(() => import('@pages/Home'))
 const Dashboard = lazy(() => import('@pages/Dashboard'))
-const Login = lazy(() => import('@pages/Login'))
+const Login = lazy(() => import('@pages/login/Login'))
 const NotFound = lazy(() => import('@pages/NotFound'))
-
+const Timetable = lazy(() => import('@pages/UploadTimeTable/UploadTimeTable'))
 interface RouteConfig {
   path: string
-  element: LazyExoticComponent<() => ReactElement>
-  guard?: React.FC<{ children: ReactElement }> | null // Guard is optional
+  element: React.LazyExoticComponent<() => React.ReactElement>
+  guard?: React.FC<{ children: React.ReactElement }> | null // Guard is optional
   children?: RouteConfig[] // Children is also optional
 }
+
 // Route configuration with guards and children routes
 export const routeConfig: RouteConfig[] = [
   {
     path: '/',
     element: Home,
-    guard: null, // Public route
+    guard: null, // Protect the Home route (public -> protected)
   },
   {
     path: '/login',
     element: Login,
-    guard: null, // Public route
+    guard: null, // No guard for Login (public route)
   },
   {
     path: '/dashboard',
     element: Dashboard,
-    guard: ProtectedRoute, // Protected route (requires authentication)
+    guard: null, // Protected route (requires authentication)
   },
   {
     path: '/404',
