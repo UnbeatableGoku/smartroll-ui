@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Upload } from 'lucide-react'
 
-import ButtonLoader from '@components/common/form/buttonLoader/buttonLoader'
+import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 import DivisionSelection from '@components/common/uploadTimeTable/DivisionSelection'
 import StreamSelection from '@components/common/uploadTimeTable/StreamSelection'
 import useDivision from '@components/common/uploadTimeTable/useDivision'

@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import ButtonLoader from '@components/common/form/buttonLoader/buttonLoader'
+import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 
 import useNewPassword from './hooks/useNewPassword'
 

@@ -11,7 +11,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import NewPassword from '@components/NewPassword/NewPassword'
-import ButtonLoader from '@components/common/form/buttonLoader/buttonLoader'
+import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 
 import useLogin from './hooks/useLogin'
 

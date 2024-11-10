@@ -3,9 +3,9 @@ import { Navigate } from 'react-router-dom'
 
 import { PAGE_LOGIN } from '@constants'
 
-import AcademicCard from '@components/dashboard_component/AcademicCard'
-import { AnalysisCard } from '@components/dashboard_component/AnalysisCard'
-import CountCards from '@components/dashboard_component/CountCards'
+import AcademicCard from '@components/dashboard/AcademicCard'
+import { AnalysisCard } from '@components/dashboard/AnalysisCard'
+import CountCards from '@components/dashboard/CountCards'
 
 const Dashboard = () => {
   // const { isAuthenticated } = useAuth()
