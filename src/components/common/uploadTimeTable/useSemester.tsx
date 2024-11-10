@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 const useSemester = () => {
     const [StoredTokens, CallAPI] = useAPI()
     const [semester, setSemester] = useState<Array<any>>([]);
-
+    const [academicYears, setAcademicYears] = useState<Array<any>>([]);
 
     const loadSemesterByStream = async(slug: string) => {
         try {
@@ -19,8 +19,10 @@ const useSemester = () => {
             const endpoint = `/manage/get_semsters_from_stream/${slug}`
             const response_obj = await CallAPI(StoredTokens, axiosInstance, endpoint, method, header)
             if (response_obj.error == false) {
-                const data = get(response_obj, 'response.data.data', [])
-                setSemester(data)
+                const semester = get(response_obj, 'response.data.data.semesters', [])
+                setSemester(semester)
+                const years = get(response_obj, 'response.data.data.years', [])
+                setAcademicYears(years)                
             }
             else {
                 toast.error(response_obj.errorMessage?.message)
@@ -35,6 +37,7 @@ const useSemester = () => {
     return {
         semester,
         loadSemesterByStream,
+        academicYears
     }
 }
 

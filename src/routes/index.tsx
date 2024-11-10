@@ -45,8 +45,9 @@ const router = createBrowserRouter([
             index: true,
             element: (
               
-              // <ProtectedRoute roleRequired="admin">
+              <ProtectedRoute roleRequired="admin">
               <Dashboard />
+              </ProtectedRoute>
                 
             ),
           },
