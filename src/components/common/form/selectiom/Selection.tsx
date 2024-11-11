@@ -9,7 +9,8 @@ import {
 } from '@/components/ui/select'
 
 import { Skeleton } from '@components/ui/skeleton'
-import { SelectionProps } from '@components/common/uploadTimeTable/utils/selectionInterface'
+import { SelectionProps } from 'types/common'
+
 
 const Selection = ({
     title,
@@ -17,7 +18,8 @@ const Selection = ({
     selectedValue2, // to render the selection items list based on the parent selection 
     onValueChange, // to handle on select event to perform any task
     placeholder, // to display the data on the default selection
-    data // to render the data on the select item 
+    data,// to render the data on the select item 
+    optionTitle // to display the static text in all options
   }: SelectionProps) => {
   return (
     <Card className="h-auto w-full dark:bg-black">
@@ -41,13 +43,13 @@ const Selection = ({
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>
-            {data?.map((semester) => (
+            {data?.map((item) => (
               <SelectItem
-                key={semester.slug}
-                value={semester.slug}
+                key={item.slug}
+                value={item.slug}
                 className="cursor-pointer"
               >
-               Semester - {semester.no}
+               {optionTitle ? `${optionTitle} - ` : null}  {item.name}
               </SelectItem>
             ))}
           </SelectContent>

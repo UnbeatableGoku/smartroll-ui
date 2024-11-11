@@ -9,8 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Upload } from 'lucide-react'
 
 import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
-import DivisionSelection from '@components/common/uploadTimeTable/DivisionSelection'
-import StreamSelection from '@components/common/uploadTimeTable/StreamSelection'
+import Selection from '@components/common/form/selectiom/Selection'
 import useDivision from '@components/common/uploadTimeTable/useDivision'
 import useShowTimeTable from '@components/common/uploadTimeTable/useShowTimeTable'
 import useStream from '@components/common/uploadTimeTable/useStream'
@@ -130,13 +129,22 @@ export default function UploadTimeTable() {
                 <>
                   <div className="relative w-full md:w-[240px] lg:w-[320px]">
                     {/* Stream Selection Card */}
-                    <StreamSelection
+                    <Selection
+                      title="Stream"
+                      selectedValue={selectedStream}
+                      selectedValue2=" "
+                      onValueChange={handleOnValueChangeStreams}
+                      placeholder="Select Stream"
+                      data={stream}
+                      optionTitle={null}
+                    />
+                    {/* <StreamSelection
                       title="Stream"
                       selectedValue={selectedStream}
                       onValueChange={handleOnValueChangeStreams}
                       placeholder="Select Stream"
                       data={stream}
-                    />
+                    /> */}
                     {/* Connecting Lines */}
                     <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
                     <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
@@ -147,14 +155,24 @@ export default function UploadTimeTable() {
               {division && (
                 <>
                   <div className="relative w-full md:w-[240px] lg:w-[320px]">
-                    <DivisionSelection
+                    <Selection
                       title="Division"
                       selectedValue={selectedDivision}
                       selectedValue2={selectedStream}
                       onValueChange={handlenValueChangeDivision}
                       placeholder="Select Division"
                       data={division}
+                      optionTitle={'Division'}
                     />
+
+                    {/* <DivisionSelection
+                        title="Division"
+                        selectedValue={selectedDivision}
+                        selectedValue2={selectedStream}
+                        onValueChange={handlenValueChangeDivision}
+                        placeholder="Select Division"
+                        data={division}
+                      /> */}
                   </div>
                 </>
               )}

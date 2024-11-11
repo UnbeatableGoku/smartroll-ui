@@ -7,6 +7,7 @@ import Dashboard from '@pages/Dashboard'
 import NotFound from '@pages/NotFound'
 import SubjectSelection from '@pages/Sbuject/SubjectSelection'
 import StudentDashboard from '@pages/StudentDashboard'
+import SubjectChoice from '@pages/Subject-Choice/SubjectChoice'
 import TeacherDashboard from '@pages/TeacherDashboard'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
@@ -17,6 +18,7 @@ import {
   PAGE_DASHBOARD,
   PAGE_LOGIN,
   PAGE_STUDENT_DASHBOARD,
+  PAGE_SUBJECT_CHOICE,
   PAGE_SUBJECT_SELECT,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
@@ -50,9 +52,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              <ProtectedRoute roleRequired="admin">
-                <Dashboard />
-              </ProtectedRoute>
+              // <ProtectedRoute roleRequired="admin">
+              <Dashboard />
+              // </ProtectedRoute>
             ),
           },
           {
@@ -106,9 +108,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              <ProtectedRoute roleRequired="student">
-                <StudentDashboard />
-              </ProtectedRoute>
+              // <ProtectedRoute roleRequired="student">
+              <StudentDashboard />
+              // </ProtectedRoute>
             ),
           },
         ],
@@ -125,6 +127,21 @@ const router = createBrowserRouter([
             element: (
               // <ProtectedRoute roleRequired="student">
               <SubjectSelection />
+              // </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: PAGE_SUBJECT_CHOICE.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              // <ProtectedRoute roleRequired="student">
+              <SubjectChoice />
               // </ProtectedRoute>
             ),
           },

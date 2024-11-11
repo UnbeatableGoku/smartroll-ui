@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 
 import { base_url } from '@utils/base_url'
 import useAPI from '@hooks/useApi'
+import { SelectionResponse } from 'types/common'
 
 interface Division {
   full_name: string
@@ -13,7 +14,7 @@ interface Division {
 }
 
 const useDivision = () => {
-  const [division, setDivision] = useState<Division[]>([])
+  const [division, setDivision] = useState<SelectionResponse[]>([])
 
   const [StoredTokens,CallAPI] = useAPI()
 
@@ -29,7 +30,10 @@ const useDivision = () => {
       const response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,header)
       if (response_obj.error == false){
         const data = get(response_obj, 'response.data.data', [])
-        setDivision(data)
+        const divisions:Array<SelectionResponse> = data.map((division:Division) =>{
+          return {slug : division.slug,name : division.full_name,}
+        })
+        setDivision(divisions)
       }
       else{
         toast.error(response_obj.errorMessage?.message)  

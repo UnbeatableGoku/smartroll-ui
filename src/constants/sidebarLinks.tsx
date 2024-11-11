@@ -48,5 +48,17 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     ),
     path: '/subject-select',
   },
+  {
+    id: 'SUBJECT-CHOICE',
+    name: 'Subject-Choice',
+    icon: (
+      <LibraryBig
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/subject-choice',
+  },
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]
