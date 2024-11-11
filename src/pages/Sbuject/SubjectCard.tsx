@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react'
 import { Card, CardHeader, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from '@components/ui/separator'
 import { Info } from 'lucide-react'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@radix-ui/react-hover-card'
+
 
 
 
@@ -12,38 +12,29 @@ interface CourseCardProps {
   toggleSubjectSelection : (subject:any) => void;
   subject: any
   selectedSubjects : string[];
+  isSubjectLock:any,
+  setIsSubjectLock:any
 }
-const SubjectCard = ({ subject,toggleSubjectSelection,selectedSubjects }: CourseCardProps) => {
-
-  const [isSelected, setIsSelected] = useState(false)
+const SubjectCard = ({ subject,toggleSubjectSelection,selectedSubjects,isSubjectLock,setIsSubjectLock}: CourseCardProps) => {
+  
+  
   const stopPropagation = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
   }, [])
   
 
-  const getBadgeStyles = (variant: string) => {
-    switch (variant) {
-      case 'blue':
-        return 'bg-blue-500/20 text-blue-200 hover:bg-blue-500/30'
-      case 'red':
-        return 'bg-rose-500/20 text-rose-200 hover:bg-rose-500/30'
-      case 'green':
-        return 'bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/30'
-      default:
-        return 'bg-white/20 text-white hover:bg-white/30'
-    }
-  }
 
 
   return (
     <>
      <Card 
+      key={subject.slug}
       className={`relative cursor-pointer transition-all duration-300 overflow-hidden
         ${selectedSubjects.some((d:any) => d.slug === subject?.slug) 
           ? `bg-zinc-800` 
           : `dark:bg-black`
         } text-white`}
-      onClick={() => toggleSubjectSelection(subject)}
+      onClick={() => {isSubjectLock ? null : toggleSubjectSelection(subject);console.log(isSubjectLock)}}
     >
      {/* {selectedSubjects.includes(subject?.slug) && (
             <div className="absolute top-2 right-2 bg-green-800 text-gray-200 text-xs font-semibold py-1 px-2 rounded-full">

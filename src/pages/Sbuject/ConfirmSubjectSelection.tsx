@@ -1,56 +1,90 @@
 import React from 'react'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { X} from 'lucide-react'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge, Lock, Trash2, X} from 'lucide-react'
+import { ScrollArea } from '@components/ui/scroll-area'
 
-const ConfirmSubjectSelection = ({isPanelOpen,setIsPanelOpen,togglePanel,subjects}:any) => {
+const ConfirmSubjectSelection = ({isPanelOpen,setIsPanelOpen,togglePanel,selectedSubjects,selectedSemester,handleSubjectSelection}:any) => {
     
-     
-
+     const onHandleClick = () =>{
+        const subject_slug = selectedSubjects.map((subject:any)=>{
+          return subject.slug
+        })
+        handleSubjectSelection(selectedSemester,subject_slug)
+     }
       
   return (
-    <div className="relative min-h-screen bg-gray-900 text-gray-100">
     
-
+    
+<>
     {/* Overlay */}
     {isPanelOpen && (
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-20"
+        className="fixed inset-0 bg-black bg-opacity-50 z-20 "
         onClick={togglePanel}
       />
     )}
 
     {/* Sliding Panel */}
     <div
-      className={`fixed top-0 right-0 h-full border rounded-md w-full md:w-[30%] bg-black shadow-lg transform transition-transform duration-300 ease-in-out z-30 ${
+      className={`fixed inset-y-0 right-0 w-full sm:w-96 bg-background/80 backdrop-blur-sm border-l shadow-lg transform transition-transform duration-300 ease-in-out z-30 ${
         isPanelOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-100">Selected Subjects</h2>
-          <Button variant="ghost" size="icon" onClick={togglePanel}>
-            <X className="h-6 w-6" />
-          </Button>
+      <div className="flex flex-col h-full">
+        <div className="p-4 border-b">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold">Selected Subjects</h2>
+            <Button variant="ghost" size="icon" className="text-muted-foreground" onClick={()=>{setIsPanelOpen(!isPanelOpen)}}>
+              <X className="h-6 w-6" />
+              <span className="sr-only">Close panel</span>
+            </Button>
+          </div>
         </div>
-        <div className="space-y-4">
-          {subjects.map((subject:any) => (
-            <Card key={subject.slug} className="bg-gray-700">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-100">
-                  {subject?.subject_name}  ({subject?.subject_code})
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                
-              </CardContent>
-            </Card>
-          ))}
-          <Button>Save</Button>
+        <ScrollArea className="flex-grow p-4">
+          <div className="space-y-4">
+            {selectedSubjects.map((subject:any) => (
+              <Card key={subject.slug} className="group">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg font-semibold leading-none">
+                      {subject.subject_name}
+                    </CardTitle>
+                    {/* <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                      
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      <span className="sr-only">Remove subject</span>
+                    </Button> */}
+                  </div>
+                </CardHeader>
+                <CardContent className="pb-2">
+                  <div className="flex justify-between items-center text-sm text-muted-foreground">
+                    <span>Subject Code - {subject.subject_code}</span>
+                    
+                  </div>
+                </CardContent>
+                <CardFooter className="text-xs text-muted-foreground">
+                  Type: {subject.category}
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </ScrollArea>
+        <div className="p-4 border-t">
+          <Button className="w-full" size="lg" 
+            onClick={()=>{onHandleClick()}}
+          >
+            <Lock className="mr-2 h-4 w-4" />
+            Lock Subjects
+          </Button>
         </div>
       </div>
     </div>
-  </div>
+    </>
   )
 }
 
