@@ -159,16 +159,14 @@ const SubjectSelection = () => {
           )}
         </div>
 
-        {selectedSubjects.length > 0 && (
-          <ConfirmSubjectSelection
-            isPanelOpen={isPanelOpen}
-            setIsPanelOpen={setIsPanelOpen}
-            togglePanel={togglePanel}
-            selectedSubjects={selectedSubjects}
-            handleSubjectSelection={handleSubjectSelection}
-            selectedSemester={selectedSemester}
-          ></ConfirmSubjectSelection>
-        )}
+        <ConfirmSubjectSelection
+          isPanelOpen={isPanelOpen}
+          setIsPanelOpen={setIsPanelOpen}
+          togglePanel={togglePanel}
+          selectedSubjects={selectedSubjects}
+          handleSubjectSelection={handleSubjectSelection}
+          selectedSemester={selectedSemester}
+        ></ConfirmSubjectSelection>
       </div>
     </>
   )

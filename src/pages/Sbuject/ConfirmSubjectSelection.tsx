@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Badge, Lock, Trash2, X } from 'lucide-react'
+import { Grip, GripVertical, Lock, X } from 'lucide-react'
 
 import { ScrollArea } from '@components/ui/scroll-area'
 
@@ -16,14 +16,60 @@ const ConfirmSubjectSelection = ({
   isPanelOpen,
   setIsPanelOpen,
   togglePanel,
-  selectedSubjects,
   selectedSemester,
   handleSubjectSelection,
+  draggable = false,
 }: any) => {
+  // Static data for subjects
+  const [subjects, setSubjects] = useState([
+    {
+      slug: 'math101',
+      subject_name: 'Mathematics I',
+      subject_code: 'MTH101',
+      category: 'Core',
+    },
+    {
+      slug: 'phy101',
+      subject_name: 'Physics I',
+      subject_code: 'PHY101',
+      category: 'Core',
+    },
+    {
+      slug: 'cs101',
+      subject_name: 'Computer Science',
+      subject_code: 'CS101',
+      category: 'Core',
+    },
+    {
+      slug: 'eng101',
+      subject_name: 'English',
+      subject_code: 'ENG101',
+      category: 'Elective',
+    },
+  ])
+
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+
+  // Handle drag start
+  const onDragStart = (index: number) => {
+    setDraggedIndex(index)
+  }
+
+  // Handle drop
+  const onDrop = (index: number) => {
+    if (draggedIndex !== null) {
+      const updatedSubjects = [...subjects]
+      const [movedSubject] = updatedSubjects.splice(draggedIndex, 1)
+      updatedSubjects.splice(index, 0, movedSubject)
+      setSubjects(updatedSubjects)
+      setDraggedIndex(null)
+    }
+  }
+  useEffect(() => {
+    console.log(subjects.map((subject) => subject.subject_name))
+  }, [subjects])
   const onHandleClick = () => {
-    const subject_slug = selectedSubjects.map((subject: any) => {
-      return subject.slug
-    })
+    const subject_slug = subjects.map((subject) => subject.slug)
     handleSubjectSelection(selectedSemester, subject_slug)
   }
 
@@ -62,34 +108,58 @@ const ConfirmSubjectSelection = ({
           </div>
           <ScrollArea className="flex-grow p-4">
             <div className="space-y-4">
-              {selectedSubjects.map((subject: any) => (
-                <Card key={subject.slug} className="group">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between">
-                      <CardTitle className="text-lg font-semibold leading-none">
-                        {subject.subject_name}
-                      </CardTitle>
-                      {/* <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
-                      
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      <span className="sr-only">Remove subject</span>
-                    </Button> */}
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pb-2">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span>Subject Code - {subject.subject_code}</span>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="text-xs text-muted-foreground">
-                    Type: {subject.category}
-                  </CardFooter>
-                </Card>
-              ))}
+              {draggable
+                ? subjects.map((subject, index) => (
+                    <>
+                      <Card
+                        key={subject.slug}
+                        className="group"
+                        draggable
+                        onDragStart={() => onDragStart(index)}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={() => onDrop(index)}
+                      >
+                        <CardHeader className="pb-2">
+                          <div className="flex items-start justify-between">
+                            {/* Grip Icon for Draggable Indicator */}
+                            <div className="flex items-center space-x-2">
+                              <GripVertical className="cursor-grab text-muted-foreground" />
+                              <CardTitle className="text-lg font-semibold leading-none">
+                                {subject.subject_name}
+                              </CardTitle>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="pb-2">
+                          <div className="flex items-center justify-between text-sm text-muted-foreground">
+                            <span>Subject Code - {subject.subject_code}</span>
+                          </div>
+                        </CardContent>
+                        <CardFooter className="text-xs text-muted-foreground">
+                          Type: {subject.category}
+                        </CardFooter>
+                      </Card>
+                    </>
+                  ))
+                : subjects.map((subject) => (
+                    <Card key={subject.slug} className="group">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between">
+                          <CardTitle className="text-lg font-semibold leading-none">
+                            {subject.subject_name}
+                          </CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pb-2">
+                        <div className="flex items-center justify-between text-sm text-muted-foreground">
+                          <span>Subject Code - {subject.subject_code}</span>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="text-xs text-muted-foreground">
+                        Type: {subject.category}
+                      </CardFooter>
+                    </Card>
+                  ))}
             </div>
           </ScrollArea>
           <div className="border-t p-4">

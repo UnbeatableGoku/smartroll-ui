@@ -12,7 +12,7 @@ const useSubjectChoice = () => {
   const [selectedSubjects, setSelectedSubjects] = useState<Array<any>>([])
 
   const [subjects, setSubject] = useState<Array<{}>>([])
-  const { semester, loadSemesterByStream, academicYears } = useSemester()
+  //   const { semester, loadSemesterByStream, academicYears } = useSemester()
 
   const [StoredTokens, CallAPI] = useAPI()
 
@@ -55,10 +55,7 @@ const useSubjectChoice = () => {
 
   return {
     selectedSubjects,
-    semester,
-    academicYears,
     subjects,
-    loadSemesterByStream,
     setSelectedSubjects,
     toggleSubjectSelection,
     loadSubjects,
