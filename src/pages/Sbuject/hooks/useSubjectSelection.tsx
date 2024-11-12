@@ -20,7 +20,11 @@ const useSubjectSelection = () => {
   // function that  is invoked when the user selects the stream 
   const handleOnValueChangeStreams = (value: string) => {
     setSelectedStream(value)
-    setSelectedDivision('')
+    setSelectedSemester("")
+    setSelectedYear("")
+    setSelectedSubjects([])
+    setIsSubjectLock(false)
+    setSubject(null)
     loadSemesterByStream(value)
   }                     
 
