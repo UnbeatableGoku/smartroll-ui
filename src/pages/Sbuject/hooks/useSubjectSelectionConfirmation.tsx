@@ -151,7 +151,10 @@ const useSubjectSelectionConfirmation = () => {
     handleValueChangeOfSubjectForStudent,
     handleValueChangeOfSubjectForTeacher,
     handleValueChangeOfCategory,
-    handleValueChangeOfSemesterForStudent
+    handleValueChangeOfSemesterForStudent,
+    setTeachers,
+    setStudents,
+    setSelectedSubjectCategory
   }
 }
 

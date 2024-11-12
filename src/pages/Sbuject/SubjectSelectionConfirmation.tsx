@@ -41,7 +41,7 @@ type PersonType = 'teacher' | 'student'
 
 const SubjectSelectionConfirmation = () => {
   const { stream, handleStream } = useStream()
-  const { selectedStream, handleValueChangeOfStream, selectedSemester, handleValueChangeOfSemesterForTeacher, semesters, selectedSubject, subjects,handleValueChangeOfSubjectForStudent,handleValueChangeOfSubjectForTeacher,teachers,setSelectedSemester,setSelectedSubject,setSubjects,complementrySbujects,selectedSubjectCategory,handleValueChangeOfCategory,handleValueChangeOfSemesterForStudent,students} = useSubjectSelectionConfirmation()
+  const { selectedStream, handleValueChangeOfStream, selectedSemester, handleValueChangeOfSemesterForTeacher, semesters, selectedSubject, subjects,handleValueChangeOfSubjectForStudent,handleValueChangeOfSubjectForTeacher,teachers,setSelectedSemester,setSelectedSubject,setSubjects,complementrySbujects,selectedSubjectCategory,handleValueChangeOfCategory,handleValueChangeOfSemesterForStudent,students,setTeachers,setStudents,setSelectedSubjectCategory} = useSubjectSelectionConfirmation()
 
   useEffect(() => {
 
@@ -172,7 +172,7 @@ const SubjectSelectionConfirmation = () => {
     <div className="flex w-full flex-col space-y-4">
 
       <div className="container mx-auto p-4">
-        <Tabs value={activeTab} onValueChange={(value) => {setActiveTab(value as PersonType);setSelectedSemester("");setSelectedSubject("");setSubjects([])}}>
+        <Tabs value={activeTab} onValueChange={(value) => {setActiveTab(value as PersonType);setSelectedSemester("");setSelectedSubject("");setSubjects([]);setTeachers([]);setStudents([]);setSelectedSubjectCategory("")}}>
           <TabsList className="grid w-full grid-cols-2" >
             <TabsTrigger value="teacher">Teachers</TabsTrigger>
             <TabsTrigger value="student">Students</TabsTrigger>
@@ -244,7 +244,7 @@ const SubjectSelectionConfirmation = () => {
               <Selection
                 title="Subject"
                 selectedValue={selectedSubject}
-                selectedValue2={selectedSubjectCategory}
+                selectedValue2={activeTab === 'student' ? selectedSubjectCategory : selectedSemester}
                 onValueChange={activeTab === 'teacher' ? handleValueChangeOfSubjectForTeacher : handleValueChangeOfSubjectForStudent}
                 placeholder="Select Subject"
                 data={subjects}
