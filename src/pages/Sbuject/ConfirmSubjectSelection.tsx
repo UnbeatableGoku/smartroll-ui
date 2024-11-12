@@ -17,6 +17,7 @@ const ConfirmSubjectSelection = ({
   setIsPanelOpen,
   togglePanel,
   selectedSemester,
+  selectedSubjects,
   handleSubjectSelection,
   draggable = false,
 }: any) => {
@@ -141,7 +142,7 @@ const ConfirmSubjectSelection = ({
                       </Card>
                     </>
                   ))
-                : subjects.map((subject) => (
+                : selectedSubjects?.subject_details?.map((subject: any) => (
                     <Card key={subject.slug} className="group">
                       <CardHeader className="pb-2">
                         <div className="flex items-start justify-between">

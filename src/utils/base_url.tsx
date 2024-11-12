@@ -1,2 +1,2 @@
 export const base_url =
-  'https://50f3-2409-40c1-12-3a15-2a8b-68ba-14a7-82ef.ngrok-free.app'
+  'https://60eb-2405-201-2024-b91e-4f5d-ed88-8bc4-4101.ngrok-free.app'

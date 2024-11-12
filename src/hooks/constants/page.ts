@@ -23,6 +23,11 @@ export const PAGE_SUBJECT_SELECT: Page = {
   path: '/subject-select',
   name: 'subject',
 }
+export const PAGE_ELECTIVE_SUBJECT: Page = {
+  id: 'ELECTIVE-SUBJECT',
+  path: '/student-dashboard/elective-subject',
+  name: 'Elective Subject',
+}
 export const PAGE_SUBJECT_CHOICE: Page = {
   id: 'SUBJECT-CHOICE',
   path: '/subject-choice',

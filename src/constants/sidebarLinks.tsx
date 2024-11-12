@@ -49,6 +49,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     path: '/subject-select',
   },
   {
+    id: 'ELECTIVE-SUBJECT',
+    name: 'Elective Subject',
+    icon: (
+      <LibraryBig
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/student-dashboard/elective-subject',
+  },
+  {
     id: 'SUBJECT-CHOICE',
     name: 'Subject-Choice',
     icon: (
