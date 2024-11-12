@@ -7,6 +7,7 @@ import Dashboard from '@pages/Dashboard'
 import NotFound from '@pages/NotFound'
 import SubjectSelection from '@pages/Sbuject/SubjectSelection'
 import StudentDashboard from '@pages/StudentDashboard'
+import ElectiveSubject from '@pages/StudentDashboard/pages/ElectiveSubject'
 import SubjectChoice from '@pages/TeacherDashboard/pages/Subject-Choice/SubjectChoice'
 import TeacherDashboard from '@pages/TeacherDashboard'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
@@ -16,6 +17,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import {
   PAGE_DASHBOARD,
+  PAGE_ELECTIVE_SUBJECT,
   PAGE_LOGIN,
   PAGE_STUDENT_DASHBOARD,
   PAGE_SUBJECT_CHOICE,
@@ -167,6 +169,22 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: PAGE_ELECTIVE_SUBJECT.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="student">
+                <ElectiveSubject />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      
     ],
   },
   { path: '*', element: <NotFound /> },

@@ -20,9 +20,9 @@ const ConfirmSubjectSelection = ({
   setIsPanelOpen,
   togglePanel,
   selectedSemester,
+  selectedSubjects,
   handleSubjectSelection,
   draggable = false,
-  selectedSubjects,
   onDrop,
   setDraggedIndex,
   save_teacher_subject_choice
