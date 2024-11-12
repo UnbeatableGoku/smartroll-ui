@@ -18,14 +18,11 @@ const SubjectSelection = () => {
     handleOnValueChangeAcademicYear,
     handleOnValueChangeSemenster,
     handleOnValueChangeStreams,
-    loadSemesterByStream,
     selectedSubjects,
-    selectedDivision,
     selectedSemester,
     selectedStream,
     selectedYear,
     semesters,
-    setSelectedSubjects,
     subjects,
     toggleSubjectSelection,
     handleSubjectSelection,
@@ -106,13 +103,16 @@ const SubjectSelection = () => {
               />
             </div>
           </div>
-          <Button onClick={togglePanel} className="z-10 mt-3 w-full lg:w-auto">
+          <div className={`${isSubjectLock ? 'hidden' : 'block'}`}>
+            <Button onClick={togglePanel} className={`z-10 mt-3 w-full lg:w-auto`}>
             <BookOpen className="mr-2 h-4 w-4" />
             Lock Subjects
             <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
               {selectedSubjects.length}
             </span>
           </Button>
+          </div>
+          
         </div>
 
         <div className="p-4">
@@ -140,6 +140,8 @@ const SubjectSelection = () => {
                     selectedSubjects={selectedSubjects}
                     isSubjectLock={isSubjectLock}
                     setIsSubjectLock={setIsSubjectLock}
+                    draggable = {false}
+                    index = {index}
                   />
                 ))
               ) : (

@@ -22,7 +22,7 @@ const useSubjectSelection = () => {
     setSelectedStream(value)
     setSelectedDivision('')
     loadSemesterByStream(value)
-  }
+  }                     
 
   // fuction that is invoked when the user selet the semester
   const handleOnValueChangeSemenster = (value: string) => {
@@ -99,7 +99,7 @@ const useSubjectSelection = () => {
   };
 
   // function: to save the selected subjects
-  const handleSubjectSelection = async (semester_slug: any, subject_slugs: any): Promise<void> => {
+  const handleSubjectSelection = async (semester_slug: any, subject_slugs: any,time_stamp:string): Promise<void> => {
     try {
       console.log(semester_slug,subject_slugs);
       const axiosInstance = axios.create()
@@ -107,7 +107,8 @@ const useSubjectSelection = () => {
       const endpoint = `/manage/add_subjects_to_semester/`
       const body = {
         semester_slug : semester_slug,
-        subject_slugs : subject_slugs
+        subject_slugs : subject_slugs,
+        deadline_timestamp : parseInt(time_stamp) / 1000,
       }
       const header = {
         'ngrok-skip-browser-warning': true,
@@ -129,6 +130,7 @@ const useSubjectSelection = () => {
     }
   }
 
+  
 
   return {
     selectedSubjects,

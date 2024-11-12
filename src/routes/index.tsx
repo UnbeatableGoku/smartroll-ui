@@ -7,7 +7,7 @@ import Dashboard from '@pages/Dashboard'
 import NotFound from '@pages/NotFound'
 import SubjectSelection from '@pages/Sbuject/SubjectSelection'
 import StudentDashboard from '@pages/StudentDashboard'
-import SubjectChoice from '@pages/Subject-Choice/SubjectChoice'
+import SubjectChoice from '@pages/TeacherDashboard/pages/Subject-Choice/SubjectChoice'
 import TeacherDashboard from '@pages/TeacherDashboard'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
@@ -22,11 +22,13 @@ import {
   PAGE_SUBJECT_SELECT,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
+  PAGE_SUBJECT_SELECTION_CONFIRMATION
 } from '@constants'
 
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
 import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
+import SubjectSelectionConfirmation from '@pages/Sbuject/SubjectSelectionConfirmation'
 
 const router = createBrowserRouter([
   {
@@ -52,9 +54,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              // <ProtectedRoute roleRequired="admin">
+              <ProtectedRoute roleRequired="admin">
               <Dashboard />
-              // </ProtectedRoute>
+              </ProtectedRoute>
             ),
           },
           {
@@ -76,9 +78,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              // <ProtectedRoute roleRequired="admin">
+              <ProtectedRoute roleRequired="admin">
               <UploadTimeTable />
-              // </ProtectedRoute>
+               </ProtectedRoute>
             ),
           },
         ],
@@ -92,9 +94,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              //  <ProtectedRoute roleRequired="teacher">
+                <ProtectedRoute roleRequired="teacher">
               <TeacherDashboard />
-              //  </ProtectedRoute>
+               </ProtectedRoute>
             ),
           },
         ],
@@ -108,15 +110,15 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              // <ProtectedRoute roleRequired="student">
+              <ProtectedRoute roleRequired="student">
               <StudentDashboard />
-              // </ProtectedRoute>
+               </ProtectedRoute>
             ),
           },
         ],
       },
 
-      // subject selection route
+      // subject selection route (admin side)
       {
         path: PAGE_SUBJECT_SELECT.path,
 
@@ -125,13 +127,14 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              // <ProtectedRoute roleRequired="student">
+             <ProtectedRoute roleRequired="admin">
               <SubjectSelection />
-              // </ProtectedRoute>
+               </ProtectedRoute>
             ),
           },
         ],
       },
+      // subject selection choice (teacher side)
       {
         path: PAGE_SUBJECT_CHOICE.path,
 
@@ -140,9 +143,26 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-              // <ProtectedRoute roleRequired="student">
+               <ProtectedRoute roleRequired="teacher">
               <SubjectChoice />
-              // </ProtectedRoute>
+               </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+
+      //SUBJECT SELECTION CONFIRMATION
+      {
+        path: PAGE_SUBJECT_SELECTION_CONFIRMATION.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+               <ProtectedRoute roleRequired="admin">
+              <SubjectSelectionConfirmation />
+               </ProtectedRoute>
             ),
           },
         ],

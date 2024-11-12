@@ -15,6 +15,8 @@ interface CourseCardProps {
   selectedSubjects: string[]
   isSubjectLock: any
   setIsSubjectLock: any
+  draggable : boolean
+  index : number
 }
 const SubjectCard = ({
   subject,
@@ -22,6 +24,8 @@ const SubjectCard = ({
   selectedSubjects,
   isSubjectLock,
   setIsSubjectLock,
+  draggable = false,
+  index
 }: CourseCardProps) => {
   const stopPropagation = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
@@ -33,7 +37,7 @@ const SubjectCard = ({
         key={subject.slug}
         className={`relative cursor-pointer overflow-hidden transition-all duration-300 ${
           selectedSubjects.some((d: any) => d.slug === subject?.slug)
-            ? `bg-zinc-800`
+            ?  isSubjectLock ? `dark:bg-black` : `bg-zinc-800`
             : `dark:bg-black`
         } text-white`}
         onClick={() => {
@@ -41,12 +45,13 @@ const SubjectCard = ({
           console.log(isSubjectLock)
         }}
       >
-        {/* {selectedSubjects.includes(subject?.slug) && (
-            <div className="absolute top-2 right-2 bg-green-800 text-gray-200 text-xs font-semibold py-1 px-2 rounded-full">
-              Selected
+        {draggable == true && isSubjectLock == true && selectedSubjects.some((selectedsubject:any) => selectedsubject.slug === subject.slug) && (
+            <div className="absolute top-2 right-2 bg-[#ffa31a] text-black text-xs font-semibold py-1 px-2 rounded-full">
+              Priority - {index + 1}
             </div>
-          )} */}
-        <CardHeader className="flex flex-row items-center justify-between pb-3">
+          )}
+          
+        <CardHeader className="flex flex-row items-center justify-between pb-3 mt-3">
           <h2 className="text-xl font-bold tracking-tight">
             {subject?.subject_name}{' '}
           </h2>
@@ -58,7 +63,7 @@ const SubjectCard = ({
 
               <p className="text-xl font-semibold">
                 {subject?.is_theory
-                  ? 'theory'
+                  ? 'Theory'
                   : subject?.is_practical
                     ? 'Practical'
                     : 'Semi-Practical'}

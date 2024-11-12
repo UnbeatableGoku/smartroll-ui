@@ -32,7 +32,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   },
   {
     id: 'STUDENT-DASHBOARD',
-    name: 'Teacher Dashboard',
+    name: 'Student Dashboard',
     icon: <DashboardIcon />,
     path: '/student-dashboard',
   },
@@ -58,7 +58,19 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
         absoluteStrokeWidth={false}
       />
     ),
-    path: '/subject-choice',
+    path: '/teacher-dashboard/subject-choice',
+  },
+  {
+    id: 'SUBJECT_SELECTION_CONFIRMATION',
+    name: 'Subject Selection Confirmation',
+    icon: (
+      <LibraryBig
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/subject/subject-selection-confirmation',
   },
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]

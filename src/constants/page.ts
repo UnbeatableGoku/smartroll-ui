@@ -25,7 +25,7 @@ export const PAGE_SUBJECT_SELECT: Page = {
 }
 export const PAGE_SUBJECT_CHOICE: Page = {
   id: 'SUBJECT-CHOICE',
-  path: '/subject-choice',
+  path: '/teacher-dashboard/subject-choice',
   name: 'subject-choice',
 }
 
@@ -45,6 +45,12 @@ export const PAGE_NOT_FOUND: Page = {
   id: 'NOT_FOUND',
   path: '/not-found',
   name: 'Page Not Found',
+}
+
+export const PAGE_SUBJECT_SELECTION_CONFIRMATION  : Page = {
+  id: 'SUBJECT_SELECTION_CONFIRMATION',
+  path: '/subject/subject-selection-confirmation',
+  name: 'Subject Selection Confirmation',
 }
 
 /**
