@@ -24,7 +24,7 @@ export const PAGE_SUBJECT_SELECT: Page = {
   name: 'subject',
 }
 export const PAGE_ELECTIVE_SUBJECT: Page = {
-  id: 'ELECTIVE-SUBJECT',
+  id: 'ELECTIVE_SUBJECT',
   path: '/student-dashboard/elective-subject',
   name: 'Elective Subject',
 }

@@ -1,4 +1,4 @@
-import React, { useCallback} from 'react'
+import React, { useCallback } from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -15,8 +15,8 @@ interface CourseCardProps {
   selectedSubjects: string[]
   isSubjectLock: any
   setIsSubjectLock: any
-  draggable : boolean
-  index : number
+  draggable: boolean
+  index: number
 }
 const SubjectCard = ({
   subject,
@@ -24,7 +24,7 @@ const SubjectCard = ({
   selectedSubjects,
   isSubjectLock,
   draggable = false,
-  index
+  index,
 }: CourseCardProps) => {
   const stopPropagation = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
@@ -36,7 +36,9 @@ const SubjectCard = ({
         key={subject.slug}
         className={`relative cursor-pointer overflow-hidden transition-all duration-300 ${
           selectedSubjects.some((d: any) => d.slug === subject?.slug)
-            ?  isSubjectLock ? `dark:bg-black` : `bg-zinc-800`
+            ? isSubjectLock
+              ? `dark:bg-black`
+              : `bg-zinc-800`
             : `dark:bg-black`
         } text-white`}
         onClick={() => {
@@ -44,13 +46,17 @@ const SubjectCard = ({
           console.log(isSubjectLock)
         }}
       >
-        {draggable == true && isSubjectLock == true && selectedSubjects.some((selectedsubject:any) => selectedsubject.slug === subject.slug) && (
-            <div className="absolute top-2 right-2 bg-[#ffa31a] text-black text-xs font-semibold py-1 px-2 rounded-full">
+        {draggable == true &&
+          isSubjectLock == true &&
+          selectedSubjects.some(
+            (selectedsubject: any) => selectedsubject.slug === subject.slug,
+          ) && (
+            <div className="absolute right-2 top-2 rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black">
               Priority - {index + 1}
             </div>
           )}
-          
-        <CardHeader className="flex flex-row items-center justify-between pb-3 mt-3">
+
+        <CardHeader className="mt-3 flex flex-row items-center justify-between pb-3">
           <h2 className="text-xl font-bold tracking-tight">
             {subject?.subject_name}{' '}
           </h2>
@@ -159,14 +165,18 @@ const SubjectCard = ({
                       Course Information
                     </h4>
                     <p className="text-sm">
-                      Theory Exam Duration : 2.5
+                      Theory Exam Duration : {subject?.theory_exam_duration}h
                     </p>
                     <p className="text-sm">
-                      Practical Exam Duration : 0
+                      Practical Exam Duration :{' '}
+                      {subject.practical_exam_duration}
                     </p>
                     <div className="flex items-center pt-2">
                       <span className="text-xs text-muted-foreground">
-                       for more info. -  <a href="https://syllabus.gtu.ac.in/" target='_blank'>GTU Syllabus</a>
+                        For more Info. -{' '}
+                        <a href="https://syllabus.gtu.ac.in/" target="_blank">
+                          GTU Syllabus
+                        </a>
                       </span>
                     </div>
                   </div>

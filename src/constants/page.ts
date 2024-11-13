@@ -53,7 +53,7 @@ export const PAGE_NOT_FOUND: Page = {
   name: 'Page Not Found',
 }
 
-export const PAGE_SUBJECT_SELECTION_CONFIRMATION  : Page = {
+export const PAGE_SUBJECT_SELECTION_CONFIRMATION: Page = {
   id: 'SUBJECT_SELECTION_CONFIRMATION',
   path: '/subject/subject-selection-confirmation',
   name: 'Subject Selection Confirmation',

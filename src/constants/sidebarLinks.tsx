@@ -1,5 +1,11 @@
 import { DashboardIcon, UserIcon } from '@icons'
-import { FileSpreadsheet,   BadgePlus,Eye,SquareCheck } from 'lucide-react'
+import {
+  BadgePlus,
+  BookCheck,
+  Eye,
+  FileSpreadsheet,
+  SquareCheck,
+} from 'lucide-react'
 
 import { SidebarLink } from 'types/common'
 
@@ -61,11 +67,11 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     path: '/subject/subject-selection-confirmation',
   },
   {
-    id: 'ELECTIVE-SUBJECT',
+    id: 'ELECTIVE_SUBJECT',
     name: 'Elective Subject',
     icon: (
-      <SquareCheck
-        className="h-24 w-24 dark:text-[#8a8686]"
+      <BookCheck
+        className="h-26 w-26 dark:text-[#8a8686]"
         strokeWidth={3}
         absoluteStrokeWidth={false}
       />
@@ -84,6 +90,6 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     ),
     path: '/teacher-dashboard/subject-choice',
   },
-  
+
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]

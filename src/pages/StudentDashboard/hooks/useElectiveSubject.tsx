@@ -6,6 +6,8 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
+import useSubjectSelection from './useSubjectSelection'
+
 const useElectiveSubject = () => {
   const [electiveSubject, setElectiveSubject] = useState<Array<any>>([])
   const [subjectSlug, setSubjectSlug] = useState<string>('')
@@ -13,6 +15,8 @@ const useElectiveSubject = () => {
   const [isLocked, setIsLocked] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [StoredTokens, CallAPI] = useAPI()
+  const [totalCategories, setTotalCategories] = useState<string[]>([])
+  const { selectedSubjects } = useSubjectSelection()
 
   const handleGetElectiveSubject = useCallback(async () => {
     setIsLoading(true)
@@ -35,12 +39,25 @@ const useElectiveSubject = () => {
 
       if (response_obj?.error === false) {
         const data = get(response_obj, 'response.data.data', [])
+
         // Set subject slug
         setSubjectSlug(data.slug)
 
         // Set elective subjects
         const electiveSubjectData = get(data, 'available_choices', [])
+        const availableCategories = [
+          ...new Set(
+            electiveSubjectData
+              .flatMap((choice: any) =>
+                choice.subjects.map((subject: any) => subject.category),
+              )
+              .filter((category: any): category is string => category != null), // Ensure non-null values
+          ),
+        ]
+        setTotalCategories(availableCategories as string[])
+
         setElectiveSubject(electiveSubjectData)
+        console.log(totalCategories)
 
         // Set finalized choices
         if (data?.choices_locked) {
@@ -52,11 +69,23 @@ const useElectiveSubject = () => {
           setIsLocked(false)
         }
       } else {
-        toast.error(response_obj.errorMessage?.message)
+        toast.error(
+          !response_obj
+            ? 'Something went wrong. Please try again later'
+            : response_obj?.errorMessage?.message,
+        )
       }
-    } catch (e) {
+    } catch (error: any) {
       setIsLocked(false)
-      toast.error('Something went wrong' + e)
+      if (!error.response) {
+        toast.error(
+          'Server is unreachable. Please check your connection or try again later.',
+        )
+      } else {
+        const errorMessage =
+          error.response?.data?.errorMessage?.message || 'An error occurred'
+        toast.error(errorMessage)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -66,6 +95,12 @@ const useElectiveSubject = () => {
     async (selectedChoices: string[], selectedChoicesSlug: string) => {
       setIsLoading(true)
       try {
+        if (selectedChoices.length !== totalCategories.length) {
+          toast.error('Please select one subject from each category')
+          return
+        }
+
+        // If validation passes, proceed with API call
         const axiosInstance = axios.create()
         const method = 'post'
         const endpoint = `/manage/mark_subject_choices/`
@@ -103,12 +138,13 @@ const useElectiveSubject = () => {
           )
         }
       } catch (error) {
+        console.error('Error in handleStudentChoice:', error)
         toast.error('Something went wrong')
       } finally {
         setIsLoading(false)
       }
     },
-    [CallAPI, StoredTokens],
+    [CallAPI, StoredTokens, selectedSubjects],
   )
 
   return {
@@ -119,6 +155,7 @@ const useElectiveSubject = () => {
     isLocked,
     finalizedChoice,
     isLoading,
+    totalCategories,
   }
 }
 

@@ -1,5 +1,5 @@
 import { DashboardIcon, UserIcon } from '@icons'
-import { FileSpreadsheet, LibraryBig} from 'lucide-react'
+import { BookCheck, LibraryBig } from 'lucide-react'
 
 import { SidebarLink } from 'types/common'
 
@@ -12,18 +12,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     icon: <DashboardIcon />,
     path: '/',
   },
-  {
-    id: 'TIMETABLE',
-    name: 'Time-Table',
-    icon: (
-      <FileSpreadsheet
-        className="h-24 w-24 dark:text-[#8a8686]"
-        strokeWidth={3}
-        absoluteStrokeWidth={false}
-      />
-    ),
-    path: '/timetable',
-  },
+  // {
+  //   id: 'TIMETABLE',
+  //   name: 'Time-Table',
+  //   icon: (
+  //     <FileSpreadsheet
+  //       className="h-24 w-24 dark:text-[#8a8686]"
+  //       strokeWidth={3}
+  //       absoluteStrokeWidth={false}
+  //     />
+  //   ),
+  //   path: '/timetable',
+  // },
   {
     id: 'TEACHER-DASHBOARD',
     name: 'Teacher Dashboard',
@@ -49,16 +49,16 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     path: '/subject-select',
   },
   {
-    id: 'ELECTIVE-SUBJECT',
+    id: 'ELECTIVE_SUBJECT',
     name: 'Elective Subject',
     icon: (
-      <LibraryBig
+      <BookCheck
         className="h-24 w-24 dark:text-[#8a8686]"
         strokeWidth={3}
         absoluteStrokeWidth={false}
       />
     ),
-    path: '/elective-subject',
+    path: '/student-dashboard/elective-subject',
   },
   {
     id: 'SUBJECT-CHOICE',

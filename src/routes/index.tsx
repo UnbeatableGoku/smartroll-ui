@@ -6,10 +6,11 @@ import MainLayout from '@layout/mainLayout'
 import Dashboard from '@pages/Dashboard'
 import NotFound from '@pages/NotFound'
 import SubjectSelection from '@pages/Sbuject/SubjectSelection'
+import SubjectSelectionConfirmation from '@pages/Sbuject/SubjectSelectionConfirmation'
 import StudentDashboard from '@pages/StudentDashboard'
 import ElectiveSubject from '@pages/StudentDashboard/pages/ElectiveSubject'
-import SubjectChoice from '@pages/TeacherDashboard/pages/Subject-Choice/SubjectChoice'
 import TeacherDashboard from '@pages/TeacherDashboard'
+import SubjectChoice from '@pages/TeacherDashboard/pages/Subject-Choice/SubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
 import Login from '@pages/login/Login'
@@ -22,15 +23,14 @@ import {
   PAGE_STUDENT_DASHBOARD,
   PAGE_SUBJECT_CHOICE,
   PAGE_SUBJECT_SELECT,
+  PAGE_SUBJECT_SELECTION_CONFIRMATION,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
-  PAGE_SUBJECT_SELECTION_CONFIRMATION
 } from '@constants'
 
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
 import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
-import SubjectSelectionConfirmation from '@pages/Sbuject/SubjectSelectionConfirmation'
 
 const router = createBrowserRouter([
   {
@@ -57,7 +57,7 @@ const router = createBrowserRouter([
             index: true,
             element: (
               <ProtectedRoute roleRequired="admin">
-              <Dashboard />
+                <Dashboard />
               </ProtectedRoute>
             ),
           },
@@ -81,8 +81,8 @@ const router = createBrowserRouter([
             index: true,
             element: (
               <ProtectedRoute roleRequired="admin">
-              <UploadTimeTable />
-               </ProtectedRoute>
+                <UploadTimeTable />
+              </ProtectedRoute>
             ),
           },
         ],
@@ -96,9 +96,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-                <ProtectedRoute roleRequired="teacher">
-              <TeacherDashboard />
-               </ProtectedRoute>
+              <ProtectedRoute roleRequired="teacher">
+                <TeacherDashboard />
+              </ProtectedRoute>
             ),
           },
         ],
@@ -113,8 +113,8 @@ const router = createBrowserRouter([
             index: true,
             element: (
               <ProtectedRoute roleRequired="student">
-              <StudentDashboard />
-               </ProtectedRoute>
+                <StudentDashboard />
+              </ProtectedRoute>
             ),
           },
         ],
@@ -129,9 +129,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-             <ProtectedRoute roleRequired="admin">
-              <SubjectSelection />
-               </ProtectedRoute>
+              <ProtectedRoute roleRequired="admin">
+                <SubjectSelection />
+              </ProtectedRoute>
             ),
           },
         ],
@@ -145,9 +145,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-               <ProtectedRoute roleRequired="teacher">
-              <SubjectChoice />
-               </ProtectedRoute>
+              <ProtectedRoute roleRequired="teacher">
+                <SubjectChoice />
+              </ProtectedRoute>
             ),
           },
         ],
@@ -162,13 +162,15 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-               <ProtectedRoute roleRequired="admin">
-              <SubjectSelectionConfirmation />
-                </ProtectedRoute>
+              <ProtectedRoute roleRequired="admin">
+                <SubjectSelectionConfirmation />
+              </ProtectedRoute>
             ),
           },
         ],
       },
+
+      //Elective subject student side
       {
         path: PAGE_ELECTIVE_SUBJECT.path,
 
@@ -184,7 +186,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-      
     ],
   },
   { path: '*', element: <NotFound /> },

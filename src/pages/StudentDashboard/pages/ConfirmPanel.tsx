@@ -1,5 +1,3 @@
-
-
 import useElectiveSubject from '../hooks/useElectiveSubject'
 import { Lock, X } from 'lucide-react'
 
@@ -23,8 +21,10 @@ const ConfirmPanel = ({
   subjectSlug,
 }: any) => {
   const { isLoading } = useElectiveSubject()
+  // const { categorySelectionStatus } = useSubjectSelection()
   const onHandleClick = () => {
     const selectedChoices = selectedSubjects.subject_choices
+
     handleSubjectSelection(selectedChoices, subjectSlug)
     setIsPanelOpen(false)
   }
