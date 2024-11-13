@@ -8,6 +8,7 @@ import useAPI from '@hooks/useApi'
 
 import { SelectionResponse } from 'types/common'
 
+
 interface Branch {
   branch_name: string
   slug: string
@@ -48,9 +49,10 @@ const useStream = () => {
         const stream_lst:Array<SelectionResponse> = data.map((stream:Stream)=> {
           return ({slug : stream.slug, name : `${stream.title} - ${stream.stream_code} ${stream.branch.branch_name} `})
         })
-
+        
         
         setStream(stream_lst)
+        toast.info("please select the stream")
       } else {
         toast.error('Server Down. Please Contact The Administrator')
       }

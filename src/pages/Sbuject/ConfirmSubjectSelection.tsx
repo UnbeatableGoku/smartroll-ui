@@ -25,7 +25,8 @@ const ConfirmSubjectSelection = ({
   draggable = false,
   onDrop,
   setDraggedIndex,
-  save_teacher_subject_choice
+  save_teacher_subject_choice,
+  isSubjectLock
 }: any) => {
   const [date, setDate] = useState<Date>()
   const [open, setOpen] = useState(false)
@@ -181,7 +182,7 @@ const ConfirmSubjectSelection = ({
     </div>}
           <div className=" p-4">
             <Button
-              className="w-full"
+              className={`w-full ${isSubjectLock} ? 'disabled' : 'enabled'`}
               size="lg"
               onClick={() => {
                 onHandleClick()

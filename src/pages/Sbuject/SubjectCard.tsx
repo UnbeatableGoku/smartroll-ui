@@ -160,14 +160,14 @@ const SubjectCard = ({
                       Course Information
                     </h4>
                     <p className="text-sm">
-                      This course is a Professional Elective. It covers advanced
-                      topics in the field and contributes to your
-                      specialization.
+                      Theory Exam Duration : 2.5
+                    </p>
+                    <p className="text-sm">
+                      Practical Exam Duration : 0
                     </p>
                     <div className="flex items-center pt-2">
                       <span className="text-xs text-muted-foreground">
-                        Hover for more details about the course structure and
-                        evaluation.
+                       for more info. -  <a href="https://syllabus.gtu.ac.in/" target='_blank'>GTU Syllabus</a>
                       </span>
                     </div>
                   </div>

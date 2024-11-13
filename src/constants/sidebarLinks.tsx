@@ -1,5 +1,5 @@
 import { DashboardIcon, UserIcon } from '@icons'
-import { FileSpreadsheet, LibraryBig, Upload } from 'lucide-react'
+import { FileSpreadsheet, LibraryBig, Upload , BadgePlus,Eye,SquareCheck } from 'lucide-react'
 
 import { SidebarLink } from 'types/common'
 
@@ -40,19 +40,31 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     id: 'SUBJECT-SELECT',
     name: 'Subject',
     icon: (
-      <LibraryBig
+      <BadgePlus
         className="h-24 w-24 dark:text-[#8a8686]"
         strokeWidth={3}
         absoluteStrokeWidth={false}
       />
     ),
-    path: '/subject-select',
+    path: '/subject/subject-select',
+  },
+  {
+    id: 'SUBJECT_SELECTION_CONFIRMATION',
+    name: 'Subject Selection Confirmation',
+    icon: (
+      <Eye
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/subject/subject-selection-confirmation',
   },
   {
     id: 'ELECTIVE-SUBJECT',
     name: 'Elective Subject',
     icon: (
-      <LibraryBig
+      <SquareCheck
         className="h-24 w-24 dark:text-[#8a8686]"
         strokeWidth={3}
         absoluteStrokeWidth={false}
@@ -64,7 +76,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     id: 'SUBJECT-CHOICE',
     name: 'Subject-Choice',
     icon: (
-      <LibraryBig
+      <SquareCheck
         className="h-24 w-24 dark:text-[#8a8686]"
         strokeWidth={3}
         absoluteStrokeWidth={false}
@@ -72,17 +84,6 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     ),
     path: '/teacher-dashboard/subject-choice',
   },
-  {
-    id: 'SUBJECT_SELECTION_CONFIRMATION',
-    name: 'Subject Selection Confirmation',
-    icon: (
-      <LibraryBig
-        className="h-24 w-24 dark:text-[#8a8686]"
-        strokeWidth={3}
-        absoluteStrokeWidth={false}
-      />
-    ),
-    path: '/subject/subject-selection-confirmation',
-  },
+  
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]

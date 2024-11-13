@@ -20,7 +20,7 @@ export const PAGE_TEACHER_DASHBOARD: Page = {
 
 export const PAGE_SUBJECT_SELECT: Page = {
   id: 'SUBJECT-SELECT',
-  path: '/subject-select',
+  path: '/subject/subject-select',
   name: 'subject',
 }
 

@@ -46,7 +46,7 @@ const ElectiveSubject = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="min-h-screen bg-gradient-to-b px-4 py-12">
+        <div className="bg-gradient-to-b px-4 py-12">
           <div className="mx-auto max-w-7xl">
             <div className="mb-16 text-center">
               <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">

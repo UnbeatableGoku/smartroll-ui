@@ -36,6 +36,7 @@ const useSubjectSelection = () => {
     setIsSubjectLock(false)
     setSubject(null)
     loadSemesterByStream(value)
+    toast.info("please select the semester")
   }                     
 
   // fuction that is invoked when the user selet the semester
@@ -68,12 +69,14 @@ const useSubjectSelection = () => {
       setSubject(null) // clear subjects
     }
     setSelectedYear('') // clear selected years
+    toast.info("please select the year")
   }
 
   // function that is invoked when the user selects the year
   const handleOnValueChangeAcademicYear = (value: string) => {
     setSelectedYear(value)
     setSelectedSubjects([])
+    setSubject([])
     loadSubjectsByYear(value, selectedSemester)
   }
 
@@ -146,8 +149,9 @@ const useSubjectSelection = () => {
       if (response_obj.error == false) {
         const selected_subjects = get(response_obj, 'response.data.data', [])
         setSelectedSubjects(selected_subjects)
-        toast.success('Subjects are successfully Locked')
+        setSubject(selected_subjects)
         setIsSubjectLock(true)
+        toast.success('Subjects are successfully Locked')
       } else {
         if (response_obj?.errorMessage)
           toast.error(response_obj.errorMessage?.message)

@@ -164,7 +164,7 @@ const router = createBrowserRouter([
             element: (
                <ProtectedRoute roleRequired="admin">
               <SubjectSelectionConfirmation />
-               </ProtectedRoute>
+                </ProtectedRoute>
             ),
           },
         ],

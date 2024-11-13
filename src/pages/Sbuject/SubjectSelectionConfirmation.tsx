@@ -171,9 +171,9 @@ const SubjectSelectionConfirmation = () => {
   return (
     <div className="flex w-full flex-col space-y-4">
 
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto lg:p-4 p-2">
         <Tabs value={activeTab} onValueChange={(value) => {setActiveTab(value as PersonType);setSelectedSemester("");setSelectedSubject("");setSubjects([]);setTeachers([]);setStudents([]);setSelectedSubjectCategory("")}}>
-          <TabsList className="grid w-full grid-cols-2" >
+          <TabsList className="grid w-auto grid-cols-2" >
             <TabsTrigger value="teacher">Teachers</TabsTrigger>
             <TabsTrigger value="student">Students</TabsTrigger>
           </TabsList>
