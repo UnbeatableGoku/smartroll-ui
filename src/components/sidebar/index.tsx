@@ -34,7 +34,6 @@ const Sidebar = () => {
     collapsed,
     open,
     setActiveIndex,
-    setCollapsed,
     setOpen,
     setSidebarLinks,
   } = useSidebarLinkSelector()

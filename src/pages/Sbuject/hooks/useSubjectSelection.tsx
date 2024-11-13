@@ -13,7 +13,6 @@ import useSemester from '@components/common/uploadTimeTable/useSemester'
 const useSubjectSelection = () => {
   const [selectedSubjects, setSelectedSubjects] = useState<Array<any>>([]) // state that holds the list of the selected subjects
   const [selectedStream, setSelectedStream] = useState<string>('') // state that holds the slug of the selected stream
-  const [selectedDivision, setSelectedDivision] = useState<string>('') // state that holds the slug of the selected division
   const [selectedSemester, setSelectedSemester] = useState<string>('') // state that holds the slug of the selected semester
   const [selectedYear, setSelectedYear] = useState<string>('') // state that holds the slug of the selected yeaer
   const [subjects, setSubject] = useState<Array<{}> | null>(null) // state that hold the list of the premenet subjects before selection
@@ -166,7 +165,6 @@ const useSubjectSelection = () => {
   return {
     selectedSubjects,
     selectedStream,
-    selectedDivision,
     selectedSemester,
     selectedYear,
     semesters,

@@ -1,15 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 
-import { Skeleton } from '@components/ui/skeleton'
-
-import useDivision from './useDivision'
 // import { SelectionProps } from './utils/selectionInterface'
 
 const DivisionSelection = () => {

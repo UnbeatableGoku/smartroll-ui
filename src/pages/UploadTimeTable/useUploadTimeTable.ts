@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import axios from 'axios'
-import { get } from 'lodash'
+
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 

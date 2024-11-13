@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+
 
 import { router } from '@routes'
 import { createRoot } from 'react-dom/client'

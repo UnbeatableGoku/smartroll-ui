@@ -1,5 +1,5 @@
 import { DashboardIcon, UserIcon } from '@icons'
-import { FileSpreadsheet, LibraryBig, Upload , BadgePlus,Eye,SquareCheck } from 'lucide-react'
+import { FileSpreadsheet,   BadgePlus,Eye,SquareCheck } from 'lucide-react'
 
 import { SidebarLink } from 'types/common'
 

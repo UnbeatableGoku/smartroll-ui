@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback} from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -23,7 +23,6 @@ const SubjectCard = ({
   toggleSubjectSelection,
   selectedSubjects,
   isSubjectLock,
-  setIsSubjectLock,
   draggable = false,
   index
 }: CourseCardProps) => {

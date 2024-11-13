@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 
 import ConfirmSubjectSelection from '@pages/Sbuject/ConfirmSubjectSelection'
 import SubjectCard from '@pages/Sbuject/SubjectCard'
 import useSubjectSelection from '@pages/Sbuject/hooks/useSubjectSelection'
-import { AlertCircle, AlertTriangle, BookOpen } from 'lucide-react'
+import {  AlertTriangle, BookOpen } from 'lucide-react'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
 import { Button } from '@components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card'
+import { Card, CardContent, CardHeader,} from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
-import useSubjectChoice from './hooks/useSubjectChoice'
+
 import useSelectionFroTeacher from './hooks/useSelectionFroTeacher'
-import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert'
+import { Alert, AlertTitle } from '@components/ui/alert'
 
 ConfirmSubjectSelection
 
@@ -22,7 +22,7 @@ const SubjectChoice = () => {
   } = useSubjectSelection()
 
   //const  {handleOnValueChangeSemenster,handleOnValueChangeStreams,setSelectedSubjects,draggedIndex} = useSubjectChoice()
-  const {loadSemesterByStreamForTeacher,semesters,selectedStream,setselectedStream,load_subjects_for_teacher_choice,selectedSemester,setselectedSemester,subjects,toggleSubjectSelection,selectedSubjects,isSubjectLock,setIsSubjectLock,onDrop,setDraggedIndex,save_teacher_subject_choice,choice_deadline} = useSelectionFroTeacher()
+  const {loadSemesterByStreamForTeacher,semesters,selectedStream,load_subjects_for_teacher_choice,selectedSemester,subjects,toggleSubjectSelection,selectedSubjects,isSubjectLock,setIsSubjectLock,onDrop,setDraggedIndex,save_teacher_subject_choice,choice_deadline} = useSelectionFroTeacher()
   const { stream, handleStream } = useStream()
   const [isPanelOpen, setIsPanelOpen] = useState(false)
   const togglePanel = () => setIsPanelOpen(!isPanelOpen)

@@ -1,5 +1,5 @@
 import { DashboardIcon, UserIcon } from '@icons'
-import { FileSpreadsheet, LibraryBig, Upload } from 'lucide-react'
+import { FileSpreadsheet, LibraryBig} from 'lucide-react'
 
 import { SidebarLink } from 'types/common'
 

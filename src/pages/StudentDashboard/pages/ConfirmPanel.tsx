@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 import useElectiveSubject from '../hooks/useElectiveSubject'
 import { Lock, X } from 'lucide-react'

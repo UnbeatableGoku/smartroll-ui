@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LockIcon, UserIcon } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import NewPassword from '@components/NewPassword/NewPassword'

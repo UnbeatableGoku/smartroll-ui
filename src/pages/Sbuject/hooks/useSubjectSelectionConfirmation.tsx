@@ -1,7 +1,7 @@
 import useSemester from '@components/common/uploadTimeTable/useSemester'
 import { SelectionResponse } from 'types/common'
 import { get } from 'lodash'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import axios from 'axios'
 import useAPI from '@hooks/useApi'
@@ -16,7 +16,7 @@ const useSubjectSelectionConfirmation = () => {
     const [teachers,setTeachers] = useState([])
     const [students,setStudents] = useState([])
     const [selectedSubject,setSelectedSubject] = useState<string>("")
-    const { semesters, loadSemesterByStream, academicYears,semesterResponse,setAcademicYears} = useSemester()
+    const { semesters, loadSemesterByStream, semesterResponse} = useSemester()
     const [StoredTokens, CallAPI] = useAPI() // custom hooks that used to call API
 
     //function : handle the value change of the stream 
@@ -54,7 +54,7 @@ const useSubjectSelectionConfirmation = () => {
         if(response_obj.error == false){
             const check_data = get(response_obj,'response.data.data',[])
             setCategoryResponse(check_data)
-            const subject_category = check_data.map((category:any,index:any)=>{
+            const subject_category = check_data.map((category:any)=>{
                 return ({slug:category.slug, name:category.category})
             })
             console.log(subject_category)

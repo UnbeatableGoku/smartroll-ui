@@ -4,7 +4,7 @@ import axios from 'axios'
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
-import { base_url } from '@utils/base_url'
+
 import useAPI from '@hooks/useApi'
 import { SelectionResponse } from 'types/common'
 

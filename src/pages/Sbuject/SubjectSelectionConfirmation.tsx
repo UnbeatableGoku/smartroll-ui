@@ -1,27 +1,20 @@
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useSubjectSelectionConfirmation from './hooks/useSubjectSelectionConfirmation'
-import { ChevronDown, ChevronUp, ChevronRight, X } from 'lucide-react'
+import { ChevronRight, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-interface Person {
-  id: number
-  name: string
-  email: string
-  subjects: string[]
-}
+
 
 interface tableHeader{
   title: string
 }
 
-interface Student extends Person {
-  grade: string
-}
+
 
 const teachers_table_header: tableHeader[] = [
   {title : 'Teacher Name'},

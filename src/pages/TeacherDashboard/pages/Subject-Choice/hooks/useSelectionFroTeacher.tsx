@@ -2,7 +2,7 @@ import useAPI from '@hooks/useApi';
 import { SelectionResponse } from 'types/common';
 import axios from 'axios';
 import { get } from 'lodash';
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { toast } from 'sonner';
 
 const useSelectionFroTeacher = () => {

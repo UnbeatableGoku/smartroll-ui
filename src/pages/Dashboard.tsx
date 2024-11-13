@@ -1,7 +1,5 @@
 import { Helmet } from 'react-helmet'
-import { Navigate } from 'react-router-dom'
 
-import { PAGE_LOGIN } from '@constants'
 
 import AcademicCard from '@components/dashboard/AcademicCard'
 import { AnalysisCard } from '@components/dashboard/AnalysisCard'
