@@ -90,6 +90,7 @@ const useSubjectChoice = () => {
   const handleOnValueChangeStreams = (value: string) => {
     setSelectedStream(value)
     loadSemesterByStream(value)
+    
   }    
 
   const onDrop = (index: number) => {

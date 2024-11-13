@@ -62,6 +62,7 @@ const ConfirmSubjectSelection = ({
       console.log('Dragging Mode')
       save_teacher_subject_choice(subject_slug)
     }
+    setIsPanelOpen(!isPanelOpen)
   }
 
   return (
@@ -189,6 +190,7 @@ const ConfirmSubjectSelection = ({
             <Button
               className={`w-full ${isSubjectLock} ? 'disabled' : 'enabled'`}
               size="lg"
+              disabled = {isSubjectLock}
               onClick={() => {
                 onHandleClick()
               }}

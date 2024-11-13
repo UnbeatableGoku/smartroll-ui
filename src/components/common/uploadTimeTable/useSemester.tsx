@@ -8,7 +8,7 @@ const useSemester = () => {
     const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
     const [semesters, setSemesters] = useState<Array<any>>([]); // state to store the list of the semesters 
     const [academicYears, setAcademicYears] = useState<Array<any>>([]); // state to strore the list of academic years 
-    const [semesterResponse,setSemesterResponse] = useState([]) // state to store the entire response of get_semester_from_stream api
+    const [semesterResponse,setSemesterResponse] = useState<Array<any>>([]) // state to store the entire response of get_semester_from_stream api
 
     // function to load the semester data from stream 
     const loadSemesterByStream = async (slug: string) => { 
@@ -36,6 +36,7 @@ const useSemester = () => {
             }
             else {
                 toast.error(response_obj.errorMessage?.message)
+                setSemesters([])
             }
         }
         catch (error) {
@@ -49,7 +50,8 @@ const useSemester = () => {
         semesterResponse,
         loadSemesterByStream,
         academicYears,
-        setAcademicYears
+        setAcademicYears,
+        setSemesterResponse
     }
 }
 

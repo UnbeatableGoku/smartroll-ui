@@ -320,17 +320,13 @@ const SubjectSelectionConfirmation = () => {
               />
             </div>
           </div>
-          <TabsContent
-            value="teacher"
-            className="mt-4 overflow-hidden rounded-lg border"
-          >
-            {teachers.length > 0 && renderTable(teachers, 'teacher')}
+          <TabsContent value="teacher" className="border rounded-lg overflow-hidden mt-4">
+            { teachers.length  > 0 ? <div className='text-center p-2 border-b border text-xl'><h2>Total Teacheres -  {teachers.length} </h2></div> : null}
+            { teachers.length > 0 && renderTable(teachers, 'teacher')}
           </TabsContent>
-          <TabsContent
-            value="student"
-            className="mt-4 overflow-hidden rounded-lg border"
-          >
-            {students.length > 0 && renderTable(students, 'student')}
+          <TabsContent value="student" className="border rounded-lg overflow-hidden mt-4">
+          { students.length  > 0 ? <div className='text-center p-2 border-b border text-xl'><h2>Total Stundets -  {students.length} </h2></div> : null}
+            {students.length > 0  && renderTable(students, 'student')}
           </TabsContent>
         </Tabs>
       </div>

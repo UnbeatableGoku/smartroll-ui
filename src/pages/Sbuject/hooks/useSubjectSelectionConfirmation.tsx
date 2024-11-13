@@ -24,6 +24,7 @@ const useSubjectSelectionConfirmation = () => {
       setSelectedStream(value)
       setSelectedSemester("")
       loadSemesterByStream(value)
+      toast.info("please select the semester")
     }
     //function : handle the value change of semester  for teachers
     const handleValueChangeOfSemesterForTeacher = (value:string) =>{
@@ -36,6 +37,7 @@ const useSubjectSelectionConfirmation = () => {
           return ({slug:subject.slug,name:subject.subject_name})
       })
       setSubjects(general_response_for_subject)
+      toast.info("please select the Subject")
     }
 
      //function : handle the value change of semester  for students
@@ -62,7 +64,9 @@ const useSubjectSelectionConfirmation = () => {
         }
         else{
           toast.error(response_obj.errorMessage?.message)
+          setComplementrySbujects([])
         }
+        toast.info("please select the Subject Category")
       }
       catch(error){
         toast.error("Something went wrong")
@@ -132,6 +136,7 @@ const useSubjectSelectionConfirmation = () => {
         return ({slug:subject.slug,name:subject.subject_name})
     })
     setSubjects(general_response_for_subject)
+    toast.info("please select the Subject")
     }
   return {
     selectedStream,

@@ -22,6 +22,7 @@ const useSubjectSelection = () => {
     academicYears,
     semesterResponse,
     setAcademicYears,
+    setSemesterResponse
   } = useSemester() // custome hook that use to load the semester
   const [isSubjectLock, setIsSubjectLock] = useState<boolean>(false) // state that used to check if the subject selection ls done or not
   const [StoredTokens, CallAPI] = useAPI() // custom hooks that used to call API
@@ -61,6 +62,7 @@ const useSubjectSelection = () => {
       const year_lst: Array<SelectionResponse> = years.map((year: string) => {
         return { slug: year, name: year }
       })
+      toast.info("please select the year")
 
       setAcademicYears(year_lst) // set the years to state
 
@@ -68,7 +70,7 @@ const useSubjectSelection = () => {
       setSubject(null) // clear subjects
     }
     setSelectedYear('') // clear selected years
-    toast.info("please select the year")
+    
   }
 
   // function that is invoked when the user selects the year
@@ -150,6 +152,9 @@ const useSubjectSelection = () => {
         setSelectedSubjects(selected_subjects)
         setSubject(selected_subjects)
         setIsSubjectLock(true)
+
+        const updateResponse:any = semesterResponse.map((item:any)=> item.slug === semester_slug ? {...item,subjects : selectedSubjects} : item)
+        setSemesterResponse(updateResponse)
         toast.success('Subjects are successfully Locked')
       } else {
         if (response_obj?.errorMessage)

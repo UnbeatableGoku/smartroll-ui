@@ -37,10 +37,14 @@ const useSelectionFroTeacher = () => {
                     return ({ slug: semester.slug, name: semester.no })
                 })
                 setSemesters(semester_lst)     // to generilized the data to load on select component 
-                
+                toast.info("please select the semester")   
             }
             else {
                 toast.error(response_obj.errorMessage?.message)
+                setselectedSemester("")
+                setSemesters([])
+                setSubjects(null)
+                setSelectedSubjects([])
             }
         }
         catch (error) {
@@ -72,13 +76,18 @@ const useSelectionFroTeacher = () => {
                     set_choice_deadline(response_obj.response.data.data.deadline_timestamp)
                 }
                 else{
-                    //TODO: make the response for the already choice done 
+                    
                     const check_finalized_choices = get(response_obj,'response.data.data.finalized_choices',[])
                     setSubjects(check_finalized_choices)
                     setIsSubjectLock(true)
                     setSelectedSubjects(check_finalized_choices)
                     set_choice_deadline(response_obj?.response?.data?.data?.deadline_timestamp)
                 }
+            }
+            else{
+                toast.error(response_obj.errorMessage?.message)
+                setSubjects(null)
+                setSelectedSubjects([])
             }
         }
         catch(error){
@@ -112,6 +121,11 @@ const useSelectionFroTeacher = () => {
                 setIsSubjectLock(true)
                 setSelectedSubjects(check_finalized_choices)
                 toast.success('Subjects saved successfully')
+            }
+            else{
+                toast.error(response_obj.errorMessage?.message)
+                setSubjects(null)
+                setSelectedSubjects([])
             }
             
         }

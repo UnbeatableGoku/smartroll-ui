@@ -44,7 +44,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   },
   {
     id: 'SUBJECT-SELECT',
-    name: 'Subject',
+    name: 'Subject Selection',
     icon: (
       <BadgePlus
         className="h-24 w-24 dark:text-[#8a8686]"
