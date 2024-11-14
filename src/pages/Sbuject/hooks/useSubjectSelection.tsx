@@ -36,8 +36,8 @@ const useSubjectSelection = () => {
     setIsSubjectLock(false)
     setSubject(null)
     loadSemesterByStream(value)
-    toast.info('please select the semester')
-  }
+    
+  }                     
 
   // fuction that is invoked when the user selet the semester
   const handleOnValueChangeSemenster = (value: string) => {

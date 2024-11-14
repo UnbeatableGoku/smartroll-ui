@@ -106,18 +106,16 @@ const SubjectSelection = () => {
               />
             </div>
           </div>
-          <div className={`${isSubjectLock ? 'hidden' : 'block'}`}>
-            <Button
-              onClick={togglePanel}
-              className={`z-10 mt-3 w-full lg:w-auto`}
-            >
-              <BookOpen className="mr-2 h-4 w-4" />
-              Lock Subjects
-              <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
-                {selectedSubjects.length}
-              </span>
-            </Button>
-          </div>
+          {isSubjectLock == false && selectedSubjects.length > 0 && <div className={`${isSubjectLock ? 'hidden' : 'block'}`}>
+            <Button onClick={togglePanel} className={`z-10 mt-3 w-full lg:w-auto`}>
+            <BookOpen className="mr-2 h-4 w-4" />
+            Lock Subjects
+            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+              {selectedSubjects.length}
+            </span>
+          </Button>
+          </div>}
+          
         </div>
 
         <div className="p-4">

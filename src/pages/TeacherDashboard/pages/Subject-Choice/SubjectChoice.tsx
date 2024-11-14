@@ -84,20 +84,17 @@ const SubjectChoice = () => {
             />
           </div>
         </div>
-        {isSubjectLock == false && (
-          <Button
-            onClick={togglePanel}
-            className="sticky mt-3 w-full lg:w-auto"
-          >
-            <BookOpen className="mr-2 h-4 w-4" />
-            Lock Subjects Choice
-            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
-              {selectedSubjects.length}
-            </span>
-          </Button>
-        )}
-
-        {choice_deadline && (
+        {isSubjectLock == false && selectedSubjects.length > 0 &&
+          <Button onClick={togglePanel} className="mt-3 w-full lg:w-auto">
+          <BookOpen className="mr-2 h-4 w-4" />
+          Lock Subjects Choice
+          <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+            {selectedSubjects.length}
+          </span>
+        </Button>}
+      
+        
+        {choice_deadline && subjects &&
           <Alert className="w-full border-yellow-500 bg-yellow-50 dark:border-yellow-400 dark:bg-yellow-900">
             <div className="">
               <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-yellow-100">
@@ -106,7 +103,7 @@ const SubjectChoice = () => {
               </AlertTitle>
             </div>
           </Alert>
-        )}
+        }
         <div className="w-full p-4">
           {/* Check if subjects is null or loading */}
           {subjects === null ? (

@@ -32,7 +32,7 @@ const useSemester = () => {
                 const data = get(response_obj,'response.data.data',[])
                 console.log(data) 
                 setSemesterResponse(data) // set the enrtire response in setSemesterResponse state
-                
+                toast.info("please select the semester")
             }
             else {
                 toast.error(response_obj.errorMessage?.message)

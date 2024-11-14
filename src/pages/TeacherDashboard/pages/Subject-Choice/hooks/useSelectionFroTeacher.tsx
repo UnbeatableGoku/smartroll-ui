@@ -37,7 +37,7 @@ const useSelectionFroTeacher = () => {
                     return ({ slug: semester.slug, name: semester.no })
                 })
                 setSemesters(semester_lst)     // to generilized the data to load on select component 
-                toast.info("please select the semester")   
+                
             }
             else {
                 toast.error(response_obj.errorMessage?.message)
@@ -124,8 +124,6 @@ const useSelectionFroTeacher = () => {
             }
             else{
                 toast.error(response_obj.errorMessage?.message)
-                setSubjects(null)
-                setSelectedSubjects([])
             }
             
         }

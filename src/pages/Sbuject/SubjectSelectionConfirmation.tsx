@@ -61,6 +61,7 @@ const SubjectSelectionConfirmation = () => {
     setTeachers,
     setStudents,
     setSelectedSubjectCategory,
+    getSubjectName
   } = useSubjectSelectionConfirmation()
 
   useEffect(() => {
@@ -321,11 +322,11 @@ const SubjectSelectionConfirmation = () => {
             </div>
           </div>
           <TabsContent value="teacher" className="border rounded-lg overflow-hidden mt-4">
-            { teachers.length  > 0 ? <div className='text-center p-2 border-b border text-xl'><h2>Total Teacheres -  {teachers.length} </h2></div> : null}
+            { teachers.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Teacheres -  {teachers.length} </p></div> : null}
             { teachers.length > 0 && renderTable(teachers, 'teacher')}
           </TabsContent>
           <TabsContent value="student" className="border rounded-lg overflow-hidden mt-4">
-          { students.length  > 0 ? <div className='text-center p-2 border-b border text-xl'><h2>Total Stundets -  {students.length} </h2></div> : null}
+          { students.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Stundets -  {students.length} </p></div> : null}
             {students.length > 0  && renderTable(students, 'student')}
           </TabsContent>
         </Tabs>

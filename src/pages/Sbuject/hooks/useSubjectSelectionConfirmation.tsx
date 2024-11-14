@@ -24,26 +24,40 @@ const useSubjectSelectionConfirmation = () => {
       setSelectedStream(value)
       setSelectedSemester("")
       loadSemesterByStream(value)
-      toast.info("please select the semester")
+      setStudents([])
+      setTeachers([])
+      setComplementrySbujects([])
+      setSelectedSubjectCategory("")
+      
     }
     //function : handle the value change of semester  for teachers
     const handleValueChangeOfSemesterForTeacher = (value:string) =>{
       setSelectedSemester(value)
       setSelectedSubject("")
+      setTeachers([])
+      
       const semester_subject = semesterResponse.find((semester: any) => semester.slug === value);
     
       const finalized_subject =  get(semester_subject,'subjects',[])
-      const general_response_for_subject:Array<SelectionResponse> = finalized_subject.map((subject:any)=>{
+      if(finalized_subject){
+        const general_response_for_subject:Array<SelectionResponse> = finalized_subject.map((subject:any)=>{
           return ({slug:subject.slug,name:subject.subject_name})
       })
+      
       setSubjects(general_response_for_subject)
       toast.info("please select the Subject")
+      }
+      else{
+        setSubjects([])
+      }
+      
     }
 
      //function : handle the value change of semester  for students
     const handleValueChangeOfSemesterForStudent = async(value:string)=>{
       setSelectedSemester(value)
       setSelectedSubjectCategory("")
+      setStudents([])
       try{
         const axiosInstance = axios.create()
         const method = 'get'
@@ -56,17 +70,23 @@ const useSubjectSelectionConfirmation = () => {
         if(response_obj.error == false){
             const check_data = get(response_obj,'response.data.data',[])
             setCategoryResponse(check_data)
-            const subject_category = check_data.map((category:any)=>{
+            if(check_data ){
+              const subject_category = check_data.map((category:any)=>{
                 return ({slug:category.slug, name:category.category})
             })
-            console.log(subject_category)
             setComplementrySbujects(subject_category)
+            toast.info("please select the Subject Category")
+            }
+            else{
+              setComplementrySbujects([])
+            }
         }
         else{
           toast.error(response_obj.errorMessage?.message)
           setComplementrySbujects([])
+          setSelectedSemester("")
         }
-        toast.info("please select the Subject Category")
+        
       }
       catch(error){
         toast.error("Something went wrong")
@@ -129,14 +149,22 @@ const useSubjectSelectionConfirmation = () => {
     const handleValueChangeOfCategory = (slug:string)=>{
       setSelectedSubjectCategory(slug)
       setSelectedSubject("")
+      setStudents([])
       const category_subject = categoryResponse.find((category: any) => category.slug === slug);
       const finalized_subject =  get(category_subject,'subjects',[])
      
       const general_response_for_subject:Array<SelectionResponse> = finalized_subject.map((subject:any)=>{
         return ({slug:subject.slug,name:subject.subject_name})
     })
+    
     setSubjects(general_response_for_subject)
     toast.info("please select the Subject")
+    }
+
+    //function: get the subject name  from slug  for students and teacher
+    const getSubjectName = (subject_slug:string):string | undefined=>{
+        const subject_obj = subjects.find((subject:any)=>subject.slug === subject_slug);
+        return subject_obj?.name
     }
   return {
     selectedStream,
@@ -159,9 +187,11 @@ const useSubjectSelectionConfirmation = () => {
     handleValueChangeOfSemesterForStudent,
     setTeachers,
     setStudents,
-    setSelectedSubjectCategory
+    setSelectedSubjectCategory,
+    getSubjectName
   }
 }
 
 export default useSubjectSelectionConfirmation
+
 
