@@ -1,40 +1,49 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import ConfirmSubjectSelection from '@pages/Sbuject/ConfirmSubjectSelection'
 import SubjectCard from '@pages/Sbuject/SubjectCard'
 import useSubjectSelection from '@pages/Sbuject/hooks/useSubjectSelection'
-import {  AlertTriangle, BookOpen } from 'lucide-react'
+import { AlertTriangle, BookOpen } from 'lucide-react'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
+import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'
-import { Card, CardContent, CardHeader,} from '@components/ui/card'
+import { Card, CardContent, CardHeader } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
 
 import useSelectionFroTeacher from './hooks/useSelectionFroTeacher'
-import { Alert, AlertTitle } from '@components/ui/alert'
-
 
 ConfirmSubjectSelection
 
 const SubjectChoice = () => {
-  const {
-    handleSubjectSelection,
-  } = useSubjectSelection()
+  const { handleSubjectSelection } = useSubjectSelection()
 
   //const  {handleOnValueChangeSemenster,handleOnValueChangeStreams,setSelectedSubjects,draggedIndex} = useSubjectChoice()
-  const {loadSemesterByStreamForTeacher,semesters,selectedStream,load_subjects_for_teacher_choice,selectedSemester,subjects,toggleSubjectSelection,selectedSubjects,isSubjectLock,setIsSubjectLock,onDrop,setDraggedIndex,save_teacher_subject_choice,choice_deadline} = useSelectionFroTeacher()
+  const {
+    loadSemesterByStreamForTeacher,
+    semesters,
+    selectedStream,
+    load_subjects_for_teacher_choice,
+    selectedSemester,
+    subjects,
+    toggleSubjectSelection,
+    selectedSubjects,
+    isSubjectLock,
+    setIsSubjectLock,
+    onDrop,
+    setDraggedIndex,
+    save_teacher_subject_choice,
+    choice_deadline,
+  } = useSelectionFroTeacher()
   const { stream, handleStream } = useStream()
   const [isPanelOpen, setIsPanelOpen] = useState(false)
   const togglePanel = () => setIsPanelOpen(!isPanelOpen)
 
   useEffect(() => {
     handleStream()
-    
   }, [])
 
-   
-  
   return (
     <div className="flex w-full flex-col space-y-4">
       {/* time table selection */}
@@ -63,7 +72,7 @@ const SubjectChoice = () => {
           )}
           <div className="relative w-full md:w-[240px] lg:w-[320px]">
             {/* Semester Selection Card */}
-            
+
             <Selection
               title="Semester"
               selectedValue={selectedSemester}
@@ -75,82 +84,82 @@ const SubjectChoice = () => {
             />
           </div>
         </div>
-        {isSubjectLock == false &&
-          <Button onClick={togglePanel} className="z-10 mt-3 w-full lg:w-auto">
-          <BookOpen className="mr-2 h-4 w-4" />
-          Lock Subjects Choice
-          <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
-            {selectedSubjects.length}
-          </span>
-        </Button>}
-      
-        
-        {choice_deadline &&
-          <Alert className="w-full border-yellow-500 bg-yellow-50 dark:border-yellow-400 dark:bg-yellow-900">
-          <div className=''>
-          <AlertTitle className="text-yellow-800 dark:text-yellow-100 flex items-center space-x-4">
-          <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
-            <span>Decision Deadline : {choice_deadline} </span>
-            </AlertTitle>
-          </div>
-        </Alert>}
-      <div className="p-4 w-full">
-        {/* Check if subjects is null or loading */}
-        {subjects === null ? (
-
-          <div className="flex flex-col items-center gap-4 w-full">
-            
-            <Skeleton className="sm:h-18 h-20 w-full" />
-            <Skeleton className="sm:h-18 h-20 w-full" />
-            <Skeleton className="sm:h-18 h-20 w-full" />
-            <Skeleton className="sm:h-18 h-20 w-full" />
-            <Skeleton className="sm:h-18 h-20 w-full" />
-            <Skeleton className="sm:h-18 h-20 w-full" />
-            <Skeleton className="sm:h-18 h-20 w-full" />
-          </div>
-        ) : (
-          // If subjects is not null, display them in the grid
-          subjects.length > 0  ? (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {
-                subjects.map((subject, index) => (
-                  <SubjectCard
-                    key={index}
-                    subject={subject}
-                    toggleSubjectSelection={toggleSubjectSelection}
-                    selectedSubjects={selectedSubjects}
-                    isSubjectLock={isSubjectLock}
-                    setIsSubjectLock={setIsSubjectLock}
-                    draggable = {true}
-                      index = {index}
-                  />
-                ))
-              }
-          </div>) : (<div className="group w-full">
-                <Card>
-                  <CardHeader className="pb-2">  
-                  </CardHeader>
-                  <CardContent className='text-center'>
-                          No Subjects are available for this semester.
-                      </CardContent>
-                </Card>
-              </div>)
+        {isSubjectLock == false && (
+          <Button
+            onClick={togglePanel}
+            className="sticky mt-3 w-full lg:w-auto"
+          >
+            <BookOpen className="mr-2 h-4 w-4" />
+            Lock Subjects Choice
+            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+              {selectedSubjects.length}
+            </span>
+          </Button>
         )}
-      </div>
 
-      <ConfirmSubjectSelection
-        isPanelOpen={isPanelOpen}
-        setIsPanelOpen={setIsPanelOpen}
-        togglePanel={togglePanel}
-        selectedSubjects={selectedSubjects}
-        handleSubjectSelection={handleSubjectSelection}
-        selectedSemester={selectedSemester}
-        draggable={true}
-        onDrop = {onDrop}
-        setDraggedIndex = {setDraggedIndex}
-        save_teacher_subject_choice = {save_teacher_subject_choice}
-      ></ConfirmSubjectSelection>
-    </div>
+        {choice_deadline && (
+          <Alert className="w-full border-yellow-500 bg-yellow-50 dark:border-yellow-400 dark:bg-yellow-900">
+            <div className="">
+              <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-yellow-100">
+                <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
+                <span>Decision Deadline : {choice_deadline} </span>
+              </AlertTitle>
+            </div>
+          </Alert>
+        )}
+        <div className="w-full p-4">
+          {/* Check if subjects is null or loading */}
+          {subjects === null ? (
+            <div className="flex w-full flex-col items-center gap-4">
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+            </div>
+          ) : // If subjects is not null, display them in the grid
+          subjects.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {subjects.map((subject, index) => (
+                <SubjectCard
+                  key={index}
+                  subject={subject}
+                  toggleSubjectSelection={toggleSubjectSelection}
+                  selectedSubjects={selectedSubjects}
+                  isSubjectLock={isSubjectLock}
+                  setIsSubjectLock={setIsSubjectLock}
+                  draggable={true}
+                  index={index}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="group w-full">
+              <Card>
+                <CardHeader className="pb-2"></CardHeader>
+                <CardContent className="text-center">
+                  No Subjects are available for this semester.
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
+
+        <ConfirmSubjectSelection
+          isPanelOpen={isPanelOpen}
+          setIsPanelOpen={setIsPanelOpen}
+          togglePanel={togglePanel}
+          selectedSubjects={selectedSubjects}
+          handleSubjectSelection={handleSubjectSelection}
+          selectedSemester={selectedSemester}
+          draggable={true}
+          onDrop={onDrop}
+          setDraggedIndex={setDraggedIndex}
+          save_teacher_subject_choice={save_teacher_subject_choice}
+        ></ConfirmSubjectSelection>
+      </div>
     </div>
   )
 }

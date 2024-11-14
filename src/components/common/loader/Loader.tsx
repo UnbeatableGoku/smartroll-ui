@@ -2,7 +2,7 @@ import { MapPin } from 'lucide-react'
 
 export const Loader = () => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm">
+    <div className="z-100 fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm">
       <div className="flex flex-col items-center gap-4">
         <div className={`relative h-8 w-8`}>
           <MapPin className="h-8 w-8 animate-pulse" />

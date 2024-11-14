@@ -8,8 +8,6 @@ import { Button } from '@components/ui/button'
 import { Card, CardHeader, CardTitle } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
 
-
-
 import ConfirmSubjectSelection from './ConfirmSubjectSelection'
 import SubjectCard from './SubjectCard'
 import useSubjectSelection from './hooks/useSubjectSelection'
@@ -33,22 +31,19 @@ const SubjectSelection = () => {
   } = useSubjectSelection()
   const { stream, handleStream } = useStream()
   const [isPanelOpen, setIsPanelOpen] = useState(false)
- 
+
   const togglePanel = () => setIsPanelOpen(!isPanelOpen)
 
   useEffect(() => {
     handleStream()
-    
-
   }, [])
 
-  
   return (
     <>
       <div className="flex w-full flex-col space-y-4">
         {/* time table selection */}
-        <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl text-center mb-3">
-                  Subjects Selection
+        <h1 className="mb-3 text-center text-4xl font-bold tracking-tight text-white md:text-5xl">
+          Subjects Selection
         </h1>
         <div className="flex flex-col flex-wrap items-center justify-evenly lg:flex-row">
           <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
@@ -112,15 +107,17 @@ const SubjectSelection = () => {
             </div>
           </div>
           <div className={`${isSubjectLock ? 'hidden' : 'block'}`}>
-            <Button onClick={togglePanel} className={`z-10 mt-3 w-full lg:w-auto`}>
-            <BookOpen className="mr-2 h-4 w-4" />
-            Lock Subjects
-            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
-              {selectedSubjects.length}
-            </span>
-          </Button>
+            <Button
+              onClick={togglePanel}
+              className={`z-10 mt-3 w-full lg:w-auto`}
+            >
+              <BookOpen className="mr-2 h-4 w-4" />
+              Lock Subjects
+              <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+                {selectedSubjects.length}
+              </span>
+            </Button>
           </div>
-          
         </div>
 
         <div className="p-4">
@@ -133,7 +130,6 @@ const SubjectSelection = () => {
               <Skeleton className="sm:h-18 h-20 w-full" />
               <Skeleton className="sm:h-18 h-20 w-full" />
               <Skeleton className="sm:h-18 h-20 w-full" />
-              
             </div>
           ) : (
             // If subjects is not null, display them in the grid
@@ -148,8 +144,8 @@ const SubjectSelection = () => {
                     selectedSubjects={selectedSubjects}
                     isSubjectLock={isSubjectLock}
                     setIsSubjectLock={setIsSubjectLock}
-                    draggable = {false}
-                    index = {index}
+                    draggable={false}
+                    index={index}
                   />
                 ))
               ) : (
@@ -176,7 +172,7 @@ const SubjectSelection = () => {
           selectedSubjects={selectedSubjects}
           handleSubjectSelection={handleSubjectSelection}
           selectedSemester={selectedSemester}
-          isSubjectLock = {isSubjectLock}
+          isSubjectLock={isSubjectLock}
         ></ConfirmSubjectSelection>
       </div>
     </>

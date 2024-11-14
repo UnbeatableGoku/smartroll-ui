@@ -1,25 +1,22 @@
 import { useCallback, useState } from 'react'
 
 import axios from 'axios'
+import { group } from 'console'
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-
-import useSubjectSelection from './useSubjectSelection'
 
 const useElectiveSubject = () => {
   const [electiveSubject, setElectiveSubject] = useState<Array<any>>([])
   const [subjectSlug, setSubjectSlug] = useState<string>('')
   const [finalizedChoice, setFinalizedChoice] = useState<Array<any>>([])
   const [isLocked, setIsLocked] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [StoredTokens, CallAPI] = useAPI()
   const [totalCategories, setTotalCategories] = useState<string[]>([])
-  const { selectedSubjects } = useSubjectSelection()
+  const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
 
   const handleGetElectiveSubject = useCallback(async () => {
-    setIsLoading(true)
     try {
       const axiosInstance = axios.create()
       const method = 'get'
@@ -86,14 +83,37 @@ const useElectiveSubject = () => {
           error.response?.data?.errorMessage?.message || 'An error occurred'
         toast.error(errorMessage)
       }
-    } finally {
-      setIsLoading(false)
     }
   }, [CallAPI, StoredTokens])
 
+  const toggleSubjectSelection = (subject: any, group_slug: any): void => {
+    // setSelectedSubjects((prev: any) =>
+    //   prev.some((d: any) => d.selectedSubjects.slug === subject.slug)
+    //     ? prev.filter((d: any) => d.selectedSubjects.slug !== subject.slug)
+    //     : { group_slug: group_slug, selectedSubjects: [subject] },
+    // )
+    console.log(subject)
+    setSelectedSubjects((prevSubjects) => {
+      // Check if the subject with the given group_slug already exists
+      const index = prevSubjects.findIndex(
+        (item: any) => item.group_slug === group_slug,
+      )
+
+      console.log(index)
+      // If it exists, remove it
+      if (index !== -1) {
+        return prevSubjects.map((item, idx) =>
+          idx == index ? { ...item, subject: subject } : item,
+        )
+      }
+
+      // If it doesn't exist, add it
+      return [...prevSubjects, { group_slug: group_slug, subject: subject }]
+    })
+  }
+
   const handleStudentChoice = useCallback(
     async (selectedChoices: string[], selectedChoicesSlug: string) => {
-      setIsLoading(true)
       try {
         if (selectedChoices.length !== totalCategories.length) {
           toast.error('Please select one subject from each category')
@@ -140,8 +160,6 @@ const useElectiveSubject = () => {
       } catch (error) {
         console.error('Error in handleStudentChoice:', error)
         toast.error('Something went wrong')
-      } finally {
-        setIsLoading(false)
       }
     },
     [CallAPI, StoredTokens, selectedSubjects],
@@ -154,8 +172,9 @@ const useElectiveSubject = () => {
     handleStudentChoice,
     isLocked,
     finalizedChoice,
-    isLoading,
     totalCategories,
+    toggleSubjectSelection,
+    selectedSubjects,
   }
 }
 

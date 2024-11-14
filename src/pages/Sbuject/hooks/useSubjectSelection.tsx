@@ -22,7 +22,7 @@ const useSubjectSelection = () => {
     academicYears,
     semesterResponse,
     setAcademicYears,
-    setSemesterResponse
+    setSemesterResponse,
   } = useSemester() // custome hook that use to load the semester
   const [isSubjectLock, setIsSubjectLock] = useState<boolean>(false) // state that used to check if the subject selection ls done or not
   const [StoredTokens, CallAPI] = useAPI() // custom hooks that used to call API
@@ -30,14 +30,14 @@ const useSubjectSelection = () => {
   // function that  is invoked when the user selects the stream
   const handleOnValueChangeStreams = (value: string) => {
     setSelectedStream(value)
-    setSelectedSemester("")
-    setSelectedYear("")
+    setSelectedSemester('')
+    setSelectedYear('')
     setSelectedSubjects([])
     setIsSubjectLock(false)
     setSubject(null)
     loadSemesterByStream(value)
-    toast.info("please select the semester")
-  }                     
+    toast.info('please select the semester')
+  }
 
   // fuction that is invoked when the user selet the semester
   const handleOnValueChangeSemenster = (value: string) => {
@@ -62,7 +62,7 @@ const useSubjectSelection = () => {
       const year_lst: Array<SelectionResponse> = years.map((year: string) => {
         return { slug: year, name: year }
       })
-      toast.info("please select the year")
+      toast.info('please select the year')
 
       setAcademicYears(year_lst) // set the years to state
 
@@ -70,7 +70,6 @@ const useSubjectSelection = () => {
       setSubject(null) // clear subjects
     }
     setSelectedYear('') // clear selected years
-    
   }
 
   // function that is invoked when the user selects the year
@@ -121,19 +120,24 @@ const useSubjectSelection = () => {
         ? prev.filter((d) => d.slug !== subject.slug)
         : [...prev, subject],
     )
+    console.log(selectedSubjects)
   }
 
   // function: to save the selected subjects
-  const handleSubjectSelection = async (semester_slug: any, subject_slugs: any,time_stamp:string): Promise<void> => {
+  const handleSubjectSelection = async (
+    semester_slug: any,
+    subject_slugs: any,
+    time_stamp: string,
+  ): Promise<void> => {
     try {
       console.log(semester_slug, subject_slugs)
       const axiosInstance = axios.create()
       const method = 'post'
       const endpoint = `/manage/add_subjects_to_semester/`
       const body = {
-        semester_slug : semester_slug,
-        subject_slugs : subject_slugs,
-        deadline_timestamp : parseInt(time_stamp) / 1000,
+        semester_slug: semester_slug,
+        subject_slugs: subject_slugs,
+        deadline_timestamp: parseInt(time_stamp) / 1000,
       }
       const header = {
         'ngrok-skip-browser-warning': true,
@@ -153,7 +157,11 @@ const useSubjectSelection = () => {
         setSubject(selected_subjects)
         setIsSubjectLock(true)
 
-        const updateResponse:any = semesterResponse.map((item:any)=> item.slug === semester_slug ? {...item,subjects : selectedSubjects} : item)
+        const updateResponse: any = semesterResponse.map((item: any) =>
+          item.slug === semester_slug
+            ? { ...item, subjects: selectedSubjects }
+            : item,
+        )
         setSemesterResponse(updateResponse)
         toast.success('Subjects are successfully Locked')
       } else {
@@ -164,8 +172,6 @@ const useSubjectSelection = () => {
       toast.error('Something went wrong')
     }
   }
-
-  
 
   return {
     selectedSubjects,

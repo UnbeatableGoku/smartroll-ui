@@ -56,7 +56,7 @@ export const PAGE_NOT_FOUND: Page = {
 export const PAGE_SUBJECT_SELECTION_CONFIRMATION: Page = {
   id: 'SUBJECT_SELECTION_CONFIRMATION',
   path: '/subject/subject-selection-confirmation',
-  name: 'Subject Selection Confirmation',
+  name: 'Subject Confirmation',
 }
 
 /**

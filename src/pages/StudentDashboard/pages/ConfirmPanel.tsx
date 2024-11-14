@@ -20,12 +20,11 @@ const ConfirmPanel = ({
   handleSubjectSelection,
   subjectSlug,
 }: any) => {
-  const { isLoading } = useElectiveSubject()
   // const { categorySelectionStatus } = useSubjectSelection()
   const onHandleClick = () => {
-    const selectedChoices = selectedSubjects.subject_choices
-
-    handleSubjectSelection(selectedChoices, subjectSlug)
+    // const selectedChoices = selectedSubjects.subject_choices
+    const selected_slug = selectedSubjects.map((sub: any) => sub.subject.slug)
+    handleSubjectSelection(selected_slug, subjectSlug)
     setIsPanelOpen(false)
   }
   return (
@@ -62,22 +61,24 @@ const ConfirmPanel = ({
           </div>
           <ScrollArea className="flex-grow p-4">
             <div className="space-y-4">
-              {selectedSubjects?.subject_details?.map((subject: any) => (
-                <Card key={subject.slug} className="group">
+              {selectedSubjects?.map((subject: any) => (
+                <Card key={subject.subject?.slug} className="group">
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
                       <CardTitle className="text-lg font-semibold leading-none">
-                        {subject.subject_name}
+                        {subject.subject?.subject_name}
                       </CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent className="pb-2">
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span>Subject Code - {subject.subject_code}</span>
+                      <span>
+                        Subject Code - {subject.subject?.subject_code}
+                      </span>
                     </div>
                   </CardContent>
                   <CardFooter className="text-xs text-muted-foreground">
-                    Type: {subject.category}
+                    Type: {subject.subject?.category}
                   </CardFooter>
                 </Card>
               ))}
@@ -92,11 +93,7 @@ const ConfirmPanel = ({
               }}
             >
               <Lock className="mr-2 h-4 w-4" />
-              {isLoading ? (
-                <ButtonLoader title="Locking..." />
-              ) : (
-                'Lock Subjects'
-              )}
+              'Lock Subjects'
             </Button>
           </div>
         </div>

@@ -56,7 +56,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   },
   {
     id: 'SUBJECT_SELECTION_CONFIRMATION',
-    name: 'Subject Selection Confirmation',
+    name: 'Subject Confirmation',
     icon: (
       <Eye
         className="h-24 w-24 dark:text-[#8a8686]"
