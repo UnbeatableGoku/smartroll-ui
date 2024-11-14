@@ -1,7 +1,4 @@
-import useElectiveSubject from '../hooks/useElectiveSubject'
 import { Lock, X } from 'lucide-react'
-
-import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 import { Button } from '@components/ui/button'
 import {
   Card,

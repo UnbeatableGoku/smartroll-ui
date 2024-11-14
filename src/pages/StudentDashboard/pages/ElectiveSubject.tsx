@@ -1,19 +1,15 @@
 import { useEffect, useState } from 'react'
 
 import useElectiveSubject from '../hooks/useElectiveSubject'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+
+import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import SubjectCard from '@pages/Sbuject/SubjectCard'
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@radix-ui/react-hover-card'
-import { BookOpen, GraduationCap, Info } from 'lucide-react'
 
-import { Loader } from '@components/common/loader/Loader'
+
+import { BookOpen, GraduationCap} from 'lucide-react'
+
+
 import { Button } from '@components/ui/button'
 
 import ConfirmPanel from './ConfirmPanel'

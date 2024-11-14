@@ -1,4 +1,3 @@
-import { Toaster as MessageToaster } from '@/components/ui/toaster'
 import { RootState } from '@data/redux/Store'
 import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
