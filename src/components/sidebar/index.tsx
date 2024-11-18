@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { setAuth } from '@data/redux/slices/authSlice'
-import { LogOut, Menu, User } from 'lucide-react'
+import { LogOut, Menu} from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -10,6 +10,7 @@ import { generateSidebarLinks } from '@utils/helpers'
 
 import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
 import TabLink from './tabLink'
+import NotificationDrawer from './NotificationDrawer'
 
 const Sidebar = () => {
   const dispatch = useDispatch()
@@ -25,8 +26,8 @@ const Sidebar = () => {
   }
 
   const menuItems = [
-    { icon: User, label: 'Profile', event: () => {} },
-    { icon: LogOut, label: 'Logout', event: handelLogout },
+    // { icon: Bell, label: 'Notifications', event: () => {},alert:true},
+    { icon: LogOut, label: 'Logout', event: handelLogout ,alert : false},
   ]
 
   const {
@@ -52,6 +53,7 @@ const Sidebar = () => {
   return (
     <div className="fixed bottom-4 left-0 right-0 flex justify-center">
       <div className="flex items-center gap-1 rounded-full border border-zinc-300/60 bg-black/80 transition-transform duration-300 ease-in-out hover:scale-105 dark:bg-black">
+        <NotificationDrawer></NotificationDrawer>
         {menuItems.map((item, index) => (
           <button
             key={item.label}

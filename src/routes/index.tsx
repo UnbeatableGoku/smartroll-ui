@@ -26,11 +26,13 @@ import {
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
+  DIVISION_CREATION
 } from '@constants'
 
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
 import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
+import DivisionCreation from '@pages/division/pages/DivisionCreation'
 
 const router = createBrowserRouter([
   {
@@ -182,6 +184,22 @@ const router = createBrowserRouter([
               <ProtectedRoute roleRequired="student">
                 <ElectiveSubject />
               </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      //Division creation
+      {
+        path: DIVISION_CREATION.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              
+                <DivisionCreation></DivisionCreation>
+              
             ),
           },
         ],

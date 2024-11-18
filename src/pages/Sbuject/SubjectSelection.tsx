@@ -28,6 +28,8 @@ const SubjectSelection = () => {
     handleSubjectSelection,
     isSubjectLock,
     setIsSubjectLock,
+    unlockSubjectAfterDeadline,
+    UnlockSubjectAfterDeadline
   } = useSubjectSelection()
   const { stream, handleStream } = useStream()
   const [isPanelOpen, setIsPanelOpen] = useState(false)
@@ -37,15 +39,12 @@ const SubjectSelection = () => {
   useEffect(() => {
     handleStream()
   }, [])
-
+  
   return (
     <>
       <div className="flex w-full flex-col space-y-4">
         {/* time table selection */}
-        <h1 className="mb-3 text-center text-4xl font-bold tracking-tight text-white md:text-5xl">
-          Subjects Selection
-        </h1>
-        <div className="flex flex-col flex-wrap items-center justify-evenly lg:flex-row">
+        <div className="flex flex-col flex-wrap items-center justify-evenly">
           <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
             {/* Stream Selection Card */}
             {stream && (
@@ -80,10 +79,11 @@ const SubjectSelection = () => {
                 optionTitle={'Semester'}
               />
 
-              <div className={`${isSubjectLock ? 'hidden' : 'block'}`}>
+              <div className={`${isSubjectLock ? 'hidden' : unlockSubjectAfterDeadline ? 'hidden':'block'}`}>
                 {/* Connecting Lines */}
                 <div
                   className={`absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12`}
+
                 />
                 <div
                   className={`absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden ${isSubjectLock ? 'hidden' : 'block'}`}
@@ -93,7 +93,7 @@ const SubjectSelection = () => {
 
             {/* Year Selection Card */}
             <div
-              className={`relative w-full md:w-[240px] lg:w-[320px] ${isSubjectLock ? 'hidden' : 'block'}`}
+              className={`relative w-full md:w-[240px] lg:w-[320px] ${isSubjectLock ? 'hidden' : unlockSubjectAfterDeadline ? 'hidden':'block'}`}
             >
               <Selection
                 title="Academic Year"
@@ -116,6 +116,15 @@ const SubjectSelection = () => {
           </Button>
           </div>}
           
+          {unlockSubjectAfterDeadline == true && isSubjectLock == true &&  <div className="">
+            <Button onClick={UnlockSubjectAfterDeadline} className={`z-10 mt-3 w-full lg:w-auto`}>
+            <BookOpen className="mr-2 h-4 w-4" />
+            Unlock Subject Selection
+            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+              {selectedSubjects.length}
+            </span>
+          </Button>
+          </div>}
         </div>
 
         <div className="p-4">

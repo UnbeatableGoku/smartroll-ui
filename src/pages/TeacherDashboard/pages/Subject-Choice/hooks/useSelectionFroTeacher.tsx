@@ -27,7 +27,7 @@ const useSelectionFroTeacher = () => {
             }
             const axiosInstance = axios.create()
             const method = 'get'
-            const endpoint = `/manage/get_semsters_from_stream/${slug}`
+            const endpoint = `/manage/get_semesters_from_stream/${slug}`
             const response_obj = await CallAPI(StoredTokens, axiosInstance, endpoint, method, header)
 
             if (response_obj.error == false) {

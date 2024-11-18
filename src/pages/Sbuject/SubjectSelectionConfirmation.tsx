@@ -11,12 +11,13 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChevronRight, X } from 'lucide-react'
+import { ChevronRight, Minus, X } from 'lucide-react'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
 
 import useSubjectSelectionConfirmation from './hooks/useSubjectSelectionConfirmation'
+import { Skeleton } from '@components/ui/skeleton'
 
 interface tableHeader {
   title: string
@@ -61,7 +62,8 @@ const SubjectSelectionConfirmation = () => {
     setTeachers,
     setStudents,
     setSelectedSubjectCategory,
-    getSubjectName
+    getSubjectName,
+    handleOnClickForDeleteSubjectOfStudent
   } = useSubjectSelectionConfirmation()
 
   useEffect(() => {
@@ -200,15 +202,20 @@ const SubjectSelectionConfirmation = () => {
                         Remaining Subject Selected By{' '}
                         {student.profile.profile.name}
                       </h3>
-                      <ScrollArea className="h-[150px]">
+                      <ScrollArea className="h-[250px]">
                         <ul className="space-y-2">
                           {student.finalized_choises.map(
                             (subject: any, index: any) => (
                               <li
                                 key={index}
-                                className="rounded border bg-background p-2"
+                                className="rounded border bg-background p-2 flex justify-between"
                               >
                                 {subject.subject_name} - {subject.subject_code}
+                                <Button size="icon" className='px-1 py-1' variant="destructive"
+                                  onClick={()=>{handleOnClickForDeleteSubjectOfStudent(subject.slug,student.slug)}}
+                                >
+                                  <Minus></Minus>
+                                </Button>
                               </li>
                             ),
                           )}
@@ -229,7 +236,7 @@ const SubjectSelectionConfirmation = () => {
       <div className="container mx-auto p-2 lg:p-4">
         <Tabs
           value={activeTab}
-          onValueChange={(value) => {
+          onValueChange={(value:any) => {
             setActiveTab(value as PersonType)
             setSelectedSemester('')
             setSelectedSubject('')
@@ -324,10 +331,26 @@ const SubjectSelectionConfirmation = () => {
           <TabsContent value="teacher" className="border rounded-lg overflow-hidden mt-4">
             { teachers.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Teacheres -  {teachers.length} </p></div> : null}
             { teachers.length > 0 && renderTable(teachers, 'teacher')}
+            {students.length == 0 && <div className="flex flex-col items-center gap-4">
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+            </div>}
           </TabsContent>
           <TabsContent value="student" className="border rounded-lg overflow-hidden mt-4">
           { students.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Stundets -  {students.length} </p></div> : null}
             {students.length > 0  && renderTable(students, 'student')}
+            {students.length == 0 && <div className="flex flex-col items-center gap-4">
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+            </div>}
           </TabsContent>
         </Tabs>
       </div>

@@ -59,6 +59,11 @@ export const PAGE_SUBJECT_SELECTION_CONFIRMATION: Page = {
   name: 'Subject Confirmation',
 }
 
+export const DIVISION_CREATION: Page = {
+  id: 'DIVISION_CREATION',
+  path: '/division-creation',
+  name: 'division-creation',
+}
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES

@@ -166,6 +166,46 @@ const useSubjectSelectionConfirmation = () => {
         const subject_obj = subjects.find((subject:any)=>subject.slug === subject_slug);
         return subject_obj?.name
     }
+
+    //function:: handle the subject deletion of single student 
+    const handleOnClickForDeleteSubjectOfStudent = async(subject_slug:string,student_slug:string)=>{
+      try{
+        const axiosInstance = axios.create()
+        const method = 'post'
+        const endpoint = `/manage/unlock_subject_choice_for_student/`
+        const header = {
+          'ngrok-skip-browser-warning': true,
+          Authorization: `Bearer ${StoredTokens.accessToken}`,
+        }
+        const body  = {
+          subject_slug : subject_slug,
+          subject_choices_slug : student_slug 
+        }
+        const response_obj = await CallAPI(StoredTokens, axiosInstance, endpoint, method, header,body)
+        if(response_obj.error==false){
+          if(response_obj.response?.data.data.subject_delete == false){
+            return toast.error("Please Try Again")
+          }
+          if(response_obj.response?.data.data.subject){
+            setStudents((prevData:any) => {
+              //check te student is exist 
+              return prevData.map((student:any)=>{
+                if(student.slug === student_slug){
+                  const updatedFinalizedSubject = student.finalized_choises.filter((subject:any) => subject.slug != subject_slug);
+                  return {...student, finalized_choises:[...updatedFinalizedSubject,response_obj.response?.data.data.subject]}
+                }
+              })
+            })
+          }
+        }
+        else{
+          toast.error(response_obj.errorMessage?.message)
+        }
+      }
+      catch(error){
+        toast.error("Something went wrong")
+      }
+    }
   return {
     selectedStream,
     selectedSemester,
@@ -188,7 +228,8 @@ const useSubjectSelectionConfirmation = () => {
     setTeachers,
     setStudents,
     setSelectedSubjectCategory,
-    getSubjectName
+    getSubjectName,
+    handleOnClickForDeleteSubjectOfStudent
   }
 }
 

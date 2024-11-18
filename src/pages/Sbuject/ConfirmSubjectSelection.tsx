@@ -47,9 +47,7 @@ const ConfirmSubjectSelection = ({
     setDraggedIndex(index)
   }
 
-  useEffect(() => {
-    console.log(selectedSubjects.map((subject: any) => subject.slug))
-  }, [selectedSubjects])
+ 
 
   const onHandleClick = () => {
     const subject_slug = selectedSubjects.map((subject: any) => subject.slug)
@@ -59,7 +57,6 @@ const ConfirmSubjectSelection = ({
       handleSubjectSelection(selectedSemester, subject_slug, time_stamp)
       setIsPanelOpen(false)
     } else {
-      console.log('Dragging Mode')
       save_teacher_subject_choice(subject_slug)
     }
     setIsPanelOpen(!isPanelOpen)

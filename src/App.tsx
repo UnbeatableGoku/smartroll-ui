@@ -9,7 +9,7 @@ import { Loader } from '@components/common/loader/Loader'
 
 function App() {
   const isLoading = useSelector((state: RootState) => state.loader.LOADER_STATE)
-  console.log(isLoading)
+  
   return (
     <div className="min-h-screen overflow-hidden text-gray-100 dark:bg-black">
       <Outlet />
