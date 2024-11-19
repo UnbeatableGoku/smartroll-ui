@@ -7,8 +7,6 @@ import { jwtDecode } from 'jwt-decode'
 import { useSelector,useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { base_url } from '@utils/base_url'
-
 import { DecodedToken } from 'types/common'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -44,7 +42,7 @@ const useLogin = () => {
 
     try {
       const response = await axios.post(
-        `${base_url}/auth/api/login/`,
+        `${import.meta.env.VITE_BASE_URL}/auth/api/login/`,
         userdata,
         { headers },
       )

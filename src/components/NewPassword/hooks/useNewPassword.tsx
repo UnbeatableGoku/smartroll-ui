@@ -5,8 +5,6 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
-import { base_url } from '@utils/base_url'
-
 import { DecodedToken } from 'types/common'
 
 interface NewPasswordData {
@@ -24,16 +22,15 @@ const useNewPassword = () => {
         'ngrok-skip-browser-warning': 'true',
       }
       const response = await axios.post(
-        `${base_url}/auth/api/set_new_password_for_stakeholders/`,
+        `${import.meta.env.VITE_BASE_URL}/auth/api/set_new_password_stakeholders/`,
         newPasswordData,
         { headers },
       )
-      
+
       if (response) {
-        const {access,refresh}  = {...response.data}
-        console.log(response)  
-        console.log(access)
-        console.log(refresh)
+        const { access, refresh }: { access: string; refresh: string } = {
+          ...response.data,
+        }
         const token: { access: string; refresh: string; isAuth: boolean } = {
           access,
           refresh,
@@ -46,25 +43,23 @@ const useNewPassword = () => {
         localStorage.setItem('refreshToken', token.refresh)
 
         // Decode the new access token to get the user profile
-        const decode:DecodedToken = jwtDecode<DecodedToken>(access)
-        console.log(decode)
+        const decode: DecodedToken = jwtDecode<DecodedToken>(access)
         dispatch(setUserProfile(decode))
 
         // Show success toast and navigate
         toast.success('Password Updated Successfully!')
-        if(decode.obj.profile.role === 'teacher'){
+        if (decode.obj.profile.role === 'teacher') {
           navigate('/teacher-dashboard/subject-choice')
-        }
-        else{
+        } else {
           navigate('/student-dashboard/elective-subject')
         }
-        
+
         return {
           success: true,
           message: 'Password Updated Successfully!',
         }
-      } 
-    } catch (error:any) {
+      }
+    } catch (error: any) {
       console.error('Error Updating Password', error)
       toast.error(error.response.data.message)
     }
