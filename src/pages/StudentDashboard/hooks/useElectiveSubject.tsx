@@ -54,7 +54,7 @@ const useElectiveSubject = () => {
         setTotalCategories(availableCategories as string[])
 
         setElectiveSubject(electiveSubjectData)
-        console.log(totalCategories)
+        
 
         // Set finalized choices
         if (data?.choices_locked) {
@@ -92,14 +92,12 @@ const useElectiveSubject = () => {
     //     ? prev.filter((d: any) => d.selectedSubjects.slug !== subject.slug)
     //     : { group_slug: group_slug, selectedSubjects: [subject] },
     // )
-    console.log(subject)
+    
     setSelectedSubjects((prevSubjects) => {
       // Check if the subject with the given group_slug already exists
       const index = prevSubjects.findIndex(
         (item: any) => item.group_slug === group_slug,
       )
-
-      console.log(index)
       // If it exists, remove it
       if (index !== -1) {
         return prevSubjects.map((item, idx) =>

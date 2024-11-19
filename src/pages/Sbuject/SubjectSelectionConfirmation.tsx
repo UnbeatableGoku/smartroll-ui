@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChevronRight, Minus, X } from 'lucide-react'
+import { ChevronRight, Trash, X } from 'lucide-react'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
@@ -87,7 +87,7 @@ const SubjectSelectionConfirmation = () => {
               })
             : student_table_header.map((header, index) => {
                 return (
-                  <TableHead className="w-auto" key={index}>
+                  <TableHead className="w-auto text-center" key={index}>
                     {header.title}
                   </TableHead>
                 )
@@ -160,17 +160,17 @@ const SubjectSelectionConfirmation = () => {
           data.map((student: any) => (
             <>
               <TableRow key={student?.slug}>
-                <TableCell className="font-medium">
+                <TableCell className="font-medium text-center">
                   {student.profile.enrollment}
                 </TableCell>
-                <TableCell className="font-medium">
+                <TableCell className="font-medium text-center">
                   {student.profile.profile.name}
                 </TableCell>
-                <TableCell className="font-medium">
+                <TableCell className="font-medium text-center">
                   {student.profile.profile.email}
                 </TableCell>
 
-                <TableCell>
+                <TableCell className='flex space-x-3 justify-center'>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -192,6 +192,11 @@ const SubjectSelectionConfirmation = () => {
                       subjects
                     </span>
                   </Button>
+                  <Button size="icon" className='px-1 py-1' variant="destructive"
+                                  onClick={()=>{handleOnClickForDeleteSubjectOfStudent(selectedSubject,student.slug)}}
+                                >
+                                  <Trash></Trash>
+                                </Button>
                 </TableCell>
               </TableRow>
               {selectedPerson?.slug === student.slug && (
@@ -211,11 +216,11 @@ const SubjectSelectionConfirmation = () => {
                                 className="rounded border bg-background p-2 flex justify-between"
                               >
                                 {subject.subject_name} - {subject.subject_code}
-                                <Button size="icon" className='px-1 py-1' variant="destructive"
+                                {/* <Button size="icon" className='px-1 py-1' variant="destructive"
                                   onClick={()=>{handleOnClickForDeleteSubjectOfStudent(subject.slug,student.slug)}}
                                 >
                                   <Minus></Minus>
-                                </Button>
+                                </Button> */}
                               </li>
                             ),
                           )}
@@ -331,7 +336,7 @@ const SubjectSelectionConfirmation = () => {
           <TabsContent value="teacher" className="border rounded-lg overflow-hidden mt-4">
             { teachers.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Teacheres -  {teachers.length} </p></div> : null}
             { teachers.length > 0 && renderTable(teachers, 'teacher')}
-            {students.length == 0 && <div className="flex flex-col items-center gap-4">
+            {teachers.length == 0 && <div className="flex flex-col items-center gap-4">
               <Skeleton className="sm:h-18 h-20 w-full" />
               <Skeleton className="sm:h-18 h-20 w-full" />
               <Skeleton className="sm:h-18 h-20 w-full" />

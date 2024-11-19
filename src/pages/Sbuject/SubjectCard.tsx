@@ -31,7 +31,7 @@ const SubjectCard = ({
   }, [])
 
   return (
-    <>
+    
       <Card
         key={subject.slug}
         className={`relative cursor-pointer overflow-hidden transition-all duration-300 ${
@@ -43,11 +43,10 @@ const SubjectCard = ({
         } text-white`}
         onClick={() => {
           isSubjectLock ? null : toggleSubjectSelection(subject)
-          console.log(isSubjectLock)
         }}
       >
-        {draggable == true &&
-          isSubjectLock == true &&
+        {draggable  &&
+          isSubjectLock &&
           selectedSubjects.some(
             (selectedsubject: any) => selectedsubject.slug === subject.slug,
           ) && (
@@ -186,7 +185,7 @@ const SubjectCard = ({
           </div>
         </CardContent>
       </Card>
-    </>
+    
   )
 }
 

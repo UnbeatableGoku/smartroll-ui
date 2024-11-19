@@ -3,14 +3,15 @@ import { DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Minus, GripVertical } from 'lucide-react'
+import {  GripVertical } from 'lucide-react'
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
 import useDivisionCreation from '../hooks/useDivisionCreation'
-import DivisionCreationSuggesition from './DivisionCreationSuggesition'
-import StudentListForDivision from './StudentListForDivision'
 
 
+
+
+import {DivisionCreationSuggesition,StudentListForDivision} from '../../division'
 
 
 const DivisionCreation = () => {
@@ -23,7 +24,6 @@ const DivisionCreation = () => {
         selectedStream,
         selectedSemester,
         isOpenSuggesition,
-        isSuggesitionAccept,
         setCapacityDivision,
         sujectChoiceGroup,
         maxDivisionCapacity,
@@ -40,11 +40,8 @@ const DivisionCreation = () => {
         handleOnClickForDisplaySuggestion,
         setMaxDivisionCapacity,
         handelOnClickForSaveDivisions,
-        createDivisions,
         onDragEnd,
-        removeGroupFromDivision,
         updateAvailableCounts,
-        updateGroupCount
     } = useDivisionCreation()
   
     useEffect(() => {
@@ -55,7 +52,6 @@ const DivisionCreation = () => {
         updateAvailableCounts()
     }, [divisions])
 
-    console.log(divisionsData)
     return (
         <div className="mx-auto p-4">
 
@@ -63,7 +59,7 @@ const DivisionCreation = () => {
                 <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
 
                     {stream && (
-                        <>
+                    
                             <div className="relative w-full md:w-[240px] lg:w-[320px]">
                                 <Selection
                                     title="Stream"
@@ -79,7 +75,7 @@ const DivisionCreation = () => {
                                 <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
                                 <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
                             </div>
-                        </>
+                        
                     )}
                     <div className="relative w-full md:w-[240px] lg:w-[320px]">
 
@@ -97,10 +93,10 @@ const DivisionCreation = () => {
                     </div>
                 </div>
 
-                {renderStudentList == true && divisionsAlreadyCreated == false && <Button className='mt-4' variant={'default'}
+                {renderStudentList && !divisionsAlreadyCreated && <Button className='mt-4' variant={'default'}
                     onClick={()=>handelOnClickForSaveDivisions()}
                   >Confirm Divisions</Button>}
-                {selectedSemester && divisionsAlreadyCreated == false &&
+                {selectedSemester && !divisionsAlreadyCreated &&
                     <DragDropContext onDragEnd={onDragEnd}>
                         <div className="flex flex-col gap-4">
                             {!renderStudentList && <div>
@@ -132,7 +128,7 @@ const DivisionCreation = () => {
                                 </Droppable>
                             </div>}
 
-                            {!isSuggesitionAccept && <div>
+                            {/* {!isSuggesitionAccept && <div>
                                 <h2 className="text-xl font-semibold mb-2">Divisions</h2>
                                 {divisions.length === 0 ? (
                                     <Button onClick={createDivisions} className="w-full">Create Divisions</Button>
@@ -181,12 +177,12 @@ const DivisionCreation = () => {
                                         ))}
                                     </div>
                                 )}
-                            </div>}
+                            </div>} */}
                         </div>
                     </DragDropContext>
                 }
 
-                {selectedSemester && divisionsAlreadyCreated == false &&
+                {selectedSemester && !divisionsAlreadyCreated &&
                 <div ref={setCapacityDivision}>
                     <Card>
                     <CardHeader>
@@ -220,7 +216,7 @@ const DivisionCreation = () => {
 
                 
                 
-                   { divisionsData && renderStudentList == true && <StudentListForDivision divisionsData={divisionsData} activeTab={activeTab} setActiveTab={setActiveTab} handelOnClickForSaveDivisions={handelOnClickForSaveDivisions}></StudentListForDivision>}
+                   { divisionsData && renderStudentList && <StudentListForDivision divisionsData={divisionsData} activeTab={activeTab} setActiveTab={setActiveTab} handelOnClickForSaveDivisions={handelOnClickForSaveDivisions}></StudentListForDivision>}
                     
             </div>
 

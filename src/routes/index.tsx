@@ -3,13 +3,14 @@ import App from '@App'
 import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
-import Dashboard from '@pages/Dashboard'
+import { Navigate } from 'react-router-dom'; 
+// import Dashboard from '@pages/Dashboard'
 import NotFound from '@pages/NotFound'
 import SubjectSelection from '@pages/Sbuject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Sbuject/SubjectSelectionConfirmation'
-import StudentDashboard from '@pages/StudentDashboard'
+// import StudentDashboard from '@pages/StudentDashboard'
 import ElectiveSubject from '@pages/StudentDashboard/pages/ElectiveSubject'
-import TeacherDashboard from '@pages/TeacherDashboard'
+// import TeacherDashboard from '@pages/TeacherDashboard'
 import SubjectChoice from '@pages/TeacherDashboard/pages/Subject-Choice/SubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
@@ -57,11 +58,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              <ProtectedRoute roleRequired="admin">
-                <Dashboard />
-              </ProtectedRoute>
-            ),
+            element:  <Navigate to="/subject/subject-select" replace />
+            // element: (
+            //   <ProtectedRoute roleRequired="admin">
+            //     <Dashboard />
+            //   </ProtectedRoute>
+            // ),
           },
           {
             element: <PageAccessWrapper />,
@@ -97,11 +99,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              <ProtectedRoute roleRequired="teacher">
-                <TeacherDashboard />
-              </ProtectedRoute>
-            ),
+            element : <Navigate to="/teacher-dashboard/subject-choice" replace />
+            // element: (
+            //   <ProtectedRoute roleRequired="teacher">
+            //     <TeacherDashboard />
+            //   </ProtectedRoute>
+            // ),
           },
         ],
       },
@@ -113,11 +116,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              <ProtectedRoute roleRequired="student">
-                <StudentDashboard />
-              </ProtectedRoute>
-            ),
+            element : <Navigate to="/student-dashboard/elective-subject" replace />
+            // element: (
+            //   <ProtectedRoute roleRequired="student">
+            //     <StudentDashboard />
+            //   </ProtectedRoute>
+            // ),
           },
         ],
       },

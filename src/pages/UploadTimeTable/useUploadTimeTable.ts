@@ -33,7 +33,6 @@ const useUploadTimeTable = () => {
   //FileUploadLogic
   const onSubmit = async (data: SubmitData) => {
     const formData = new FormData()
-    console.log(data)
 
     if (data.file) {
       formData.append('master_tt.csv', data.file)
@@ -67,12 +66,10 @@ const useUploadTimeTable = () => {
         setTimeTable(true)
         toast.success('File uploaded successfully')
       } else {
-        console.log(response_obj.errorMessage?.message)
         toast.error(response_obj?.errorMessage?.message)
         setLoadTimeTable(false)
       }
     } catch (error) {
-      console.error('Error Uploading File', error)
       toast.error(`File upload failed. See console for more information.`)
     }
   }

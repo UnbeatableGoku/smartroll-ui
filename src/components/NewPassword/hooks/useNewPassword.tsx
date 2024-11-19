@@ -11,7 +11,7 @@ import { DecodedToken } from 'types/common'
 
 interface NewPasswordData {
   password: string
-  student_slug: string
+  profile_slug: string
 }
 const useNewPassword = () => {
   const navigate = useNavigate()
@@ -24,14 +24,19 @@ const useNewPassword = () => {
         'ngrok-skip-browser-warning': 'true',
       }
       const response = await axios.post(
-        `${base_url}/auth/api/set_new_password_for_student/`,
+        `${base_url}/auth/api/set_new_password_for_stakeholders/`,
         newPasswordData,
         { headers },
       )
+      
       if (response) {
-        console.log(response)
+        const {access,refresh}  = {...response.data}
+        console.log(response)  
+        console.log(access)
+        console.log(refresh)
         const token: { access: string; refresh: string; isAuth: boolean } = {
-          ...response?.data,
+          access,
+          refresh,
           isAuth: true,
         }
         dispatch(setAuth(token))
@@ -41,23 +46,27 @@ const useNewPassword = () => {
         localStorage.setItem('refreshToken', token.refresh)
 
         // Decode the new access token to get the user profile
-        const decode = jwtDecode<DecodedToken>(response?.data?.access)
+        const decode:DecodedToken = jwtDecode<DecodedToken>(access)
         console.log(decode)
         dispatch(setUserProfile(decode))
 
         // Show success toast and navigate
         toast.success('Password Updated Successfully!')
-        navigate('/student-dashboard')
+        if(decode.obj.profile.role === 'teacher'){
+          navigate('/teacher-dashboard/subject-choice')
+        }
+        else{
+          navigate('/student-dashboard/elective-subject')
+        }
+        
         return {
           success: true,
           message: 'Password Updated Successfully!',
         }
-      } else {
-        toast.error('Password Update Failed. Please Contact Administrator.')
-      }
-    } catch (error) {
+      } 
+    } catch (error:any) {
       console.error('Error Updating Password', error)
-      toast.error('An error occurred while updating the password')
+      toast.error(error.response.data.message)
     }
   }
   return {

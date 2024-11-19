@@ -208,7 +208,6 @@ const useSubjectSelection = () => {
         )
         if(response_obj.error === false){
           const check = get(response_obj,'response.data.data',false);
-          console.log(check)
           if(check == true){
             setIsSubjectLock(!isSubjectLock)
           }

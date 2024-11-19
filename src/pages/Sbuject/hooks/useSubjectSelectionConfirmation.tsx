@@ -170,6 +170,10 @@ const useSubjectSelectionConfirmation = () => {
     //function:: handle the subject deletion of single student 
     const handleOnClickForDeleteSubjectOfStudent = async(subject_slug:string,student_slug:string)=>{
       try{
+        const delete_choice = prompt("Please type 'delete' for delete student choice")
+        if(delete_choice != 'delete'){
+          return toast.error("please type 'delete' for delete student choice")
+        }
         const axiosInstance = axios.create()
         const method = 'post'
         const endpoint = `/manage/unlock_subject_choice_for_student/`
@@ -186,17 +190,10 @@ const useSubjectSelectionConfirmation = () => {
           if(response_obj.response?.data.data.subject_delete == false){
             return toast.error("Please Try Again")
           }
-          if(response_obj.response?.data.data.subject){
             setStudents((prevData:any) => {
               //check te student is exist 
-              return prevData.map((student:any)=>{
-                if(student.slug === student_slug){
-                  const updatedFinalizedSubject = student.finalized_choises.filter((subject:any) => subject.slug != subject_slug);
-                  return {...student, finalized_choises:[...updatedFinalizedSubject,response_obj.response?.data.data.subject]}
-                }
-              })
+              return prevData.filter((student:any)=> student.slug != student_slug)              
             })
-          }
         }
         else{
           toast.error(response_obj.errorMessage?.message)

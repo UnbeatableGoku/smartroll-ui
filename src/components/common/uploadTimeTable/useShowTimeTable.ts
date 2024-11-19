@@ -34,11 +34,11 @@ const useShowTimeTable = () => {
         method,
         header,
       )
-      if (response_obj.error == false) {
+      if (!response_obj.error) {
         const data = get(response_obj, 'response.data.data.schedules', [])
         setMasterTimeTable(data)
       } else {
-        console.log(response_obj.errorMessage?.message)
+        
         toast.error(response_obj.errorMessage?.message)
       }
     } catch (e) {

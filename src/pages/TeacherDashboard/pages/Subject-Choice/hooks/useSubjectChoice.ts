@@ -49,7 +49,6 @@ const useSubjectChoice = () => {
   }
 
   const toggleSubjectSelection = (subject: any): void => {
-    console.log(subject.slug)
     setSelectedSubjects((prev) =>
       prev.some((d) => d.slug === subject.slug)
         ? prev.filter((d) => d.slug !== subject.slug)
@@ -96,7 +95,6 @@ const useSubjectChoice = () => {
   const onDrop = (index: number) => {
     if (draggedIndex !== null) {
       const updatedSubjects = [...selectedSubjects]
-      console.log(updatedSubjects)
       const [movedSubject] = updatedSubjects.splice(draggedIndex, 1)
       updatedSubjects.splice(index, 0, movedSubject)
       setSelectedSubjects(updatedSubjects)

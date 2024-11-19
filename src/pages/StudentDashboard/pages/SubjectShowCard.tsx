@@ -32,8 +32,7 @@ const SubjectShowCard = ({
   const stopPropagation = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
   }, [])
-  console.log(selectedSubjects)
-  console.log(isSubjectLock)
+
   return (
     <>
       <Card

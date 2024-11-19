@@ -16,7 +16,6 @@ import { Check,  Minus} from 'lucide-react'
 const StudentListForDivision = ({divisionsData,setActiveTab,activeTab}:any) => {
   
   const renderTable = (data: any) => {
-    console.log(data);
   
     return (
       <Table>
@@ -32,8 +31,8 @@ const StudentListForDivision = ({divisionsData,setActiveTab,activeTab}:any) => {
             </TableHead>
   
             {/* Dynamically create batch headers */}
-            {data?.total_batches.map((batch: string, index: number) => (
-              <TableHead className="w-auto" key={index}>
+            {data?.total_batches.map((batch: string) => (
+              <TableHead className="w-auto" key={batch}>
                 {batch}
               </TableHead>
             ))}
@@ -53,17 +52,17 @@ const StudentListForDivision = ({divisionsData,setActiveTab,activeTab}:any) => {
                   <TableCell>{student.enrollment}</TableCell>
   
                   {/* Loop over total_batches to check each batch */}
-                  {data.total_batches.map((batchName: string, index: number) => {
+                  {data.total_batches.map((batchName: string) => {
                     // Check if the current batch name matches the batch_name in the student data
                     if (batchName === batch?.batch_name) {
                       return (
-                        <TableCell key={index}>
+                        <TableCell key={batchName}>
                           <Check className='text-green-700' /> {/* Render Check icon if the student is in this batch */}
                         </TableCell>
                       );
                     } else {
                       return (
-                        <TableCell key={index}>
+                        <TableCell key={batchName}>
                           <Minus /> {/* Render Minus icon if the student is not in this batch */}
                         </TableCell>
                       );
@@ -94,7 +93,7 @@ const StudentListForDivision = ({divisionsData,setActiveTab,activeTab}:any) => {
             {
               divisionsData?.divisions.map((division:any)=>{
                 return (
-                  <TabsTrigger value={division.division_name}>{division.division_name}</TabsTrigger>
+                  <TabsTrigger value={division.division_name} key={division.division_name}>{division.division_name}</TabsTrigger>
                 )
               })
             }
@@ -104,7 +103,7 @@ const StudentListForDivision = ({divisionsData,setActiveTab,activeTab}:any) => {
           {
             divisionsData?.divisions.map((division:any)=>{
               return (
-                <TabsContent value={division.division_name} className="overflow-hidden mt-4">
+                <TabsContent value={division.division_name} className="overflow-hidden mt-4" key={division.division_name}>
                   {divisionsData ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Division -  {division.division_name}</p><p>Total Studentes -  {division.total_student_count} </p></div> : null}
                   <div className=' h-[500px] '>
                   {divisionsData && renderTable(division)}

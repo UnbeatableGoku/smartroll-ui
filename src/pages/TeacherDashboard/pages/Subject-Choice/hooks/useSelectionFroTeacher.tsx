@@ -100,8 +100,6 @@ const useSelectionFroTeacher = () => {
     const save_teacher_subject_choice = async(subject_slugs:any)=>{
         try{
             
-            console.log("first")
-            console.log(subject_slugs);
             const header = {
                 'ngrok-skip-browser-warning': true,
                 Authorization: `Bearer ${StoredTokens.accessToken}`,

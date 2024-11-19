@@ -21,7 +21,7 @@ const useSemester = () => {
             const method = 'get'
             const endpoint = `/manage/get_semesters_from_stream/${slug}`
             const response_obj = await CallAPI(StoredTokens, axiosInstance, endpoint, method, header)
-            if (response_obj.error == false) {
+            if (!response_obj.error) {
                 const semester = get(response_obj, 'response.data.data', [])
             
                 const semester_lst: Array<SelectionResponse> = semester.map((semester: any) => {
@@ -30,7 +30,7 @@ const useSemester = () => {
                 setSemesters(semester_lst)     // to generilized the data to load on select component
             
                 const data = get(response_obj,'response.data.data',[])
-                console.log(data) 
+                
                 setSemesterResponse(data) // set the enrtire response in setSemesterResponse state
                 toast.info("please select the semester")
             }

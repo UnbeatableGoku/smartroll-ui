@@ -31,16 +31,7 @@ const NotificationDrawer = () => {
 
   
 
-  const NotificationItem = ({ notification }: { notification: Notification }) => (
-    <div className={`flex items-start space-x-4 p-4 ${notification.status === 'seen' ? 'opacity-60' : ''}`}>
-      <div className={`w-2 h-2 mt-2 rounded-full ${notification.status === 'seen' ? 'bg-gray-300' : 'bg-blue-500'}`} />
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium dark:text-white">{notification.type}</p>
-        <p className="text-sm text-gray-500">{notification.message}</p>
-      </div>
-      
-    </div>
-  )
+  
 
   return (
     
@@ -103,5 +94,17 @@ const NotificationDrawer = () => {
     
   )
 }
+
+
+const NotificationItem = ({ notification }: { notification: Notification }) => (
+  <div className={`flex items-start space-x-4 p-4 ${notification.status === 'seen' ? 'opacity-60' : ''}`}>
+    <div className={`w-2 h-2 mt-2 rounded-full ${notification.status === 'seen' ? 'bg-gray-300' : 'bg-blue-500'}`} />
+    <div className="flex-1 min-w-0">
+      <p className="text-sm font-medium dark:text-white">{notification.type}</p>
+      <p className="text-sm text-gray-500">{notification.message}</p>
+    </div>
+    
+  </div>
+)
 
 export default NotificationDrawer

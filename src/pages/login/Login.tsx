@@ -6,61 +6,35 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from 'lucide-react'
 import { Helmet } from 'react-helmet'
-import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
-
 import NewPassword from '@components/NewPassword/NewPassword'
-
-
 import useLogin from './hooks/useLogin'
+
 
 type LoginFormData = {
   email: string
   password: string
 }
-const Login = () => {
-  //? useNavigate
-  const navigate = useNavigate()
-  //? useForm
-  const { register, handleSubmit, reset } = useForm<LoginFormData>()
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [studentSlug, setStudentSlug] = useState<string>('')
-  const [isTempPassword, setIsTempPassword] = useState<boolean>(false)
+
+const Login = () => {
+  
   const [isLoading, setIsLoading] = useState<boolean>(false)
   //custom hook for handlLogin
-  const { handleLogin, redirectLogin } = useLogin()
+  const { handleLogin, redirectLogin,isTempPassword,setShowPassword,showPassword,studentSlug,register,handleSubmit} = useLogin()
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = (data: LoginFormData) => {
     setIsLoading(true)
-    const response = await handleLogin(data) //? Handle login logic here
-    try {
-      if (response.error && response?.student_slug) {
-        setStudentSlug(response?.student_slug)
-        setIsTempPassword(true)
-        toast.warning('Temporary password. Please set a new password.')
-      } else {
-        if (response.error && response?.status === 401) {
-          toast.error(`${response?.message}. Please try again.`)
-        }
-      }
-
-      if (response.profile?.profile.role === 'admin') {
-        navigate('/')
-      } else if (response.profile?.profile.role === 'teacher') {
-        navigate('/teacher-dashboard')
-      } else if (response.profile?.profile.role === 'student') {
-        navigate('/student-dashboard')
-      }
-    } catch (error) {
-      toast.error('An error occurred during login. Please try again.')
-    } finally {
-      setIsLoading(false) // Hide spinner when the request is completed (either success or failure)
-
-      reset() //? Reset the form fields after submission
-    }
+    handleLogin(data) //? Handle login logic here
+    setIsLoading(false)
+      
+       
+        
+        
   }
+
+      
+    
+  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
@@ -76,7 +50,7 @@ const Login = () => {
         <title>Smart Roll | Login</title>
       </Helmet>
       {isTempPassword ? ( //? Render NewPassword component if isTempPassword is true
-        <NewPassword student_slug={studentSlug} />
+        <NewPassword profile_slug={studentSlug} />
       ) : (
         <div className="flex min-h-screen flex-col">
         <main className="flex flex-grow items-center justify-center bg-black">

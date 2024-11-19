@@ -17,15 +17,13 @@ const useSidebarLinkSelector = () => {
   // Define the sidebar links based on user role
   const userLinks = {
     admin: [
-      'DASHBOARD',
-      'USER_MANAGEMENT',
       //   'TIMETABLE',
       'SUBJECT-SELECT',
       'SUBJECT_SELECTION_CONFIRMATION',
       'DIVISION_CREATION'
     ],
-    teacher: ['TEACHER-DASHBOARD', 'SUBJECT-CHOICE'],
-    student: ['STUDENT-DASHBOARD', 'ELECTIVE_SUBJECT'],
+    teacher: ['SUBJECT-CHOICE'],
+    student: ['ELECTIVE_SUBJECT'],
   }
 
   // Compute the sidebar links based on the user's role

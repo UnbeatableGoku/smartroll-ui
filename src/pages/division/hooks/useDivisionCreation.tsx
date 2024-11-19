@@ -110,14 +110,14 @@ const useDivisionCreation = () => {
                 header,
             )     
             if(response_obj.error == false){
-                console.log(response_obj.response?.data.data.divisions.length)
+                
                 if(response_obj.response?.data.data.divisions.length > 0){
                     
                     setDivisionsData(response_obj.response?.data.data)
                     setRenderStudentList(true)
                     setDivisionsAlreadyCreated(true)
                     setActiveTab(response_obj.response?.data.data.divisions[0].division_name)
-                    console.log("first")
+                    
                 }
                 else{
                     const check = get(response_obj,'response.data.data',{});
@@ -211,7 +211,6 @@ const useDivisionCreation = () => {
                 params
             )     
             if(response_obj.error == false){
-                console.log(response_obj)
                 const check = get(response_obj,'response.data.data',{})
                 setDivisionsData(check)
                 setActiveTab(check.divisions[0].division_name)
