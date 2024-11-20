@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { PAGE_DASHBOARD } from '@constants'
 
-import UsernameSection from './usernameSection'
+
 
 
 const Header = () => {

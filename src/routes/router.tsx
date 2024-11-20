@@ -25,9 +25,9 @@ const EDITOR_ROUTES: RouteObject[] = [
   {
     path: `${PAGE_EDIT_USER.path}/:userId`,
     element: <EditUserPage />,
-    loader: async ({ params }) => {
+    loader: async ({}) => {
       try {
-        console.log(params)
+        
 
         // const { data } = await getUser(params.userId!)
         // return data

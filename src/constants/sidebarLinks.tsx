@@ -1,5 +1,11 @@
 import { DashboardIcon, UserIcon } from '@icons'
-import { FileSpreadsheet, LibraryBig, Upload } from 'lucide-react'
+import {
+  BadgePlus,
+  BookCheck,
+  Eye,
+  FileSpreadsheet,
+  SquareCheck,
+} from 'lucide-react'
 
 import { SidebarLink } from 'types/common'
 
@@ -32,21 +38,70 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   },
   {
     id: 'STUDENT-DASHBOARD',
-    name: 'Teacher Dashboard',
+    name: 'Student Dashboard',
     icon: <DashboardIcon />,
     path: '/student-dashboard',
   },
   {
     id: 'SUBJECT-SELECT',
-    name: 'Subject',
+    name: 'Subject Selection',
     icon: (
-      <LibraryBig
+      <BadgePlus
         className="h-24 w-24 dark:text-[#8a8686]"
         strokeWidth={3}
         absoluteStrokeWidth={false}
       />
     ),
-    path: '/subject-select',
+    path: '/subject/subject-select',
   },
+  {
+    id: 'SUBJECT_SELECTION_CONFIRMATION',
+    name: 'Subject Confirmation',
+    icon: (
+      <Eye
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/subject/subject-selection-confirmation',
+  },
+  {
+    id: 'ELECTIVE_SUBJECT',
+    name: 'Elective Subject',
+    icon: (
+      <BookCheck
+        className="h-26 w-26 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/student-dashboard/elective-subject',
+  },
+  {
+    id: 'SUBJECT-CHOICE',
+    name: 'Subject-Choice',
+    icon: (
+      <SquareCheck
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-dashboard/subject-choice',
+  },
+  {
+    id: 'DIVISION_CREATION',
+    name: 'division-creation',
+    icon: (
+      <SquareCheck
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/division-creation',
+  },
+
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]

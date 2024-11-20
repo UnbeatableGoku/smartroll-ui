@@ -35,7 +35,7 @@ export const SocketContextProvider = ({
     })
 
     newSocket.on('broadcast', (data: Prathmesh) => {
-      console.log(data, 'this is data')
+      
 
       setServerMsg((prev) => [...prev, data.first])
     })

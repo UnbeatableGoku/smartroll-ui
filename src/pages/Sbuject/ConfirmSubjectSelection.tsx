@@ -1,56 +1,204 @@
-import React from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { X} from 'lucide-react'
+import { useState } from 'react'
 
-const ConfirmSubjectSelection = ({isPanelOpen,setIsPanelOpen,togglePanel,subjects}:any) => {
-    
-     
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@radix-ui/react-popover'
+import { format } from 'date-fns'
+import { CalendarIcon, GripVertical, Lock, X } from 'lucide-react'
 
-      
+import { cn } from '@utils'
+
+import { ScrollArea } from '@components/ui/scroll-area'
+
+const ConfirmSubjectSelection = ({
+  isPanelOpen,
+  setIsPanelOpen,
+  togglePanel,
+  selectedSemester,
+  selectedSubjects,
+  handleSubjectSelection,
+  draggable = false,
+  onDrop,
+  setDraggedIndex,
+  save_teacher_subject_choice,
+  isSubjectLock,
+}: any) => {
+  const [date, setDate] = useState<Date>()
+  const [open, setOpen] = useState(false)
+
+  const handleSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate)
+    setOpen(false)
+  }
+
+  // Handle drag start
+  const onDragStart = (index: number) => {
+    setDraggedIndex(index)
+  }
+
+ 
+
+  const onHandleClick = () => {
+    const subject_slug = selectedSubjects.map((subject: any) => subject.slug)
+
+    if (draggable == false) {
+      const time_stamp = date?.getTime()
+      handleSubjectSelection(selectedSemester, subject_slug, time_stamp)
+      setIsPanelOpen(false)
+    } else {
+      save_teacher_subject_choice(subject_slug)
+    }
+    setIsPanelOpen(!isPanelOpen)
+  }
+
   return (
-    <div className="relative min-h-screen bg-gray-900 text-gray-100">
-    
+    <>
+      {/* Overlay */}
+      {isPanelOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black bg-opacity-50"
+          onClick={togglePanel}
+        />
+      )}
 
-    {/* Overlay */}
-    {isPanelOpen && (
+      {/* Sliding Panel */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-20"
-        onClick={togglePanel}
-      />
-    )}
+        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-background/80 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out sm:w-96 ${
+          isPanelOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex h-full flex-col">
+          <div className="border-b p-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">Selected Subjects</h2>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground"
+                onClick={() => {
+                  setIsPanelOpen(!isPanelOpen)
+                }}
+              >
+                <X className="h-6 w-6" />
+                <span className="sr-only">Close panel</span>
+              </Button>
+            </div>
+          </div>
+          <ScrollArea className="flex-grow p-4">
+            <div className="space-y-4">
+              {draggable
+                ? selectedSubjects.map((subject: any, index: any) => (
+                    <>
+                      <Card
+                        key={subject.slug}
+                        className="group"
+                        draggable
+                        onDragStart={() => onDragStart(index)}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={() => onDrop(index)}
+                      >
+                        <CardHeader className="pb-2">
+                          <div className="flex items-start justify-between">
+                            {/* Grip Icon for Draggable Indicator */}
+                            <div className="flex items-center space-x-2">
+                              <GripVertical className="cursor-grab text-muted-foreground" />
+                              <CardTitle className="text-lg font-semibold leading-none">
+                                {subject.subject_name}
+                              </CardTitle>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="pb-2">
+                          <div className="flex items-center justify-between text-sm text-muted-foreground">
+                            <span>Subject Code - {subject.subject_code}</span>
+                          </div>
+                        </CardContent>
+                        <CardFooter className="text-xs text-muted-foreground">
+                          Type: {subject.category}
+                        </CardFooter>
+                      </Card>
+                    </>
+                  ))
+                : selectedSubjects.map((subject: any) => (
+                    <Card key={subject.slug} className="group">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between">
+                          <CardTitle className="text-lg font-semibold leading-none">
+                            {subject.subject_name}
+                          </CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pb-2">
+                        <div className="flex items-center justify-between text-sm text-muted-foreground">
+                          <span>Subject Code - {subject.subject_code}</span>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="text-xs text-muted-foreground">
+                        Type: {subject.category}
+                      </CardFooter>
+                    </Card>
+                  ))}
+            </div>
+          </ScrollArea>
 
-    {/* Sliding Panel */}
-    <div
-      className={`fixed top-0 right-0 h-full border rounded-md w-full md:w-[30%] bg-black shadow-lg transform transition-transform duration-300 ease-in-out z-30 ${
-        isPanelOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}
-    >
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-100">Selected Subjects</h2>
-          <Button variant="ghost" size="icon" onClick={togglePanel}>
-            <X className="h-6 w-6" />
-          </Button>
-        </div>
-        <div className="space-y-4">
-          {subjects.map((subject:any) => (
-            <Card key={subject.slug} className="bg-gray-700">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-100">
-                  {subject?.subject_name}  ({subject?.subject_code})
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                
-              </CardContent>
-            </Card>
-          ))}
-          <Button>Save</Button>
+          {draggable == false && (
+            <div className="w-full border-t bg-background px-4">
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      'my-3 w-full justify-start text-left font-normal',
+                      !date && 'text-muted-foreground',
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? (
+                      format(date, 'PPP')
+                    ) : (
+                      <span>Set timeline for subject selection</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={handleSelect}
+                    initialFocus
+                    className="w-full bg-popover"
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
+          <div className="p-4">
+            <Button
+              className={`w-full ${isSubjectLock} ? 'disabled' : 'enabled'`}
+              size="lg"
+              disabled = {isSubjectLock}
+              onClick={() => {
+                onHandleClick()
+              }}
+            >
+              <Lock className="mr-2 h-4 w-4" />
+              Lock Subjects
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </>
   )
 }
 

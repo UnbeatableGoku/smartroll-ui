@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { LockIcon, UserIcon } from "lucide-react"
 import { Link } from 'react-router-dom'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
 
 
@@ -20,7 +20,7 @@ const Login = () => {
     const formRef = useRef(null) // Initialize formRef
 
 
-  const { register, handleSubmit, watch,reset } = useForm<LoginFormData>()
+  const { register, handleSubmit,reset } = useForm<LoginFormData>()
 
   const onSubmit = (data: LoginFormData) => {
     // Handle login logic here

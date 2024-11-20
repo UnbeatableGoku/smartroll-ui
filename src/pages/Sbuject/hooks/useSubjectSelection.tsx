@@ -1,88 +1,247 @@
-import useSemester from '@components/common/uploadTimeTable/useSemester'
-import useAPI from '@hooks/useApi'
+import { useState } from 'react'
+
 import axios from 'axios'
 import { get } from 'lodash'
-import  { useState } from 'react'
 import { toast } from 'sonner'
 
-const useSubjectSelection = () => {
-  const [selectedSubjects, setSelectedSubjects] = useState<Array<any>>([])
-  const [selectedStream, setSelectedStream] = useState<string>('')
-  const [selectedDivision, setSelectedDivision] = useState<string>('')
-  const [selectedSemester, setSelectedSemester] = useState<string>('')
-  const [selectedYear, setSelectedYear] = useState<string>('')
-  const [subjects, setSubject] = useState<Array<{}>>([])
-  const { semester, loadSemesterByStream ,academicYears} = useSemester()
-  
-  const [StoredTokens,CallAPI] = useAPI()
+import useAPI from '@hooks/useApi'
 
+import { SelectionResponse } from 'types/common'
+
+import useSemester from '@components/common/uploadTimeTable/useSemester'
+
+const useSubjectSelection = () => {
+  const [selectedSubjects, setSelectedSubjects] = useState<Array<any>>([]) // state that holds the list of the selected subjects
+  const [selectedStream, setSelectedStream] = useState<string>('') // state that holds the slug of the selected stream
+  const [selectedSemester, setSelectedSemester] = useState<string>('') // state that holds the slug of the selected semester
+  const [selectedYear, setSelectedYear] = useState<string>('') // state that holds the slug of the selected yeaer
+  const [subjects, setSubject] = useState<Array<{}> | null>(null) // state that hold the list of the premenet subjects before selection
+  const [unlockSubjectAfterDeadline,setunloackSubjectAfterDeadline] = useState(false)
+  const {
+    semesters,
+    loadSemesterByStream,
+    academicYears,
+    semesterResponse,
+    setAcademicYears,
+    setSemesterResponse,
+  } = useSemester() // custome hook that use to load the semester
+  const [isSubjectLock, setIsSubjectLock] = useState<boolean>(false) // state that used to check if the subject selection ls done or not
+  const [StoredTokens, CallAPI] = useAPI() // custom hooks that used to call API
+
+  // function that  is invoked when the user selects the stream
   const handleOnValueChangeStreams = (value: string) => {
     setSelectedStream(value)
-    setSelectedDivision('')
+    setSelectedSemester('')
+    setSelectedYear('')
+    setSelectedSubjects([])
+    setIsSubjectLock(false)
+    setSubject(null)
     loadSemesterByStream(value)
-  }
+    
+  }                     
 
+  // fuction that is invoked when the user selet the semester
   const handleOnValueChangeSemenster = (value: string) => {
-    setSelectedSemester(value)
-    setSelectedYear("")
+    setSelectedSemester(value) // set the current selected semester slug to state
 
-  }
-  const handleOnValueChangeAcademicYear = (value:string) =>{
-      setSelectedYear(value)
-      loadSubjectsByYear(value,selectedSemester)
+    // get the object of the current selected semester
+    const semester_subject = semesterResponse.find(
+      (semester: any) => semester.slug === value,
+    )
+    if(semester_subject.deadline_reached){
+      setunloackSubjectAfterDeadline(semester_subject.deadline_reached)
+
+    }
+    else{
+      setunloackSubjectAfterDeadline(false)
+    }
+    const finalized_subject = get(semester_subject, 'subjects', []) // check: to get the list of the selected subjects
+    
+    // check: if subjects is already selected
+    if (finalized_subject) {
+      setSelectedSubjects(finalized_subject) // set the selected subject state
+      setSubject(finalized_subject) // load the subject
+      setIsSubjectLock(semester_subject.subjects_locked) // lock subject selection
+    } else {
+      setIsSubjectLock(false) // unlock subject selection
+      const years = get(semester_subject, 'years', []) // get the years
+      // to generilized the data to load on select component
+      const year_lst: Array<SelectionResponse> = years.map((year: string) => {
+        return { slug: year, name: year }
+      })
+      toast.info('please select the year')
+
+      setAcademicYears(year_lst) // set the years to state
+
+      setSelectedSubjects([]) // clear selected subjects
+      setSubject(null) // clear subjects
+    }
+    setSelectedYear('') // clear selected years
   }
 
-  const loadSubjectsByYear = async(year : string,semester_slug:string):Promise<void> =>{
-        
-    try{
-    // Simulating API call to fetch subjects by year and semester
-    const axiosInstance =  axios.create()
-    const method = 'get'
-    const endpoint = `/manage/get_subjects_from_acedemic_year/${semester_slug}/${year}`
-    const header = {
+  // function that is invoked when the user selects the year
+  const handleOnValueChangeAcademicYear = (value: string) => {
+    setSelectedYear(value)
+    setSelectedSubjects([])
+    setSubject([])
+    loadSubjectsByYear(value, selectedSemester)
+  }
+
+  // function: to load all the subjects of given year
+  const loadSubjectsByYear = async (
+    year: string,
+    semester_slug: string,
+  ): Promise<void> => {
+    try {
+      // Simulating API call to fetch subjects by year and semester
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_subjects_from_acedemic_year/${semester_slug}/${year}`
+      const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
       }
-      const response_obj = await CallAPI(StoredTokens,axiosInstance, endpoint, method, header)
-      if(response_obj.error == false){
-        const subjects = get(response_obj,'response.data.data',[])
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
+      if (response_obj.error == false) {
+        const subjects = get(response_obj, 'response.data.data', [])
         setSubject(subjects)
-      }
-      else{
+      } else {
         toast.error(response_obj.errorMessage?.message)
       }
-    }
-    catch(erorr){
-        toast.error("Something went wrong")
+    } catch (erorr) {
+      toast.error('Something went wrong')
     }
   }
 
-  const toggleSubjectSelection = (subject:any): void => {
-    console.log(subject.slug)
-    setSelectedSubjects(prev =>
-      prev.some(d => d.slug === subject.slug) 
-        ? prev.filter(d => d.slug !== subject.slug) 
-        : [...prev, subject]
-    );
-  };
-  
+  // function: to toggle the selection of subject
+  const toggleSubjectSelection = (subject: any): void => {
+    
+    setSelectedSubjects((prev) =>
+      prev.some((d) => d.slug === subject.slug)
+        ? prev.filter((d) => d.slug !== subject.slug)
+        : [...prev, subject],
+    )
+    
+  }
 
+  // function: to save the selected subjects
+  const handleSubjectSelection = async (
+    semester_slug: any,
+    subject_slugs: any,
+    time_stamp: string,
+  ): Promise<void> => {
+    try {
+      
+      const axiosInstance = axios.create()
+      const method = 'post'
+      const endpoint = `/manage/add_subjects_to_semester/`
+      const body = {
+        semester_slug: semester_slug,
+        subject_slugs: subject_slugs,
+        deadline_timestamp: parseInt(time_stamp) / 1000,
+      }
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+        body,
+      )
+      if (response_obj.error == false) {
+        const selected_subjects = get(response_obj, 'response.data.data', [])
+        setSelectedSubjects(selected_subjects)
+        setSubject(selected_subjects)
+        setIsSubjectLock(true)
+
+        const updateResponse: any = semesterResponse.map((item: any) =>
+          item.slug === semester_slug
+            ? { ...item, subjects: selectedSubjects,subjects_locked:true, deadline_reached : false }
+            : item,
+        )
+        setSemesterResponse(updateResponse)
+        setunloackSubjectAfterDeadline(false)
+        toast.success('Subjects are successfully Locked')
+      } else {
+        if (response_obj?.errorMessage)
+          toast.error(response_obj.errorMessage?.message)
+      }
+    } catch (error) {
+      toast.error('Something went wrong')
+    }
+  }
+
+  //function :: to handle the subject selection unlock after the deadline reached 
+  const UnlockSubjectAfterDeadline = async()=>{
+    try{
+      const check = prompt('Please Type "unlock" to unlock selected subjects')
+      if(check === 'unlock'){
+        
+        //TODO: MAKE THE API CALL TO UNLOCK THE SELECTED SUBJECTS
+        const axiosInstance = axios.create()
+        const method = 'post'
+        const endpoint = `/manage/unlock_subject_choices/`
+        const header = {
+          'ngrok-skip-browser-warning': true,
+          Authorization: `Bearer ${StoredTokens.accessToken}`,
+        }
+        const body = {
+          semester_slug : selectedSemester
+        }
+        const response_obj = await CallAPI(
+          StoredTokens,
+          axiosInstance,
+          endpoint,
+          method,
+          header,
+          body
+        )
+        if(response_obj.error === false){
+          const check = get(response_obj,'response.data.data',false);
+          if(check == true){
+            setIsSubjectLock(!isSubjectLock)
+          }
+        }        
+          
+      }
+      else{
+        toast.error('Please re-type "unlock"')
+      }
+    }
+    catch(error){
+      toast.error('Something went wrong')
+    }
+  }
   return {
     selectedSubjects,
     selectedStream,
-    selectedDivision,
     selectedSemester,
     selectedYear,
-    semester,
+    semesters,
     academicYears,
     subjects,
+    isSubjectLock,
+    unlockSubjectAfterDeadline,
     handleOnValueChangeStreams,
     handleOnValueChangeSemenster,
     handleOnValueChangeAcademicYear,
     loadSemesterByStream,
     setSelectedSubjects,
-    loadSubjectsByYear, 
-    toggleSubjectSelection
+    loadSubjectsByYear,
+    toggleSubjectSelection,
+    handleSubjectSelection,
+    setIsSubjectLock,
+    UnlockSubjectAfterDeadline
   }
 }
 

@@ -13,7 +13,7 @@ import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 import useNewPassword from './hooks/useNewPassword'
 
 interface NewPasswordProps {
-  student_slug: string
+  profile_slug: string
 }
 
 type LoginFormData = {
@@ -21,7 +21,7 @@ type LoginFormData = {
   confirmPassword: string
 }
 
-const NewPassword = ({ student_slug }: NewPasswordProps) => {
+const NewPassword = ({ profile_slug }: NewPasswordProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   // Initialize the form with react-hook-form
   const { register, handleSubmit } = useForm<LoginFormData>()
@@ -32,15 +32,16 @@ const NewPassword = ({ student_slug }: NewPasswordProps) => {
     setIsLoading(true)
 
     const { password, confirmPassword } = data
-    console.log(data)
+    
     // Check if the passwords match
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match')
-      return
+      setIsLoading(false)
+      return toast.error('Passwords do not match')
+      
     } else {
       // Call the handleNewPassword function to update the password
       try {
-        const response = await handleNewPassword({ password, student_slug })
+        const response = await handleNewPassword({ password, profile_slug })
         if (!response?.success) {
           setIsLoading(!isLoading)
         }

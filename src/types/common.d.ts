@@ -31,3 +31,19 @@ export interface DecodedToken {
     }
   }
 }
+
+// for displaying the streams,semester and divisions and batches
+interface SelectionResponse {
+  slug : string
+  name : string 
+}
+
+export interface SelectionProps {
+  title: string
+  selectedValue: string
+  selectedValue2?: string
+  onValueChange: (value: string) => void
+  placeholder: string
+  data : Array<SelectionResponse> | null
+  optionTitle?: string | null
+}
