@@ -90,7 +90,7 @@ const ConfirmPanel = ({
               }}
             >
               <Lock className="mr-2 h-4 w-4" />
-              'Lock Subjects'
+              Lock Subjects
             </Button>
           </div>
         </div>

@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
   Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
+  SheetContent,  
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -49,13 +47,13 @@ const NotificationDrawer = () => {
           </Button>
         </SheetTrigger>
         <SheetContent side="bottom" className="h-[80vh] sm:h-[60vh] overflow-y-auto">
-          <SheetHeader>
+          {/* <SheetHeader>
             <SheetTitle>Notifications</SheetTitle>
-          </SheetHeader>
+          </SheetHeader> */}
           <Tabs defaultValue="unread" className="w-full mt-4">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-1/2 grid-cols-2 mx-auto">
               <TabsTrigger value="unread">Unread</TabsTrigger>
-              <TabsTrigger value="all">all</TabsTrigger>
+              <TabsTrigger value="all">All</TabsTrigger>
             </TabsList>
            
             <TabsContent value="all">
