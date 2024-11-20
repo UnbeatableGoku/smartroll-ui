@@ -36,8 +36,9 @@ const useSelectionFroTeacher = () => {
                 const semester_lst: Array<SelectionResponse> = semester.map((semester: any) => {
                     return ({ slug: semester.slug, name: semester.no })
                 })
-                setSemesters(semester_lst)     // to generilized the data to load on select component 
-                
+                setSemesters(semester_lst) 
+                setSubjects(null)    // to generilized the data to load on select component 
+                setselectedSemester("")
             }
             else {
                 toast.error(response_obj.errorMessage?.message)
