@@ -8,8 +8,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Upload } from 'lucide-react'
 
-import DivisionSelection from '@components/common/uploadTimeTable/DivisionSelection'
-import StreamSelection from '@components/common/uploadTimeTable/StreamSelection'
+import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
+import Selection from '@components/common/form/selectiom/Selection'
 import useDivision from '@components/common/uploadTimeTable/useDivision'
 import useShowTimeTable from '@components/common/uploadTimeTable/useShowTimeTable'
 import useStream from '@components/common/uploadTimeTable/useStream'
@@ -103,17 +103,13 @@ export default function UploadTimeTable() {
               <div>
                 <Button
                   type="submit"
-                  className={`relative flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium hover:bg-zinc-600 dark:border-gray-800 dark:bg-white dark:text-black dark:hover:bg-black dark:hover:text-white ${loadTimeTable ? 'cursor-not-allowed dark:bg-white' : ''
-                    }`}
+                  className={`relative flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium hover:bg-zinc-600 dark:border-gray-800 dark:bg-white dark:text-black dark:hover:bg-black dark:hover:text-white ${
+                    loadTimeTable ? 'cursor-not-allowed dark:bg-white' : ''
+                  }`}
                   disabled={loadTimeTable}
                 >
                   {loadTimeTable ? (
-                    <li className="flex items-center justify-between">
-                      <div role="status" className="p-2">
-                        <div className="text-surface h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-black"></div>
-                      </div>
-                      Uploading File...
-                    </li>
+                    <ButtonLoader title="Uploading..." />
                   ) : (
                     'Upload File'
                   )}
@@ -133,37 +129,53 @@ export default function UploadTimeTable() {
                 <>
                   <div className="relative w-full md:w-[240px] lg:w-[320px]">
                     {/* Stream Selection Card */}
-                    <StreamSelection
+                    <Selection
+                      title="Stream"
+                      selectedValue={selectedStream}
+                      selectedValue2=" "
+                      onValueChange={handleOnValueChangeStreams}
+                      placeholder="Select Stream"
+                      data={stream}
+                      optionTitle={null}
+                    />
+                    {/* <StreamSelection
                       title="Stream"
                       selectedValue={selectedStream}
                       onValueChange={handleOnValueChangeStreams}
                       placeholder="Select Stream"
                       data={stream}
-                    />
+                    /> */}
                     {/* Connecting Lines */}
                     <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
                     <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
                   </div>
-                </>)
-              }
+                </>
+              )}
               {/* Division Selection Card */}
-              {
-                division && (
-                  <>
-                    <div className="relative w-full md:w-[240px] lg:w-[320px]">
-                      <DivisionSelection
+              {division && (
+                <>
+                  <div className="relative w-full md:w-[240px] lg:w-[320px]">
+                    <Selection
+                      title="Division"
+                      selectedValue={selectedDivision}
+                      selectedValue2={selectedStream}
+                      onValueChange={handlenValueChangeDivision}
+                      placeholder="Select Division"
+                      data={division}
+                      optionTitle={'Division'}
+                    />
+
+                    {/* <DivisionSelection
                         title="Division"
                         selectedValue={selectedDivision}
                         selectedValue2={selectedStream}
                         onValueChange={handlenValueChangeDivision}
                         placeholder="Select Division"
                         data={division}
-                      />
-                    </div>
-                  </>
-                )
-              }
-
+                      /> */}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

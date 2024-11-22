@@ -31,3 +31,35 @@ export interface DecodedToken {
     }
   }
 }
+
+// for displaying the streams,semester and divisions and batches
+interface SelectionResponse {
+  slug : string
+  name : string 
+}
+
+export interface SelectionProps {
+  title: string
+  selectedValue: string
+  selectedValue2?: string
+  onValueChange: (value: string) => void
+  placeholder: string
+  data : Array<SelectionResponse> | null
+  optionTitle?: string | null
+}
+
+
+interface Branch {
+  branch_name: string
+  slug: string
+}
+
+export interface StreamInterface {
+  title: string
+  slug: string
+  branch: Branch
+  stream_code: string,
+  choices_saved: boolean,
+  choices_locked:boolean,
+  saved_subjects : Array<any>
+}

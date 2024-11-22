@@ -5,8 +5,6 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { base_url } from '@utils/base_url'
-
 // Define Token and API Response Types
 interface Tokens {
   accessToken: string | null
@@ -140,12 +138,19 @@ const makeRequest = async (
   params: any = null,
 ): Promise<AxiosResponse> => {
   if (method === 'get') {
-    return await reqInstance.get(`${base_url}${endpoint}`, {
-      headers: headers,
-      params,
-    })
+    return await reqInstance.get(
+      `${import.meta.env.VITE_BASE_URL}${endpoint}`,
+      {
+        headers: headers,
+        params,
+      },
+    )
   } else if (method === 'post') {
-    return await reqInstance.post(`${base_url}${endpoint}`, body, { headers })
+    return await reqInstance.post(
+      `${import.meta.env.VITE_BASE_URL}${endpoint}`,
+      body,
+      { headers },
+    )
   } else {
     throw new Error('Invalid HTTP method')
   }
@@ -161,7 +166,7 @@ const expireToken = async (
 
   try {
     const response = await axios.post(
-      `${base_url}/auth/api/token/refresh/`,
+      `${import.meta.env.VITE_BASE_URL}/auth/api/token/refresh/`,
       { refresh: refreshToken },
       { headers },
     )

@@ -6,7 +6,7 @@ const Home = lazy(() => import('@pages/Home'))
 const Dashboard = lazy(() => import('@pages/Dashboard'))
 const Login = lazy(() => import('@pages/login/Login'))
 const NotFound = lazy(() => import('@pages/NotFound'))
-const Timetable = lazy(() => import('@pages/UploadTimeTable/UploadTimeTable'))
+
 interface RouteConfig {
   path: string
   element: React.LazyExoticComponent<() => React.ReactElement>
@@ -26,6 +26,7 @@ export const routeConfig: RouteConfig[] = [
     element: Login,
     guard: null, // No guard for Login (public route)
   },
+
   {
     path: '/dashboard',
     element: Dashboard,

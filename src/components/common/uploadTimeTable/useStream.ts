@@ -6,22 +6,13 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { base_url } from '@utils/base_url'
+import { SelectionResponse, StreamInterface } from 'types/common'
 
-interface Branch {
-  branch_name: string
-  branch_code: string
-  slug: string
-}
 
-interface Stream {
-  title: string
-  slug: string
-  branch: Branch
-}
 
 const useStream = () => {
-  const [stream, setStream] = useState<Stream[]>([])
+  const [stream, setStream] = useState<SelectionResponse[]>([])
+  const [streamData,setStreamData] = useState<StreamInterface[]>([])
   const [StoredTokens, CallAPI] = useAPI()
 
   const handleStream = async () => {
@@ -43,8 +34,20 @@ const useStream = () => {
       )
 
       if (response_obj.error == false) {
-        const data = get(response_obj, 'response.data.data', [])
-        setStream(data)
+        const data:Array<StreamInterface> = get(response_obj, 'response.data.data', [])
+        console.log(response_obj.response?.data.data)
+        setStreamData(response_obj.response?.data.data)
+        const stream_lst: Array<SelectionResponse> = data.map(
+          (stream: StreamInterface) => {
+            return {
+              slug: stream.slug,
+              name: `${stream.title} - ${stream.stream_code} ${stream.branch.branch_name} `,
+            }
+          },
+        )
+
+        setStream(stream_lst)
+        toast.info('Please select the stream')
       } else {
         toast.error('Server Down. Please Contact The Administrator')
       }
@@ -55,8 +58,14 @@ const useStream = () => {
   }
   return {
     stream,
+    streamData,
+    setStreamData,
     handleStream,
   }
 }
 
 export default useStream
+
+// demo data
+// {stream.title} - {stream.branch.branch_code}{' '}
+//           {stream.branch.branch_name}

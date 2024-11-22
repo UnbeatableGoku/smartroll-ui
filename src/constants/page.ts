@@ -18,10 +18,21 @@ export const PAGE_TEACHER_DASHBOARD: Page = {
   name: 'Teacher Dashboard',
 }
 
-export const PAGE_SUBJECT_SELECT : Page = {
+export const PAGE_SUBJECT_SELECT: Page = {
   id: 'SUBJECT-SELECT',
-  path: '/subject-select',
+  path: '/subject/subject-select',
   name: 'subject',
+}
+
+export const PAGE_SUBJECT_CHOICE: Page = {
+  id: 'SUBJECT-CHOICE',
+  path: '/teacher-dashboard/subject-choice',
+  name: 'subject-choice',
+}
+export const PAGE_ELECTIVE_SUBJECT: Page = {
+  id: 'ELECTIVE_SUBJECT',
+  path: '/student-dashboard/elective-subject',
+  name: 'Elective Subject',
 }
 
 export const PAGE_STUDENT_DASHBOARD: Page = {
@@ -42,7 +53,17 @@ export const PAGE_NOT_FOUND: Page = {
   name: 'Page Not Found',
 }
 
+export const PAGE_SUBJECT_SELECTION_CONFIRMATION: Page = {
+  id: 'SUBJECT_SELECTION_CONFIRMATION',
+  path: '/subject/subject-selection-confirmation',
+  name: 'Subject Confirmation',
+}
 
+export const DIVISION_CREATION: Page = {
+  id: 'DIVISION_CREATION',
+  path: '/division-creation',
+  name: 'division-creation',
+}
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES
@@ -59,7 +80,6 @@ export const PAGE_USER_MANAGEMENT: Page = {
   path: '/user-management',
   name: 'User Management',
 }
-
 
 export const PAGE_ADD_USER: Page = {
   id: 'CREATE_USER',

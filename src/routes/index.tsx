@@ -3,22 +3,37 @@ import App from '@App'
 import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
-import Dashboard from '@pages/Dashboard'
+import { Navigate } from 'react-router-dom'; 
+// import Dashboard from '@pages/Dashboard'
 import NotFound from '@pages/NotFound'
-import StudentDashboard from '@pages/StudentDashboard'
-import TeacherDashboard from '@pages/TeacherDashboard'
 import SubjectSelection from '@pages/Sbuject/SubjectSelection'
-import ErrorPage from '@pages/errorPage'
+import SubjectSelectionConfirmation from '@pages/Sbuject/SubjectSelectionConfirmation'
+// import StudentDashboard from '@pages/StudentDashboard'
+import ElectiveSubject from '@pages/StudentDashboard/pages/ElectiveSubject'
+// import TeacherDashboard from '@pages/TeacherDashboard'
+import SubjectChoice from '@pages/TeacherDashboard/pages/Subject-Choice/SubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
-
+import ErrorPage from '@pages/errorPage'
 import Login from '@pages/login/Login'
 import { createBrowserRouter } from 'react-router-dom'
 
-import { PAGE_DASHBOARD, PAGE_LOGIN, PAGE_STUDENT_DASHBOARD, PAGE_SUBJECT_SELECT, PAGE_TEACHER_DASHBOARD, PAGE_TIMETABLE } from '@constants'
+import {
+  PAGE_DASHBOARD,
+  PAGE_ELECTIVE_SUBJECT,
+  PAGE_LOGIN,
+  PAGE_STUDENT_DASHBOARD,
+  PAGE_SUBJECT_CHOICE,
+  PAGE_SUBJECT_SELECT,
+  PAGE_SUBJECT_SELECTION_CONFIRMATION,
+  PAGE_TEACHER_DASHBOARD,
+  PAGE_TIMETABLE,
+  DIVISION_CREATION
+} from '@constants'
 
 import PageAccessWrapper from '@components/common/pageAccessWrapper'
 
 import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
+import DivisionCreation from '@pages/division/pages/DivisionCreation'
 
 const router = createBrowserRouter([
   {
@@ -43,13 +58,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              
-              <ProtectedRoute roleRequired="admin">
-              <Dashboard />
-              </ProtectedRoute>
-                
-            ),
+            element:  <Navigate to="/subject/subject-select" replace />
+            // element: (
+            //   <ProtectedRoute roleRequired="admin">
+            //     <Dashboard />
+            //   </ProtectedRoute>
+            // ),
           },
           {
             element: <PageAccessWrapper />,
@@ -70,10 +84,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: (
-             
-              // <ProtectedRoute roleRequired="admin">
-              <UploadTimeTable />
-              // </ProtectedRoute>
+              <ProtectedRoute roleRequired="admin">
+                <UploadTimeTable />
+              </ProtectedRoute>
             ),
           },
         ],
@@ -86,11 +99,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              //  <ProtectedRoute roleRequired="teacher">
-              <TeacherDashboard />
-              //  </ProtectedRoute>
-            ),
+            element : <Navigate to="/teacher-dashboard/subject-choice" replace />
+            // element: (
+            //   <ProtectedRoute roleRequired="teacher">
+            //     <TeacherDashboard />
+            //   </ProtectedRoute>
+            // ),
           },
         ],
       },
@@ -102,31 +116,97 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              // <ProtectedRoute roleRequired="student">
-              <StudentDashboard />
-              // </ProtectedRoute>
-            ),
+            element : <Navigate to="/student-dashboard/elective-subject" replace />
+            // element: (
+            //   <ProtectedRoute roleRequired="student">
+            //     <StudentDashboard />
+            //   </ProtectedRoute>
+            // ),
           },
         ],
       },
-      // subject selection route
+
+      // subject selection route (admin side)
       {
         path: PAGE_SUBJECT_SELECT.path,
 
-        element: (
-          <MainLayout />
-        ),
+        element: <MainLayout />,
         children: [
           {
             index: true,
             element: (
-              // <ProtectedRoute roleRequired="student">
-              <SubjectSelection />
-              // </ProtectedRoute>
+              <ProtectedRoute roleRequired="admin">
+                <SubjectSelection />
+              </ProtectedRoute>
             ),
           },
-        ]
+        ],
+      },
+      // subject selection choice (teacher side)
+      {
+        path: PAGE_SUBJECT_CHOICE.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="teacher">
+                <SubjectChoice />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+
+      //SUBJECT SELECTION CONFIRMATION
+      {
+        path: PAGE_SUBJECT_SELECTION_CONFIRMATION.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="admin">
+                <SubjectSelectionConfirmation />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+
+      //Elective subject student side
+      {
+        path: PAGE_ELECTIVE_SUBJECT.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="student">
+                <ElectiveSubject />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      //Division creation
+      {
+        path: DIVISION_CREATION.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              
+                <DivisionCreation></DivisionCreation>
+              
+            ),
+          },
+        ],
       },
     ],
   },

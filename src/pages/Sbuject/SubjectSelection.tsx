@@ -1,52 +1,67 @@
-import React, { useEffect, useState } from 'react'
-
-import SubjectCard from './SubjectCard'
-import useStream from '@components/common/uploadTimeTable/useStream'
-
-import useSubjectSelection from './hooks/useSubjectSelection'
+import { useEffect, useState } from 'react'
 
 import { BookOpen } from 'lucide-react'
-import StreamSelection from '@components/common/uploadTimeTable/StreamSelection'
-import SemesterSelection from '@components/common/uploadTimeTable/SemesterSelection'
-import AcademicYear from '@components/common/uploadTimeTable/AcademicYear'
+
+import Selection from '@components/common/form/selectiom/Selection'
+import useStream from '@components/common/uploadTimeTable/useStream'
 import { Button } from '@components/ui/button'
+import { Card, CardHeader, CardTitle } from '@components/ui/card'
+import { Skeleton } from '@components/ui/skeleton'
+
 import ConfirmSubjectSelection from './ConfirmSubjectSelection'
+import SubjectCard from './SubjectCard'
+import useSubjectSelection from './hooks/useSubjectSelection'
 
 const SubjectSelection = () => {
-
-  const { academicYears, handleOnValueChangeAcademicYear, handleOnValueChangeSemenster, handleOnValueChangeStreams, loadSemesterByStream, selectedSubjects, selectedDivision, selectedSemester, selectedStream, selectedYear, semester, setSelectedSubjects, subjects, toggleSubjectSelection } = useSubjectSelection()
+  const {
+    academicYears,
+    handleOnValueChangeAcademicYear,
+    handleOnValueChangeSemenster,
+    handleOnValueChangeStreams,
+    selectedSubjects,
+    selectedSemester,
+    selectedStream,
+    selectedYear,
+    semesters,
+    subjects,
+    notTechSubjects,
+    toggleSubjectSelection,
+    handleSubjectSelection,
+    isSubjectLock,
+    setIsSubjectLock,
+    unlockSubjectAfterDeadline,
+    UnlockSubjectAfterDeadline,
+    handleOnCheckForNonTechSubject,
+  } = useSubjectSelection()
   const { stream, handleStream } = useStream()
   const [isPanelOpen, setIsPanelOpen] = useState(false)
+
   const togglePanel = () => setIsPanelOpen(!isPanelOpen)
-
-
-
-
 
   useEffect(() => {
     handleStream()
   }, [])
-
-
-
+  
   return (
-    <>
+    
       <div className="flex w-full flex-col space-y-4">
         {/* time table selection */}
-
-        <div className='flex flex-col md:flex-row items-center'>
-          <div className="flex w-full flex-col items-center justify-center space-y-4 md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
+        <div className="flex flex-col flex-wrap items-center justify-evenly">
+          <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
             {/* Stream Selection Card */}
             {stream && (
               <>
                 <div className="relative w-full md:w-[240px] lg:w-[320px]">
-                  <StreamSelection
+                  <Selection
                     title="Stream"
                     selectedValue={selectedStream}
+                    selectedValue2=" "
                     onValueChange={handleOnValueChangeStreams}
                     placeholder="Select Stream"
                     data={stream}
+                    optionTitle={null}
                   />
+
                   {/* Connecting Lines */}
                   <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
                   <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
@@ -55,68 +70,122 @@ const SubjectSelection = () => {
             )}
             <div className="relative w-full md:w-[240px] lg:w-[320px]">
               {/* Semester Selection Card */}
-              <SemesterSelection
+
+              <Selection
                 title="Semester"
                 selectedValue={selectedSemester}
                 selectedValue2={selectedStream}
                 onValueChange={handleOnValueChangeSemenster}
                 placeholder="Select Semester"
-                data={semester}
+                data={semesters}
+                optionTitle={'Semester'}
               />
-              {/* Connecting Lines */}
-              <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
-              <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
+
+              <div className={`${isSubjectLock ? 'hidden' : unlockSubjectAfterDeadline ? 'hidden':'block'}`}>
+                {/* Connecting Lines */}
+                <div
+                  className={`absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12`}
+
+                />
+                <div
+                  className={`absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden ${isSubjectLock ? 'hidden' : 'block'}`}
+                />
+              </div>
             </div>
 
-
-
             {/* Year Selection Card */}
-            <div className="relative w-full md:w-[240px] lg:w-[320px]">
-              <AcademicYear
+            <div
+              className={`relative w-full md:w-[240px] lg:w-[320px] ${isSubjectLock ? 'hidden' : unlockSubjectAfterDeadline ? 'hidden':'block'}`}
+            >
+              <Selection
                 title="Academic Year"
                 selectedValue={selectedYear}
-                selectedValue2={selectedStream}
+                selectedValue2={selectedSemester}
                 onValueChange={handleOnValueChangeAcademicYear}
                 placeholder="Select Year"
                 data={academicYears}
+                optionTitle={null}
               />
             </div>
           </div>
-          <Button onClick={togglePanel} className="fixed top-32 right-24 z-10">
+          {isSubjectLock == false && selectedSubjects.length > 0 && <div className={`${isSubjectLock ? 'hidden' : 'block'}`}>
+            <Button onClick={togglePanel} className={`z-10 mt-3 w-full lg:w-auto`}>
             <BookOpen className="mr-2 h-4 w-4" />
-            Subjects
-            <span className="ml-2 bg-gray-100 text-gray-900 rounded-full px-2 py-1 text-xs font-bold">
-              {subjects.length}
+            Lock Subjects
+            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+              {selectedSubjects.length}
             </span>
           </Button>
-
+          </div>}
+          
+          {unlockSubjectAfterDeadline == true && isSubjectLock == true &&  <div className="">
+            <Button onClick={UnlockSubjectAfterDeadline} className={`z-10 mt-3 w-full lg:w-auto`}>
+            <BookOpen className="mr-2 h-4 w-4" />
+            Unlock Subject Selection
+            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+              {selectedSubjects.length}
+            </span>
+          </Button>
+          </div>}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-          {
-            subjects.length > 0 ? (
-              <>
-                {
-                  subjects.map((subject, index) => {
-                    return (
-                      <SubjectCard subject={subject} toggleSubjectSelection={toggleSubjectSelection} selectedSubjects={selectedSubjects}>
-
-                      </SubjectCard>
-                    )
-                  })
-                }
-              </>) : (<></>)
-          }
-
-
-
-
+        <div className="p-4">
+          {/* Check if subjects is null or loading */}
+          {subjects === null ? (
+            <div className="flex flex-col items-center gap-4">
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+              <Skeleton className="sm:h-18 h-20 w-full" />
+            </div>
+          ) : (
+            // If subjects is not null, display them in the grid
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {/* Check if subjects are available */}
+              {subjects.length > 0 ? (
+                subjects.map((subject, index) => (
+                  <SubjectCard
+                    key={index}
+                    subject={subject}
+                    toggleSubjectSelection={toggleSubjectSelection}
+                    selectedSubjects={selectedSubjects}
+                    isSubjectLock={isSubjectLock}
+                    setIsSubjectLock={setIsSubjectLock}
+                    draggable={false}
+                    index={index}
+                  />
+                ))
+              ) : (
+                <div className="group w-full">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between">
+                        <CardTitle className="text-center text-lg font-semibold leading-none">
+                          No Subjects are available for this academic year.
+                        </CardTitle>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-
+        <ConfirmSubjectSelection
+          isPanelOpen={isPanelOpen}
+          setIsPanelOpen={setIsPanelOpen}
+          togglePanel={togglePanel}
+          selectedSubjects={selectedSubjects}
+          handleSubjectSelection={handleSubjectSelection}
+          selectedSemester={selectedSemester}
+          isSubjectLock={isSubjectLock}
+          notTechSubjects={notTechSubjects}
+          handleOnCheckForNonTechSubject = {handleOnCheckForNonTechSubject}
+        ></ConfirmSubjectSelection>
       </div>
-      {subjects.length > 0 && <ConfirmSubjectSelection isPanelOpen={isPanelOpen} setIsPanelOpen={setIsPanelOpen} togglePanel={togglePanel} subjects = {subjects}></ConfirmSubjectSelection>}
-    </>
   )
 }
 
