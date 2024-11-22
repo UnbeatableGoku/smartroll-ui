@@ -16,6 +16,7 @@ const useElectiveSubject = () => {
   const [totalCategories, setTotalCategories] = useState<string[]>([])
   const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
 
+  //function :: to load the choices of the elective subjects
   const handleGetElectiveSubject = useCallback(async () => {
     try {
       const axiosInstance = axios.create()
@@ -87,11 +88,7 @@ const useElectiveSubject = () => {
   }, [CallAPI, StoredTokens])
 
   const toggleSubjectSelection = (subject: any, group_slug: any): void => {
-    // setSelectedSubjects((prev: any) =>
-    //   prev.some((d: any) => d.selectedSubjects.slug === subject.slug)
-    //     ? prev.filter((d: any) => d.selectedSubjects.slug !== subject.slug)
-    //     : { group_slug: group_slug, selectedSubjects: [subject] },
-    // )
+    
     
     setSelectedSubjects((prevSubjects) => {
       // Check if the subject with the given group_slug already exists
@@ -110,6 +107,7 @@ const useElectiveSubject = () => {
     })
   }
 
+  //function:: to loak 
   const handleStudentChoice = useCallback(
     async (selectedChoices: string[], selectedChoicesSlug: string) => {
       try {

@@ -47,3 +47,19 @@ export interface SelectionProps {
   data : Array<SelectionResponse> | null
   optionTitle?: string | null
 }
+
+
+interface Branch {
+  branch_name: string
+  slug: string
+}
+
+export interface StreamInterface {
+  title: string
+  slug: string
+  branch: Branch
+  stream_code: string,
+  choices_saved: boolean,
+  choices_locked:boolean,
+  saved_subjects : Array<any>
+}

@@ -21,6 +21,7 @@ import { cn } from '@utils'
 
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Checkbox } from '@components/ui/checkbox'
+import { Badge } from '@components/ui/badge'
 
 const ConfirmSubjectSelection = ({
   isPanelOpen,
@@ -39,7 +40,7 @@ const ConfirmSubjectSelection = ({
 }: any) => {
   const [date, setDate] = useState<Date>()
   const [open, setOpen] = useState(false)
-  
+
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
     setOpen(false)
@@ -57,7 +58,7 @@ const ConfirmSubjectSelection = ({
 
     if (draggable == false) {
       const time_stamp = date?.getTime()
-      handleSubjectSelection(selectedSemester, subject_slug, time_stamp,notTechSubjects)
+      handleSubjectSelection(selectedSemester, subject_slug, time_stamp, notTechSubjects)
       setIsPanelOpen(false)
     } else {
       save_teacher_subject_choice(subject_slug)
@@ -111,43 +112,56 @@ const ConfirmSubjectSelection = ({
                     onDrop={() => onDrop(index)}
                   >
                     <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between">
+                      <div className="flex items-start justify-between w-full">
                         {/* Grip Icon for Draggable Indicator */}
                         <div className="flex items-center space-x-2">
                           <GripVertical className="cursor-grab text-muted-foreground" />
                           <CardTitle className="text-lg font-semibold leading-none">
                             {subject.subject_name}
+
                           </CardTitle>
+                          <div>
+                            {subject.is_technical != null && (<div className={`rounded-full ${subject.is_technical ? 'bg-[#ffa31a] hidden' : 'bg-[#f1141f] dark:text-white w-20'}  px-2 py-1 text-xs font-semibold text-black ml-[40px]`}>
+                              {!subject.is_technical ? 'Non-Tech.' : ''}
+                            </div>)}
+                          </div>
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent className="pb-2">
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <div className="flex flex-col  text-sm text-muted-foreground">
+
                         <span>Subject Code - {subject.subject_code}</span>
                       </div>
                     </CardContent>
-                    <CardFooter className="text-xs text-muted-foreground">
+                    <CardFooter className="text-xs text-muted-foreground flex justify-between ">
                       Type: {subject.category}
+                      <Badge
+                        variant="secondary"
+                        className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
+                      >
+                        Sem -{subject?.sem_year}
+                      </Badge>
                     </CardFooter>
                   </Card>
 
                 ))
                 : selectedSubjects.map((subject: any) => (
                   <Card key={subject.slug} className="group"
-                    >
+                  >
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
                         <div className="flex items-center space-x-2">
                           <Checkbox
-                          checked = {notTechSubjects.includes(subject.slug)}
-                          onCheckedChange={()=>{handleOnCheckForNonTechSubject(subject.slug)}}
+                            checked={notTechSubjects.includes(subject.slug)}
+                            onCheckedChange={() => { handleOnCheckForNonTechSubject(subject.slug) }}
                           />
                           <CardTitle className="text-lg font-semibold leading-none">
                             {subject.subject_name}
                           </CardTitle>
                         </div>
-                        { notTechSubjects.includes(subject.slug) ? (<div className="rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black">
-                          Tech. 
+                        {notTechSubjects.includes(subject.slug) ? (<div className="rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black">
+                          Tech.
                         </div>) : (<div className="rounded-full bg-[#e51717] dark:text-white px-2 text-center py-1 text-xs font-semibold text-black w-24">
                           Non-tech.
                         </div>)}
