@@ -20,6 +20,7 @@ import { CalendarIcon, GripVertical, Lock, X } from 'lucide-react'
 import { cn } from '@utils'
 
 import { ScrollArea } from '@components/ui/scroll-area'
+import { Checkbox } from '@components/ui/checkbox'
 
 const ConfirmSubjectSelection = ({
   isPanelOpen,
@@ -33,10 +34,12 @@ const ConfirmSubjectSelection = ({
   setDraggedIndex,
   save_teacher_subject_choice,
   isSubjectLock,
+  notTechSubjects,
+  handleOnCheckForNonTechSubject
 }: any) => {
   const [date, setDate] = useState<Date>()
   const [open, setOpen] = useState(false)
-
+  
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
     setOpen(false)
@@ -47,14 +50,14 @@ const ConfirmSubjectSelection = ({
     setDraggedIndex(index)
   }
 
- 
+
 
   const onHandleClick = () => {
     const subject_slug = selectedSubjects.map((subject: any) => subject.slug)
 
     if (draggable == false) {
       const time_stamp = date?.getTime()
-      handleSubjectSelection(selectedSemester, subject_slug, time_stamp)
+      handleSubjectSelection(selectedSemester, subject_slug, time_stamp,notTechSubjects)
       setIsPanelOpen(false)
     } else {
       save_teacher_subject_choice(subject_slug)
@@ -74,9 +77,8 @@ const ConfirmSubjectSelection = ({
 
       {/* Sliding Panel */}
       <div
-        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-background/80 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out sm:w-96 ${
-          isPanelOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-background/80 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out sm:w-96 ${isPanelOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         <div className="flex h-full flex-col">
           <div className="border-b p-4">
@@ -99,56 +101,68 @@ const ConfirmSubjectSelection = ({
             <div className="space-y-4">
               {draggable
                 ? selectedSubjects.map((subject: any, index: any) => (
-                    <>
-                      <Card
-                        key={subject.slug}
-                        className="group"
-                        draggable
-                        onDragStart={() => onDragStart(index)}
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={() => onDrop(index)}
-                      >
-                        <CardHeader className="pb-2">
-                          <div className="flex items-start justify-between">
-                            {/* Grip Icon for Draggable Indicator */}
-                            <div className="flex items-center space-x-2">
-                              <GripVertical className="cursor-grab text-muted-foreground" />
-                              <CardTitle className="text-lg font-semibold leading-none">
-                                {subject.subject_name}
-                              </CardTitle>
-                            </div>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pb-2">
-                          <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <span>Subject Code - {subject.subject_code}</span>
-                          </div>
-                        </CardContent>
-                        <CardFooter className="text-xs text-muted-foreground">
-                          Type: {subject.category}
-                        </CardFooter>
-                      </Card>
-                    </>
-                  ))
-                : selectedSubjects.map((subject: any) => (
-                    <Card key={subject.slug} className="group">
-                      <CardHeader className="pb-2">
-                        <div className="flex items-start justify-between">
+
+                  <Card
+                    key={subject.slug}
+                    className="group"
+                    draggable
+                    onDragStart={() => onDragStart(index)}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={() => onDrop(index)}
+                  >
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between">
+                        {/* Grip Icon for Draggable Indicator */}
+                        <div className="flex items-center space-x-2">
+                          <GripVertical className="cursor-grab text-muted-foreground" />
                           <CardTitle className="text-lg font-semibold leading-none">
                             {subject.subject_name}
                           </CardTitle>
                         </div>
-                      </CardHeader>
-                      <CardContent className="pb-2">
-                        <div className="flex items-center justify-between text-sm text-muted-foreground">
-                          <span>Subject Code - {subject.subject_code}</span>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pb-2">
+                      <div className="flex items-center justify-between text-sm text-muted-foreground">
+                        <span>Subject Code - {subject.subject_code}</span>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="text-xs text-muted-foreground">
+                      Type: {subject.category}
+                    </CardFooter>
+                  </Card>
+
+                ))
+                : selectedSubjects.map((subject: any) => (
+                  <Card key={subject.slug} className="group"
+                    >
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                          checked = {notTechSubjects.includes(subject.slug)}
+                          onCheckedChange={()=>{handleOnCheckForNonTechSubject(subject.slug)}}
+                          />
+                          <CardTitle className="text-lg font-semibold leading-none">
+                            {subject.subject_name}
+                          </CardTitle>
                         </div>
-                      </CardContent>
-                      <CardFooter className="text-xs text-muted-foreground">
-                        Type: {subject.category}
-                      </CardFooter>
-                    </Card>
-                  ))}
+                        { notTechSubjects.includes(subject.slug) ? (<div className="rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black">
+                          Tech. 
+                        </div>) : (<div className="rounded-full bg-[#e51717] dark:text-white px-2 text-center py-1 text-xs font-semibold text-black w-24">
+                          Non-tech.
+                        </div>)}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pb-2">
+                      <div className="flex items-center justify-between text-sm text-muted-foreground">
+                        <span>Subject Code - {subject.subject_code}</span>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="text-xs text-muted-foreground">
+                      Type: {subject.category}
+                    </CardFooter>
+                  </Card>
+                ))}
             </div>
           </ScrollArea>
 
@@ -187,7 +201,7 @@ const ConfirmSubjectSelection = ({
             <Button
               className={`w-full ${isSubjectLock} ? 'disabled' : 'enabled'`}
               size="lg"
-              disabled = {isSubjectLock}
+              disabled={isSubjectLock}
               onClick={() => {
                 onHandleClick()
               }}
