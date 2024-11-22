@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react'
 
 import axios from 'axios'
-
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
@@ -15,6 +14,7 @@ const useElectiveSubject = () => {
   const [StoredTokens, CallAPI] = useAPI()
   const [totalCategories, setTotalCategories] = useState<string[]>([])
   const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
+  const [deadline, setDeadline] = useState<string>()
 
   //function :: to load the choices of the elective subjects
   const handleGetElectiveSubject = useCallback(async () => {
@@ -40,7 +40,7 @@ const useElectiveSubject = () => {
 
         // Set subject slug
         setSubjectChoicesSlug(data.slug)
-
+        setDeadline(data.deadline_timestamp)
         // Set elective subjects
         const electiveSubjectData = get(data, 'available_choices', [])
         const availableCategories = [
@@ -55,10 +55,9 @@ const useElectiveSubject = () => {
         setTotalCategories(availableCategories as string[])
 
         setElectiveSubject(electiveSubjectData)
-        
 
         // Set finalized choices
-        if (data?.choices_locked) {
+        if (data?.choices_saved) {
           const finalizedSubjects = get(data, 'finalized_choices', [])
           setFinalizedChoice(finalizedSubjects)
           setIsSubjectSave(true)
@@ -67,11 +66,7 @@ const useElectiveSubject = () => {
           setIsSubjectSave(false)
         }
       } else {
-        toast.error(
-          !response_obj
-            ? 'Something went wrong. Please try again later'
-            : response_obj?.errorMessage?.message,
-        )
+        toast.error('Server Down. Please Contact The Administrator')
       }
     } catch (error: any) {
       setIsSubjectSave(false)
@@ -148,10 +143,7 @@ const useElectiveSubject = () => {
           setFinalizedChoice(final_subject)
           toast.success('Subjects are Successfully Locked')
         } else {
-          toast.error(
-            response_obj?.errorMessage?.message ||
-              'Error marking subject choices',
-          )
+          toast.error('Server Down. Please Contact The Administrator')
         }
       } catch (error) {
         console.error('Error in handleStudentChoice:', error)
@@ -221,7 +213,8 @@ const useElectiveSubject = () => {
     totalCategories,
     toggleSubjectSelection,
     selectedSubjects,
-    handleOnClickForUnsaveDraft
+    handleOnClickForUnsaveDraft,
+    deadline,
   }
 }
 

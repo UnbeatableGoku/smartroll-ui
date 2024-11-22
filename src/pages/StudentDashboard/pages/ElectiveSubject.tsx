@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react'
 
 import useElectiveSubject from '../hooks/useElectiveSubject'
-
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { AlertTriangle, BookOpen, GraduationCap } from 'lucide-react'
 
-
-import { BookOpen, GraduationCap} from 'lucide-react'
-
-
+import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'
 
 import ConfirmPanel from './ConfirmPanel'
@@ -63,33 +60,24 @@ const ElectiveSubject = () => {
     finalizedChoice,
     selectedSubjects,
     toggleSubjectSelection,
+    deadline,
+    handleOnClickForUnsaveDraft
   } = useElectiveSubject()
-
-  // const { selectedSubjects, categorySelections, toggleSubjectSelection } =
-  //   useSubjectSelection()
 
   useEffect(() => {
     handleGetElectiveSubject()
   }, [])
 
-  // useEffect(() => {
-  //   console.log(selectedSubjects)
-  //   console.log(subjectSlug)
-  // }, [selectedSubjects ])
-  // if (!isLoading) {
-  //   return <Loader />
-  // }
-
   return (
-    <div className="min-h-screen bg-gradient-to-b px-4 py-12">
+    <div className="py-13 min-h-screen bg-gradient-to-b px-4">
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-2xl md:text-4xl lg:text-5xl">
             {isSubjectSave && finalizedChoice
               ? 'Your Finalized Elective Subjects'
               : 'Elective Subject Selection'}
           </h1>
-          <p className="mt-4 text-lg text-gray-400">
+          <p className="mt-2 text-xs text-gray-400 sm:text-sm md:text-lg lg:text-xl">
             {isSubjectSave && finalizedChoice
               ? 'These are your selected elective subjects'
               : 'Choose your preferred subjects for each elective category'}
@@ -97,7 +85,7 @@ const ElectiveSubject = () => {
           {!isSubjectSave && selectedSubjects.length > 0 && (
             <Button
               onClick={togglePanel}
-              className="mt-3 w-full bg-white p-2 shadow-md lg:w-auto"
+              className="mt-6 w-full bg-white p-2 shadow-md lg:w-auto"
             >
               <BookOpen className="mr-2 h-4 w-4" />
               Save As Draft
@@ -106,9 +94,20 @@ const ElectiveSubject = () => {
               </span>
             </Button>
           )}
-          {isSubjectSave && selectedSubjects.length > 0 && (
+          {deadline && (
+            <Alert className="w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900 mt-5">
+            <div className="">
+              <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
+                <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
+                <span>Decision Deadline : {deadline} </span>
+              </AlertTitle>
+            </div>
+          </Alert>
+          )}
+          {isSubjectSave && (
             <Button
-              className="mt-3 w-full bg-white p-2 shadow-md lg:w-auto"
+              className="mt-5 w-full bg-white p-2 shadow-md lg:w-auto"
+              onClick={handleOnClickForUnsaveDraft}
             >
               <BookOpen className="mr-2 h-4 w-4" />
               Unsave Draft
@@ -161,7 +160,7 @@ const ElectiveSubject = () => {
             electiveSubject.map((group: SubjectGroup) => {
               const category = group?.subjects[0]?.category
               return (
-                <div className="rounded-2xl border border-zinc-600 p-8 backdrop-blur-sm dark:bg-black">
+                <div className="rounded-2xl border border-zinc-600 p-8 dark:bg-black">
                   <div className="mb-4">
                     <div className="flex items-center gap-3">
                       <GraduationCap className="h-6 w-6 text-primary" />
@@ -176,22 +175,9 @@ const ElectiveSubject = () => {
 
                   <RadioGroup
                     value={group.slug}
-                    // onValueChange={(value: any) => {
-                    //   const selectedSubject = group.subjects.find(
-                    //     (subject) => subject.slug === value,
-                    //   )
-                    //   if (selectedSubject) {
-                    //     toggleSubjectSelection(selectedSubject, group.slug)
-                    //     console.log(value)
-                    //   }
-                    // }}
-                    className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                    className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
                   >
                     {group.subjects.map((subject, index) => {
-                      // const isSelected = selectedSubjects.subject_choices.some(
-                      //   (s) => s === categorySelections[category],
-                      // )
-
                       return (
                         <div key={subject.slug} className="relative">
                           <RadioGroupItem

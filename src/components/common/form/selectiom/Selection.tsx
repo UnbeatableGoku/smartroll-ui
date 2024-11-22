@@ -48,7 +48,7 @@ const Selection = ({
                 <SelectItem
                   key={item.slug}
                   value={item.slug}
-                  className="cursor-pointer"
+                  className="cursor-pointer text-wrap"
                 >
                   {optionTitle ? `${optionTitle} - ` : null} {item.name}
                 </SelectItem>

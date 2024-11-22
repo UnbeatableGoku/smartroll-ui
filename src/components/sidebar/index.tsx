@@ -2,15 +2,16 @@ import { useMemo } from 'react'
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { setAuth } from '@data/redux/slices/authSlice'
-import { LogOut, Menu} from 'lucide-react'
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
+import { LogOut, Menu } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { generateSidebarLinks } from '@utils/helpers'
 
+import NotificationDrawer from './NotificationDrawer'
 import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
 import TabLink from './tabLink'
-import NotificationDrawer from './NotificationDrawer'
 
 const Sidebar = () => {
   const dispatch = useDispatch()
@@ -27,7 +28,7 @@ const Sidebar = () => {
 
   const menuItems = [
     // { icon: Bell, label: 'Notifications', event: () => {},alert:true},
-    { icon: LogOut, label: 'Logout', event: handelLogout ,alert : false},
+    { icon: LogOut, label: 'Logout', event: handelLogout, alert: false },
   ]
 
   const {
@@ -82,28 +83,30 @@ const Sidebar = () => {
               <Menu className="h-6 w-6 transition-transform duration-200 ease-in-out group-hover:scale-110" />
             </button>
           </DialogTrigger>
-          <DialogContent className="dark:bg-black sm:max-w-[425px]">
-            {/* <DialogHeader >
+          <VisuallyHidden.Root>
+            <DialogContent className="dark:bg-black sm:max-w-[425px]">
+              {/* <DialogHeader >
               <DialogTitle className='dark:text-white'>Options</DialogTitle>
             </DialogHeader> */}
-            <div className="grid gap-4 py-4 dark:bg-black dark:text-white">
-              <ul>
-                {[...validLinks].map((page, index) => (
-                  <TabLink
-                    name={page.name}
-                    icon={page.icon}
-                    path={page.path}
-                    key={page.id}
-                    subTabs={page.children}
-                    collapsed={collapsed}
-                    //Returns true for first parent with children
-                    defalutOpen={firstParentWithChild === index}
-                    onClick={() => setOpen(false)} // Close dialog on item click
-                  />
-                ))}
-              </ul>
-            </div>
-          </DialogContent>
+              <div className="grid gap-4 py-4 dark:bg-black dark:text-white">
+                <ul>
+                  {[...validLinks].map((page, index) => (
+                    <TabLink
+                      name={page.name}
+                      icon={page.icon}
+                      path={page.path}
+                      key={page.id}
+                      subTabs={page.children}
+                      collapsed={collapsed}
+                      //Returns true for first parent with children
+                      defalutOpen={firstParentWithChild === index}
+                      onClick={() => setOpen(false)} // Close dialog on item click
+                    />
+                  ))}
+                </ul>
+              </div>
+            </DialogContent>
+          </VisuallyHidden.Root>
         </Dialog>
       </div>
     </div>

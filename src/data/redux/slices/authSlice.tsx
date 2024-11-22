@@ -36,6 +36,7 @@ const authSlice = createSlice({
       }
     },
     setUserProfile: (state, action: PayloadAction<DecodedToken>) => {
+      
       return {
         ...state,
         userProfile: action.payload,

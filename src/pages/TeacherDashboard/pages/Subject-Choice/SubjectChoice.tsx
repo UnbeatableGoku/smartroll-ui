@@ -30,7 +30,7 @@ const SubjectChoice = () => {
     toggleSubjectSelection,
     selectedSubjects,
     isSubjectLock,
-    setIsSubjectLock,
+    
     onDrop,
     setDraggedIndex,
     save_teacher_subject_choice,

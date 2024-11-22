@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react'
+import  {useEffect, useState } from 'react'
 
+import InfoCard from '../component/InfoCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
@@ -29,8 +30,20 @@ const SubjectShowCard = ({
   index,
   group_slug,
 }: CourseCardProps) => {
-  const stopPropagation = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation()
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkIfMobile()
+    window.addEventListener('resize', checkIfMobile)
+
+    return () => {
+      window.removeEventListener('resize', checkIfMobile)
+    }
   }, [])
 
   return (
@@ -42,9 +55,9 @@ const SubjectShowCard = ({
           selectedSubjects.some((d: any) => d.subject.slug === subject?.slug)
             ? isSubjectSave
               ? `dark:bg-black`
-              : `bg-zinc-800`
-            : `dark:bg-black`
-        } text-white`}
+              : `border border-white text-white dark:bg-blue-600/20`
+            : `text-white dark:bg-black`
+        }`}
         onClick={() => {
           isSubjectSave ? null : toggleSubjectSelection(subject, group_slug)
         }}
@@ -64,11 +77,10 @@ const SubjectShowCard = ({
             {subject?.subject_name}{' '}
           </h2>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 p-3">
           <div className="flex flex-col justify-between gap-4 md:flex-row">
             <div className="space-y-1">
               <p className="text-sm uppercase text-white/60">Type</p>
-
               <p className="text-xl font-semibold">
                 {subject?.is_theory
                   ? 'Theory'
@@ -79,25 +91,77 @@ const SubjectShowCard = ({
             </div>
             <div className="space-y-1">
               <p className="text-sm uppercase text-white/60">Subject Code</p>
-              <p className="text-xl font-semibold md:text-center">
-                {subject?.subject_code}
-              </p>
+              <div className="flex justify-between gap-2">
+                <p className="text-xl font-semibold md:text-center">
+                  {subject?.subject_code}
+                </p>
+                {isMobile && (
+                  <div className="absolute bottom-5 right-5">
+                    <button
+                      className="relative"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIsExpanded(!isExpanded)
+                      }}
+                      aria-expanded={isExpanded}
+                      aria-label={
+                        isExpanded
+                          ? 'Hide course information'
+                          : 'Show course information'
+                      }
+                    >
+                      <Info className="h-5 w-5 text-white" />
+                    </button>
+                    {isExpanded && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                        <Card className="w-80 max-w-[90vw]">
+                          <CardContent className="p-4">
+                            <div className="mb-2 flex items-start justify-between">
+                              <InfoCard
+                                theory_exam_duration={
+                                  subject.theory_exam_duration
+                                }
+                                practical_exam_duration={
+                                  subject.practical_exam_duration
+                                }
+                                subject_code={subject.subject_code}
+                              />
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setIsExpanded(false)
+                                }}
+                                className="text-muted-foreground hover:text-foreground"
+                                aria-label="Close"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="space-y-1">
-              <p className="text-sm uppercase text-white/60">Effective Year</p>
-              <p className="text-xl font-semibold md:text-right">
+              <p className="hidden text-sm uppercase text-white/60 sm:block md:block lg:block">
+                Effective Year
+              </p>
+              <p className="hidden text-xl font-semibold sm:block md:block md:text-right lg:block">
                 {subject?.eff_from}
               </p>
             </div>
           </div>
 
-          <div className="flex w-full justify-between">
+          <div className="hidden w-full justify-between sm:block md:block lg:block">
             <div className="w-full">
               <div className="flex w-full flex-row gap-x-3 text-center">
                 <div className="flex w-2/5 justify-around rounded-lg bg-white/10 p-2">
                   <div>
                     <p className="text-sm font-medium text-white/60">L</p>
-                    <p className="text-lg font-bold">{subject?.L} </p>
+                    <p className="text-lg font-bold">{subject?.L}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white/60">T</p>
@@ -105,7 +169,7 @@ const SubjectShowCard = ({
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white/60">P</p>
-                    <p className="text-lg font-bold">{subject?.P} </p>
+                    <p className="text-lg font-bold">{subject?.P}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white/60">Credit</p>
@@ -134,58 +198,42 @@ const SubjectShowCard = ({
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white/60">Total</p>
-                    <p className="text-lg font-bold">
-                      {' '}
-                      {subject?.total_marks}{' '}
-                    </p>
+                    <p className="text-lg font-bold">{subject?.total_marks}</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 p-0">
             <Badge
               variant="secondary"
-              className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
+              className="hidden bg-blue-500/20 text-blue-200 hover:bg-blue-500/30 sm:block md:block lg:block"
             >
-              {subject?.category}
+              {subject.category}
             </Badge>
 
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <div onClick={stopPropagation}>
-                  <Info className="cursor-pointer text-white" />
-                </div>
-              </HoverCardTrigger>
-              <HoverCardContent
-                className="z-10 w-80 rounded-md border p-2 dark:bg-black"
-                onClick={stopPropagation}
-              >
-                <div className="flex justify-between space-x-4">
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-semibold">
-                      Course Information
-                    </h4>
-                    <p className="text-sm">
-                      Theory Exam Duration : {subject?.theory_exam_duration}h
-                    </p>
-                    <p className="text-sm">
-                      Practical Exam Duration :{' '}
-                      {subject.practical_exam_duration}
-                    </p>
-                    <div className="flex items-center pt-2">
-                      <span className="text-xs text-muted-foreground">
-                        For more Info. -{' '}
-                        <a href="https://syllabus.gtu.ac.in/" target="_blank">
-                          GTU Syllabus
-                        </a>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
+            {!isMobile && (
+              <div className="relative">
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <button
+                      className="p-2"
+                      aria-label="Show course information"
+                    >
+                      <Info className="cursor-pointer text-white" />
+                    </button>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="absolute z-50 w-80 rounded-md border p-2 shadow-lg dark:bg-black">
+                    <InfoCard
+                      theory_exam_duration={subject.theory_exam_duration}
+                      practical_exam_duration={subject.practical_exam_duration}
+                      subject_code={subject.subject_code}
+                    />
+                  </HoverCardContent>
+                </HoverCard>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

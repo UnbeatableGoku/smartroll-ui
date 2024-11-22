@@ -317,6 +317,7 @@ const useSelectionFroTeacher = () => {
         selectedSubjects,
         choice_deadline,
         saveAsDraft,
+        choice_slug,
         setIsSubjectLock,
         toggleSubjectSelection,
         onDrop,
