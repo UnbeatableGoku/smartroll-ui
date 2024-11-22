@@ -24,12 +24,14 @@ const SubjectSelection = () => {
     selectedYear,
     semesters,
     subjects,
+    notTechSubjects,
     toggleSubjectSelection,
     handleSubjectSelection,
     isSubjectLock,
     setIsSubjectLock,
     unlockSubjectAfterDeadline,
-    UnlockSubjectAfterDeadline
+    UnlockSubjectAfterDeadline,
+    handleOnCheckForNonTechSubject,
   } = useSubjectSelection()
   const { stream, handleStream } = useStream()
   const [isPanelOpen, setIsPanelOpen] = useState(false)
@@ -41,7 +43,7 @@ const SubjectSelection = () => {
   }, [])
   
   return (
-    <>
+    
       <div className="flex w-full flex-col space-y-4">
         {/* time table selection */}
         <div className="flex flex-col flex-wrap items-center justify-evenly">
@@ -180,9 +182,10 @@ const SubjectSelection = () => {
           handleSubjectSelection={handleSubjectSelection}
           selectedSemester={selectedSemester}
           isSubjectLock={isSubjectLock}
+          notTechSubjects={notTechSubjects}
+          handleOnCheckForNonTechSubject = {handleOnCheckForNonTechSubject}
         ></ConfirmSubjectSelection>
       </div>
-    </>
   )
 }
 

@@ -52,7 +52,7 @@ const SubjectChoice = () => {
         <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
           {/* Stream Selection Card */}
           {stream && (
-            <>
+            
               <div className="relative w-full md:w-[240px] lg:w-[320px]">
                 <Selection
                   title="Stream"
@@ -68,7 +68,7 @@ const SubjectChoice = () => {
                 <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
                 <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
               </div>
-            </>
+            
           )}
           <div className="relative w-full md:w-[240px] lg:w-[320px]">
             {/* Semester Selection Card */}

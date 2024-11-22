@@ -3,7 +3,7 @@ import React from 'react'
 
 import { Navigate } from 'react-router-dom'
 
-import { PAGE_LOGIN } from '@constants'
+import { PAGE_LOGIN,PAGE_SUBJECT_SELECT,PAGE_ELECTIVE_SUBJECT,PAGE_SUBJECT_CHOICE } from '@constants'
 
 import useAuth from '@hooks/useAuth'
 
@@ -26,10 +26,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (!role) {
     return <Navigate to={PAGE_LOGIN.path} replace />
   }
-
+  
+  console.log(role)
   // Optionally check for specific roles if roleRequired is provided
   if (roleRequired && role !== roleRequired) {
-    return <Navigate to={PAGE_LOGIN.path} replace />
+    if(role == 'admin')
+      return <Navigate to={PAGE_SUBJECT_SELECT.path} replace />
+    else if (role == 'teacher'){
+      return <Navigate to={PAGE_SUBJECT_CHOICE.path} replace />
+    }
+    else if (role =='student'){
+      return <Navigate to={PAGE_ELECTIVE_SUBJECT.path} replace />
+    }
   }
 
   return children // Render the protected content

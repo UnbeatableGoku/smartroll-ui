@@ -17,6 +17,7 @@ const useSubjectSelection = () => {
   const [selectedYear, setSelectedYear] = useState<string>('') // state that holds the slug of the selected yeaer
   const [subjects, setSubject] = useState<Array<{}> | null>(null) // state that hold the list of the premenet subjects before selection
   const [unlockSubjectAfterDeadline,setunloackSubjectAfterDeadline] = useState(false)
+  const [notTechSubjects,setNotTechSubjects] = useState([])
   const {
     semesters,
     loadSemesterByStream,
@@ -37,7 +38,7 @@ const useSubjectSelection = () => {
     setIsSubjectLock(false)
     setSubject(null)
     loadSemesterByStream(value)
-    
+    setNotTechSubjects([])
   }                     
 
   // fuction that is invoked when the user selet the semester
@@ -75,6 +76,7 @@ const useSubjectSelection = () => {
 
       setSelectedSubjects([]) // clear selected subjects
       setSubject(null) // clear subjects
+      setNotTechSubjects([])
     }
     setSelectedYear('') // clear selected years
   }
@@ -127,6 +129,10 @@ const useSubjectSelection = () => {
         ? prev.filter((d) => d.slug !== subject.slug)
         : [...prev, subject],
     )
+
+    setNotTechSubjects((prevArry:any) => {
+      return prevArry.includes(subject.slug)? prevArry.filter((item:any) => item!== subject.slug) : [...prevArry, subject.slug]
+    })
     
   }
 
@@ -135,16 +141,19 @@ const useSubjectSelection = () => {
     semester_slug: any,
     subject_slugs: any,
     time_stamp: string,
+    non_tech_subjects: any
   ): Promise<void> => {
     try {
       
       const axiosInstance = axios.create()
       const method = 'post'
       const endpoint = `/manage/add_subjects_to_semester/`
+      const difference = subject_slugs.filter((item:string) => !non_tech_subjects.includes(item));
       const body = {
         semester_slug: semester_slug,
         subject_slugs: subject_slugs,
         deadline_timestamp: parseInt(time_stamp) / 1000,
+        non_tech_subjects: difference,
       }
       const header = {
         'ngrok-skip-browser-warning': true,
@@ -222,6 +231,18 @@ const useSubjectSelection = () => {
       toast.error('Something went wrong')
     }
   }
+
+
+  const handleOnCheckForNonTechSubject = (subject_slug:string)=>{
+      try{
+        setNotTechSubjects((prevArry:any) => {
+          return prevArry.includes(subject_slug)? prevArry.filter((item:any) => item!== subject_slug) : [...prevArry, subject_slug]
+        })
+      }
+      catch(error:any){
+        toast.error(error.message)
+      }
+  }
   return {
     selectedSubjects,
     selectedStream,
@@ -232,6 +253,7 @@ const useSubjectSelection = () => {
     subjects,
     isSubjectLock,
     unlockSubjectAfterDeadline,
+    notTechSubjects,
     handleOnValueChangeStreams,
     handleOnValueChangeSemenster,
     handleOnValueChangeAcademicYear,
@@ -241,7 +263,8 @@ const useSubjectSelection = () => {
     toggleSubjectSelection,
     handleSubjectSelection,
     setIsSubjectLock,
-    UnlockSubjectAfterDeadline
+    UnlockSubjectAfterDeadline,
+    handleOnCheckForNonTechSubject
   }
 }
 

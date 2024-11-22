@@ -334,7 +334,7 @@ const SubjectSelectionConfirmation = () => {
             </div>
           </div>
           <TabsContent value="teacher" className="border rounded-lg overflow-hidden mt-4">
-            { teachers.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Teacheres -  {teachers.length} </p></div> : null}
+            { teachers.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Teachers -  {teachers.length} </p></div> : null}
             { teachers.length > 0 && renderTable(teachers, 'teacher')}
             {teachers.length == 0 && <div className="flex flex-col items-center gap-4">
               <Skeleton className="sm:h-18 h-20 w-full" />
@@ -346,7 +346,7 @@ const SubjectSelectionConfirmation = () => {
             </div>}
           </TabsContent>
           <TabsContent value="student" className="border rounded-lg overflow-hidden mt-4">
-          { students.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Stundets -  {students.length} </p></div> : null}
+          { students.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Stundents -  {students.length} </p></div> : null}
             {students.length > 0  && renderTable(students, 'student')}
             {students.length == 0 && <div className="flex flex-col items-center gap-4">
               <Skeleton className="sm:h-18 h-20 w-full" />
