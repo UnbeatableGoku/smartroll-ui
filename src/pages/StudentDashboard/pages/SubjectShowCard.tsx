@@ -13,7 +13,7 @@ interface CourseCardProps {
   toggleSubjectSelection: (subject: any, group_slug: any) => void
   subject: any
   selectedSubjects: any
-  isSubjectLock?: any
+  isSubjectSave?: any
   setIsSubjectLock?: any
   draggable: boolean
   index: number
@@ -24,7 +24,7 @@ const SubjectShowCard = ({
   subject,
   toggleSubjectSelection,
   selectedSubjects,
-  isSubjectLock,
+  isSubjectSave,
   draggable = false,
   index,
   group_slug,
@@ -38,19 +38,19 @@ const SubjectShowCard = ({
       <Card
         key={subject.slug}
         className={`relative cursor-pointer overflow-hidden transition-all duration-300 ${
-          isSubjectLock == false &&
+          isSubjectSave == false &&
           selectedSubjects.some((d: any) => d.subject.slug === subject?.slug)
-            ? isSubjectLock
+            ? isSubjectSave
               ? `dark:bg-black`
               : `bg-zinc-800`
             : `dark:bg-black`
         } text-white`}
         onClick={() => {
-          isSubjectLock ? null : toggleSubjectSelection(subject, group_slug)
+          isSubjectSave ? null : toggleSubjectSelection(subject, group_slug)
         }}
       >
         {draggable == true &&
-          isSubjectLock == true &&
+          isSubjectSave == true &&
           selectedSubjects.some(
             (selectedsubject: any) => selectedsubject.slug === subject.slug,
           ) && (

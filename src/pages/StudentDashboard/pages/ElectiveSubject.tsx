@@ -58,8 +58,8 @@ const ElectiveSubject = () => {
     handleGetElectiveSubject,
     electiveSubject,
     handleStudentChoice,
-    subjectSlug,
-    isLocked,
+    subjectChoicesSlug,
+    isSubjectSave,
     finalizedChoice,
     selectedSubjects,
     toggleSubjectSelection,
@@ -85,31 +85,40 @@ const ElectiveSubject = () => {
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
-            {isLocked && finalizedChoice
+            {isSubjectSave && finalizedChoice
               ? 'Your Finalized Elective Subjects'
               : 'Elective Subject Selection'}
           </h1>
           <p className="mt-4 text-lg text-gray-400">
-            {isLocked && finalizedChoice
+            {isSubjectSave && finalizedChoice
               ? 'These are your selected elective subjects'
               : 'Choose your preferred subjects for each elective category'}
           </p>
-          {!isLocked && selectedSubjects.length > 0 && (
+          {!isSubjectSave && selectedSubjects.length > 0 && (
             <Button
               onClick={togglePanel}
               className="mt-3 w-full bg-white p-2 shadow-md lg:w-auto"
             >
               <BookOpen className="mr-2 h-4 w-4" />
-              Lock Subjects
+              Save As Draft
               <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
                 {selectedSubjects.length}
               </span>
             </Button>
           )}
+          {isSubjectSave && selectedSubjects.length > 0 && (
+            <Button
+              className="mt-3 w-full bg-white p-2 shadow-md lg:w-auto"
+            >
+              <BookOpen className="mr-2 h-4 w-4" />
+              Unsave Draft
+              
+            </Button>
+          )}
         </div>
 
         <div className="space-y-10">
-          {isLocked && finalizedChoice ? (
+          {isSubjectSave && finalizedChoice ? (
             <div className="rounded-2xl border border-zinc-600 p-8 backdrop-blur-sm dark:bg-black">
               <div className="mb-6">
                 <div className="flex items-center gap-3">
@@ -132,7 +141,7 @@ const ElectiveSubject = () => {
                       subject={subject}
                       toggleSubjectSelection={() => {}}
                       selectedSubjects={finalizedChoice}
-                      isSubjectLock={isLocked}
+                      isSubjectSave={isSubjectSave}
                       draggable={false}
                       index={index}
                     />
@@ -202,7 +211,7 @@ const ElectiveSubject = () => {
                               draggable={false}
                               index={index}
                               group_slug={group.slug}
-                              isSubjectLock={isLocked}
+                              isSubjectSave={isSubjectSave}
                               studentChoice={true}
                             />
                           </Label>
@@ -233,7 +242,7 @@ const ElectiveSubject = () => {
         togglePanel={togglePanel}
         selectedSubjects={selectedSubjects}
         handleSubjectSelection={handleStudentChoice}
-        subjectSlug={subjectSlug}
+        subjectChoicesSlug={subjectChoicesSlug}
       />
     </div>
   )

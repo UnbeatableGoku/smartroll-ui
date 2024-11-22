@@ -15,13 +15,13 @@ const ConfirmPanel = ({
   togglePanel,
   selectedSubjects,
   handleSubjectSelection,
-  subjectSlug,
+  subjectChoicesSlug,
 }: any) => {
   // const { categorySelectionStatus } = useSubjectSelection()
   const onHandleClick = () => {
     // const selectedChoices = selectedSubjects.subject_choices
     const selected_slug = selectedSubjects.map((sub: any) => sub.subject.slug)
-    handleSubjectSelection(selected_slug, subjectSlug)
+    handleSubjectSelection(selected_slug, subjectChoicesSlug)
     setIsPanelOpen(false)
   }
   return (

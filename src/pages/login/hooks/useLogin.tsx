@@ -86,7 +86,7 @@ const useLogin = () => {
       
     } catch (error: any) {
       // Safely access error.response
-      const message = error.response?.data?.message || 'An error occurred'
+      const message = error.response?.data?.detail || 'An error occurred'
       reset()
       return toast.error(message)
       // if (error.code === 'ERR_NETWORK') {

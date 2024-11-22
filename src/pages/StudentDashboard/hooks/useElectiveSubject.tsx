@@ -9,9 +9,9 @@ import useAPI from '@hooks/useApi'
 
 const useElectiveSubject = () => {
   const [electiveSubject, setElectiveSubject] = useState<Array<any>>([])
-  const [subjectSlug, setSubjectSlug] = useState<string>('')
+  const [subjectChoicesSlug, setSubjectChoicesSlug] = useState<string>('')
   const [finalizedChoice, setFinalizedChoice] = useState<Array<any>>([])
-  const [isLocked, setIsLocked] = useState<boolean>(false)
+  const [isSubjectSave, setIsSubjectSave] = useState<boolean>(false)
   const [StoredTokens, CallAPI] = useAPI()
   const [totalCategories, setTotalCategories] = useState<string[]>([])
   const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
@@ -39,7 +39,7 @@ const useElectiveSubject = () => {
         const data = get(response_obj, 'response.data.data', [])
 
         // Set subject slug
-        setSubjectSlug(data.slug)
+        setSubjectChoicesSlug(data.slug)
 
         // Set elective subjects
         const electiveSubjectData = get(data, 'available_choices', [])
@@ -61,10 +61,10 @@ const useElectiveSubject = () => {
         if (data?.choices_locked) {
           const finalizedSubjects = get(data, 'finalized_choices', [])
           setFinalizedChoice(finalizedSubjects)
-          setIsLocked(true)
+          setIsSubjectSave(true)
         } else {
           setFinalizedChoice([])
-          setIsLocked(false)
+          setIsSubjectSave(false)
         }
       } else {
         toast.error(
@@ -74,7 +74,7 @@ const useElectiveSubject = () => {
         )
       }
     } catch (error: any) {
-      setIsLocked(false)
+      setIsSubjectSave(false)
       if (!error.response) {
         toast.error(
           'Server is unreachable. Please check your connection or try again later.',
@@ -119,7 +119,7 @@ const useElectiveSubject = () => {
         // If validation passes, proceed with API call
         const axiosInstance = axios.create()
         const method = 'post'
-        const endpoint = `/manage/mark_subject_choices/`
+        const endpoint = `/manage/mark_subject_choices_of_student/`
         const body = {
           subject_choices_slug: selectedChoicesSlug,
           subject_choices: selectedChoices,
@@ -144,7 +144,7 @@ const useElectiveSubject = () => {
             'response.data.data.finalized_choices',
             [],
           )
-          setIsLocked(true)
+          setIsSubjectSave(true)
           setFinalizedChoice(final_subject)
           toast.success('Subjects are Successfully Locked')
         } else {
@@ -161,16 +161,67 @@ const useElectiveSubject = () => {
     [CallAPI, StoredTokens, selectedSubjects],
   )
 
+  const handleOnClickForUnsaveDraft = async()=>{
+    try{
+      const axiosInstance = axios.create()
+      const method = 'post'
+      const endpoint = '/manage/unsave_subject_choices_for_student/'
+      const headers = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const body = {
+        subject_choices_slug: subjectChoicesSlug,
+        
+      }
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        headers,
+        body
+      )
+
+      if (response_obj?.error === false){
+        const data = get(response_obj, 'response.data.data', [])
+
+        // Set subject slug
+        setSubjectChoicesSlug(data.slug)
+
+        // Set elective subjects
+        const electiveSubjectData = get(data, 'available_choices', [])
+        const availableCategories = [
+          ...new Set(
+            electiveSubjectData
+              .flatMap((choice: any) =>
+                choice.subjects.map((subject: any) => subject.category),
+              )
+              .filter((category: any): category is string => category != null), // Ensure non-null values
+          ),
+        ]
+        setTotalCategories(availableCategories as string[])
+
+        setElectiveSubject(electiveSubjectData)
+        setIsSubjectSave(false)
+      }
+    }
+    catch(error){
+      toast.error('Something went wrong')
+    }
+  }
+
   return {
     handleGetElectiveSubject,
     electiveSubject,
-    subjectSlug,
+    subjectChoicesSlug,
     handleStudentChoice,
-    isLocked,
+    isSubjectSave,
     finalizedChoice,
     totalCategories,
     toggleSubjectSelection,
     selectedSubjects,
+    handleOnClickForUnsaveDraft
   }
 }
 
