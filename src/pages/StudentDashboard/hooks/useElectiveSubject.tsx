@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react'
 
 import axios from 'axios'
-
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
@@ -15,6 +14,7 @@ const useElectiveSubject = () => {
   const [StoredTokens, CallAPI] = useAPI()
   const [totalCategories, setTotalCategories] = useState<string[]>([])
   const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
+  const [deadline, setDeadline] = useState<string>()
 
   const handleGetElectiveSubject = useCallback(async () => {
     try {
@@ -39,7 +39,7 @@ const useElectiveSubject = () => {
 
         // Set subject slug
         setSubjectSlug(data.slug)
-
+        setDeadline(data.deadline_timestamp)
         // Set elective subjects
         const electiveSubjectData = get(data, 'available_choices', [])
         const availableCategories = [
@@ -54,10 +54,9 @@ const useElectiveSubject = () => {
         setTotalCategories(availableCategories as string[])
 
         setElectiveSubject(electiveSubjectData)
-        
 
         // Set finalized choices
-        if (data?.choices_locked) {
+        if (data?.choices_saved) {
           const finalizedSubjects = get(data, 'finalized_choices', [])
           setFinalizedChoice(finalizedSubjects)
           setIsLocked(true)
@@ -66,11 +65,7 @@ const useElectiveSubject = () => {
           setIsLocked(false)
         }
       } else {
-        toast.error(
-          !response_obj
-            ? 'Something went wrong. Please try again later'
-            : response_obj?.errorMessage?.message,
-        )
+        toast.error('Server Down. Please Contact The Administrator')
       }
     } catch (error: any) {
       setIsLocked(false)
@@ -92,7 +87,7 @@ const useElectiveSubject = () => {
     //     ? prev.filter((d: any) => d.selectedSubjects.slug !== subject.slug)
     //     : { group_slug: group_slug, selectedSubjects: [subject] },
     // )
-    
+
     setSelectedSubjects((prevSubjects) => {
       // Check if the subject with the given group_slug already exists
       const index = prevSubjects.findIndex(
@@ -150,10 +145,7 @@ const useElectiveSubject = () => {
           setFinalizedChoice(final_subject)
           toast.success('Subjects are Successfully Locked')
         } else {
-          toast.error(
-            response_obj?.errorMessage?.message ||
-              'Error marking subject choices',
-          )
+          toast.error('Server Down. Please Contact The Administrator')
         }
       } catch (error) {
         console.error('Error in handleStudentChoice:', error)
@@ -173,6 +165,7 @@ const useElectiveSubject = () => {
     totalCategories,
     toggleSubjectSelection,
     selectedSubjects,
+    deadline,
   }
 }
 
