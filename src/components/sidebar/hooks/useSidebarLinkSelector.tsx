@@ -5,8 +5,10 @@ import { jwtDecode } from 'jwt-decode'
 import { useSelector } from 'react-redux'
 
 import { DecodedToken } from 'types/common'
+import { toast } from 'sonner'
 
 const useSidebarLinkSelector = () => {
+
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [open, setOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
@@ -28,25 +30,33 @@ const useSidebarLinkSelector = () => {
 
   // Compute the sidebar links based on the user's role
   const setSidebarLinks = (): Array<string> => {
-    if (!accessToken && accessToken == undefined) {
-      return []
-    }
-    
-    if (accessToken != undefined && accessToken != null) {
-      const userProfile = jwtDecode<DecodedToken | undefined>(accessToken)
-      if (userProfile?.obj.profile.role === 'admin') {
-        return userLinks.admin
-      } else if (userProfile?.obj.profile.role === 'teacher') {
-        return userLinks.teacher
-      } else if (userProfile?.obj.profile.role === 'student') {
-        return userLinks.student
-      } else {
+    try{
+      if (!accessToken && accessToken == undefined) {
         return []
       }
+      
+      if (accessToken != undefined && accessToken != null) {
+        const userProfile = jwtDecode<DecodedToken | undefined>(accessToken)
+        if (userProfile?.obj.profile.role === 'admin') {
+          return userLinks.admin
+        } else if (userProfile?.obj.profile.role === 'teacher') {
+          return userLinks.teacher
+        } else if (userProfile?.obj.profile.role === 'student') {
+          return userLinks.student
+        } else {
+          return []
+        }
+      }
+      else {
+        return []
+      }
+      
     }
-    else {
-      return []
+    catch(error:any){
+      toast.error(error.message)
     }
+    
+    return []
 
   }
 

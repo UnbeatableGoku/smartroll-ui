@@ -121,7 +121,7 @@ const ElectiveSubject = () => {
             )}
           </div>
 
-        <div className="group w-full h-96 flex items-center" ref={noElectiveSubjectCard}>
+        <div className="group w-full h-96  items-center hidden" ref={noElectiveSubjectCard}>
                 <Card className='w-full border-white'>
                   <CardHeader className="pb-2"></CardHeader>
                   <CardContent className="text-center font-bold">

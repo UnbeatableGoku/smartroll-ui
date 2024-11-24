@@ -45,7 +45,7 @@ const useLogin = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/auth/api/login/`,
+        `${window.base_url}/auth/api/login/`,
         userdata,
         { headers },
       )
@@ -103,20 +103,27 @@ const useLogin = () => {
   }
 
   const redirectLogin = () => {
-    if (access_token) {
-      const decode = jwtDecode<DecodedToken>(access_token)
-      if (decode?.obj?.profile?.role === 'admin') {
-        navigate('/')
-      } else if (decode?.obj?.profile?.role === 'student') {
-        navigate('/student-dashboard')
-      } else if (decode?.obj?.profile?.role === 'teacher') {
-        navigate('/teacher-dashboard')
+    try{
+      if (access_token) {
+        console.log(access_token)
+        const decode = jwtDecode<DecodedToken>(access_token)
+        if (decode?.obj?.profile?.role === 'admin') {
+          navigate('/')
+        } else if (decode?.obj?.profile?.role === 'student') {
+          navigate('/student-dashboard')
+        } else if (decode?.obj?.profile?.role === 'teacher') {
+          navigate('/teacher-dashboard')
+        } else {
+          navigate('/login')
+        }
       } else {
         navigate('/login')
       }
-    } else {
-      navigate('/login')
     }
+    catch(error:any){
+      toast.error(error.message)
+    }
+    
   }
 
   return {

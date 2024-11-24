@@ -24,8 +24,8 @@ const authSlice = createSlice({
       state,
       action: PayloadAction<{
         isAuth: boolean
-        access: string
-        refresh: string
+        access: string | null
+        refresh: string | null
       }>,
     ) => {
       return {
