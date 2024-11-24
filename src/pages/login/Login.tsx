@@ -6,10 +6,11 @@ import { Label } from '@/components/ui/label'
 import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 
+
 import NewPassword from '@components/NewPassword/NewPassword'
+import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 
 import useLogin from './hooks/useLogin'
-import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 
 type LoginFormData = {
   email: string
@@ -17,7 +18,6 @@ type LoginFormData = {
 }
 
 const Login = () => {
-  
   //custom hook for handlLogin
   const {
     handleLogin,
@@ -28,13 +28,11 @@ const Login = () => {
     studentSlug,
     register,
     handleSubmit,
-    isLoading
+    isLoading,
   } = useLogin()
 
   const onSubmit = (data: LoginFormData) => {
-    
     handleLogin(data) //? Handle login logic here
-    
   }
 
   const togglePasswordVisibility = () => {
@@ -53,7 +51,7 @@ const Login = () => {
       {isTempPassword ? ( //? Render NewPassword component if isTempPassword is true
         <NewPassword profile_slug={studentSlug} />
       ) : (
-        <div className="flex h-[100dvh]  flex-col">
+        <div className="flex h-[100dvh] flex-col mx-3">
           <main className="flex h-[100dvh] items-center justify-center bg-black">
             <div className="w-full max-w-md rounded-lg bg-background p-8 shadow-lg">
               <h2 className="mb-6 text-center text-2xl font-bold">

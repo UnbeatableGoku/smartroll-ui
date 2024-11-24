@@ -1,11 +1,13 @@
+import { useEffect } from 'react'
+
+import { RootState } from '@data/redux/Store'
+import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 
 import Header from '@components/header'
 import Sidebar from '@components/sidebar'
 import useNotification from '@components/sidebar/hooks/useNotification'
-import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '@data/redux/Store'
+
 
 
 const MainLayout = () => {
@@ -18,10 +20,8 @@ const MainLayout = () => {
 
       handleOnClickForNotifications()
     }
-  
-    
   }, [access])
-  
+
   return (
     <div className="relative h-screen">
       <div className="wrapper flex h-full overflow-hidden">
@@ -31,7 +31,7 @@ const MainLayout = () => {
         <div className="relative flex w-full flex-col">
           <Header />
 
-          <main className="mx-auto h-screen w-full overflow-y-auto bg-shade p-2 dark:bg-black lg:p-8">
+          <main className="h-100 mx-auto w-full overflow-y-auto bg-shade p-2 dark:bg-black lg:p-8">
             <Outlet />
           </main>
           <Sidebar />

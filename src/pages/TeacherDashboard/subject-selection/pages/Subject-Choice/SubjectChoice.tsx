@@ -1,9 +1,10 @@
 import { useState } from 'react'
 
-import ConfirmSubjectSelection from '@pages/Sbuject/components/ConfirmSubjectSelection'
-import SubjectCard from '@pages/Sbuject/components/SubjectCard'
-import useSubjectSelection from '@pages/Sbuject/hooks/useSubjectSelection'
+import ConfirmSubjectSelection from '@pages/Subject/components/ConfirmSubjectSelection'
+import SubjectCard from '@pages/Subject/components/SubjectCard'
+import useSubjectSelection from '@pages/Subject/hooks/useSubjectSelection'
 import { AlertTriangle, BookOpen } from 'lucide-react'
+import { Helmet } from 'react-helmet'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import { Alert, AlertTitle } from '@components/ui/alert'
@@ -48,24 +49,27 @@ const SubjectChoice = () => {
 
 
   return (
-    <div className="flex w-full flex-col space-y-4">
-      {/* time table selection */}
+    <>
+      <Helmet>
+        <title>Smart Roll | Subject Choice</title>
+      </Helmet>
+      <div className="flex w-full flex-col space-y-4">
+        {/* time table selection */}
 
-      <div className="flex flex-col flex-wrap items-center justify-evenly space-y-5 lg:flex-col">
-        <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
-          {/* Stream Selection Card */}
-          {stream && (
-
-            <div className="relative w-full md:w-[240px] lg:w-[320px]">
-              <Selection
-                title="Stream"
-                selectedValue={selectedStream}
-                selectedValue2=" "
-                onValueChange={loadSemesterByStreamForTeacher}
-                placeholder="Select Stream"
-                data={stream}
-                optionTitle={null}
-              />
+        <div className="flex flex-col flex-wrap items-center justify-evenly space-y-5 lg:flex-col">
+          <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
+            {/* Stream Selection Card */}
+            {stream && (
+              <div className="relative w-full md:w-[240px] lg:w-[320px]">
+                <Selection
+                  title="Stream"
+                  selectedValue={selectedStream}
+                  selectedValue2=" "
+                  onValueChange={loadSemesterByStreamForTeacher}
+                  placeholder="Select Stream"
+                  data={stream}
+                  optionTitle={null}
+                />
 
               {!isSubjectLock && !saveAsDraft &&
                 <div>
@@ -82,17 +86,18 @@ const SubjectChoice = () => {
             <div className="relative w-full md:w-[240px] lg:w-[320px]">
               {/* Semester Selection Card */}
 
-              <Selection
-                title="Semester"
-                selectedValue={selectedSemester}
-                selectedValue2={selectedStream}
-                onValueChange={load_subjects_for_teacher_choice}
-                placeholder="Select Semester"
-                data={semesters}
-                optionTitle={'Semester'}
-              />
-            </div>}
-        </div>
+                <Selection
+                  title="Semester"
+                  selectedValue={selectedSemester}
+                  selectedValue2={selectedStream}
+                  onValueChange={load_subjects_for_teacher_choice}
+                  placeholder="Select Semester"
+                  data={semesters}
+                  optionTitle={'Semester'}
+                />
+              </div>
+            }
+          </div>
 
         {!isSubjectLock && !saveAsDraft && selectedSubjects.length > 0 &&
           <Button onClick={togglePanel} className="mt-3 w-full lg:w-auto">
@@ -170,22 +175,23 @@ const SubjectChoice = () => {
                 </Card>
               </div>
             )}
-        </div>
+          </div>
 
-        <ConfirmSubjectSelection
-          isPanelOpen={isPanelOpen}
-          setIsPanelOpen={setIsPanelOpen}
-          togglePanel={togglePanel}
-          selectedSubjects={selectedSubjects}
-          handleSubjectSelection={handleSubjectSelection}
-          selectedSemester={selectedSemester}
-          draggable={true}
-          onDrop={onDrop}
-          setDraggedIndex={setDraggedIndex}
-          save_teacher_subject_choice={save_teacher_subject_choice}
-        ></ConfirmSubjectSelection>
+          <ConfirmSubjectSelection
+            isPanelOpen={isPanelOpen}
+            setIsPanelOpen={setIsPanelOpen}
+            togglePanel={togglePanel}
+            selectedSubjects={selectedSubjects}
+            handleSubjectSelection={handleSubjectSelection}
+            selectedSemester={selectedSemester}
+            draggable={true}
+            onDrop={onDrop}
+            setDraggedIndex={setDraggedIndex}
+            save_teacher_subject_choice={save_teacher_subject_choice}
+          ></ConfirmSubjectSelection>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

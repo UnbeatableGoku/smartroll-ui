@@ -1,16 +1,17 @@
 //?slices
+import { useState } from 'react'
+
 import { RootState } from '@data/redux/Store'
 import { setAuth, setUserProfile } from '@data/redux/slices/authSlice'
 //? axios
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import { useSelector,useDispatch } from 'react-redux'
+import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 import { DecodedToken } from 'types/common'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { useForm } from 'react-hook-form'
 
 //? TYPES AND INTERFACES
 type UserData = {
@@ -55,7 +56,7 @@ const useLogin = () => {
         setIsTempPassword(true)
         toast.warning('Temporary password. Please set a new password.')
         setIsLoading(false)
-        return 
+        return
       }
 
       const token: { access: string; refresh: string; isAuth: boolean } = {
@@ -63,9 +64,13 @@ const useLogin = () => {
         isAuth: true,
       }
 
-
-      if(token.access == undefined && token.refresh == undefined && token.refresh == null && token.access == null){
-        throw new Error("Access token is required")
+      if (
+        token.access == undefined &&
+        token.refresh == undefined &&
+        token.refresh == null &&
+        token.access == null
+      ) {
+        throw new Error('Access token is required')
       }
       //? set the tokens in the rdux store
       dispatch(setAuth(token))
@@ -74,58 +79,26 @@ const useLogin = () => {
       localStorage.setItem('accessToken', token.access)
       localStorage.setItem('refreshToken', token.refresh)
 
-      
-      const decode:DecodedToken = jwtDecode<DecodedToken>(response.data.access)
+      const decode: DecodedToken = jwtDecode<DecodedToken>(response.data.access)
       dispatch(setUserProfile(decode))
 
       //? return success message and the token
       if (decode.obj.profile.role === 'admin') {
-        
         return navigate('/subject/subject-select') //:: CHANGE TO '/'
       } else if (decode.obj.profile.role === 'teacher') {
         return navigate('/teacher-dashboard/subject-choice') //:: CHANGE TO '/teacher-dashboard'
       } else if (decode.obj.profile.role === 'student') {
         return navigate('/student-dashboard/elective-subject') //:: CHANGE TO '/student-dashboard'
-      }
-      else{
+      } else {
         return navigate('/login')
       }
-      
     } catch (error: any) {
       // Safely access error.response
-      const message = error.response?.data?.detail || error.message ||  'An error occurred'
+      const message =
+        error.response?.data?.detail || error.message || 'An error occurred'
       setIsLoading(false)
       reset()
       return toast.error(message)
-      // if (error.code === 'ERR_NETWORK') {
-      //   return {
-      //     error: true,
-      //     message,
-      //     data: null,
-      //     status: 404,
-      //     profile: null,
-      //   }
-      // }
-
-      // if (error.response) {
-      //   return {
-      //     error: true,
-      //     message:
-      //       error?.response?.data?.detail ||
-      //       error?.response?.data?.message ||
-      //       'An error occurred',
-      //     data: null,
-      //     status: error?.response?.status || 500,
-      //     profile: null,
-      //   }
-      // }
-      // return {
-      //   error: true,
-      //   message,
-      //   data: null,
-      //   status: 500,
-      //   profile: null,
-      // }
     }
   }
 
@@ -157,7 +130,6 @@ const useLogin = () => {
     handleLogin,
     redirectLogin,
     setShowPassword,
-  
   }
 }
 

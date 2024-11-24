@@ -1,4 +1,4 @@
-import  {useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import InfoCard from './InfoCard'
 import { Badge } from '@/components/ui/badge'
@@ -26,8 +26,6 @@ const SubjectShowCard = ({
   toggleSubjectSelection,
   selectedSubjects,
   isSubjectSave,
-  draggable = false,
-  index,
   group_slug,
 }: CourseCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -62,22 +60,14 @@ const SubjectShowCard = ({
           isSubjectSave ? null : toggleSubjectSelection(subject, group_slug)
         }}
       >
-        {draggable == true &&
-          isSubjectSave == true &&
-          selectedSubjects.some(
-            (selectedsubject: any) => selectedsubject.slug === subject.slug,
-          ) && (
-            <div className="absolute right-2 top-2 rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black">
-              Priority - {index + 1}
-            </div>
-          )}
-
         <CardHeader className="mt-3 flex flex-row items-center justify-between pb-3">
           <h2 className="text-xl font-bold tracking-tight">
             {subject?.subject_name}{' '}
           </h2>
         </CardHeader>
-        <CardContent className="space-y-6 p-3">
+        <CardContent className="space-y-6">
+          <p className="text-lg font-normal">Sem : {subject.sem_year}</p>
+
           <div className="flex flex-col justify-between gap-4 md:flex-row">
             <div className="space-y-1">
               <p className="text-sm uppercase text-white/60">Type</p>
@@ -205,10 +195,10 @@ const SubjectShowCard = ({
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-2 p-0">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <Badge
               variant="secondary"
-              className="hidden bg-blue-500/20 text-blue-200 hover:bg-blue-500/30 sm:block md:block lg:block"
+              className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
             >
               {subject.category}
             </Badge>

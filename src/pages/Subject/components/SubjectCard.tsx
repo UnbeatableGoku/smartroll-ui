@@ -1,7 +1,8 @@
-import  {  useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+
 import {
   HoverCard,
   HoverCardContent,
@@ -27,9 +28,6 @@ const SubjectCard = ({
   draggable = false,
   index,
 }: CourseCardProps) => {
- 
-
-
   const [isExpanded, setIsExpanded] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
@@ -47,15 +45,15 @@ const SubjectCard = ({
   }, [])
 
   return (
-
     <Card
       key={subject.slug}
-      className={`relative cursor-pointer overflow-hidden transition-all duration-300 ${selectedSubjects.some((d: any) => d.slug === subject?.slug)
+      className={`relative cursor-pointer overflow-hidden transition-all duration-300 ${
+        selectedSubjects.some((d: any) => d.slug === subject?.slug)
           ? isSubjectLock
-          ? `dark:bg-black`
-          : `border border-white text-white dark:bg-blue-600/20`
-        : `text-white dark:bg-black`
-        } `}
+            ? `dark:bg-black`
+            : `border border-white text-white dark:bg-blue-600/20`
+          : `text-white dark:bg-black`
+      } `}
       onClick={() => {
         isSubjectLock ? null : toggleSubjectSelection(subject)
       }}
@@ -66,39 +64,47 @@ const SubjectCard = ({
           (selectedsubject: any) => selectedsubject.slug === subject.slug,
         ) && (
           <>
-            <div className={`absolute right-2 ${subject?.is_technical != null ? subject?.is_technical ? 'top-2': 'top-9' : 'top-2'} top-6 rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black`}>
+            <div
+              className={`absolute right-2 ${subject?.is_technical != null ? (subject?.is_technical ? 'top-2' : 'top-9') : 'top-2'} top-6 rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black`}
+            >
               Priority - {index + 1}
             </div>
             <div>
               {subject?.is_technical != null && (
-                <div className={`absolute right-2 top-2 rounded-full ${subject?.is_technical ? 'bg-[#ffa31a] hidden' : 'bg-[#e3103a] text-white '}  px-2 py-1 text-xs font-semibold text-black`}>
+                <div
+                  className={`absolute right-2 top-2 rounded-full ${subject?.is_technical ? 'hidden bg-[#ffa31a]' : 'bg-[#e3103a] text-white'} px-2 py-1 text-xs font-semibold text-black`}
+                >
                   {/* Your label or content here */}
                   {subject?.is_technical ? 'Tech' : 'Non-tech'}
                 </div>
               )}
-            </div>  
+            </div>
           </>
         )}
 
-{draggable &&
+      {draggable && (
         <div>
-        {subject?.is_technical != null && (
-          <div className={`absolute right-2 top-2 rounded-full ${subject?.is_technical ? 'bg-[#ffa31a] hidden' : 'bg-[#e3103a] text-white '}  px-2 py-1 text-xs font-semibold text-black`}>
-            {/* Your label or content here */}
-            {subject?.is_technical ? 'Tech' : 'Non-tech'}
-          </div>
-        )}
-      </div>  
-        }
+          {subject?.is_technical != null && (
+            <div
+              className={`absolute right-2 top-2 rounded-full ${subject?.is_technical ? 'hidden bg-[#ffa31a]' : 'bg-[#e3103a] text-white'} px-2 py-1 text-xs font-semibold text-black`}
+            >
+              {/* Your label or content here */}
+              {subject?.is_technical ? 'Tech' : 'Non-tech'}
+            </div>
+          )}
+        </div>
+      )}
 
       {!draggable &&
         isSubjectLock &&
         selectedSubjects.some(
-          (selectedsubject: any) => selectedsubject.slug === subject.slug
+          (selectedsubject: any) => selectedsubject.slug === subject.slug,
         ) && (
           <div>
             {subject?.is_technical != null && (
-              <div className={`absolute right-2 top-2 rounded-full ${subject?.is_technical ? 'bg-[#ffa31a] hidden' : 'bg-[#e3103a] text-white '}  px-2 py-1 text-xs font-semibold text-black`}>
+              <div
+                className={`absolute right-2 top-2 rounded-full ${subject?.is_technical ? 'hidden bg-[#ffa31a]' : 'bg-[#e3103a] text-white'} px-2 py-1 text-xs font-semibold text-black`}
+              >
                 {/* Your label or content here */}
                 {subject?.is_technical ? 'Tech' : 'Non-tech'}
               </div>
@@ -110,10 +116,9 @@ const SubjectCard = ({
         <h2 className="text-xl font-bold tracking-tight">
           {subject?.subject_name}{' '}
         </h2>
-        
       </CardHeader>
       <CardContent className="space-y-6">
-      <p className='text-lg'>Sem : {subject.sem_year}</p>
+        <p className="text-lg">Sem : {subject.sem_year}</p>
         <div className="flex flex-col justify-between gap-4 md:flex-row">
           <div className="space-y-1">
             <p className="text-sm uppercase text-white/60">Type</p>
@@ -132,61 +137,59 @@ const SubjectCard = ({
               {subject?.subject_code}
             </p>
             {isMobile && (
-                  <div className="absolute bottom-5 right-5">
-                    <button
-                      className="relative"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setIsExpanded(!isExpanded)
-                      }}
-                      aria-expanded={isExpanded}
-                      aria-label={
-                        isExpanded
-                          ? 'Hide course information'
-                          : 'Show course information'
-                      }
-                    >
-                      <Info className="h-5 w-5 text-white" />
-                    </button>
-                    {isExpanded && (
-                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                        <Card className="w-80 max-w-[90vw]">
-                          <CardContent className="p-4">
-                            <div className="mb-2 flex items-start justify-between">
-                              <InfoCard
-                                theory_exam_duration={
-                                  subject.theory_exam_duration
-                                }
-                                practical_exam_duration={
-                                  subject.practical_exam_duration
-                                }
-                                subject_code={subject.subject_code}
-                              />
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  setIsExpanded(false)
-                                }}
-                                className="text-muted-foreground hover:text-foreground"
-                                aria-label="Close"
-                              >
-                                ✕
-                              </button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    )}
+              <div className="absolute bottom-5 right-5">
+                <button
+                  className="relative"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIsExpanded(!isExpanded)
+                  }}
+                  aria-expanded={isExpanded}
+                  aria-label={
+                    isExpanded
+                      ? 'Hide course information'
+                      : 'Show course information'
+                  }
+                >
+                  <Info className="h-5 w-5 text-white" />
+                </button>
+                {isExpanded && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <Card className="w-80 max-w-[90vw]">
+                      <CardContent className="p-4">
+                        <div className="mb-2 flex items-start justify-between">
+                          <InfoCard
+                            theory_exam_duration={subject.theory_exam_duration}
+                            practical_exam_duration={
+                              subject.practical_exam_duration
+                            }
+                            subject_code={subject.subject_code}
+                          />
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setIsExpanded(false)
+                            }}
+                            className="text-muted-foreground hover:text-foreground"
+                            aria-label="Close"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
                 )}
+              </div>
+            )}
           </div>
           <div className="space-y-1">
-          <p className="hidden text-sm uppercase text-white/60 sm:block md:block lg:block">
-                Effective Year
-              </p>
-              <p className="hidden text-xl font-semibold sm:block md:block md:text-right lg:block">
-                {subject?.eff_from}
-              </p>
+            <p className="hidden text-sm uppercase text-white/60 sm:block md:block lg:block">
+              Effective Year
+            </p>
+            <p className="hidden text-xl font-semibold sm:block md:block md:text-right lg:block">
+              {subject?.eff_from}
+            </p>
           </div>
         </div>
 
@@ -233,10 +236,7 @@ const SubjectCard = ({
                 </div>
                 <div>
                   <p className="text-sm font-medium text-white/60">Total</p>
-                  <p className="text-lg font-bold">
-                    {' '}
-                    {subject?.total_marks}{' '}
-                  </p>
+                  <p className="text-lg font-bold"> {subject?.total_marks} </p>
                 </div>
               </div>
             </div>
@@ -252,30 +252,26 @@ const SubjectCard = ({
           </Badge>
 
           {!isMobile && (
-              <div className="relative">
-                <HoverCard>
-                  <HoverCardTrigger asChild>
-                    <button
-                      className="p-2"
-                      aria-label="Show course information"
-                    >
-                      <Info className="cursor-pointer text-white" />
-                    </button>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="absolute z-50 w-80 rounded-md border p-2 shadow-lg dark:bg-black">
-                    <InfoCard
-                      theory_exam_duration={subject.theory_exam_duration}
-                      practical_exam_duration={subject.practical_exam_duration}
-                      subject_code={subject.subject_code}
-                    />
-                  </HoverCardContent>
-                </HoverCard>
-              </div>
-            )}
+            <div className="relative">
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <button className="p-2" aria-label="Show course information">
+                    <Info className="cursor-pointer text-white" />
+                  </button>
+                </HoverCardTrigger>
+                <HoverCardContent className="absolute z-50 w-80 rounded-md border p-2 shadow-lg dark:bg-black">
+                  <InfoCard
+                    theory_exam_duration={subject.theory_exam_duration}
+                    practical_exam_duration={subject.practical_exam_duration}
+                    subject_code={subject.subject_code}
+                  />
+                </HoverCardContent>
+              </HoverCard>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
-
   )
 }
 

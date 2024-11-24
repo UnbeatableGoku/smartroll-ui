@@ -16,8 +16,9 @@ const useSubjectSelection = () => {
   const [selectedSemester, setSelectedSemester] = useState<string>('') // state that holds the slug of the selected semester
   const [selectedYear, setSelectedYear] = useState<string>('') // state that holds the slug of the selected yeaer
   const [subjects, setSubject] = useState<Array<{}> | null>(null) // state that hold the list of the premenet subjects before selection
-  const [unlockSubjectAfterDeadline,setunloackSubjectAfterDeadline] = useState(false)
-  const [notTechSubjects,setNotTechSubjects] = useState([])
+  const [unlockSubjectAfterDeadline, setunloackSubjectAfterDeadline] =
+    useState(false)
+  const [notTechSubjects, setNotTechSubjects] = useState([])
   const {
     semesters,
     loadSemesterByStream,
@@ -39,7 +40,7 @@ const useSubjectSelection = () => {
     setSubject(null)
     loadSemesterByStream(value)
     setNotTechSubjects([])
-  }                     
+  }
 
   // fuction that is invoked when the user selet the semester
   const handleOnValueChangeSemenster = (value: string) => {
@@ -49,15 +50,13 @@ const useSubjectSelection = () => {
     const semester_subject = semesterResponse.find(
       (semester: any) => semester.slug === value,
     )
-    if(semester_subject.deadline_reached){
+    if (semester_subject.deadline_reached) {
       setunloackSubjectAfterDeadline(semester_subject.deadline_reached)
-
-    }
-    else{
+    } else {
       setunloackSubjectAfterDeadline(false)
     }
     const finalized_subject = get(semester_subject, 'subjects', []) // check: to get the list of the selected subjects
-    
+
     // check: if subjects is already selected
     if (finalized_subject) {
       setSelectedSubjects(finalized_subject) // set the selected subject state
@@ -123,17 +122,17 @@ const useSubjectSelection = () => {
 
   // function: to toggle the selection of subject
   const toggleSubjectSelection = (subject: any): void => {
-    
     setSelectedSubjects((prev) =>
       prev.some((d) => d.slug === subject.slug)
         ? prev.filter((d) => d.slug !== subject.slug)
         : [...prev, subject],
     )
 
-    setNotTechSubjects((prevArry:any) => {
-      return prevArry.includes(subject.slug)? prevArry.filter((item:any) => item!== subject.slug) : [...prevArry, subject.slug]
+    setNotTechSubjects((prevArry: any) => {
+      return prevArry.includes(subject.slug)
+        ? prevArry.filter((item: any) => item !== subject.slug)
+        : [...prevArry, subject.slug]
     })
-    
   }
 
   // function: to save the selected subjects
@@ -141,14 +140,15 @@ const useSubjectSelection = () => {
     semester_slug: any,
     subject_slugs: any,
     time_stamp: string,
-    non_tech_subjects: any
+    non_tech_subjects: any,
   ): Promise<void> => {
     try {
-      
       const axiosInstance = axios.create()
       const method = 'post'
       const endpoint = `/manage/add_subjects_to_semester/`
-      const difference = subject_slugs.filter((item:string) => !non_tech_subjects.includes(item));
+      const difference = subject_slugs.filter(
+        (item: string) => !non_tech_subjects.includes(item),
+      )
       const body = {
         semester_slug: semester_slug,
         subject_slugs: subject_slugs,
@@ -175,7 +175,12 @@ const useSubjectSelection = () => {
 
         const updateResponse: any = semesterResponse.map((item: any) =>
           item.slug === semester_slug
-            ? { ...item, subjects: selectedSubjects,subjects_locked:true, deadline_reached : false }
+            ? {
+                ...item,
+                subjects: selectedSubjects,
+                subjects_locked: true,
+                deadline_reached: false,
+              }
             : item,
         )
         setSemesterResponse(updateResponse)
@@ -190,12 +195,11 @@ const useSubjectSelection = () => {
     }
   }
 
-  //function :: to handle the subject selection unlock after the deadline reached 
-  const UnlockSubjectAfterDeadline = async()=>{
-    try{
+  //function :: to handle the subject selection unlock after the deadline reached
+  const UnlockSubjectAfterDeadline = async () => {
+    try {
       const check = prompt('Please Type "unlock" to unlock selected subjects')
-      if(check === 'unlock'){
-        
+      if (check === 'unlock') {
         //TODO: MAKE THE API CALL TO UNLOCK THE SELECTED SUBJECTS
         const axiosInstance = axios.create()
         const method = 'post'
@@ -205,7 +209,7 @@ const useSubjectSelection = () => {
           Authorization: `Bearer ${StoredTokens.accessToken}`,
         }
         const body = {
-          semester_slug : selectedSemester
+          semester_slug: selectedSemester,
         }
         const response_obj = await CallAPI(
           StoredTokens,
@@ -213,35 +217,32 @@ const useSubjectSelection = () => {
           endpoint,
           method,
           header,
-          body
+          body,
         )
-        if(response_obj.error === false){
-          const check = get(response_obj,'response.data.data',false);
-          if(check == true){
+        if (response_obj.error === false) {
+          const check = get(response_obj, 'response.data.data', false)
+          if (check == true) {
             setIsSubjectLock(!isSubjectLock)
           }
-        }        
-          
-      }
-      else{
+        }
+      } else {
         toast.error('Please re-type "unlock"')
       }
-    }
-    catch(error){
+    } catch (error) {
       toast.error('Something went wrong')
     }
   }
 
-
-  const handleOnCheckForNonTechSubject = (subject_slug:string)=>{
-      try{
-        setNotTechSubjects((prevArry:any) => {
-          return prevArry.includes(subject_slug)? prevArry.filter((item:any) => item!== subject_slug) : [...prevArry, subject_slug]
-        })
-      }
-      catch(error:any){
-        toast.error(error.message)
-      }
+  const handleOnCheckForNonTechSubject = (subject_slug: string) => {
+    try {
+      setNotTechSubjects((prevArry: any) => {
+        return prevArry.includes(subject_slug)
+          ? prevArry.filter((item: any) => item !== subject_slug)
+          : [...prevArry, subject_slug]
+      })
+    } catch (error: any) {
+      toast.error(error.message)
+    }
   }
   return {
     selectedSubjects,
@@ -264,7 +265,7 @@ const useSubjectSelection = () => {
     handleSubjectSelection,
     setIsSubjectLock,
     UnlockSubjectAfterDeadline,
-    handleOnCheckForNonTechSubject
+    handleOnCheckForNonTechSubject,
   }
 }
 
