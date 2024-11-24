@@ -5,7 +5,6 @@ import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-import { error } from 'console'
 
 const useElectiveSubject = () => {
   const [electiveSubject, setElectiveSubject] = useState<Array<any>>([])
@@ -84,8 +83,6 @@ const useElectiveSubject = () => {
   }, [CallAPI, StoredTokens])
 
   const toggleSubjectSelection = (subject: any, group_slug: any): void => {
-    
-    
     setSelectedSubjects((prevSubjects) => {
       // Check if the subject with the given group_slug already exists
       const index = prevSubjects.findIndex(
@@ -103,7 +100,7 @@ const useElectiveSubject = () => {
     })
   }
 
-  //function:: to loak 
+  //function:: to loak
   const handleStudentChoice = useCallback(
     async (selectedChoices: string[], selectedChoicesSlug: string) => {
       try {
@@ -154,8 +151,8 @@ const useElectiveSubject = () => {
     [CallAPI, StoredTokens, selectedSubjects],
   )
 
-  const handleOnClickForUnsaveDraft = async()=>{
-    try{
+  const handleOnClickForUnsaveDraft = async () => {
+    try {
       const axiosInstance = axios.create()
       const method = 'post'
       const endpoint = '/manage/unsave_subject_choices_for_student/'
@@ -165,7 +162,6 @@ const useElectiveSubject = () => {
       }
       const body = {
         subject_choices_slug: subjectChoicesSlug,
-        
       }
       const response_obj = await CallAPI(
         StoredTokens,
@@ -173,10 +169,10 @@ const useElectiveSubject = () => {
         endpoint,
         method,
         headers,
-        body
+        body,
       )
 
-      if (response_obj?.error === false){
+      if (response_obj?.error === false) {
         const data = get(response_obj, 'response.data.data', [])
 
         // Set subject slug
@@ -198,8 +194,7 @@ const useElectiveSubject = () => {
         setElectiveSubject(electiveSubjectData)
         setIsSubjectSave(false)
       }
-    }
-    catch(error){
+    } catch (error) {
       toast.error('Something went wrong')
     }
   }

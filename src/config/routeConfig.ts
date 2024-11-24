@@ -4,7 +4,7 @@ import { lazy } from 'react'
 // Lazy load components
 const Home = lazy(() => import('@pages/Home'))
 const Dashboard = lazy(() => import('@pages/Dashboard'))
-const Login = lazy(() => import('@pages/login/Login'))
+const Login = lazy(() => import('@pages/Login/Login'))
 const NotFound = lazy(() => import('@pages/NotFound'))
 
 interface RouteConfig {
