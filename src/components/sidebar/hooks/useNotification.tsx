@@ -9,6 +9,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
+import { DecodedToken } from 'types/common'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 interface Notification {
   slug: string
@@ -19,9 +22,10 @@ interface Notification {
 
 const useNotification = () => {
   const dispatch = useDispatch()
-  const { seenNotifications, unSeenNotifications } = useSelector(
+  const { seenNotifications, unSeenNotifications,notificationTypes } = useSelector(
     (state: RootState) => state.notification,
   )
+  const profile:DecodedToken | null = useSelector((state: RootState) => state.auth.userProfile)
 
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   //   const [seenNotifications, setSeenNotifications] = useState<
@@ -30,9 +34,37 @@ const useNotification = () => {
   //   const [unSeenNotifications, setUnSeenNotifications] = useState<
   //     Array<Notification>
   //   >([])
+
+
+  
+
+  
+
+
+  const replaceLink = (message:string,messageType:string) => {
+    if (!message) return message;
+    // Check if the string contains 'belective_sub_link'
+    if (message.includes('subject_choice_url')) {
+      const parts = message.split('subject_choice_url');
+      
+      const role = profile?.obj.profile.role
+      const notificationType = notificationTypes.find((notificationType:any)=> notificationType.type === messageType && notificationType.role === role )
+      return parts.map((part, index) => (
+        <React.Fragment key={index}>
+          {part}
+          {index < parts.length - 1 && (
+            <Link to={`${notificationType?.url}`} className="text-blue-700 underline">Click Here.</Link>
+          )}
+        </React.Fragment>
+      ));
+    }
+
+    // If 'belective_sub_link' is not found, just return the original string
+    return message;
+  };
+
   //function :: to get the notification
   const handleOnClickForNotifications = async () => {
-    console.log(seenNotifications, unSeenNotifications)
     try {
       const header = {
         'ngrok-skip-browser-warning': true,
@@ -111,6 +143,7 @@ const useNotification = () => {
     seenNotifications,
     handleOnClickForNotifications,
     handleOnClickForMarkNotifications,
+    replaceLink
   }
 }
 

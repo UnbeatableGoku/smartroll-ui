@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 
 import { BookOpen } from 'lucide-react'
+import { Helmet } from 'react-helmet'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
 import { Button } from '@components/ui/button'
-import { Card, CardHeader, CardTitle } from '@components/ui/card'
+import { Card, CardContent, CardHeader } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
 
-import ConfirmSubjectSelection from './ConfirmSubjectSelection'
-import SubjectCard from './SubjectCard'
+import ConfirmSubjectSelection from './components/ConfirmSubjectSelection'
+import SubjectCard from './components/SubjectCard'
 import useSubjectSelection from './hooks/useSubjectSelection'
 
 const SubjectSelection = () => {
@@ -41,9 +42,12 @@ const SubjectSelection = () => {
   useEffect(() => {
     handleStream()
   }, [])
-  
+
   return (
-    
+    <>
+      <Helmet>
+        <title>Smart Roll | Subject Selection</title>
+      </Helmet>
       <div className="flex w-full flex-col space-y-4">
         {/* time table selection */}
         <div className="flex flex-col flex-wrap items-center justify-evenly">
@@ -81,11 +85,12 @@ const SubjectSelection = () => {
                 optionTitle={'Semester'}
               />
 
-              <div className={`${isSubjectLock ? 'hidden' : unlockSubjectAfterDeadline ? 'hidden':'block'}`}>
+              <div
+                className={`${isSubjectLock ? 'hidden' : unlockSubjectAfterDeadline ? 'hidden' : 'block'}`}
+              >
                 {/* Connecting Lines */}
                 <div
                   className={`absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12`}
-
                 />
                 <div
                   className={`absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden ${isSubjectLock ? 'hidden' : 'block'}`}
@@ -95,7 +100,7 @@ const SubjectSelection = () => {
 
             {/* Year Selection Card */}
             <div
-              className={`relative w-full md:w-[240px] lg:w-[320px] ${isSubjectLock ? 'hidden' : unlockSubjectAfterDeadline ? 'hidden':'block'}`}
+              className={`relative w-full md:w-[240px] lg:w-[320px] ${isSubjectLock ? 'hidden' : unlockSubjectAfterDeadline ? 'hidden' : 'block'}`}
             >
               <Selection
                 title="Academic Year"
@@ -108,25 +113,35 @@ const SubjectSelection = () => {
               />
             </div>
           </div>
-          {isSubjectLock == false && selectedSubjects.length > 0 && <div className={`${isSubjectLock ? 'hidden' : 'block'}`}>
-            <Button onClick={togglePanel} className={`z-10 mt-3 w-full lg:w-auto`}>
-            <BookOpen className="mr-2 h-4 w-4" />
-            Lock Subjects
-            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
-              {selectedSubjects.length}
-            </span>
-          </Button>
-          </div>}
-          
-          {unlockSubjectAfterDeadline == true && isSubjectLock == true &&  <div className="">
-            <Button onClick={UnlockSubjectAfterDeadline} className={`z-10 mt-3 w-full lg:w-auto`}>
-            <BookOpen className="mr-2 h-4 w-4" />
-            Unlock Subject Selection
-            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
-              {selectedSubjects.length}
-            </span>
-          </Button>
-          </div>}
+          {isSubjectLock == false && selectedSubjects.length > 0 && (
+            <div className={`${isSubjectLock ? 'hidden' : 'block'}`}>
+              <Button
+                onClick={togglePanel}
+                className={`z-10 mt-3 w-full lg:w-auto`}
+              >
+                <BookOpen className="mr-2 h-4 w-4" />
+                Lock Subjects
+                <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+                  {selectedSubjects.length}
+                </span>
+              </Button>
+            </div>
+          )}
+
+          {unlockSubjectAfterDeadline == true && isSubjectLock == true && (
+            <div className="">
+              <Button
+                onClick={UnlockSubjectAfterDeadline}
+                className={`z-10 mt-3 w-full lg:w-auto`}
+              >
+                <BookOpen className="mr-2 h-4 w-4" />
+                Unlock Subject Selection
+                <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+                  {selectedSubjects.length}
+                </span>
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="p-4">
@@ -140,36 +155,31 @@ const SubjectSelection = () => {
               <Skeleton className="sm:h-18 h-20 w-full" />
               <Skeleton className="sm:h-18 h-20 w-full" />
             </div>
-          ) : (
-            // If subjects is not null, display them in the grid
+          ) : // If subjects is not null, check if subjects are available
+          subjects.length > 0 ? (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {/* Check if subjects are available */}
-              {subjects.length > 0 ? (
-                subjects.map((subject, index) => (
-                  <SubjectCard
-                    key={index}
-                    subject={subject}
-                    toggleSubjectSelection={toggleSubjectSelection}
-                    selectedSubjects={selectedSubjects}
-                    isSubjectLock={isSubjectLock}
-                    setIsSubjectLock={setIsSubjectLock}
-                    draggable={false}
-                    index={index}
-                  />
-                ))
-              ) : (
-                <div className="group w-full">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-center text-lg font-semibold leading-none">
-                          No Subjects are available for this academic year.
-                        </CardTitle>
-                      </div>
-                    </CardHeader>
-                  </Card>
-                </div>
-              )}
+              {subjects.map((subject, index) => (
+                <SubjectCard
+                  key={index}
+                  subject={subject}
+                  toggleSubjectSelection={toggleSubjectSelection}
+                  selectedSubjects={selectedSubjects}
+                  isSubjectLock={isSubjectLock}
+                  setIsSubjectLock={setIsSubjectLock}
+                  draggable={false}
+                  index={index}
+                />
+              ))}
+            </div>
+          ) : (
+            // If no subjects are available, show a message
+            <div className="group w-full">
+              <Card>
+                <CardHeader className="pb-2"></CardHeader>
+                <CardContent className="text-center">
+                  No Subjects are available for this academic year.
+                </CardContent>
+              </Card>
             </div>
           )}
         </div>
@@ -183,9 +193,10 @@ const SubjectSelection = () => {
           selectedSemester={selectedSemester}
           isSubjectLock={isSubjectLock}
           notTechSubjects={notTechSubjects}
-          handleOnCheckForNonTechSubject = {handleOnCheckForNonTechSubject}
+          handleOnCheckForNonTechSubject={handleOnCheckForNonTechSubject}
         ></ConfirmSubjectSelection>
       </div>
+    </>
   )
 }
 

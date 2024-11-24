@@ -2,11 +2,11 @@ import useAPI from '@hooks/useApi';
 import { SelectionResponse,  StreamInterface } from 'types/common';
 import axios from 'axios';
 import { get } from 'lodash';
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner';
 import useStream from '@components/common/uploadTimeTable/useStream';
 
-const useSelectionFroTeacher = () => {
+const useSelectionForTeacher = () => {
     
     
     const {streamData,setStreamData,stream,handleStream} = useStream()
@@ -24,6 +24,11 @@ const useSelectionFroTeacher = () => {
     const [choice_deadline, set_choice_deadline] = useState<string | null>(null)
     const [saveAsDraft,setSaveAsDraft] = useState<boolean>(false)
 
+
+    //useRef 
+    const noSubjectFoundCard = useRef<HTMLDivElement>(null)
+    
+    
     useEffect(() => {
         handleStream()
     }, [])
@@ -174,10 +179,13 @@ const useSelectionFroTeacher = () => {
                     setSelectedSubjects(check_finalized_choices)
                     set_choice_deadline(response_obj?.response?.data?.data?.deadline_timestamp)
                 }
+                if(!noSubjectFoundCard.current?.classList.contains('hidden')){
+                    noSubjectFoundCard.current?.classList.add('hidden')
+                }
             }
             else {
                 toast.error(response_obj.errorMessage?.message)
-                setSubjects(null)
+                setSubjects([])
 
             }
         }
@@ -318,6 +326,7 @@ const useSelectionFroTeacher = () => {
         choice_deadline,
         saveAsDraft,
         choice_slug,
+        noSubjectFoundCard,
         setIsSubjectLock,
         toggleSubjectSelection,
         onDrop,
@@ -334,4 +343,4 @@ const useSelectionFroTeacher = () => {
     }
 }
 
-export default useSelectionFroTeacher
+export default useSelectionForTeacher

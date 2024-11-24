@@ -5,17 +5,37 @@ interface Notification {
   status: string
   type: string
   message: string
+  type_code : string
 }
+
+interface notificationTypesInterface  {
+  type : string,
+  url : string,
+  role : string
+}
+
+const notification_types:notificationTypesInterface[] = [
+  {type: 'subject_choice_alert',url:'/teacher-dashboard/subject-choice',role : 'teacher'},
+  {type: 'subject_choice_alert',url:'/student-dashboard/elective-subject',role : 'student'},
+  {type: 'subject_deletion_alert',url:'/student-dashboard/elective-subject',role : 'student'},
+  {type: 'subject_deletion_alert',url:'/teacher-dashboard/subject-choice',role : 'teacher'},
+  {type: 'subject_choice_deadline_alert',url:'/teacher-dashboard/subject-choice',role : 'student'},
+  {type: 'subject_choice_deadline_alert',url:'/teacher-dashboard/subject-choice',role : 'teacher'},
+  {type: 'subject_choice_reset_alert',url:'/teacher-dashboard/subject-choice',role : 'student'},
+  {type: 'subject_choice_reset_alert',url:'/teacher-dashboard/subject-choice',role : 'teacher'},
+]
 
 interface NotificationState {
   seenNotifications: Notification[]
-  unSeenNotifications: Notification[]
+  unSeenNotifications: Notification[],
+  notificationTypes: notificationTypesInterface[] 
 }
 
 // Initial state
 const initialState: NotificationState = {
   seenNotifications: [],
   unSeenNotifications: [],
+  notificationTypes : notification_types 
 }
 
 const notificationSlice = createSlice({

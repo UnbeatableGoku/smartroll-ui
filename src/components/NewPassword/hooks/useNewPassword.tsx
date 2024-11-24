@@ -22,7 +22,7 @@ const useNewPassword = () => {
         'ngrok-skip-browser-warning': 'true',
       }
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/auth/api/set_new_password_stakeholders/`,
+        `${import.meta.env.VITE_BASE_URL}/auth/api/set_new_password_for_stakeholders/`,
         newPasswordData,
         { headers },
       )
@@ -60,8 +60,12 @@ const useNewPassword = () => {
         }
       }
     } catch (error: any) {
-      console.error('Error Updating Password', error)
-      toast.error(error.response.data.message)
+      if(error.status == 404){
+        toast.error(error.message)
+      }
+      if(error.status==500){
+        toast.error(error.response.data.message)
+      }
     }
   }
   return {

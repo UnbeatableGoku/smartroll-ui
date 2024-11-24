@@ -11,8 +11,8 @@ interface authState {
 
 const initialState: authState = {
   isAuth: true,
-  accessToken: localStorage.getItem('accessToken'),
-  refreshToken: localStorage.getItem('refreshToken'),
+  accessToken: localStorage.getItem('accessToken') != "undefined" && localStorage.getItem('accessToken') ? localStorage.getItem('accessToken') : null,
+  refreshToken: localStorage.getItem('refreshToken') != "undefined" ? localStorage.getItem('refreshToken') : null,
   userProfile: null,
 }
 

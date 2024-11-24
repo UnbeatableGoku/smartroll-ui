@@ -35,7 +35,7 @@ const useStream = () => {
 
       if (response_obj.error == false) {
         const data:Array<StreamInterface> = get(response_obj, 'response.data.data', [])
-        console.log(response_obj.response?.data.data)
+        
         setStreamData(response_obj.response?.data.data)
         const stream_lst: Array<SelectionResponse> = data.map(
           (stream: StreamInterface) => {
@@ -49,7 +49,7 @@ const useStream = () => {
         setStream(stream_lst)
         toast.info('Please select the stream')
       } else {
-        toast.error('Server Down. Please Contact The Administrator')
+        toast.error(response_obj.errorMessage?.message)
       }
     } catch (e) {
       console.error('Error fetching streams', e)

@@ -31,7 +31,7 @@ const useAuth = () => {
   
   useEffect(() => {
     const accessToken = Auth?.accessToken
-    if (accessToken) {
+    if (accessToken != undefined && accessToken != null) {
       try {
         const decoded = jwtDecode<DecodedToken>(accessToken) // Decode the token
         if (decoded) {

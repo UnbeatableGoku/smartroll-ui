@@ -12,12 +12,13 @@ import {
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ChevronRight, Trash, X } from 'lucide-react'
+import { Helmet } from 'react-helmet'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
+import { Skeleton } from '@components/ui/skeleton'
 
 import useSubjectSelectionConfirmation from './hooks/useSubjectSelectionConfirmation'
-import { Skeleton } from '@components/ui/skeleton'
 
 interface tableHeader {
   title: string
@@ -63,7 +64,7 @@ const SubjectSelectionConfirmation = () => {
     setStudents,
     setSelectedSubjectCategory,
     getSubjectName,
-    handleOnClickForDeleteSubjectOfStudent
+    handleOnClickForDeleteSubjectOfStudent,
   } = useSubjectSelectionConfirmation()
 
   useEffect(() => {
@@ -160,17 +161,17 @@ const SubjectSelectionConfirmation = () => {
           data.map((student: any) => (
             <>
               <TableRow key={student?.slug}>
-                <TableCell className="font-medium text-center">
+                <TableCell className="text-center font-medium">
                   {student.profile.enrollment}
                 </TableCell>
-                <TableCell className="font-medium text-center">
+                <TableCell className="text-center font-medium">
                   {student.profile.profile.name}
                 </TableCell>
-                <TableCell className="font-medium text-center">
+                <TableCell className="text-center font-medium">
                   {student.profile.profile.email}
                 </TableCell>
 
-                <TableCell className='flex space-x-3 justify-center'>
+                <TableCell className="flex justify-center space-x-3">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -192,11 +193,19 @@ const SubjectSelectionConfirmation = () => {
                       subjects
                     </span>
                   </Button>
-                  <Button size="icon" className='px-1 py-1' variant="destructive"
-                                  onClick={()=>{handleOnClickForDeleteSubjectOfStudent(selectedSubject,student.slug)}}
-                                >
-                                  <Trash></Trash>
-                                </Button>
+                  <Button
+                    size="icon"
+                    className="px-1 py-1"
+                    variant="destructive"
+                    onClick={() => {
+                      handleOnClickForDeleteSubjectOfStudent(
+                        selectedSubject,
+                        student.slug,
+                      )
+                    }}
+                  >
+                    <Trash></Trash>
+                  </Button>
                 </TableCell>
               </TableRow>
               {selectedPerson?.slug === student.slug && (
@@ -213,7 +222,7 @@ const SubjectSelectionConfirmation = () => {
                             (subject: any, index: any) => (
                               <li
                                 key={index}
-                                className="rounded border bg-background p-2 flex justify-between"
+                                className="flex justify-between rounded border bg-background p-2"
                               >
                                 {subject.subject_name} - {subject.subject_code}
                                 {/* <Button size="icon" className='px-1 py-1' variant="destructive"
@@ -237,36 +246,77 @@ const SubjectSelectionConfirmation = () => {
   )
 
   return (
-    <div className="flex w-full flex-col space-y-4">
-      <div className="container mx-auto p-2 lg:p-4">
-        <Tabs
-          value={activeTab}
-          onValueChange={(value:any) => {
-            setActiveTab(value as PersonType)
-            setSelectedSemester('')
-            setSelectedSubject('')
-            setSubjects([])
-            setTeachers([])
-            setStudents([])
-            setSelectedSubjectCategory('')
-          }}
-        >
-          <TabsList className="grid w-auto grid-cols-2">
-            <TabsTrigger value="teacher">Teachers</TabsTrigger>
-            <TabsTrigger value="student">Students</TabsTrigger>
-          </TabsList>
-          <div className="mt-5 flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
-            {/* Stream Selection Card */}
-            {stream && (
-              <>
+    <>
+      <Helmet>
+        <title>Smart Roll | Subject Confirmation</title>
+      </Helmet>
+      <div className="flex w-full flex-col space-y-4">
+        <div className="container mx-auto p-2 lg:p-4">
+          <Tabs
+            value={activeTab}
+            onValueChange={(value: any) => {
+              setActiveTab(value as PersonType)
+              setSelectedSemester('')
+              setSelectedSubject('')
+              setSubjects([])
+              setTeachers([])
+              setStudents([])
+              setSelectedSubjectCategory('')
+            }}
+          >
+            <TabsList className="grid w-auto grid-cols-2">
+              <TabsTrigger value="teacher">Teachers</TabsTrigger>
+              <TabsTrigger value="student">Students</TabsTrigger>
+            </TabsList>
+            <div className="mt-5 flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
+              {/* Stream Selection Card */}
+              {stream && (
+                <>
+                  <div className="relative w-full md:w-[240px] lg:w-[320px]">
+                    <Selection
+                      title="Stream"
+                      selectedValue={selectedStream}
+                      selectedValue2=" "
+                      onValueChange={handleValueChangeOfStream}
+                      placeholder="Select Stream"
+                      data={stream}
+                      optionTitle={null}
+                    />
+
+                    {/* Connecting Lines */}
+                    <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
+                    <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
+                  </div>
+                </>
+              )}
+              <div className="relative w-full md:w-[240px] lg:w-[320px]">
+                <Selection
+                  title="Semester"
+                  selectedValue={selectedSemester}
+                  selectedValue2={selectedStream}
+                  onValueChange={
+                    activeTab == 'teacher'
+                      ? handleValueChangeOfSemesterForTeacher
+                      : handleValueChangeOfSemesterForStudent
+                  }
+                  placeholder="Select Semester"
+                  data={semesters}
+                  optionTitle={'Semester'}
+                />
+                {/* Connecting Lines */}
+                <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
+                <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
+              </div>
+
+              {activeTab === 'student' && (
                 <div className="relative w-full md:w-[240px] lg:w-[320px]">
                   <Selection
-                    title="Stream"
-                    selectedValue={selectedStream}
-                    selectedValue2=" "
-                    onValueChange={handleValueChangeOfStream}
-                    placeholder="Select Stream"
-                    data={stream}
+                    title="Subject Category"
+                    selectedValue={selectedSubjectCategory}
+                    selectedValue2={selectedSemester}
+                    onValueChange={handleValueChangeOfCategory}
+                    placeholder="Select category"
+                    data={complementrySbujects}
                     optionTitle={null}
                   />
 
@@ -274,92 +324,77 @@ const SubjectSelectionConfirmation = () => {
                   <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
                   <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
                 </div>
-              </>
-            )}
-            <div className="relative w-full md:w-[240px] lg:w-[320px]">
-              <Selection
-                title="Semester"
-                selectedValue={selectedSemester}
-                selectedValue2={selectedStream}
-                onValueChange={
-                  activeTab == 'teacher'
-                    ? handleValueChangeOfSemesterForTeacher
-                    : handleValueChangeOfSemesterForStudent
-                }
-                placeholder="Select Semester"
-                data={semesters}
-                optionTitle={'Semester'}
-              />
-              {/* Connecting Lines */}
-              <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
-              <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
-            </div>
+              )}
 
-            {activeTab === 'student' && (
+              {/* Subject Selection Card */}
               <div className="relative w-full md:w-[240px] lg:w-[320px]">
                 <Selection
-                  title="Subject Category"
-                  selectedValue={selectedSubjectCategory}
-                  selectedValue2={selectedSemester}
-                  onValueChange={handleValueChangeOfCategory}
-                  placeholder="Select category"
-                  data={complementrySbujects}
+                  title="Subject"
+                  selectedValue={selectedSubject}
+                  selectedValue2={
+                    activeTab === 'student'
+                      ? selectedSubjectCategory
+                      : selectedSemester
+                  }
+                  onValueChange={
+                    activeTab === 'teacher'
+                      ? handleValueChangeOfSubjectForTeacher
+                      : handleValueChangeOfSubjectForStudent
+                  }
+                  placeholder="Select Subject"
+                  data={subjects}
                   optionTitle={null}
                 />
-                {/* Connecting Lines */}
-                <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
-                <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
               </div>
-            )}
-
-            {/* Subject Selection Card */}
-            <div className="relative w-full md:w-[240px] lg:w-[320px]">
-              <Selection
-                title="Subject"
-                selectedValue={selectedSubject}
-                selectedValue2={
-                  activeTab === 'student'
-                    ? selectedSubjectCategory
-                    : selectedSemester
-                }
-                onValueChange={
-                  activeTab === 'teacher'
-                    ? handleValueChangeOfSubjectForTeacher
-                    : handleValueChangeOfSubjectForStudent
-                }
-                placeholder="Select Subject"
-                data={subjects}
-                optionTitle={null}
-              />
             </div>
-          </div>
-          <TabsContent value="teacher" className="border rounded-lg overflow-hidden mt-4">
-            { teachers.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Teachers -  {teachers.length} </p></div> : null}
-            { teachers.length > 0 && renderTable(teachers, 'teacher')}
-            {teachers.length == 0 && <div className="flex flex-col items-center gap-4">
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-            </div>}
-          </TabsContent>
-          <TabsContent value="student" className="border rounded-lg overflow-hidden mt-4">
-          { students.length  > 0 ? <div className='p-2 border-b border flex flex-col lg:flex-row justify-between text-xl font-bold'><p>Subject -  {getSubjectName(selectedSubject)}</p><p>Total Stundents -  {students.length} </p></div> : null}
-            {students.length > 0  && renderTable(students, 'student')}
-            {students.length == 0 && <div className="flex flex-col items-center gap-4">
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-            </div>}
-          </TabsContent>
-        </Tabs>
+            <TabsContent
+              value="teacher"
+              className="mt-4 overflow-hidden rounded-lg border"
+            >
+              {teachers.length > 0 ? (
+                <div className="flex flex-col justify-between border border-b p-2 text-xl font-bold lg:flex-row">
+                  <p>Subject - {getSubjectName(selectedSubject)}</p>
+                  <p>Total Teachers - {teachers.length} </p>
+                </div>
+              ) : null}
+              {teachers.length > 0 && renderTable(teachers, 'teacher')}
+              {teachers.length == 0 && (
+                <div className="flex flex-col items-center gap-4">
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent
+              value="student"
+              className="mt-4 overflow-hidden rounded-lg border"
+            >
+              {students.length > 0 ? (
+                <div className="flex flex-col justify-between border border-b p-2 text-xl font-bold lg:flex-row">
+                  <p>Subject - {getSubjectName(selectedSubject)}</p>
+                  <p>Total Stundents - {students.length} </p>
+                </div>
+              ) : null}
+              {students.length > 0 && renderTable(students, 'student')}
+              {students.length == 0 && (
+                <div className="flex flex-col items-center gap-4">
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                  <Skeleton className="sm:h-18 h-20 w-full" />
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

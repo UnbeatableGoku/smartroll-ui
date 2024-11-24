@@ -18,6 +18,7 @@ interface CallAPIResponse {
     data: any
     error: boolean
     message: string
+    statusCode : any
   }
 }
 
@@ -100,15 +101,17 @@ const useAPI = () => {
           dispatch(setLoader(false))
           return {
             error: true,
-            errorMessage: { data: null, error: true, message: 'Token Expired' },
+            errorMessage: { data: null, error: true, message: 'Token Expired',statusCode : result.status },
           }
         }
       } else {
         // Handle other errors
         dispatch(setLoader(false))
+        const errorResponse = {...error.response?.data,statusCode : error.response.status}
+        
         return {
           error: true,
-          errorMessage: error.response?.data || 'Unknown error',
+          errorMessage: errorResponse || 'Unknown error',
         }
       }
     }
@@ -121,6 +124,7 @@ const useAPI = () => {
         data: null,
         error: true,
         message: 'Unexpected error occurred',
+        statusCode : 500,
       },
     }
   }

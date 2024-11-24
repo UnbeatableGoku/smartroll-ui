@@ -28,19 +28,26 @@ const useSidebarLinkSelector = () => {
 
   // Compute the sidebar links based on the user's role
   const setSidebarLinks = (): Array<string> => {
-    if (!accessToken) {
+    if (!accessToken && accessToken == undefined) {
       return []
     }
-    const userProfile = jwtDecode<DecodedToken>(accessToken)
-    if (userProfile?.obj.profile.role === 'admin') {
-      return userLinks.admin
-    } else if (userProfile?.obj.profile.role === 'teacher') {
-      return userLinks.teacher
-    } else if (userProfile?.obj.profile.role === 'student') {
-      return userLinks.student
-    } else {
+    
+    if (accessToken != undefined && accessToken != null) {
+      const userProfile = jwtDecode<DecodedToken | undefined>(accessToken)
+      if (userProfile?.obj.profile.role === 'admin') {
+        return userLinks.admin
+      } else if (userProfile?.obj.profile.role === 'teacher') {
+        return userLinks.teacher
+      } else if (userProfile?.obj.profile.role === 'student') {
+        return userLinks.student
+      } else {
+        return []
+      }
+    }
+    else {
       return []
     }
+
   }
 
   return {
