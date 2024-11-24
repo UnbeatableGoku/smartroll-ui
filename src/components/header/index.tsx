@@ -11,6 +11,7 @@ import { PAGE_DASHBOARD } from '@constants'
 import { DecodedToken } from 'types/common'
 
 import { setUserProfile } from '@data/redux/slices/authSlice'
+import { toast } from 'sonner'
 
 const Header = () => {
 
@@ -19,11 +20,17 @@ const Header = () => {
 
   const [profile, setProfile] = useState<DecodedToken | null>(null)
   const decodeToken = () => {
-    if (access) {
-      const decoded: DecodedToken = jwtDecode<DecodedToken>(access)
-      dispatch(setUserProfile(decoded))
-      setProfile(decoded)
+    try{
+      if (access) {
+        const decoded: DecodedToken = jwtDecode<DecodedToken>(access)
+        dispatch(setUserProfile(decoded))
+        setProfile(decoded)
+      }  
     }
+    catch(error:any){
+      toast.error(error.message)
+    }
+    
   }
   useEffect(() => {
     decodeToken()

@@ -42,6 +42,7 @@ const Login = () => {
   useEffect(() => {
     redirectLogin()
   }, [])
+  console.log("login")
 
   return (
     <>

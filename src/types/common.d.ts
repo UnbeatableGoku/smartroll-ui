@@ -63,3 +63,9 @@ export interface StreamInterface {
   choices_locked:boolean,
   saved_subjects : Array<any>
 }
+
+declare global {
+  interface Window {
+      base_url:string;
+  }
+}

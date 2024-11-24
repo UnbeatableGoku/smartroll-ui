@@ -22,7 +22,7 @@ const useNewPassword = () => {
         'ngrok-skip-browser-warning': 'true',
       }
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/auth/api/set_new_password_for_stakeholders/`,
+        `${window.base_url}/auth/api/set_new_password_for_stakeholders/`,
         newPasswordData,
         { headers },
       )
