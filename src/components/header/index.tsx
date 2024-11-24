@@ -1,22 +1,26 @@
 import logo from '@assets/images/smartroll.png'
 import { RootState } from '@data/redux/Store'
 import { jwtDecode } from 'jwt-decode'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { PAGE_DASHBOARD } from '@constants'
 
 import { DecodedToken } from 'types/common'
 import { useEffect, useState } from 'react'
+import { setUserProfile } from '@data/redux/slices/authSlice'
 
 const Header = () => {
+
+  const dispatch = useDispatch()
   const access: any = useSelector((state: RootState) => state.auth.accessToken)
   
   const [profile,setProfile] = useState<DecodedToken|null>(null)
   const decodeToken  = ()=>{
     if(access){
       const decoded: DecodedToken = jwtDecode<DecodedToken>(access)
-    setProfile(decoded)
+      dispatch(setUserProfile(decoded))
+      setProfile(decoded)
     }
   }
   useEffect(() => {

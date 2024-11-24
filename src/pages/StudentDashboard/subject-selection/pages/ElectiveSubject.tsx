@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import useElectiveSubject from '../hooks/useElectiveSubject'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { AlertTriangle, BookOpen, GraduationCap } from 'lucide-react'
@@ -9,8 +9,8 @@ import { AlertTriangle, BookOpen, GraduationCap } from 'lucide-react'
 import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'
 
-import ConfirmPanel from './ConfirmPanel'
-import SubjectShowCard from './SubjectShowCard'
+import ConfirmPanel from '../component/ConfirmPanel'
+import SubjectShowCard from '../component/SubjectShowCard'
 
 // Define TypeScript interfaces for better type safety
 interface Subject {
@@ -52,16 +52,17 @@ const ElectiveSubject = () => {
   const togglePanel = () => setIsPanelOpen(!isPanelOpen)
 
   const {
-    handleGetElectiveSubject,
     electiveSubject,
-    handleStudentChoice,
     subjectChoicesSlug,
     isSubjectSave,
     finalizedChoice,
     selectedSubjects,
-    toggleSubjectSelection,
     deadline,
-    handleOnClickForUnsaveDraft
+    noElectiveSubjectCard,
+    handleGetElectiveSubject,
+    handleStudentChoice,
+    toggleSubjectSelection,
+    handleOnClickForUnsaveDraft,
   } = useElectiveSubject()
 
   useEffect(() => {
@@ -69,7 +70,7 @@ const ElectiveSubject = () => {
   }, [])
 
   return (
-    <div className="py-13 min-h-screen bg-gradient-to-b px-4">
+    <div className="py-13 bg-gradient-to-b px-4">
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-white sm:text-2xl md:text-4xl lg:text-5xl">
@@ -116,6 +117,14 @@ const ElectiveSubject = () => {
           )}
         </div>
 
+        <div className="group w-full h-96 flex items-center" ref={noElectiveSubjectCard}>
+                <Card className='w-full border-white'>
+                  <CardHeader className="pb-2"></CardHeader>
+                  <CardContent className="text-center font-bold">
+                  You'll get your elective subject choices soon ....
+                  </CardContent>
+                </Card>
+              </div>
         <div className="space-y-10">
           {isSubjectSave && finalizedChoice ? (
             <div className="rounded-2xl border border-zinc-600 p-8 backdrop-blur-sm dark:bg-black">

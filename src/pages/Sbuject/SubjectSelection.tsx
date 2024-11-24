@@ -8,8 +8,8 @@ import { Button } from '@components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
 
-import ConfirmSubjectSelection from './ConfirmSubjectSelection'
-import SubjectCard from './SubjectCard'
+import ConfirmSubjectSelection from './components/ConfirmSubjectSelection'
+import SubjectCard from './components/SubjectCard'
 import useSubjectSelection from './hooks/useSubjectSelection'
 
 const SubjectSelection = () => {

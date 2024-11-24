@@ -1,7 +1,7 @@
-import {  useState } from 'react'
+import { useState } from 'react'
 
-import ConfirmSubjectSelection from '@pages/Sbuject/ConfirmSubjectSelection'
-import SubjectCard from '@pages/Sbuject/SubjectCard'
+import ConfirmSubjectSelection from '@pages/Sbuject/components/ConfirmSubjectSelection'
+import SubjectCard from '@pages/Sbuject/components/SubjectCard'
 import useSubjectSelection from '@pages/Sbuject/hooks/useSubjectSelection'
 import { AlertTriangle, BookOpen } from 'lucide-react'
 
@@ -11,14 +11,14 @@ import { Button } from '@components/ui/button'
 import { Card, CardContent, CardHeader } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
 
-import useSelectionFroTeacher from './hooks/useSelectionFroTeacher'
+import useSelectionForTeacher from '../../hooks/useSelectionForTeacher'
 
 ConfirmSubjectSelection
 
 const SubjectChoice = () => {
   const { handleSubjectSelection } = useSubjectSelection()
 
-  //const  {handleOnValueChangeSemenster,handleOnValueChangeStreams,setSelectedSubjects,draggedIndex} = useSubjectChoice()
+
   const {
     loadSemesterByStreamForTeacher,
     stream,
@@ -30,7 +30,7 @@ const SubjectChoice = () => {
     toggleSubjectSelection,
     selectedSubjects,
     isSubjectLock,
-    
+    noSubjectFoundCard,
     onDrop,
     setDraggedIndex,
     save_teacher_subject_choice,
@@ -38,14 +38,14 @@ const SubjectChoice = () => {
     saveAsDraft,
     setSaveAsDraft,
     handleOnClickForUnsaveDraft
-  } = useSelectionFroTeacher()
-  
+  } = useSelectionForTeacher()
+
   const [isPanelOpen, setIsPanelOpen] = useState(false)
   const togglePanel = () => setIsPanelOpen(!isPanelOpen)
 
 
 
-  
+
 
   return (
     <div className="flex w-full flex-col space-y-4">
@@ -67,7 +67,7 @@ const SubjectChoice = () => {
                 optionTitle={null}
               />
 
-              {!isSubjectLock &&  !saveAsDraft &&
+              {!isSubjectLock && !saveAsDraft &&
                 <div>
                   {/* Connecting Lines */}
                   <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
@@ -78,8 +78,8 @@ const SubjectChoice = () => {
 
           )}
           {
-            !isSubjectLock  && !saveAsDraft &&
-             <div className="relative w-full md:w-[240px] lg:w-[320px]">
+            !isSubjectLock && !saveAsDraft &&
+            <div className="relative w-full md:w-[240px] lg:w-[320px]">
               {/* Semester Selection Card */}
 
               <Selection
@@ -94,7 +94,7 @@ const SubjectChoice = () => {
             </div>}
         </div>
 
-        {!isSubjectLock  && !saveAsDraft && selectedSubjects.length > 0 &&
+        {!isSubjectLock && !saveAsDraft && selectedSubjects.length > 0 &&
           <Button onClick={togglePanel} className="mt-3 w-full lg:w-auto">
             <BookOpen className="mr-2 h-4 w-4" />
             Save As Draft
@@ -103,12 +103,12 @@ const SubjectChoice = () => {
             </span>
           </Button>}
 
-          {!isSubjectLock  && saveAsDraft && 
+        {!isSubjectLock && saveAsDraft &&
           <Button className="mt-3 w-full lg:w-auto"
-           onClick={handleOnClickForUnsaveDraft}
+            onClick={handleOnClickForUnsaveDraft}
           >
             <BookOpen className="mr-2 h-4 w-4" />
-              Unsave Draft
+            Unsave Draft
           </Button>}
 
         {choice_deadline && subjects && !isSubjectLock &&
@@ -121,6 +121,17 @@ const SubjectChoice = () => {
             </div>
           </Alert>
         }
+
+
+        <div className="group w-full hidden" ref={noSubjectFoundCard}>
+          <Card>
+            <CardHeader className="pb-2"></CardHeader>
+            <CardContent className="text-center">
+              No Subjects are available for this semester.
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="w-full p-4">
           {/* Check if subjects is null or loading */}
           {subjects === null ? (

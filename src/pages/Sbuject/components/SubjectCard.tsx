@@ -8,7 +8,7 @@ import {
   HoverCardTrigger,
 } from '@radix-ui/react-hover-card'
 import { Info } from 'lucide-react'
-import InfoCard from '@pages/StudentDashboard/component/InfoCard'
+import InfoCard from '@pages/StudentDashboard/subject-selection/component/InfoCard'
 
 interface CourseCardProps {
   toggleSubjectSelection: (subject: any) => void

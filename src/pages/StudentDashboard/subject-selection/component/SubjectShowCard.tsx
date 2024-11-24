@@ -1,6 +1,6 @@
 import  {useEffect, useState } from 'react'
 
-import InfoCard from '../component/InfoCard'
+import InfoCard from './InfoCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {

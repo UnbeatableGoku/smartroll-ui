@@ -1,11 +1,11 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import axios from 'axios'
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-import { error } from 'console'
+
 
 const useElectiveSubject = () => {
   const [electiveSubject, setElectiveSubject] = useState<Array<any>>([])
@@ -16,6 +16,11 @@ const useElectiveSubject = () => {
   const [totalCategories, setTotalCategories] = useState<string[]>([])
   const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
   const [deadline, setDeadline] = useState<string>()
+
+
+  //useRef
+
+  const noElectiveSubjectCard = useRef<HTMLDivElement>(null)
 
   //function :: to load the choices of the elective subjects
   const handleGetElectiveSubject = useCallback(async () => {
@@ -66,8 +71,22 @@ const useElectiveSubject = () => {
           setFinalizedChoice([])
           setIsSubjectSave(false)
         }
+        if(noElectiveSubjectCard.current){
+          noElectiveSubjectCard.current.classList.add('hidden')
+        }
       } else {
         toast.error(response_obj.errorMessage?.message)
+        if(response_obj.errorMessage?.statusCode === 404){
+          if(noElectiveSubjectCard.current){
+            noElectiveSubjectCard.current.classList.remove('hidden')
+          }
+        }
+        else{
+          if(noElectiveSubjectCard.current){
+            noElectiveSubjectCard.current.classList.remove('hidden')
+          }
+        }
+        
       }
     } catch (error: any) {
       setIsSubjectSave(false)
@@ -205,17 +224,18 @@ const useElectiveSubject = () => {
   }
 
   return {
-    handleGetElectiveSubject,
     electiveSubject,
     subjectChoicesSlug,
-    handleStudentChoice,
+    noElectiveSubjectCard,
     isSubjectSave,
     finalizedChoice,
     totalCategories,
-    toggleSubjectSelection,
     selectedSubjects,
-    handleOnClickForUnsaveDraft,
     deadline,
+    handleGetElectiveSubject,
+    handleStudentChoice,
+    toggleSubjectSelection,
+    handleOnClickForUnsaveDraft,
   }
 }
 

@@ -7,11 +7,15 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@data/redux/Store'
 
+
 const MainLayout = () => {
   const access: any = useSelector((state: RootState) => state.auth.accessToken)
   const {handleOnClickForNotifications} = useNotification()
+  
+  
   useEffect(() => {
     if(access){
+
       handleOnClickForNotifications()
     }
   

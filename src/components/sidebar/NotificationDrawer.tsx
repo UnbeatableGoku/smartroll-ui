@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -10,11 +10,13 @@ import { Bell } from 'lucide-react'
 import useNotification from './hooks/useNotification'
 import { Separator } from '@components/ui/separator'
 
+
 interface Notification {
   slug: string
   status: string
   type: string
   message: string
+  type_code : string
 }
 
 const NotificationDrawer = () => {
@@ -24,8 +26,11 @@ const NotificationDrawer = () => {
     seenNotifications,
     unSeenNotifications,
     handleOnClickForMarkNotifications,
+    replaceLink
   } = useNotification()
 
+
+  
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -69,6 +74,7 @@ const NotificationDrawer = () => {
                   <NotificationItem
                     key={notification.slug}
                     notification={notification}
+                    replace = {replaceLink}
                   />
                 ))
               ) : (
@@ -98,6 +104,7 @@ const NotificationDrawer = () => {
                   <NotificationItem
                     key={notification.slug}
                     notification={notification}
+                    replace = {replaceLink}
                   />
                   <Separator></Separator>
                   </>
@@ -115,7 +122,7 @@ const NotificationDrawer = () => {
   )
 }
 
-const NotificationItem = ({ notification }: { notification: Notification }) => (
+const NotificationItem = ({ notification,replace }: { notification: Notification,replace:any }) => (
   <div
     className={`flex items-start space-x-4 p-4 ${notification.status === 'seen' ? 'opacity-60' : ''}`}
   >
@@ -124,7 +131,7 @@ const NotificationItem = ({ notification }: { notification: Notification }) => (
     />
     <div className="min-w-0 flex-1">
       <p className="text-sm font-medium dark:text-white">{notification.type}</p>
-      <p className="text-sm text-gray-500">{notification.message}</p>
+      <p className="text-sm font-medium dark:text-white">{replace(notification.message,notification.type_code)}</p>
     </div>
   </div>
 )

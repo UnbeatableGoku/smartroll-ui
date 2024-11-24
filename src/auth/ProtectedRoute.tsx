@@ -30,6 +30,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   
   // Optionally check for specific roles if roleRequired is provided
   if (roleRequired && role !== roleRequired) {
+    console.log("first")
     if(role == 'admin')
       return <Navigate to={PAGE_SUBJECT_SELECT.path} replace />
     else if (role == 'teacher'){
