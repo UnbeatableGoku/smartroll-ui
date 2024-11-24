@@ -5,6 +5,7 @@ import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
+import { error } from 'console'
 
 const useElectiveSubject = () => {
   const [electiveSubject, setElectiveSubject] = useState<Array<any>>([])
@@ -66,7 +67,7 @@ const useElectiveSubject = () => {
           setIsSubjectSave(false)
         }
       } else {
-        toast.error('Server Down. Please Contact The Administrator')
+        toast.error(response_obj.errorMessage?.message)
       }
     } catch (error: any) {
       setIsSubjectSave(false)
@@ -143,7 +144,7 @@ const useElectiveSubject = () => {
           setFinalizedChoice(final_subject)
           toast.success('Subjects are Successfully Locked')
         } else {
-          toast.error('Server Down. Please Contact The Administrator')
+          toast.error(response_obj.errorMessage?.message)
         }
       } catch (error) {
         console.error('Error in handleStudentChoice:', error)

@@ -306,6 +306,7 @@ const SubjectSelectionConfirmation = () => {
                   data={complementrySbujects}
                   optionTitle={null}
                 />
+                
                 {/* Connecting Lines */}
                 <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
                 <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
@@ -313,7 +314,7 @@ const SubjectSelectionConfirmation = () => {
             )}
 
             {/* Subject Selection Card */}
-            <div className="relative w-full md:w-[240px] lg:w-[320px]">
+             <div className="relative w-full md:w-[240px] lg:w-[320px]">
               <Selection
                 title="Subject"
                 selectedValue={selectedSubject}

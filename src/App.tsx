@@ -11,7 +11,7 @@ function App() {
   const isLoading = useSelector((state: RootState) => state.loader.LOADER_STATE)
   
   return (
-    <div className="min-h-screen overflow-hidden text-gray-100 dark:bg-black">
+    <div className="min-h-[100dvh] overflow-hidden text-gray-100 dark:bg-black">
       <Outlet />
       <Toaster richColors position="top-right" />
       {isLoading && <Loader />}

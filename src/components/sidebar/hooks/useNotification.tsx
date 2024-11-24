@@ -32,7 +32,6 @@ const useNotification = () => {
   //   >([])
   //function :: to get the notification
   const handleOnClickForNotifications = async () => {
-    console.log(seenNotifications, unSeenNotifications)
     try {
       const header = {
         'ngrok-skip-browser-warning': true,

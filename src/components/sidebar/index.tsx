@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { setAuth } from '@data/redux/slices/authSlice'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { LogOut, Menu } from 'lucide-react'
-import { useDispatch } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { generateSidebarLinks } from '@utils/helpers'
@@ -12,8 +12,10 @@ import { generateSidebarLinks } from '@utils/helpers'
 import NotificationDrawer from './NotificationDrawer'
 import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
 import TabLink from './tabLink'
+import { RootState } from '@data/redux/Store'
 
 const Sidebar = () => {
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handelLogout = () => {

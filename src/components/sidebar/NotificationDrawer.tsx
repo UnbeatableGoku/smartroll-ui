@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Bell } from 'lucide-react'
 
 import useNotification from './hooks/useNotification'
+import { Separator } from '@components/ui/separator'
 
 interface Notification {
   slug: string
@@ -30,7 +31,7 @@ const NotificationDrawer = () => {
       <SheetTrigger asChild>
         <Button
           variant="ghost"
-          className="group relative flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          className="group relative flex h-12 w-12 items-center justify-around rounded-full text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           onClick={() => {
             handleOnClickForNotifications()
           }}
@@ -39,9 +40,11 @@ const NotificationDrawer = () => {
           {unSeenNotifications.length > 0 && (
             <Badge
               variant="destructive"
-              className="absolute right-[-4px] top-1 h-5 min-w-[1.25rem] px-1"
+              className="absolute right-[-4px] top-1 h-5 min-w-[1.25rem] px-1 justify-around"
             >
+             <p>
               {unSeenNotifications.length}
+            </p> 
             </Badge>
           )}
         </Button>
@@ -91,10 +94,13 @@ const NotificationDrawer = () => {
             <ScrollArea className="mt-4 h-[calc(60vh-10rem)]">
               {unSeenNotifications.length > 0 ? (
                 unSeenNotifications.map((notification) => (
+                  <>
                   <NotificationItem
                     key={notification.slug}
                     notification={notification}
                   />
+                  <Separator></Separator>
+                  </>
                 ))
               ) : (
                 <p className="py-4 text-center text-gray-500">

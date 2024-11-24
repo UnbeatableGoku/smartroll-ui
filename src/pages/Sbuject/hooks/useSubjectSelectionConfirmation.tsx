@@ -39,15 +39,19 @@ const useSubjectSelectionConfirmation = () => {
       const semester_subject = semesterResponse.find((semester: any) => semester.slug === value);
     
       const finalized_subject =  get(semester_subject,'subjects',[])
-      if(finalized_subject){
+      
+      if(finalized_subject) {
         const general_response_for_subject:Array<SelectionResponse> = finalized_subject.map((subject:any)=>{
           return ({slug:subject.slug,name:subject.subject_name})
       })
       
       setSubjects(general_response_for_subject)
-      toast.info("please select the Subject")
+      toast.info("Please select the Subject")
       }
+      
       else{
+        setSelectedSemester('')
+        toast.error("No subjects found")
         setSubjects([])
       }
       

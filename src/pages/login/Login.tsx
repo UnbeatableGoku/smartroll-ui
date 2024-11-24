@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +9,7 @@ import { Helmet } from 'react-helmet'
 import NewPassword from '@components/NewPassword/NewPassword'
 
 import useLogin from './hooks/useLogin'
+import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 
 type LoginFormData = {
   email: string
@@ -16,7 +17,7 @@ type LoginFormData = {
 }
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  
   //custom hook for handlLogin
   const {
     handleLogin,
@@ -27,12 +28,13 @@ const Login = () => {
     studentSlug,
     register,
     handleSubmit,
+    isLoading
   } = useLogin()
 
   const onSubmit = (data: LoginFormData) => {
-    setIsLoading(true)
+    
     handleLogin(data) //? Handle login logic here
-    setIsLoading(false)
+    
   }
 
   const togglePasswordVisibility = () => {
@@ -51,8 +53,8 @@ const Login = () => {
       {isTempPassword ? ( //? Render NewPassword component if isTempPassword is true
         <NewPassword profile_slug={studentSlug} />
       ) : (
-        <div className="flex min-h-screen flex-col">
-          <main className="flex flex-grow items-center justify-center bg-black">
+        <div className="flex h-[100dvh]  flex-col">
+          <main className="flex h-[100dvh] items-center justify-center bg-black">
             <div className="w-full max-w-md rounded-lg bg-background p-8 shadow-lg">
               <h2 className="mb-6 text-center text-2xl font-bold">
                 Login to SmartRoll
@@ -103,7 +105,11 @@ const Login = () => {
                   </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Logging in...' : 'Login'}
+                  {isLoading ? (
+                    <ButtonLoader title="Logging..." />
+                  ) : (
+                    <button>Login</button>
+                  )}
                 </Button>
               </form>
             </div>

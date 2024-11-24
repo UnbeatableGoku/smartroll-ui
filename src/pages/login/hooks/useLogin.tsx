@@ -24,6 +24,7 @@ type LoginFormData = {
 
 //? HOOK
 const useLogin = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { register, handleSubmit, reset } = useForm<LoginFormData>()
   const [showPassword, setShowPassword] = useState(false)
   const [studentSlug, setStudentSlug] = useState<string>('')
@@ -35,6 +36,7 @@ const useLogin = () => {
   //? LOGIN FUNCTIONALITY
 
   const handleLogin = async (userdata: UserData) => {
+    setIsLoading(true)
     const headers = {
       'Content-Type': 'application/json', // Assuming JSON for login
       'ngrok-skip-browser-warning': 'true',
@@ -46,12 +48,13 @@ const useLogin = () => {
         userdata,
         { headers },
       )
-      
+      setIsLoading(false)
 
       if (response?.data?.profile_slug) {
         setStudentSlug(response?.data?.profile_slug)
         setIsTempPassword(true)
         toast.warning('Temporary password. Please set a new password.')
+        setIsLoading(false)
         return 
       }
 
@@ -61,6 +64,9 @@ const useLogin = () => {
       }
 
 
+      if(token.access == undefined && token.refresh == undefined && token.refresh == null && token.access == null){
+        throw new Error("Access token is required")
+      }
       //? set the tokens in the rdux store
       dispatch(setAuth(token))
 
@@ -74,6 +80,7 @@ const useLogin = () => {
 
       //? return success message and the token
       if (decode.obj.profile.role === 'admin') {
+        
         return navigate('/subject/subject-select') //:: CHANGE TO '/'
       } else if (decode.obj.profile.role === 'teacher') {
         return navigate('/teacher-dashboard/subject-choice') //:: CHANGE TO '/teacher-dashboard'
@@ -86,7 +93,8 @@ const useLogin = () => {
       
     } catch (error: any) {
       // Safely access error.response
-      const message = error.response?.data?.detail || 'An error occurred'
+      const message = error.response?.data?.detail || error.message ||  'An error occurred'
+      setIsLoading(false)
       reset()
       return toast.error(message)
       // if (error.code === 'ERR_NETWORK') {
@@ -142,6 +150,7 @@ const useLogin = () => {
     studentSlug,
     isTempPassword,
     showPassword,
+    isLoading,
     register,
     handleSubmit,
     reset,

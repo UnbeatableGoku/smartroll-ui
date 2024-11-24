@@ -40,7 +40,7 @@ const Selection = ({
               onValueChange(value)
             }}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full text-wrap">
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
@@ -48,7 +48,7 @@ const Selection = ({
                 <SelectItem
                   key={item.slug}
                   value={item.slug}
-                  className="cursor-pointer text-wrap"
+                  className="cursor-pointer "
                 >
                   {optionTitle ? `${optionTitle} - ` : null} {item.name}
                 </SelectItem>
