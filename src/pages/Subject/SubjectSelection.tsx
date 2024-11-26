@@ -12,6 +12,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import ConfirmSubjectSelection from './components/ConfirmSubjectSelection'
 import SubjectCard from './components/SubjectCard'
 import useSubjectSelection from './hooks/useSubjectSelection'
+import UpdateDeadlineDialog from './components/UpdateDeadlineDialog'
 
 const SubjectSelection = () => {
   const {
@@ -142,6 +143,10 @@ const SubjectSelection = () => {
               </Button>
             </div>
           )}
+          {
+            !unlockSubjectAfterDeadline && isSubjectLock &&
+            <UpdateDeadlineDialog></UpdateDeadlineDialog> 
+          }
         </div>
 
         <div className="p-4">
