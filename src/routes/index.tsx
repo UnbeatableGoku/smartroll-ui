@@ -29,7 +29,9 @@ import {
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
+  FORGOT_PASSWORD
 } from '@constants'
+import ForgotPassword from '@pages/login/ForgotPassword'
 
 
 
@@ -46,6 +48,15 @@ const router = createBrowserRouter([
           {
             path: PAGE_LOGIN.path,
             element: <Login />,
+          },
+        ],
+      },
+      {
+        element: <LogoLayout />,
+        children: [
+          {
+            path: FORGOT_PASSWORD.path,
+            element: <ForgotPassword />,
           },
         ],
       },

@@ -16,8 +16,8 @@ const useSubjectSelection = () => {
   const [selectedSemester, setSelectedSemester] = useState<string>('') // state that holds the slug of the selected semester
   const [selectedYear, setSelectedYear] = useState<string>('') // state that holds the slug of the selected yeaer
   const [subjects, setSubject] = useState<Array<{}> | null>(null) // state that hold the list of the premenet subjects before selection
-  const [unlockSubjectAfterDeadline, setunloackSubjectAfterDeadline] =
-    useState(false)
+  const [unlockSubjectAfterDeadline, setunloackSubjectAfterDeadline] = useState(false)
+  const [deadLine,setDeadLine] = useState<string>('')
   const [notTechSubjects, setNotTechSubjects] = useState([])
   const {
     semesters,
@@ -55,6 +55,7 @@ const useSubjectSelection = () => {
     } else {
       setunloackSubjectAfterDeadline(false)
     }
+    setDeadLine(semester_subject.subject_choice_deadline)
     const finalized_subject = get(semester_subject, 'subjects', []) // check: to get the list of the selected subjects
 
     // check: if subjects is already selected
@@ -244,6 +245,37 @@ const useSubjectSelection = () => {
       toast.error(error.message)
     }
   }
+
+  //function:: to update the deadline for the choice lock for teacher and student 
+  const handleOnClickToUpdateDeadline = async()=>{
+    try{
+      const axiosInstance = axios.create()
+        const method = 'post'
+        const endpoint = `/manage/extend_subject_choice_deadline/`
+        const header = {
+          'ngrok-skip-browser-warning': true,
+          Authorization: `Bearer ${StoredTokens.accessToken}`,
+        }
+        const body = {
+          semester_slug: selectedSemester,
+          new_deadline_timestamp: new Date(deadLine).getTime() / 1000,
+        }
+        const response_obj = await CallAPI(
+          StoredTokens,
+          axiosInstance,
+          endpoint,
+          method,
+          header,
+          body,
+        )
+        if(response_obj.error === false){
+
+        }
+    }
+    catch(error){
+
+    }
+  }
   return {
     selectedSubjects,
     selectedStream,
@@ -255,6 +287,7 @@ const useSubjectSelection = () => {
     isSubjectLock,
     unlockSubjectAfterDeadline,
     notTechSubjects,
+    deadLine,
     handleOnValueChangeStreams,
     handleOnValueChangeSemenster,
     handleOnValueChangeAcademicYear,
@@ -266,6 +299,8 @@ const useSubjectSelection = () => {
     setIsSubjectLock,
     UnlockSubjectAfterDeadline,
     handleOnCheckForNonTechSubject,
+    setDeadLine,
+    handleOnClickToUpdateDeadline
   }
 }
 
