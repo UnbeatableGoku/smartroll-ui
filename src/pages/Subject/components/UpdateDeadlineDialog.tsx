@@ -15,10 +15,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 
-const UpdateDeadlineDialog = ({deadline,setDeadLine,handleOnClickToUpdateDeadline}:any) => {
+const UpdateDeadlineDialog = ({deadline,setDeadLine,handleOnClickToUpdateDeadline,openDeadlineDailog,setOpenDeadlineDailog}:any) => {
   return (
     <div className="mt-5">
-    <Dialog>
+    <Dialog open={openDeadlineDailog} onOpenChange={setOpenDeadlineDailog}>
       <DialogTrigger asChild>
         <Button variant="default">Extend Deadline</Button>
       </DialogTrigger>

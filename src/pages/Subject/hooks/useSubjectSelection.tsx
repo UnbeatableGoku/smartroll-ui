@@ -18,7 +18,8 @@ const useSubjectSelection = () => {
   const [subjects, setSubject] = useState<Array<{}> | null>(null) // state that hold the list of the premenet subjects before selection
   const [unlockSubjectAfterDeadline, setunloackSubjectAfterDeadline] = useState(false)
   const [deadLine,setDeadLine] = useState<string>('')
-  const [notTechSubjects, setNotTechSubjects] = useState([])
+  const [notTechSubjects, setNotTechSubjects] = useState<Array<any>>([])
+  const [openDeadlineDailog,setOpenDeadlineDailog] = useState<boolean>(false)
   const {
     semesters,
     loadSemesterByStream,
@@ -224,6 +225,7 @@ const useSubjectSelection = () => {
           const check = get(response_obj, 'response.data.data', false)
           if (check == true) {
             setIsSubjectLock(!isSubjectLock)
+            setNotTechSubjects(selectedSubjects)
           }
         }
       } else {
@@ -260,6 +262,7 @@ const useSubjectSelection = () => {
           semester_slug: selectedSemester,
           new_deadline_timestamp: new Date(deadLine).getTime() / 1000,
         }
+        console.log(body)
         const response_obj = await CallAPI(
           StoredTokens,
           axiosInstance,
@@ -268,8 +271,13 @@ const useSubjectSelection = () => {
           header,
           body,
         )
-        if(response_obj.error === false){
-
+        if(response_obj.error === false && response_obj.response?.data.data.is_changed){
+            setDeadLine(response_obj.response?.data.data.deadline_timestamp)
+            toast.success('Deadline is successfully updated')
+            setOpenDeadlineDailog(!openDeadlineDailog)
+        }
+        else{
+            toast.error(response_obj.errorMessage?.message)
         }
     }
     catch(error){
@@ -288,6 +296,8 @@ const useSubjectSelection = () => {
     unlockSubjectAfterDeadline,
     notTechSubjects,
     deadLine,
+    openDeadlineDailog,
+    setOpenDeadlineDailog,
     handleOnValueChangeStreams,
     handleOnValueChangeSemenster,
     handleOnValueChangeAcademicYear,

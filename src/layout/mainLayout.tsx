@@ -7,7 +7,7 @@ import Header from '@components/header'
 import Sidebar from '@components/sidebar'
 
 
-import useToValidateTokenAndServer from './hooks /useToValidateTokenAndServer'
+import useToValidateTokenAndServer from './hooks/useToValidateTokenAndServer'
 
 
 

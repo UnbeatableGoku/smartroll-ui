@@ -28,6 +28,8 @@ const SubjectSelection = () => {
     subjects,
     notTechSubjects,
     deadLine,
+    openDeadlineDailog,
+    setOpenDeadlineDailog,
     toggleSubjectSelection,
     handleSubjectSelection,
     isSubjectLock,
@@ -148,7 +150,7 @@ const SubjectSelection = () => {
           )}
           {
             !unlockSubjectAfterDeadline && isSubjectLock &&
-            <UpdateDeadlineDialog semesterSlug={selectedSemester} deadline={deadLine} setDeadLine={setDeadLine} handleOnClickToUpdateDeadline={handleOnClickToUpdateDeadline}></UpdateDeadlineDialog> 
+            <UpdateDeadlineDialog semesterSlug={selectedSemester} deadline={deadLine} setDeadLine={setDeadLine} handleOnClickToUpdateDeadline={handleOnClickToUpdateDeadline} openDeadlineDailog={openDeadlineDailog} setOpenDeadlineDailog={setOpenDeadlineDailog}></UpdateDeadlineDialog> 
           }
         </div>
 
