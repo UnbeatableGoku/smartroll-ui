@@ -12,6 +12,8 @@ const useSidebarLinkSelector = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [open, setOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+
 
   // Get the user profile from the Redux store
   const accessToken = useSelector((state: RootState) => state.auth.accessToken)
@@ -68,6 +70,8 @@ const useSidebarLinkSelector = () => {
     setCollapsed,
     setSidebarLinks,
     collapsed,
+    isProfileModalOpen,
+    setIsProfileModalOpen,
   }
 }
 

@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { setAuth } from '@data/redux/slices/authSlice'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
-import { LogOut, Menu } from 'lucide-react'
+import { LogOut, Menu,UserPen } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -12,6 +12,7 @@ import { generateSidebarLinks } from '@utils/helpers'
 import NotificationDrawer from './NotificationDrawer'
 import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
 import TabLink from './tabLink'
+import StackholderProfile from '@components/stackholder/StackholderProfile'
 
 const Sidebar = () => {
   const dispatch = useDispatch()
@@ -26,19 +27,25 @@ const Sidebar = () => {
     navigate('/login')
   }
 
-  const menuItems = [
-    // { icon: Bell, label: 'Notifications', event: () => {},alert:true},
-    { icon: LogOut, label: 'Logout', event: handelLogout, alert: false },
-  ]
+  
 
   const {
     activeIndex,
     collapsed,
     open,
+    isProfileModalOpen,
     setActiveIndex,
     setOpen,
     setSidebarLinks,
+    setIsProfileModalOpen
   } = useSidebarLinkSelector()
+
+
+  const menuItems = [
+    { icon: UserPen, label: 'Profile', event: () => {setIsProfileModalOpen(true)}},
+   { icon: LogOut, label: 'Logout', event: handelLogout, alert: false },
+ ]
+
   const validLinks = useMemo(
     () => generateSidebarLinks(setSidebarLinks()),
     [setSidebarLinks()],
@@ -109,6 +116,7 @@ const Sidebar = () => {
           </VisuallyHidden.Root>
         </Dialog>
       </div>
+      <StackholderProfile isOpen={isProfileModalOpen} onClose={()=>{setIsProfileModalOpen(false)}}></StackholderProfile>
     </div>
   )
 }

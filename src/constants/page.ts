@@ -64,6 +64,13 @@ export const DIVISION_CREATION: Page = {
   path: '/division-creation',
   name: 'division-creation',
 }
+
+export const FORGOT_PASSWORD: Page = {
+  // update_password
+  id: 'FORGOT_PASSWORD',
+  path: '/update_password',
+  name: 'forgot-password',
+}
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES

@@ -13,7 +13,9 @@ import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 import useNewPassword from './hooks/useNewPassword'
 
 interface NewPasswordProps {
-  profile_slug: string
+  profile_slug: string 
+  isForgotPassword?: boolean
+  ForgotPasswordCode?: string 
 }
 
 type LoginFormData = {
@@ -21,14 +23,14 @@ type LoginFormData = {
   confirmPassword: string
 }
 
-const NewPassword = ({ profile_slug }: NewPasswordProps) => {
+const NewPassword = ({ profile_slug,ForgotPasswordCode,isForgotPassword=false }: NewPasswordProps) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirm,setShowPasswordConfirm] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   // Initialize the form with react-hook-form
   const { register, handleSubmit } = useForm<LoginFormData>()
 
-  const { handleNewPassword } = useNewPassword()
+  const { handleNewPassword,handleForgotPassword } = useNewPassword()
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
@@ -50,6 +52,10 @@ const NewPassword = ({ profile_slug }: NewPasswordProps) => {
     } else {
       // Call the handleNewPassword function to update the password
       try {
+        if(isForgotPassword){
+            handleForgotPassword(profile_slug,ForgotPasswordCode,password)
+            return 
+        }
         const response = await handleNewPassword({ password, profile_slug })
         if (!response?.success) {
           setIsLoading(!isLoading)

@@ -126,6 +126,33 @@ const useLogin = () => {
     
   }
 
+
+  //function :: handle the forogot password button 
+
+  const handleOnClickForForgotPassoword = async()=>{
+    try{
+      const email = prompt('Pelase enter the Email address for forgot passwowrd')
+        const headers = {
+          'Content-Type': 'application/json', // Assuming JSON for login
+          'ngrok-skip-browser-warning': 'true',
+        }
+      
+      
+      if(!email){
+        throw new Error('Please enter the valid email address')
+      }
+
+      const response = await axios.post(`${window.base_url}/auth/api/forgot_password/`,{email:email},{headers:headers}) 
+      if(response.data.data = true){
+        toast.success('Email has been sent successfully. Please check your email.')
+      }
+
+    }
+    catch(error:any){
+      toast.error(error.message || 'something went wrong')
+    }
+    
+  }
   return {
     studentSlug,
     isTempPassword,
@@ -137,6 +164,7 @@ const useLogin = () => {
     handleLogin,
     redirectLogin,
     setShowPassword,
+    handleOnClickForForgotPassoword
   }
 }
 

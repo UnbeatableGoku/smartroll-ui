@@ -27,6 +27,9 @@ const SubjectSelection = () => {
     semesters,
     subjects,
     notTechSubjects,
+    deadLine,
+    openDeadlineDailog,
+    setOpenDeadlineDailog,
     toggleSubjectSelection,
     handleSubjectSelection,
     isSubjectLock,
@@ -34,6 +37,8 @@ const SubjectSelection = () => {
     unlockSubjectAfterDeadline,
     UnlockSubjectAfterDeadline,
     handleOnCheckForNonTechSubject,
+    setDeadLine,
+    handleOnClickToUpdateDeadline
   } = useSubjectSelection()
   const { stream, handleStream } = useStream()
   const [isPanelOpen, setIsPanelOpen] = useState(false)
@@ -145,7 +150,7 @@ const SubjectSelection = () => {
           )}
           {
             !unlockSubjectAfterDeadline && isSubjectLock &&
-            <UpdateDeadlineDialog></UpdateDeadlineDialog> 
+            <UpdateDeadlineDialog semesterSlug={selectedSemester} deadline={deadLine} setDeadLine={setDeadLine} handleOnClickToUpdateDeadline={handleOnClickToUpdateDeadline} openDeadlineDailog={openDeadlineDailog} setOpenDeadlineDailog={setOpenDeadlineDailog}></UpdateDeadlineDialog> 
           }
         </div>
 

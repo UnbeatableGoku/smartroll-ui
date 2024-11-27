@@ -29,6 +29,7 @@ const Login = () => {
     register,
     handleSubmit,
     isLoading,
+    handleOnClickForForgotPassoword
   } = useLogin()
 
   const onSubmit = (data: LoginFormData) => {
@@ -42,7 +43,6 @@ const Login = () => {
   useEffect(() => {
     redirectLogin()
   }, [])
-  console.log("login")
 
   return (
     <>
@@ -102,6 +102,12 @@ const Login = () => {
                       )}
                     </Button>
                   </div>
+                  <div className='flex justify-end underline cursor-pointer'
+                   onClick={()=>{handleOnClickForForgotPassoword()}}
+                  >
+                  Forgot password
+                  </div>
+                  
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? (
