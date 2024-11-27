@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-import InfoCard from './InfoCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
@@ -9,6 +8,8 @@ import {
   HoverCardTrigger,
 } from '@radix-ui/react-hover-card'
 import { Info } from 'lucide-react'
+
+import InfoCard from './InfoCard'
 
 interface CourseCardProps {
   toggleSubjectSelection: (subject: any, group_slug: any) => void
@@ -66,10 +67,12 @@ const SubjectShowCard = ({
           </h2>
         </CardHeader>
         <CardContent className="space-y-6">
-          <p className="text-lg font-normal">Sem : {subject.sem_year}</p>
+          <p className="hidden text-lg font-normal sm:block md:block lg:block">
+            Sem : {subject.sem_year}
+          </p>
 
           <div className="flex flex-col justify-between gap-4 md:flex-row">
-            <div className="space-y-1">
+            <div className="hidden space-y-1 sm:block md:block lg:block">
               <p className="text-sm uppercase text-white/60">Type</p>
               <p className="text-xl font-semibold">
                 {subject?.is_theory

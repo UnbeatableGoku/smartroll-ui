@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react'
 
+import ConfirmPanel from '../component/ConfirmPanel'
+import SubjectShowCard from '../component/SubjectShowCard'
 import useElectiveSubject from '../hooks/useElectiveSubject'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { AlertTriangle, BookOpen, GraduationCap } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 
 import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'
-
-import ConfirmPanel from '../component/ConfirmPanel'
-import SubjectShowCard from '../component/SubjectShowCard'
 
 // Define TypeScript interfaces for better type safety
 interface Subject {
@@ -121,28 +119,31 @@ const ElectiveSubject = () => {
             )}
           </div>
 
-        <div className="group w-full h-96  items-center hidden" ref={noElectiveSubjectCard}>
-                <Card className='w-full border-white'>
-                  <CardHeader className="pb-2"></CardHeader>
-                  <CardContent className="text-center font-bold">
-                  You'll get your elective subject choices soon ....
-                  </CardContent>
-                </Card>
-              </div>
-        <div className="space-y-10">
-          {isSubjectSave && finalizedChoice ? (
-            <div className="rounded-2xl border border-zinc-600 p-2 lg:p-8 backdrop-blur-sm dark:bg-black">
-              <div className="mb-6">
-                <div className="flex items-center gap-3">
-                  <GraduationCap className="h-6 w-6 text-primary" />
-                  <h2 className="text-2xl font-bold text-white">
-                    Selected Electives
-                  </h2>
+          <div
+            className="group hidden h-96 w-full items-center"
+            ref={noElectiveSubjectCard}
+          >
+            <Card className="w-full border-white">
+              <CardHeader className="pb-2"></CardHeader>
+              <CardContent className="text-center font-bold">
+                You'll get your elective subject choices soon ....
+              </CardContent>
+            </Card>
+          </div>
+          <div className="space-y-10">
+            {isSubjectSave && finalizedChoice ? (
+              <div className="rounded-2xl border border-zinc-600 p-4 backdrop-blur-sm dark:bg-black lg:p-8">
+                <div className="mb-6">
+                  <div className="flex items-center gap-3">
+                    <GraduationCap className="h-6 w-6 text-primary" />
+                    <h2 className="text-2xl font-bold text-white">
+                      Selected Electives
+                    </h2>
+                  </div>
+                  <p className="mt-2 text-gray-400">
+                    Your finalized subject selections
+                  </p>
                 </div>
-                <p className="mt-2 text-gray-400">
-                  Your finalized subject selections
-                </p>
-              </div>
 
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {Array.isArray(finalizedChoice) &&
@@ -173,7 +174,7 @@ const ElectiveSubject = () => {
               electiveSubject.map((group: SubjectGroup) => {
                 const category = group?.subjects[0]?.category
                 return (
-                  <div className="rounded-2xl border border-zinc-600 p-2 lg:p-8 dark:bg-black">
+                  <div className="rounded-2xl border border-zinc-600 p-2 dark:bg-black lg:p-8">
                     <div className="mb-4">
                       <div className="flex items-center gap-3">
                         <GraduationCap className="h-6 w-6 text-primary" />
