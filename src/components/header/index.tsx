@@ -11,6 +11,7 @@ import { PAGE_DASHBOARD } from '@constants'
 import { DecodedToken } from 'types/common'
 
 import { setUserProfile } from '@data/redux/slices/authSlice'
+import { toast } from 'sonner'
 
 const Header = () => {
 
@@ -19,11 +20,17 @@ const Header = () => {
 
   const [profile, setProfile] = useState<DecodedToken | null>(null)
   const decodeToken = () => {
-    if (access) {
-      const decoded: DecodedToken = jwtDecode<DecodedToken>(access)
-      dispatch(setUserProfile(decoded))
-      setProfile(decoded)
+    try{
+      if (access) {
+        const decoded: DecodedToken = jwtDecode<DecodedToken>(access)
+        dispatch(setUserProfile(decoded))
+        setProfile(decoded)
+      }  
     }
+    catch(error:any){
+      toast.error(error.message)
+    }
+    
   }
   useEffect(() => {
     decodeToken()
@@ -41,7 +48,7 @@ const Header = () => {
       {/* Align the heading to the right */}
       <h1 className="ml-auto hidden text-white md:block md:text-sm lg:block">
         {profile &&
-          `${profile.obj.profile.role.charAt(0).toUpperCase() + profile.obj.profile.role.slice(1)} | ${profile.obj.profile.name}`}
+          `${profile.obj.profile.role === 'teacher' ? 'Faculty' : profile.obj.profile.role.at(0)?.toLowerCase() + profile.obj.profile.role.slice(1)} | ${profile.obj.profile.name}`}
       </h1>
     </header>
   )

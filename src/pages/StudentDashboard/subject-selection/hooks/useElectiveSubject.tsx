@@ -71,22 +71,19 @@ const useElectiveSubject = () => {
           setFinalizedChoice([])
           setIsSubjectSave(false)
         }
-        if(noElectiveSubjectCard.current){
+        if(noElectiveSubjectCard.current?.classList.contains('hidden')){
           noElectiveSubjectCard.current.classList.add('hidden')
+          noElectiveSubjectCard.current.classList.remove('flex')
         }
+        
       } else {
         toast.error(response_obj.errorMessage?.message)
         if(response_obj.errorMessage?.statusCode === 404){
           if(noElectiveSubjectCard.current){
             noElectiveSubjectCard.current.classList.remove('hidden')
+            noElectiveSubjectCard.current.classList.add('flex')
           }
         }
-        else{
-          if(noElectiveSubjectCard.current){
-            noElectiveSubjectCard.current.classList.remove('hidden')
-          }
-        }
-        
       }
     } catch (error: any) {
       setIsSubjectSave(false)

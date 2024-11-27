@@ -230,7 +230,7 @@ const ConfirmSubjectSelection = ({
               }}
             >
               <Lock className="mr-2 h-4 w-4" />
-              Lock Subjects
+              Save As Draft
             </Button>
           </div>
         </div>
