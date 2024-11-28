@@ -4,6 +4,7 @@ import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
 import DivisionCreation from '@pages/Division/pages/DivisionCreation'
+import ForgotPassword from '@pages/Login/ForgotPassword'
 import Login from '@pages/Login/Login'
 import NotFound from '@pages/NotFound'
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
@@ -18,6 +19,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import {
   DIVISION_CREATION,
+  FORGOT_PASSWORD,
   PAGE_DASHBOARD,
   PAGE_ELECTIVE_SUBJECT,
   PAGE_LOGIN,
@@ -27,9 +29,9 @@ import {
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
-  FORGOT_PASSWORD
 } from '@constants'
-import ForgotPassword from '@pages/login/ForgotPassword'
+
+ForgotPassword
 
 const router = createBrowserRouter([
   {

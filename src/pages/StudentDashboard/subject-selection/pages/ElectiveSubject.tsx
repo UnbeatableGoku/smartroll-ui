@@ -132,7 +132,7 @@ const ElectiveSubject = () => {
           </div>
           <div className="space-y-10">
             {isSubjectSave && finalizedChoice ? (
-              <div className="rounded-2xl border border-zinc-600 p-4 backdrop-blur-sm dark:bg-black lg:p-8">
+              <div className="rounded-2xl border border-zinc-600 p-6 backdrop-blur-sm dark:bg-black lg:p-8">
                 <div className="mb-6">
                   <div className="flex items-center gap-3">
                     <GraduationCap className="h-6 w-6 text-primary" />
@@ -145,7 +145,7 @@ const ElectiveSubject = () => {
                   </p>
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {Array.isArray(finalizedChoice) &&
                   finalizedChoice.length > 0 ? (
                     finalizedChoice.map((subject: Subject, index: number) => (
@@ -174,7 +174,7 @@ const ElectiveSubject = () => {
               electiveSubject.map((group: SubjectGroup) => {
                 const category = group?.subjects[0]?.category
                 return (
-                  <div className="rounded-2xl border border-zinc-600 p-2 dark:bg-black lg:p-8">
+                  <div className="rounded-2xl border border-zinc-600 p-6 dark:bg-black lg:p-8">
                     <div className="mb-4">
                       <div className="flex items-center gap-3">
                         <GraduationCap className="h-6 w-6 text-primary" />

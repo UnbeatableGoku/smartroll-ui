@@ -16,10 +16,11 @@ const useSubjectSelection = () => {
   const [selectedSemester, setSelectedSemester] = useState<string>('') // state that holds the slug of the selected semester
   const [selectedYear, setSelectedYear] = useState<string>('') // state that holds the slug of the selected yeaer
   const [subjects, setSubject] = useState<Array<{}> | null>(null) // state that hold the list of the premenet subjects before selection
-  const [unlockSubjectAfterDeadline, setunloackSubjectAfterDeadline] = useState(false)
-  const [deadLine,setDeadLine] = useState<string>('')
+  const [unlockSubjectAfterDeadline, setunloackSubjectAfterDeadline] =
+    useState(false)
+  const [deadLine, setDeadLine] = useState<string>('')
   const [notTechSubjects, setNotTechSubjects] = useState<Array<any>>([])
-  const [openDeadlineDailog,setOpenDeadlineDailog] = useState<boolean>(false)
+  const [openDeadlineDailog, setOpenDeadlineDailog] = useState<boolean>(false)
   const {
     semesters,
     loadSemesterByStream,
@@ -248,41 +249,44 @@ const useSubjectSelection = () => {
     }
   }
 
-  //function:: to update the deadline for the choice lock for teacher and student 
-  const handleOnClickToUpdateDeadline = async()=>{
-    try{
+  //function:: to update the deadline for the choice lock for teacher and student
+  const handleOnClickToUpdateDeadline = async () => {
+    try {
+      const confirmation = prompt('Please type "yes" to update the deadline')
+      if (confirmation != 'yes') {
+        return toast.error('Please re-type "yes" to update the deadline')
+      }
       const axiosInstance = axios.create()
-        const method = 'post'
-        const endpoint = `/manage/extend_subject_choice_deadline/`
-        const header = {
-          'ngrok-skip-browser-warning': true,
-          Authorization: `Bearer ${StoredTokens.accessToken}`,
-        }
-        const body = {
-          semester_slug: selectedSemester,
-          new_deadline_timestamp: new Date(deadLine).getTime() / 1000,
-        }
-        console.log(body)
-        const response_obj = await CallAPI(
-          StoredTokens,
-          axiosInstance,
-          endpoint,
-          method,
-          header,
-          body,
-        )
-        if(response_obj.error === false && response_obj.response?.data.data.is_changed){
-            setDeadLine(response_obj.response?.data.data.deadline_timestamp)
-            toast.success('Deadline is successfully updated')
-            setOpenDeadlineDailog(!openDeadlineDailog)
-        }
-        else{
-            toast.error(response_obj.errorMessage?.message)
-        }
-    }
-    catch(error){
-
-    }
+      const method = 'post'
+      const endpoint = `/manage/extend_subject_choice_deadline/`
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const body = {
+        semester_slug: selectedSemester,
+        new_deadline_timestamp: new Date(deadLine).getTime() / 1000,
+      }
+      console.log(body)
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+        body,
+      )
+      if (
+        response_obj.error === false &&
+        response_obj.response?.data.data.is_changed
+      ) {
+        setDeadLine(response_obj.response?.data.data.deadline_timestamp)
+        toast.success('Deadline is successfully updated')
+        setOpenDeadlineDailog(!openDeadlineDailog)
+      } else {
+        toast.error(response_obj.errorMessage?.message)
+      }
+    } catch (error) {}
   }
   return {
     selectedSubjects,
@@ -310,7 +314,7 @@ const useSubjectSelection = () => {
     UnlockSubjectAfterDeadline,
     handleOnCheckForNonTechSubject,
     setDeadLine,
-    handleOnClickToUpdateDeadline
+    handleOnClickToUpdateDeadline,
   }
 }
 

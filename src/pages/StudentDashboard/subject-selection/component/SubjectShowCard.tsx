@@ -106,9 +106,11 @@ const SubjectShowCard = ({
                       <Info className="h-5 w-5 text-white" />
                     </button>
                     {isExpanded && (
-                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                        <Card className="w-80 max-w-[90vw]">
-                          <CardContent className="p-4">
+                      <div
+                        className={`fixed inset-0 z-50 bg-black bg-opacity-50`}
+                      >
+                        <Card className="mx-auto w-auto max-w-md border border-zinc-500">
+                          <CardContent className="relative p-6">
                             <div className="mb-2 flex items-start justify-between">
                               <InfoCard
                                 theory_exam_duration={

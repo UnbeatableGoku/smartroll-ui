@@ -6,7 +6,6 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-
 const useElectiveSubject = () => {
   const [electiveSubject, setElectiveSubject] = useState<Array<any>>([])
   const [subjectChoicesSlug, setSubjectChoicesSlug] = useState<string>('')
@@ -16,7 +15,6 @@ const useElectiveSubject = () => {
   const [totalCategories, setTotalCategories] = useState<string[]>([])
   const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
   const [deadline, setDeadline] = useState<string>()
-
 
   //useRef
 
@@ -71,15 +69,14 @@ const useElectiveSubject = () => {
           setFinalizedChoice([])
           setIsSubjectSave(false)
         }
-        if(noElectiveSubjectCard.current?.classList.contains('hidden')){
+        if (noElectiveSubjectCard.current?.classList.contains('hidden')) {
           noElectiveSubjectCard.current.classList.add('hidden')
           noElectiveSubjectCard.current.classList.remove('flex')
         }
-        
       } else {
         toast.error(response_obj.errorMessage?.message)
-        if(response_obj.errorMessage?.statusCode === 404){
-          if(noElectiveSubjectCard.current){
+        if (response_obj.errorMessage?.statusCode === 404) {
+          if (noElectiveSubjectCard.current) {
             noElectiveSubjectCard.current.classList.remove('hidden')
             noElectiveSubjectCard.current.classList.add('flex')
           }
@@ -170,6 +167,10 @@ const useElectiveSubject = () => {
 
   const handleOnClickForUnsaveDraft = async () => {
     try {
+      const confirmation = prompt('Please type "unsave" to Unsave the draft')
+      if (confirmation != 'unsave') {
+        return toast.error('Please re-type "unsave" to Unsave the draft')
+      }
       const axiosInstance = axios.create()
       const method = 'post'
       const endpoint = '/manage/unsave_subject_choices_for_student/'
