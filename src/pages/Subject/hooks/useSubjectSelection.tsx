@@ -64,6 +64,8 @@ const useSubjectSelection = () => {
     if (finalized_subject) {
       setSelectedSubjects(finalized_subject) // set the selected subject state
       setSubject(finalized_subject) // load the subject
+      const subjects_slug = finalized_subject.map((subject:any)=> subject.slug)
+      setNotTechSubjects(subjects_slug)
       setIsSubjectLock(semester_subject.subjects_locked) // lock subject selection
     } else {
       setIsSubjectLock(false) // unlock subject selection
@@ -248,7 +250,8 @@ const useSubjectSelection = () => {
           const check = get(response_obj, 'response.data.data', false)
           if (check == true) {
             setIsSubjectLock(!isSubjectLock)
-            setNotTechSubjects(selectedSubjects)
+            const subjects_slug = selectedSubjects.map((subject:any)=>subject.slug)
+            setNotTechSubjects(subjects_slug)
           }
         }
       } else {

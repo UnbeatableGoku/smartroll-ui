@@ -84,12 +84,12 @@ const useNewPassword = () => {
       }
       const response = await axios.post(`${window.base_url}/auth/api/set_updated_password/`,body,{headers:headers})
       if(response.data.data === true){
-        toast.message('Your password has been updated successfully')
+        toast.success('Your password has been updated successfully')
         navigate('/login')
       }
     }
     catch(error:any){
-      toast.error(error.message || 'someting went wrong')
+      toast.error(error.response.data.message || error.message || 'someting went wrong')
     }
   }
   return {

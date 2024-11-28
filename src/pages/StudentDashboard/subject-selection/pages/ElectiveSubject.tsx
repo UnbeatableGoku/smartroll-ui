@@ -57,7 +57,6 @@ const ElectiveSubject = () => {
     finalizedChoice,
     selectedSubjects,
     deadline,
-    noElectiveSubjectCard,
     FinalChoiceLock,
     handleGetElectiveSubject,
     handleStudentChoice,
@@ -74,7 +73,7 @@ const ElectiveSubject = () => {
       <Helmet>
         <title>Smart Roll | Elective Subject</title>
       </Helmet>
-      <div className="py-13 min-h-screen bg-gradient-to-b px-4">
+      <div className="py-13 bg-gradient-to-b px-4">
         <div className="mx-auto max-w-full">
           <div className="mb-16 text-center">
             <h1 className="text-2xl font-bold tracking-tight text-white sm:text-2xl md:text-4xl lg:text-5xl">
@@ -93,7 +92,7 @@ const ElectiveSubject = () => {
                 className="mt-6 w-full bg-white p-2 shadow-md lg:w-auto"
               >
                 <BookOpen className="mr-2 h-4 w-4" />
-                Save As Draft
+                View choices
                 <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
                   {selectedSubjects.length}
                 </span>
@@ -121,8 +120,7 @@ const ElectiveSubject = () => {
           </div>
 
           <div
-            className="group hidden h-96 w-full items-center"
-            ref={noElectiveSubjectCard}
+            className="group h-96 hidden w-full items-center"
           >
             <Card className="w-full border-white">
               <CardHeader className="pb-2"></CardHeader>

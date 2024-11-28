@@ -238,7 +238,7 @@ const ConfirmSubjectSelection = ({
               }}
             >
               <Lock className="mr-2 h-4 w-4" />
-              Save As Draft
+              {draggable  ? "Save As Draft" : "Lock Subject"}
             </Button>
           </div>
         </div>

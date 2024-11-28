@@ -71,7 +71,7 @@ const useSelectionForTeacher = () => {
               setIsSubjectLock(stream_data.choices_locked)
             if(stream_data.saved_subjects != null && stream_data.choices_saved == false){
                 const saved_subjects = stream_data.saved_subjects
-                setSelectedSubjects(prevArray => {return [...prevArray,saved_subjects]})
+                setSelectedSubjects(saved_subjects)
                 setSaveAsDraft(stream_data.choices_saved)
                 getSemensterData(slug)
                 return 
@@ -79,7 +79,7 @@ const useSelectionForTeacher = () => {
             
             if(stream_data.saved_subjects != null && stream_data.choices_saved){
                 const saved_subjects = stream_data.saved_subjects
-                setSelectedSubjects(prevArray => {return [...prevArray,saved_subjects]})
+                setSelectedSubjects(saved_subjects)
                 setSubjects(saved_subjects)
                 setSaveAsDraft(stream_data.choices_saved)
                 getSemensterData(slug)

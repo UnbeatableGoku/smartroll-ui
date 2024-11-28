@@ -54,7 +54,7 @@ const SubjectShowCard = ({
           selectedSubjects.some((d: any) => d.subject.slug === subject?.slug)
             ? isSubjectSave
               ? `dark:bg-black`
-              : `border border-white text-white dark:bg-blue-600/20`
+              : `border border-white text-white dark:bg-[#000e29]`
             : `text-white dark:bg-black`
         }`}
         onClick={() => {
@@ -85,7 +85,7 @@ const SubjectShowCard = ({
             <div className="space-y-1">
               <p className="text-xs lg:text-sm uppercase text-white/60 ">Subject Code</p>
               <div className="flex justify-between gap-2">
-                <p className="text-sm lg:text-xl font-semibold md:text-center">
+                <p className="text-sm lg:text-xl font-semibold text-right lg:text-center w-full">
                   {subject?.subject_code}
                 </p>
                 
@@ -211,6 +211,7 @@ const SubjectShowCard = ({
                                   subject.practical_exam_duration
                                 }
                                 subject_code={subject.subject_code}
+
                               />
                               <button
                                 onClick={(e) => {
