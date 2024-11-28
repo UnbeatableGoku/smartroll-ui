@@ -1,5 +1,5 @@
 import NewPassword from '@components/NewPassword/NewPassword'
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const ForgotPassword = () => {
   const [profileSlug, setProfileSlug] = useState<string>("");

@@ -15,6 +15,7 @@ const useElectiveSubject = () => {
   const [totalCategories, setTotalCategories] = useState<string[]>([])
   const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
   const [deadline, setDeadline] = useState<string>()
+  const [FinalChoiceLock, setFinalChoiceLock] = useState<boolean>(false)
 
   //useRef
 
@@ -44,6 +45,7 @@ const useElectiveSubject = () => {
 
         // Set subject slug
         setSubjectChoicesSlug(data.slug)
+        setFinalChoiceLock(data.choices_locked)
         setDeadline(data.deadline_timestamp)
         // Set elective subjects
         const electiveSubjectData = get(data, 'available_choices', [])
@@ -83,6 +85,7 @@ const useElectiveSubject = () => {
         }
       }
     } catch (error: any) {
+      console.log(error)
       setIsSubjectSave(false)
       if (!error.response) {
         toast.error(
@@ -226,6 +229,7 @@ const useElectiveSubject = () => {
     totalCategories,
     selectedSubjects,
     deadline,
+    FinalChoiceLock,
     handleGetElectiveSubject,
     handleStudentChoice,
     toggleSubjectSelection,

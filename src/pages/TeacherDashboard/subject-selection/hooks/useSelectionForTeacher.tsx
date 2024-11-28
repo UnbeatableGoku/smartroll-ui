@@ -28,6 +28,7 @@ const useSelectionForTeacher = () => {
 
   //useRef
   const noSubjectFoundCard = useRef<HTMLDivElement>(null)
+  const noSubjectSelectedCard = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     handleStream()
@@ -48,9 +49,23 @@ const useSelectionForTeacher = () => {
 
       if (stream_data.choices_locked) {
         //for perment subject choice lock
+        const saved_subjects = stream_data.saved_subjects
+        if (saved_subjects) {
+          setSelectedSubjects(saved_subjects)
+          setSubjects(saved_subjects)
+          if (!noSubjectFoundCard.current?.classList.contains('hidden')) {
+            noSubjectFoundCard.current?.classList.add('hidden')
+          }
+        } else {
+          setSelectedSubjects([])
+          setSubjects([])
+        }
+
+        setSaveAsDraft(stream_data.choices_saved)
         return setIsSubjectLock(true)
       }
 
+      setIsSubjectLock(stream_data.choices_locked)
       if (
         stream_data.saved_subjects != null &&
         stream_data.choices_saved == false
@@ -354,6 +369,7 @@ const useSelectionForTeacher = () => {
     saveAsDraft,
     choice_slug,
     noSubjectFoundCard,
+    noSubjectSelectedCard,
     setIsSubjectLock,
     toggleSubjectSelection,
     onDrop,
