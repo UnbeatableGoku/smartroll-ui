@@ -137,6 +137,15 @@ const SubjectChoice = () => {
           </Card>
         </div>
 
+        <div className="group w-full hidden" ref={noSubjectFoundCard}>
+          <Card>
+            <CardHeader className="pb-2"></CardHeader>
+            <CardContent className="text-center">
+            The deadline has passed, and you haven't selected any subjects.
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="w-full p-4">
           {/* Check if subjects is null or loading */}
           {subjects === null ? (

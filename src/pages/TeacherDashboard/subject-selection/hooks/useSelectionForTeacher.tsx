@@ -24,10 +24,9 @@ const useSelectionForTeacher = () => {
     const [choice_deadline, set_choice_deadline] = useState<string | null>(null)
     const [saveAsDraft,setSaveAsDraft] = useState<boolean>(false)
 
-
     //useRef 
     const noSubjectFoundCard = useRef<HTMLDivElement>(null)
-    
+    const noSubjectSelectedCard = useRef<HTMLDivElement>(null)
     
     useEffect(() => {
         handleStream()
@@ -47,10 +46,24 @@ const useSelectionForTeacher = () => {
 
             if(stream_data.choices_locked){
                 //for perment subject choice lock
+                const saved_subjects = stream_data.saved_subjects
+                if(saved_subjects){
+                    setSelectedSubjects(saved_subjects)
+                    setSubjects(saved_subjects)
+                    if(!noSubjectFoundCard.current?.classList.contains('hidden')){
+                        noSubjectFoundCard.current?.classList.add('hidden')
+                    }
+                }else{
+                    
+                    setSelectedSubjects([])
+                    setSubjects([])
+                }
+                
+                setSaveAsDraft(stream_data.choices_saved)
                 return  setIsSubjectLock(true)
               }
-              
-              
+
+              setIsSubjectLock(stream_data.choices_locked)
             if(stream_data.saved_subjects != null && stream_data.choices_saved == false){
                 const saved_subjects = stream_data.saved_subjects
                 setSelectedSubjects(saved_subjects)
@@ -327,6 +340,7 @@ const useSelectionForTeacher = () => {
         saveAsDraft,
         choice_slug,
         noSubjectFoundCard,
+        noSubjectSelectedCard,
         setIsSubjectLock,
         toggleSubjectSelection,
         onDrop,

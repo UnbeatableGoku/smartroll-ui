@@ -60,6 +60,7 @@ const ElectiveSubject = () => {
     selectedSubjects,
     deadline,
     noElectiveSubjectCard,
+    FinalChoiceLock,
     handleGetElectiveSubject,
     handleStudentChoice,
     toggleSubjectSelection,
@@ -100,7 +101,7 @@ const ElectiveSubject = () => {
                 </span>
               </Button>
             )}
-            {deadline && (
+            {deadline && !FinalChoiceLock && (
               <Alert className="mt-5 w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
                 <div className="">
                   <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
@@ -110,7 +111,7 @@ const ElectiveSubject = () => {
                 </div>
               </Alert>
             )}
-            {isSubjectSave && (
+            {isSubjectSave && !FinalChoiceLock  &&(
               <Button
                 className="mt-5 w-full bg-white p-2 shadow-md lg:w-auto"
                 onClick={handleOnClickForUnsaveDraft}
