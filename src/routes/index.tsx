@@ -3,15 +3,14 @@ import App from '@App'
 import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
-import DivisionCreation from '@pages/division/pages/DivisionCreation' 
-import Login from '@pages/login/Login' 
 
 import NotFound from '@pages/NotFound'
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
-
 import SubjectSelection from '@pages/Subject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
-// import TeacherDashboard from '@pages/TeacherDashboard'
+import ForgotPassword from '@pages/login/ForgotPassword'
+import DivisionCreation from '@pages/division/pages/DivisionCreation'
+import Login from '@pages/login/Login'// import TeacherDashboard from '@pages/TeacherDashboard'
 import SubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/SubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
@@ -20,6 +19,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import {
   DIVISION_CREATION,
+  FORGOT_PASSWORD,
   PAGE_DASHBOARD,
   PAGE_ELECTIVE_SUBJECT,
   PAGE_LOGIN,
@@ -29,9 +29,9 @@ import {
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
-  FORGOT_PASSWORD
 } from '@constants'
-import ForgotPassword from '@pages/login/ForgotPassword'
+
+
 
 
 
@@ -205,7 +205,7 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <DivisionCreation></DivisionCreation>,
+            element: <DivisionCreation />,
           },
         ],
       },

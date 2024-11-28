@@ -18,7 +18,8 @@ interface CourseCardProps {
   isSubjectLock: any
   setIsSubjectLock: any
   draggable: boolean
-  index: number
+  index: number,
+  
 }
 const SubjectCard = ({
   subject,

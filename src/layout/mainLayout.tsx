@@ -1,36 +1,30 @@
 import { useEffect } from 'react'
 
-
 import { Outlet } from 'react-router-dom'
 
 import Header from '@components/header'
 import Sidebar from '@components/sidebar'
 
-
 import useToValidateTokenAndServer from './hooks/useToValidateTokenAndServer'
 
-
-
 const MainLayout = () => {
-  
-  const {checkServerAvailability,access,accessTokenValid} = useToValidateTokenAndServer()
-  
-  
-  
+  const { checkServerAvailability, access, accessTokenValid } =
+    useToValidateTokenAndServer()
+
   useEffect(() => {
-      checkServerAvailability()
+    checkServerAvailability()
   }, [])
 
-  if(access && accessTokenValid) {
+  if (access && accessTokenValid) {
     return (
       <div className="relative h-screen">
         <div className="wrapper flex h-full overflow-hidden">
           {/* Left Section - Sidebar */}
-  
+
           {/* Right Section - Header and Main Content */}
           <div className="relative flex w-full flex-col">
             <Header />
-  
+
             <main className="h-100 mx-auto w-full overflow-y-auto bg-shade p-2 dark:bg-black lg:p-8">
               <Outlet />
             </main>
@@ -44,8 +38,7 @@ const MainLayout = () => {
         </div>
       </div>
     )
-  }
-  else{
+  } else {
     return null
   }
 }

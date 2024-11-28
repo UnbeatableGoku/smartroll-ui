@@ -1,5 +1,3 @@
-
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
@@ -48,7 +46,7 @@ const Selection = ({
                 <SelectItem
                   key={item.slug}
                   value={item.slug}
-                  className="cursor-pointer "
+                  className="cursor-pointer"
                 >
                   {optionTitle ? `${optionTitle} - ` : null} {item.name}
                 </SelectItem>
