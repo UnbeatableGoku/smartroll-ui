@@ -10,6 +10,7 @@
   .title {
     @apply py-3 text-xl font-bold;
   }
+  
   :root {
 
     --background: 0 0% 100%;
@@ -147,3 +148,8 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);  /* This inverts the colors, turning dark icons to light */
+}
+

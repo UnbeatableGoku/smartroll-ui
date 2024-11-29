@@ -6,7 +6,6 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-
 const useElectiveSubject = () => {
   const [electiveSubject, setElectiveSubject] = useState<Array<any>>([])
   const [subjectChoicesSlug, setSubjectChoicesSlug] = useState<string>('')
@@ -16,7 +15,7 @@ const useElectiveSubject = () => {
   const [totalCategories, setTotalCategories] = useState<string[]>([])
   const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
   const [deadline, setDeadline] = useState<string>()
-
+  const [FinalChoiceLock,setFinalChoiceLock] = useState<boolean>(false)
 
   //useRef
 
@@ -46,6 +45,7 @@ const useElectiveSubject = () => {
 
         // Set subject slug
         setSubjectChoicesSlug(data.slug)
+        setFinalChoiceLock(data.choices_locked)
         setDeadline(data.deadline_timestamp)
         // Set elective subjects
         const electiveSubjectData = get(data, 'available_choices', [])
@@ -62,6 +62,13 @@ const useElectiveSubject = () => {
 
         setElectiveSubject(electiveSubjectData)
 
+        if(electiveSubjectData.length == 0){
+          if (!noElectiveSubjectCard.current?.classList.contains('hidden')) {
+              noElectiveSubjectCard?.current?.classList.add('hidden')
+            noElectiveSubjectCard?.current?.classList.remove('flex')
+        }
+        }
+
         // Set finalized choices
         if (data?.choices_saved) {
           const finalizedSubjects = get(data, 'finalized_choices', [])
@@ -71,21 +78,19 @@ const useElectiveSubject = () => {
           setFinalizedChoice([])
           setIsSubjectSave(false)
         }
-        if(noElectiveSubjectCard.current?.classList.contains('hidden')){
-          noElectiveSubjectCard.current.classList.add('hidden')
-          noElectiveSubjectCard.current.classList.remove('flex')
-        }
+        
         
       } else {
         toast.error(response_obj.errorMessage?.message)
-        if(response_obj.errorMessage?.statusCode === 404){
-          if(noElectiveSubjectCard.current){
+        if (response_obj.errorMessage?.statusCode === 404) {
+          if (noElectiveSubjectCard.current) {
             noElectiveSubjectCard.current.classList.remove('hidden')
             noElectiveSubjectCard.current.classList.add('flex')
           }
         }
       }
     } catch (error: any) {
+      console.log(error)
       setIsSubjectSave(false)
       if (!error.response) {
         toast.error(
@@ -156,7 +161,7 @@ const useElectiveSubject = () => {
           )
           setIsSubjectSave(true)
           setFinalizedChoice(final_subject)
-          toast.success('Subjects are Successfully Locked')
+          toast.success('Subjects are saved Successfully ')
         } else {
           toast.error(response_obj.errorMessage?.message)
         }
@@ -170,6 +175,10 @@ const useElectiveSubject = () => {
 
   const handleOnClickForUnsaveDraft = async () => {
     try {
+      const confirmation = prompt('Please type "unsave" to Unsave the draft')
+      if (confirmation != 'unsave') {
+        return toast.error('Please re-type "unsave" to Unsave the draft')
+      }
       const axiosInstance = axios.create()
       const method = 'post'
       const endpoint = '/manage/unsave_subject_choices_for_student/'
@@ -225,6 +234,7 @@ const useElectiveSubject = () => {
     totalCategories,
     selectedSubjects,
     deadline,
+    FinalChoiceLock,
     handleGetElectiveSubject,
     handleStudentChoice,
     toggleSubjectSelection,

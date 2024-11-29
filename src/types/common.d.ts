@@ -23,7 +23,9 @@ export interface DecodedToken {
       name: string | null
       email: string
       role: string
-    }
+    },
+    sr_no?: string
+    enrollment?: string
     branch: {
       branch_name: string
       branch_code: string
@@ -68,4 +70,10 @@ declare global {
   interface Window {
       base_url:string;
   }
+}
+
+
+interface ProfileModalProps {
+  isOpen: boolean
+  onClose: () => void
 }

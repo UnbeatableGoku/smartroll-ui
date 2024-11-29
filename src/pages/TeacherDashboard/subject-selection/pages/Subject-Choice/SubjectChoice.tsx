@@ -102,7 +102,7 @@ const SubjectChoice = () => {
         {!isSubjectLock && !saveAsDraft && selectedSubjects.length > 0 &&
           <Button onClick={togglePanel} className="mt-3 w-full lg:w-auto">
             <BookOpen className="mr-2 h-4 w-4" />
-            Save As Draft
+            View subject choices
             <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
               {selectedSubjects.length}
             </span>
@@ -133,6 +133,15 @@ const SubjectChoice = () => {
             <CardHeader className="pb-2"></CardHeader>
             <CardContent className="text-center">
               No Subjects are available for this semester.
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="group w-full hidden" ref={noSubjectFoundCard}>
+          <Card>
+            <CardHeader className="pb-2"></CardHeader>
+            <CardContent className="text-center">
+            The deadline has passed, and you haven't selected any subjects.
             </CardContent>
           </Card>
         </div>

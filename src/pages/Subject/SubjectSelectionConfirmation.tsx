@@ -193,7 +193,7 @@ const SubjectSelectionConfirmation = () => {
                       subjects
                     </span>
                   </Button>
-                  <Button
+                  {student.choices_locked && <Button
                     size="icon"
                     className="px-1 py-1"
                     variant="destructive"
@@ -205,7 +205,7 @@ const SubjectSelectionConfirmation = () => {
                     }}
                   >
                     <Trash></Trash>
-                  </Button>
+                  </Button>}
                 </TableCell>
               </TableRow>
               {selectedPerson?.slug === student.slug && (

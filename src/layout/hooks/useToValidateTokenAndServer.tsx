@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useSelector,useDispatch } from 'react-redux';
 import { setAuth, setUserProfile } from '@data/redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import useNotification from '@components/sidebar/hooks/useNotification';
+import useNotification from '@components/sidebar/hooks/useNotification';   
 
 const useToValidateTokenAndServer = () => {
     const dispatch = useDispatch()

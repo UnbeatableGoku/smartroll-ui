@@ -12,6 +12,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import ConfirmSubjectSelection from './components/ConfirmSubjectSelection'
 import SubjectCard from './components/SubjectCard'
 import useSubjectSelection from './hooks/useSubjectSelection'
+import UpdateDeadlineDialog from './components/UpdateDeadlineDialog'
 
 const SubjectSelection = () => {
   const {
@@ -26,6 +27,9 @@ const SubjectSelection = () => {
     semesters,
     subjects,
     notTechSubjects,
+    deadLine,
+    openDeadlineDailog,
+    setOpenDeadlineDailog,
     toggleSubjectSelection,
     handleSubjectSelection,
     isSubjectLock,
@@ -33,6 +37,8 @@ const SubjectSelection = () => {
     unlockSubjectAfterDeadline,
     UnlockSubjectAfterDeadline,
     handleOnCheckForNonTechSubject,
+    setDeadLine,
+    handleOnClickToUpdateDeadline
   } = useSubjectSelection()
   const { stream, handleStream } = useStream()
   const [isPanelOpen, setIsPanelOpen] = useState(false)
@@ -142,6 +148,10 @@ const SubjectSelection = () => {
               </Button>
             </div>
           )}
+          {
+            !unlockSubjectAfterDeadline && isSubjectLock &&
+            <UpdateDeadlineDialog semesterSlug={selectedSemester} deadline={deadLine} setDeadLine={setDeadLine} handleOnClickToUpdateDeadline={handleOnClickToUpdateDeadline} openDeadlineDailog={openDeadlineDailog} setOpenDeadlineDailog={setOpenDeadlineDailog}></UpdateDeadlineDialog> 
+          }
         </div>
 
         <div className="p-4">

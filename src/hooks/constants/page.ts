@@ -52,6 +52,13 @@ export const PAGE_NOT_FOUND: Page = {
   name: 'Page Not Found',
 }
 
+export const FORGOT_PASSWORD: Page = {
+  // update_password
+  id: 'FORGOT_PASSWORD',
+  path: '/update_password',
+  name: 'forgot-password',
+}
+
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES
