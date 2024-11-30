@@ -1,15 +1,7 @@
-import { useEffect, useState } from 'react'
-
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Download} from 'lucide-react'
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@radix-ui/react-hover-card'
-import { Info } from 'lucide-react'
-import InfoCard from '@pages/StudentDashboard/subject-selection/component/InfoCard'
 
 interface CourseCardProps {
   toggleSubjectSelection: (subject: any) => void
@@ -29,21 +21,9 @@ const SubjectCard = ({
   draggable = false,
   index,
 }: CourseCardProps) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  
 
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-
-    checkIfMobile()
-    window.addEventListener('resize', checkIfMobile)
-
-    return () => {
-      window.removeEventListener('resize', checkIfMobile)
-    }
-  }, [])
+  
 
   return (
     <Card
@@ -137,52 +117,7 @@ const SubjectCard = ({
             <p className="text-xl font-semibold md:text-center">
               {subject?.subject_code}
             </p>
-            {isMobile && (
-              <div className="absolute bottom-5 right-5">
-                <button
-                  className="relative"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setIsExpanded(!isExpanded)
-                  }}
-                  aria-expanded={isExpanded}
-                  aria-label={
-                    isExpanded
-                      ? 'Hide course information'
-                      : 'Show course information'
-                  }
-                >
-                  <Info className="h-5 w-5 text-white" />
-                </button>
-                {isExpanded && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <Card className="w-80 max-w-[90vw]">
-                      <CardContent className="p-4">
-                        <div className="mb-2 flex items-start justify-between">
-                          <InfoCard
-                            theory_exam_duration={subject.theory_exam_duration}
-                            practical_exam_duration={
-                              subject.practical_exam_duration
-                            }
-                            subject_code={subject.subject_code}
-                          />
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setIsExpanded(false)
-                            }}
-                            className="text-muted-foreground hover:text-foreground"
-                            aria-label="Close"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-              </div>
-            )}
+           
           </div>
           <div className="space-y-1">
             <p className="hidden text-sm uppercase text-white/60 sm:block md:block lg:block">
@@ -252,24 +187,20 @@ const SubjectCard = ({
             {subject?.category}
           </Badge>
 
-          {!isMobile && (
-            <div className="relative">
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <button className="p-2" aria-label="Show course information">
-                    <Info className="cursor-pointer text-white" />
-                  </button>
-                </HoverCardTrigger>
-                <HoverCardContent className="absolute z-50 w-80 rounded-md border p-2 shadow-lg dark:bg-black">
-                  <InfoCard
-                    theory_exam_duration={subject.theory_exam_duration}
-                    practical_exam_duration={subject.practical_exam_duration}
-                    subject_code={subject.subject_code}
-                  />
-                </HoverCardContent>
-              </HoverCard>
-            </div>
-          )}
+          <Badge
+              variant="secondary"
+              className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30 mt-3"
+              onClick={(e)=>{e.stopPropagation()}}
+            >
+              <a
+                href={`https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/Syallbus/${subject.subject_code}.pdf`}
+                className='flex gap-x-2 items-center'
+                target='_blank'
+              >
+                <Download className="h-4 w-4 text-white" />
+                Syllabus
+              </a>
+            </Badge>
         </div>
       </CardContent>
     </Card>

@@ -62,11 +62,8 @@ const useElectiveSubject = () => {
 
         setElectiveSubject(electiveSubjectData)
 
-        if(electiveSubjectData.length == 0){
-          if (!noElectiveSubjectCard.current?.classList.contains('hidden')) {
-              noElectiveSubjectCard?.current?.classList.add('hidden')
-            noElectiveSubjectCard?.current?.classList.remove('flex')
-        }
+        if(!noElectiveSubjectCard.current?.classList.contains('hidden')){
+          noElectiveSubjectCard?.current?.classList.add('hidden')
         }
 
         // Set finalized choices
@@ -85,7 +82,6 @@ const useElectiveSubject = () => {
         if (response_obj.errorMessage?.statusCode === 404) {
           if (noElectiveSubjectCard.current) {
             noElectiveSubjectCard.current.classList.remove('hidden')
-            noElectiveSubjectCard.current.classList.add('flex')
           }
         }
       }

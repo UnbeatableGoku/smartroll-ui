@@ -62,6 +62,7 @@ const ElectiveSubject = () => {
     handleStudentChoice,
     toggleSubjectSelection,
     handleOnClickForUnsaveDraft,
+    noElectiveSubjectCard,
   } = useElectiveSubject()
 
   useEffect(() => {
@@ -121,6 +122,7 @@ const ElectiveSubject = () => {
 
           <div
             className="group h-96 hidden w-full items-center"
+            ref={noElectiveSubjectCard}
           >
             <Card className="w-full border-white">
               <CardHeader className="pb-2"></CardHeader>
@@ -176,12 +178,12 @@ const ElectiveSubject = () => {
                   <div className="rounded-2xl border border-zinc-600 p-6 dark:bg-black lg:p-8">
                     <div className="mb-4">
                       <div className="flex items-center gap-3">
-                        <GraduationCap className="h-6 w-6 text-primary" />
-                        <h2 className="text-2xl font-bold text-white">
+                        <GraduationCap className="lg:h-6 lg:w-6 w-5 h-5 text-primary" />
+                        <h2 className="lg:text-2xl text-xl font-bold text-white">
                           {category}
                         </h2>
                       </div>
-                      <p className="mt-2 text-gray-400">
+                      <p className="mt-2 text-xs lg:text-sm text-gray-400">
                         Select one subject from this category
                       </p>
                     </div>
