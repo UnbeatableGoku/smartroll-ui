@@ -93,38 +93,12 @@ const useSelectionForTeacher = () => {
         setIsSubjectLock(stream_data.choices_locked)
       }
       getSemensterData(slug)
-      // const header = {
-      //     'ngrok-skip-browser-warning': true,
-      //     Authorization: `Bearer ${StoredTokens.accessToken}`,
-      // }
-      // const axiosInstance = axios.create()
-      // const method = 'get'
-      // const endpoint = `/manage/get_semesters_from_stream/${slug}`
-      // const response_obj = await CallAPI(StoredTokens, axiosInstance, endpoint, method, header)
-
-      // if (response_obj.error == false) {
-      //     const semester = get(response_obj, 'response.data.data', [])
-
-      //     const semester_lst: Array<SelectionResponse> = semester.map((semester: any) => {
-      //         return ({ slug: semester.slug, name: semester.no })
-      //     })
-      //     setSemesters(semester_lst)
-      //     setSubjects(null)    // to generilized the data to load on select component
-      //     setselectedSemester("")
-      // }
-      // else {
-      //     toast.error(response_obj.errorMessage?.message)
-      //     setselectedSemester("")
-      //     setSemesters([])
-      //     setSubjects(null)
-
-      // }
     } catch (error) {
       console.error('Error fetching Semester', error)
       toast.error('Error fetching Semester. See console for more information.')
     }
 
-    setSelectedSubjects([])
+    // setSelectedSubjects([])
   }
 
   const getSemensterData = async (slug: string) => {

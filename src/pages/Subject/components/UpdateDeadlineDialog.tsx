@@ -38,7 +38,7 @@ const UpdateDeadlineDialog = ({deadline,setDeadLine,handleOnClickToUpdateDeadlin
               id="link"
               type="date"
               value={deadline}
-              className="dark:text-white"
+              className="dark:text-white "
               onChange={(e)=>{setDeadLine(e.target.value)}}
             />
           </div>

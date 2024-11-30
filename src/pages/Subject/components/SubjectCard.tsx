@@ -1,15 +1,6 @@
-import { useEffect, useState } from 'react'
-
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@radix-ui/react-hover-card'
-import { Info } from 'lucide-react'
-import InfoCard from '@pages/StudentDashboard/subject-selection/component/InfoCard'
+import { DownloadCloud } from 'lucide-react'
 
 interface CourseCardProps {
   toggleSubjectSelection: (subject: any) => void
@@ -28,22 +19,6 @@ const SubjectCard = ({
   draggable = false,
   index,
 }: CourseCardProps) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-
-    checkIfMobile()
-    window.addEventListener('resize', checkIfMobile)
-
-    return () => {
-      window.removeEventListener('resize', checkIfMobile)
-    }
-  }, [])
-
   return (
     <Card
       key={subject.slug}
@@ -112,18 +87,19 @@ const SubjectCard = ({
           </div>
         )}
 
-      <CardHeader className="mt-3 flex flex-row items-center justify-between pb-3">
-        <h2 className="text-xl font-bold tracking-tight">
+      <CardHeader className="mt-0 flex flex-row items-center justify-between px-3 pb-0 lg:mt-3 lg:px-6 lg:pb-3">
+        <h2 className="text-sm font-bold tracking-tight md:text-xl">
           {subject?.subject_name}{' '}
         </h2>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <p className="text-lg">Sem : {subject.sem_year}</p>
-        <div className="flex flex-col justify-between gap-4 md:flex-row">
+      <CardContent className="space-y-2 px-3 py-3 lg:space-y-6 lg:px-6 lg:py-6">
+        <p className="hidden text-lg font-normal sm:block md:block lg:block">
+          Sem : {subject.sem_year}
+        </p>
+        <div className="flex flex-row justify-between gap-4">
           <div className="space-y-1">
-            <p className="text-sm uppercase text-white/60">Type</p>
-
-            <p className="text-xl font-semibold">
+            <p className="text-xs uppercase text-white/60 lg:text-sm">Type</p>
+            <p className="text-sm font-semibold lg:text-xl">
               {subject?.is_theory
                 ? 'Theory'
                 : subject?.is_practical
@@ -132,68 +108,24 @@ const SubjectCard = ({
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-sm uppercase text-white/60">Subject Code</p>
-            <p className="text-xl font-semibold md:text-center">
-              {subject?.subject_code}
+            <p className="text-xs uppercase text-white/60 lg:text-sm">
+              Subject Code
             </p>
-            {isMobile && (
-              <div className="absolute bottom-5 right-5">
-                <button
-                  className="relative"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setIsExpanded(!isExpanded)
-                  }}
-                  aria-expanded={isExpanded}
-                  aria-label={
-                    isExpanded
-                      ? 'Hide course information'
-                      : 'Show course information'
-                  }
-                >
-                  <Info className="h-5 w-5 text-white" />
-                </button>
-                {isExpanded && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <Card className="w-80 max-w-[90vw]">
-                      <CardContent className="p-4">
-                        <div className="mb-2 flex items-start justify-between">
-                          <InfoCard
-                            theory_exam_duration={subject.theory_exam_duration}
-                            practical_exam_duration={
-                              subject.practical_exam_duration
-                            }
-                            subject_code={subject.subject_code}
-                          />
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setIsExpanded(false)
-                            }}
-                            className="text-muted-foreground hover:text-foreground"
-                            aria-label="Close"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-              </div>
-            )}
+            <div className="flex justify-between gap-2">
+              <p className="w-full text-right text-sm font-semibold lg:text-center lg:text-xl">
+                {subject?.subject_code}
+              </p>
+            </div>
           </div>
-          <div className="space-y-1">
-            <p className="hidden text-sm uppercase text-white/60 sm:block md:block lg:block">
-              Effective Year
-            </p>
-            <p className="hidden text-xl font-semibold sm:block md:block md:text-right lg:block">
+          <div className="hidden space-y-1 sm:block md:block lg:block">
+            <p className="text-sm uppercase text-white/60">Effective Year</p>
+            <p className="text-right text-xl font-semibold">
               {subject?.eff_from}
             </p>
           </div>
         </div>
 
-        <div className="hidden w-full justify-between sm:block md:block lg:block">
+        <div className="w-full justify-between">
           <div className="w-full">
             <div className="flex w-full flex-row gap-x-3 text-center">
               <div className="flex w-2/5 justify-around rounded-lg bg-white/10 p-2">
@@ -243,7 +175,7 @@ const SubjectCard = ({
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
           <Badge
             variant="secondary"
             className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
@@ -251,24 +183,23 @@ const SubjectCard = ({
             {subject?.category}
           </Badge>
 
-          {!isMobile && (
-            <div className="relative">
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <button className="p-2" aria-label="Show course information">
-                    <Info className="cursor-pointer text-white" />
-                  </button>
-                </HoverCardTrigger>
-                <HoverCardContent className="absolute z-50 w-80 rounded-md border p-2 shadow-lg dark:bg-black">
-                  <InfoCard
-                    theory_exam_duration={subject.theory_exam_duration}
-                    practical_exam_duration={subject.practical_exam_duration}
-                    subject_code={subject.subject_code}
-                  />
-                </HoverCardContent>
-              </HoverCard>
-            </div>
-          )}
+          <Badge
+            variant="secondary"
+            className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+          >
+            <a
+              href={`https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/Syallbus/${subject.subject_code}.pdf`}
+              download={`Syllabus_${subject.subject_code}.pdf`}
+              className="flex items-center gap-x-2"
+              target="_blank"
+            >
+              <DownloadCloud className="h-4 w-4 text-white" />
+              Syllabus
+            </a>
+          </Badge>
         </div>
       </CardContent>
     </Card>

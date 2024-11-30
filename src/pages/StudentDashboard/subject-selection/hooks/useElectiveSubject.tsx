@@ -62,6 +62,10 @@ const useElectiveSubject = () => {
 
         setElectiveSubject(electiveSubjectData)
 
+        if (!noElectiveSubjectCard.current?.classList.contains('hidden')) {
+          noElectiveSubjectCard?.current?.classList.add('hidden')
+        }
+
         // Set finalized choices
         if (data?.choices_saved) {
           const finalizedSubjects = get(data, 'finalized_choices', [])
@@ -71,16 +75,11 @@ const useElectiveSubject = () => {
           setFinalizedChoice([])
           setIsSubjectSave(false)
         }
-        if (noElectiveSubjectCard.current?.classList.contains('hidden')) {
-          noElectiveSubjectCard.current.classList.add('hidden')
-          noElectiveSubjectCard.current.classList.remove('flex')
-        }
       } else {
         toast.error(response_obj.errorMessage?.message)
         if (response_obj.errorMessage?.statusCode === 404) {
           if (noElectiveSubjectCard.current) {
             noElectiveSubjectCard.current.classList.remove('hidden')
-            noElectiveSubjectCard.current.classList.add('flex')
           }
         }
       }
@@ -156,7 +155,7 @@ const useElectiveSubject = () => {
           )
           setIsSubjectSave(true)
           setFinalizedChoice(final_subject)
-          toast.success('Subjects are Successfully Locked')
+          toast.success('Subjects are saved Successfully ')
         } else {
           toast.error(response_obj.errorMessage?.message)
         }

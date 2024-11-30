@@ -116,7 +116,7 @@ const SubjectChoice = () => {
             Unsave Draft
           </Button>}
 
-        {choice_deadline && subjects && !isSubjectLock &&
+        {choice_deadline &&  !isSubjectLock &&
           <Alert className="w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
             <div className="">
               <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">

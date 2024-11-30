@@ -21,7 +21,7 @@ const StackholderProfile = ({ isOpen, onClose }: ProfileModalProps) => {
         className="absolute right-2 top-2 text-zinc-400 hover:text-white"
         variant="ghost"
         size="icon"
-        onClick={onClose}
+        onClick={()=>{setIsEditing(false);onClose();setEmail(profile?.obj.profile.email)}}
       >
         <X className="h-4 w-4" />
         <span className="sr-only">Close</span>
@@ -83,11 +83,12 @@ const StackholderProfile = ({ isOpen, onClose }: ProfileModalProps) => {
                     className="flex-1 bg-zinc-800 border-zinc-700 text-white"
                   />
                   <Button
-                    onClick={() => setIsEditing(false)}
+                    onClick={() => {handleOnUpdateProfile();setIsEditing(false)}}
                     variant="secondary"
                     className="bg-zinc-800 hover:bg-zinc-700 text-white"
+                    disabled={profile?.obj.profile.email === email}
                   >
-                    Save
+                    Update
                   </Button>
                 </div>
               ) : (
@@ -105,15 +106,8 @@ const StackholderProfile = ({ isOpen, onClose }: ProfileModalProps) => {
                 </>
               )}
             </div>
+              <div className='text-yellow-500'>Warning: You'll be logged out after updating your email</div>
           </div>
-        </div>
-
-        <div className="pt-4">
-          <Button className="w-full bg-zinc-100 text-zinc-900 hover:bg-zinc-200"
-           onClick={()=>{handleOnUpdateProfile()}}
-          >
-            Update Profile
-          </Button>
         </div>
       </CardContent>
     </Card>

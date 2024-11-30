@@ -141,43 +141,29 @@ const ConfirmSubjectSelection = ({
                       key={subject.slug}
                       className="group"
                       draggable
-                      onClick={() => subjectSelected(subject.slug)}
+                      onDragStart={() => onDragStart(index)}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={() => onDrop(index)}
                     >
                       <CardHeader className="pb-2">
                         <div className="flex w-full items-start justify-between">
                           {/* Grip Icon for Draggable Indicator */}
-                          <div className="flex items-center space-x-2">
-                            {/* <GripVertical className="cursor-grab text-muted-foreground" /> */}
-                            <CardTitle className="text-lg font-semibold leading-none">
-                              {subject.subject_name}
-                            </CardTitle>
-                            <div>
-                              {subject.is_technical != null && (
-                                <div
-                                  className={`rounded-full ${subject.is_technical ? 'hidden bg-[#ffa31a]' : 'w-20 bg-[#f1141f] dark:text-white'} ml-[40px] px-2 py-1 text-xs font-semibold text-black`}
+                          <div className="jus flex w-full items-center space-x-2">
+                            <GripVertical className="cursor-grab text-muted-foreground" />
+                            <CardTitle className="flex w-full justify-between gap-x-2 text-lg font-semibold leading-none">
+                              <div>{subject.subject_name}</div>
+                              <div>
+                                <Badge
+                                  variant="secondary"
+                                  className={`bg-[#ffa31a] hover:bg-[#ffa31a]/70 dark:text-black`}
                                 >
-                                  {!subject.is_technical ? 'Non-Tech.' : ''}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex space-x-2">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => moveSubject(index, 'up')}
-                              disabled={index === 0}
-                            >
-                              <ChevronUp className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => moveSubject(index, 'down')}
-                              disabled={index === selectedSubjects.length - 1}
-                            >
-                              <ChevronDown className="h-4 w-4" />
-                            </Button>
+                                  <span className="hidden lg:block">
+                                    Priority -{' '}
+                                  </span>{' '}
+                                  {index + 1}
+                                </Badge>
+                              </div>
+                            </CardTitle>
                           </div>
                         </div>
                       </CardHeader>
@@ -188,6 +174,12 @@ const ConfirmSubjectSelection = ({
                       </CardContent>
                       <CardFooter className="flex justify-between text-xs text-muted-foreground">
                         Type: {subject.category}
+                        <Badge
+                          variant="secondary"
+                          className={`bg-[#f1141f] ${subject.is_technical ? 'hidden bg-[#ffa31a]' : 'w-20 bg-[#f1141f] dark:text-white'} hover:bg-[#f1141f]/30`}
+                        >
+                          {!subject.is_technical ? 'Non-Tech.' : ''}
+                        </Badge>
                         <Badge
                           variant="secondary"
                           className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
@@ -277,7 +269,7 @@ const ConfirmSubjectSelection = ({
               }}
             >
               <Lock className="mr-2 h-4 w-4" />
-              Save As Draft
+              {draggable ? 'Save As Draft' : 'Lock Subject'}
             </Button>
           </div>
         </div>

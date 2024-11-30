@@ -13,9 +13,9 @@ import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 import useNewPassword from './hooks/useNewPassword'
 
 interface NewPasswordProps {
-  profile_slug: string 
+  profile_slug: string
   isForgotPassword?: boolean
-  ForgotPasswordCode?: string 
+  ForgotPasswordCode?: string
 }
 
 type LoginFormData = {
@@ -23,19 +23,23 @@ type LoginFormData = {
   confirmPassword: string
 }
 
-const NewPassword = ({ profile_slug,ForgotPasswordCode,isForgotPassword=false }: NewPasswordProps) => {
+const NewPassword = ({
+  profile_slug,
+  ForgotPasswordCode,
+  isForgotPassword = false,
+}: NewPasswordProps) => {
   const [showPassword, setShowPassword] = useState(false)
-  const [showPasswordConfirm,setShowPasswordConfirm] = useState(false)
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   // Initialize the form with react-hook-form
   const { register, handleSubmit } = useForm<LoginFormData>()
 
-  const { handleNewPassword,handleForgotPassword } = useNewPassword()
+  const { handleNewPassword, handleForgotPassword } = useNewPassword()
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
   }
-  const togglePasswordVisibilityForConfirm = ()=>{
+  const togglePasswordVisibilityForConfirm = () => {
     setShowPasswordConfirm(!showPasswordConfirm)
   }
 
@@ -43,18 +47,17 @@ const NewPassword = ({ profile_slug,ForgotPasswordCode,isForgotPassword=false }:
     setIsLoading(true)
 
     const { password, confirmPassword } = data
-    
+
     // Check if the passwords match
     if (password !== confirmPassword) {
       setIsLoading(false)
       return toast.error('Passwords do not match')
-      
     } else {
       // Call the handleNewPassword function to update the password
       try {
-        if(isForgotPassword){
-            handleForgotPassword(profile_slug,ForgotPasswordCode,password)
-            return 
+        if (isForgotPassword) {
+          handleForgotPassword(profile_slug, ForgotPasswordCode, password)
+          return
         }
         const response = await handleNewPassword({ password, profile_slug })
         if (!response?.success) {
@@ -77,7 +80,7 @@ const NewPassword = ({ profile_slug,ForgotPasswordCode,isForgotPassword=false }:
 
       <div className="flex min-h-screen flex-col">
         <main className="flex flex-grow items-center justify-center bg-black">
-          <div className="w-full max-w-md rounded-lg bg-background p-8 shadow-lg">
+          <div className="w-full max-w-md rounded-lg border-zinc-700 p-8 shadow-xl shadow-zinc-800/60">
             <h2 className="mb-6 text-center text-2xl font-bold">
               New Password
             </h2>
@@ -96,21 +99,21 @@ const NewPassword = ({ profile_slug,ForgotPasswordCode,isForgotPassword=false }:
                     className="pl-10"
                   />
                   <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={togglePasswordVisibility}
-                      aria-label={
-                        showPassword ? 'Hide password' : 'Show password'
-                      }
-                    >
-                      {showPassword ? (
-                        <EyeOffIcon className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <EyeIcon className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={togglePasswordVisibility}
+                    aria-label={
+                      showPassword ? 'Hide password' : 'Show password'
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
                 </div>
               </div>
               <div className="space-y-2">
@@ -127,21 +130,21 @@ const NewPassword = ({ profile_slug,ForgotPasswordCode,isForgotPassword=false }:
                     className="pl-10"
                   />
                   <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={togglePasswordVisibilityForConfirm}
-                      aria-label={
-                        showPasswordConfirm ? 'Hide password' : 'Show password'
-                      }
-                    >
-                      {showPasswordConfirm ? (
-                        <EyeOffIcon className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <EyeIcon className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={togglePasswordVisibilityForConfirm}
+                    aria-label={
+                      showPasswordConfirm ? 'Hide password' : 'Show password'
+                    }
+                  >
+                    {showPasswordConfirm ? (
+                      <EyeOffIcon className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
                 </div>
               </div>
 

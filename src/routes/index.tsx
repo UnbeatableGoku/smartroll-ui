@@ -10,7 +10,6 @@ import NotFound from '@pages/NotFound'
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
 import SubjectSelection from '@pages/Subject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
-// import TeacherDashboard from '@pages/TeacherDashboard'
 import SubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/SubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
@@ -30,8 +29,6 @@ import {
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
 } from '@constants'
-
-ForgotPassword
 
 const router = createBrowserRouter([
   {
