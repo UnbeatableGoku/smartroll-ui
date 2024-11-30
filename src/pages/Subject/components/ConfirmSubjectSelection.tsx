@@ -15,7 +15,14 @@ import {
   PopoverTrigger,
 } from '@radix-ui/react-popover'
 import { format } from 'date-fns'
-import { CalendarIcon, GripVertical, Lock, X } from 'lucide-react'
+import {
+  CalendarIcon,
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
+  Lock,
+  X,
+} from 'lucide-react'
 
 import { cn } from '@utils'
 
@@ -40,6 +47,9 @@ const ConfirmSubjectSelection = ({
 }: any) => {
   const [date, setDate] = useState<Date>()
   const [open, setOpen] = useState(false)
+  const [selectedPanelSubject, setSelectedPanelSubject] = useState<
+    string | null
+  >(null)
 
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
@@ -67,6 +77,27 @@ const ConfirmSubjectSelection = ({
       save_teacher_subject_choice(subject_slug)
     }
     setIsPanelOpen(!isPanelOpen)
+  }
+
+  const moveSubject = (direction: 'up' | 'down', index: any) => {
+    const currentIndex = selectedSubjects.findIndex(
+      (s: any) => s.id === selectedPanelSubject,
+    )
+    if (currentIndex === -1) return
+
+    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
+    if (newIndex < 0 || newIndex >= selectedSubjects.length) return
+
+    const newSelectedSubjects = [...selectedSubjects]
+    const [movedSubject] = newSelectedSubjects.splice(currentIndex, 1)
+    newSelectedSubjects.splice(newIndex, 0, movedSubject)
+
+    const subject_slug = selectedSubjects.map((subject: any) => subject.slug)
+    save_teacher_subject_choice(subject_slug)
+  }
+
+  const subjectSelected = (slug: any) => {
+    console.log(slug)
   }
 
   return (
@@ -110,15 +141,13 @@ const ConfirmSubjectSelection = ({
                       key={subject.slug}
                       className="group"
                       draggable
-                      onDragStart={() => onDragStart(index)}
-                      onDragOver={(e) => e.preventDefault()}
-                      onDrop={() => onDrop(index)}
+                      onClick={() => subjectSelected(subject.slug)}
                     >
                       <CardHeader className="pb-2">
                         <div className="flex w-full items-start justify-between">
                           {/* Grip Icon for Draggable Indicator */}
                           <div className="flex items-center space-x-2">
-                            <GripVertical className="cursor-grab text-muted-foreground" />
+                            {/* <GripVertical className="cursor-grab text-muted-foreground" /> */}
                             <CardTitle className="text-lg font-semibold leading-none">
                               {subject.subject_name}
                             </CardTitle>
@@ -131,6 +160,24 @@ const ConfirmSubjectSelection = ({
                                 </div>
                               )}
                             </div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => moveSubject(index, 'up')}
+                              disabled={index === 0}
+                            >
+                              <ChevronUp className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => moveSubject(index, 'down')}
+                              disabled={index === selectedSubjects.length - 1}
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                            </Button>
                           </div>
                         </div>
                       </CardHeader>
