@@ -101,6 +101,7 @@ const useSelectionForTeacher = () => {
     // setSelectedSubjects([])
   }
 
+  //fucition to ge the semester data based on the stream (onValuechange of stream)
   const getSemensterData = async (slug: string) => {
     try {
       const header = {

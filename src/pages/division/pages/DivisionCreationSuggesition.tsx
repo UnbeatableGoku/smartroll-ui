@@ -15,7 +15,6 @@ import {
 const DivisionCreationSuggesition = ({
   isOpenSuggesition,
   setIsOpenSuggesition,
-  handleOnClickForDeclineSuggestion,
   handleOnClickForAcceptSuggestion,
   divisionsData,
 }: any) => {
@@ -69,24 +68,25 @@ const DivisionCreationSuggesition = ({
                           </TableRow>
                         ))}
                       </TableBody>
-                    </Table>
+                    </Table>Division
                   </div>
 
                   <div className="mt-6 flex items-center justify-end space-x-3">
                     <Button
-                      className="bg-red-800 text-white"
+                      variant={'destructive'}
                       onClick={() => {
-                        handleOnClickForDeclineSuggestion()
+                        // handleOnClickForDeclineSuggestion()
+                        setIsOpenSuggesition(!isOpenSuggesition)
                       }}
                     >
-                      <X className="mr-2 h-4 w-4" /> Denied
+                      <X className="mr-2 h-4 w-4" /> Close
                     </Button>
                     <Button
                       onClick={() => {
                         handleOnClickForAcceptSuggestion()
                       }}
                     >
-                      Accept <Check className="ml-2 h-4 w-4" />
+                      View divisions <Check className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 </CardContent>

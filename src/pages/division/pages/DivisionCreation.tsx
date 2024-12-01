@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { DivisionCreationSuggesition, StudentListForDivision } from '..'
+
 import useDivisionCreation from '../hooks/useDivisionCreation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,6 +10,8 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
+import StudentListForDivision from './StudentListForDivision'
+import DivisionCreationSuggesition from './DivisionCreationSuggesition'
 
 const DivisionCreation = () => {
   const { stream, handleStream } = useStream()
@@ -38,6 +40,7 @@ const DivisionCreation = () => {
     handelOnClickForSaveDivisions,
     onDragEnd,
     updateAvailableCounts,
+    studentBatchList
   } = useDivisionCreation()
 
   useEffect(() => {
@@ -82,6 +85,14 @@ const DivisionCreation = () => {
         </div>
 
         {renderStudentList && !divisionsAlreadyCreated && (
+          <div className='flex w-full flex-x-4'>
+          <Button
+            className="mt-4"
+            variant={'destructive'}
+            onClick={() => handelOnClickForSaveDivisions()}
+          >
+            Change division size 
+          </Button>
           <Button
             className="mt-4"
             variant={'default'}
@@ -89,6 +100,7 @@ const DivisionCreation = () => {
           >
             Confirm Divisions
           </Button>
+          </div>
         )}
         {selectedSemester && !divisionsAlreadyCreated && (
           <DragDropContext onDragEnd={onDragEnd}>
@@ -125,7 +137,7 @@ const DivisionCreation = () => {
                                     <span>{group.subjects}</span>
                                   </div>
                                   <span className="font-semibold">
-                                    {group.availableCount}/{group.totalCount}
+                                    {group.totalCount}
                                   </span>
                                 </li>
                               )}
@@ -240,6 +252,7 @@ const DivisionCreation = () => {
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             handelOnClickForSaveDivisions={handelOnClickForSaveDivisions}
+            studentBatchList={studentBatchList}
           ></StudentListForDivision>
         )}
       </div>
