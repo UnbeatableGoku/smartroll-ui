@@ -75,7 +75,7 @@ const SubjectSelectionConfirmation = () => {
 
   const [activeTab, setActiveTab] = useState<PersonType>('teacher')
   const renderTable = (data: Array<{}>, type: PersonType) => (
-    <Table>
+    <Table className='border'>
       <TableHeader>
         <TableRow>
           {type === 'teacher'
@@ -268,6 +268,10 @@ const SubjectSelectionConfirmation = () => {
               <TabsTrigger value="teacher">Teachers</TabsTrigger>
               <TabsTrigger value="student">Students</TabsTrigger>
             </TabsList>
+            {activeTab == 'teacher'  && <div className='flex flex-col lg:flex-row justify-center gap-y-4 lg:gap-x-3 my-4 '>
+                  <Button className='lg:w-auto w-full'>Teacher to subject map</Button> 
+                  <Button className='lg:w-auto w-full'>Subject to teacher map</Button>
+                </div>}
             <div className="mt-5 flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
               {/* Stream Selection Card */}
               {stream && (
@@ -349,7 +353,7 @@ const SubjectSelectionConfirmation = () => {
             </div>
             <TabsContent
               value="teacher"
-              className="mt-4 overflow-hidden rounded-lg border"
+              className="mt-4 overflow-hidden rounded-lg"
             >
               {teachers.length > 0 ? (
                 <div className="flex flex-col justify-between border border-b p-2 text-xl font-bold lg:flex-row">

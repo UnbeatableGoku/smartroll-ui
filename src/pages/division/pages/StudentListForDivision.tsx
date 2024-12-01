@@ -13,6 +13,7 @@ const StudentListForDivision = ({
   divisionsData,
   setActiveTab,
   activeTab,
+  studentBatchList
 }: any) => {
   const renderTable = (data: any) => {
     return (
@@ -36,10 +37,9 @@ const StudentListForDivision = ({
         {/* Table Body */}
 
         <TableBody className="h-80 overflow-y-scroll">
-          {data?.batches?.map((batch: any, batchIndex: number) => {
-            return batch.students.map((student: any, studentIndex: number) => {
+          {data?.students?.map((student: any) => {
               return (
-                <TableRow key={`${batchIndex}-${studentIndex}`}>
+                <TableRow key={student.slug}>
                   <TableCell className="font-medium">
                     {student.profile.name}
                   </TableCell>
@@ -48,7 +48,7 @@ const StudentListForDivision = ({
                   {/* Loop over total_batches to check each batch */}
                   {data.total_batches.map((batchName: string) => {
                     // Check if the current batch name matches the batch_name in the student data
-                    if (batchName === batch?.batch_name) {
+                    if (student.batches.includes(batchName)) {
                       return (
                         <TableCell key={batchName}>
                           <Check className="text-green-700" />{' '}
@@ -66,7 +66,7 @@ const StudentListForDivision = ({
                   })}
                 </TableRow>
               )
-            })
+            
           })}
         </TableBody>
       </Table>
@@ -82,29 +82,30 @@ const StudentListForDivision = ({
             setActiveTab(value)
           }}
         >
-          <TabsList className="grid w-auto grid-cols-2">
+          <TabsList className={`flex flex-row`}>
             {divisionsData?.divisions.map((division: any) => {
               return (
                 <TabsTrigger
                   value={division.division_name}
                   key={division.division_name}
+                  className='w-full'
                 >
                   {division.division_name}
                 </TabsTrigger>
               )
             })}
           </TabsList>
-          {divisionsData?.divisions.map((division: any) => {
+          {studentBatchList?.map((division: any) => {
             return (
               <TabsContent
-                value={division.division_name}
+                value={`${division.division}`}
                 className="mt-4 overflow-hidden"
-                key={division.division_name}
+                key={division.division}
               >
-                {divisionsData ? (
+                {studentBatchList ? (
                   <div className="flex flex-col justify-between border border-b p-2 text-xl font-bold lg:flex-row">
-                    <p>Division - {division.division_name}</p>
-                    <p>Total Studentes - {division.total_student_count} </p>
+                    <p>Division - {division.division}</p>
+                    <p>Total Students - {division.students.length} </p>
                   </div>
                 ) : null}
                 <div className="h-[500px]">

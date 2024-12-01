@@ -15,7 +15,6 @@ import {
 const DivisionCreationSuggesition = ({
   isOpenSuggesition,
   setIsOpenSuggesition,
-  handleOnClickForDeclineSuggestion,
   handleOnClickForAcceptSuggestion,
   divisionsData,
 }: any) => {
@@ -27,7 +26,7 @@ const DivisionCreationSuggesition = ({
             <div className="flex min-h-full items-center justify-center p-4">
               <Card className="w-full max-w-4xl">
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Division Creation Recommendations</CardTitle>
+                  <CardTitle>Subject hours overview after creating divisions</CardTitle>
                   <Card
                     onClick={() => {
                       setIsOpenSuggesition(!isOpenSuggesition)
@@ -40,7 +39,6 @@ const DivisionCreationSuggesition = ({
                 <CardContent className="space-y-4 text-sm sm:text-base">
                   <div className="container mx-auto py-10">
                     <Table>
-                      <TableCaption>Subject Hours Overview</TableCaption>
                       <TableHeader>
                         <TableRow>
                           <TableHead className="w-[300px]">
@@ -74,19 +72,20 @@ const DivisionCreationSuggesition = ({
 
                   <div className="mt-6 flex items-center justify-end space-x-3">
                     <Button
-                      className="bg-red-800 text-white"
+                      variant={'destructive'}
                       onClick={() => {
-                        handleOnClickForDeclineSuggestion()
+                        // handleOnClickForDeclineSuggestion()
+                        setIsOpenSuggesition(!isOpenSuggesition)
                       }}
                     >
-                      <X className="mr-2 h-4 w-4" /> Denied
+                      <X className="mr-2 h-4 w-4" /> Close
                     </Button>
                     <Button
                       onClick={() => {
                         handleOnClickForAcceptSuggestion()
                       }}
                     >
-                      Accept <Check className="ml-2 h-4 w-4" />
+                      View divisions <Check className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 </CardContent>
