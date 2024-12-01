@@ -35,6 +35,12 @@ export const PAGE_ELECTIVE_SUBJECT: Page = {
   name: 'Elective Subject',
 }
 
+export const PAGE_STUDENT_DIVISION: Page = {
+  id: 'STUDENT_DIVISION',
+  path: '/student-dashboard/division',
+  name: 'Student Division',
+}
+
 export const PAGE_STUDENT_DASHBOARD: Page = {
   id: 'STUDENT-DASHBOARD',
   path: '/student-dashboard',
