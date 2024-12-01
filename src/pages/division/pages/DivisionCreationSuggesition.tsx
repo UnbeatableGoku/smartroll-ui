@@ -26,7 +26,7 @@ const DivisionCreationSuggesition = ({
             <div className="flex min-h-full items-center justify-center p-4">
               <Card className="w-full max-w-4xl">
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Division Creation Recommendations</CardTitle>
+                  <CardTitle>Subject hours overview after creating divisions</CardTitle>
                   <Card
                     onClick={() => {
                       setIsOpenSuggesition(!isOpenSuggesition)
@@ -39,7 +39,6 @@ const DivisionCreationSuggesition = ({
                 <CardContent className="space-y-4 text-sm sm:text-base">
                   <div className="container mx-auto py-10">
                     <Table>
-                      <TableCaption>Subject Hours Overview</TableCaption>
                       <TableHeader>
                         <TableRow>
                           <TableHead className="w-[300px]">
@@ -68,7 +67,7 @@ const DivisionCreationSuggesition = ({
                           </TableRow>
                         ))}
                       </TableBody>
-                    </Table>Division
+                    </Table>
                   </div>
 
                   <div className="mt-6 flex items-center justify-end space-x-3">

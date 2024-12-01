@@ -12,6 +12,7 @@ import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
 import StudentListForDivision from './StudentListForDivision'
 import DivisionCreationSuggesition from './DivisionCreationSuggesition'
+import { Separator } from '@components/ui/separator'
 
 const DivisionCreation = () => {
   const { stream, handleStream } = useStream()
@@ -29,6 +30,7 @@ const DivisionCreation = () => {
     activeTab,
     renderStudentList,
     divisionsAlreadyCreated,
+    totalStudentsCount,
     setActiveTab,
     handleOnValueChangeOfStream,
     handleOnValueChangeOfSemester,
@@ -40,6 +42,7 @@ const DivisionCreation = () => {
     handelOnClickForSaveDivisions,
     onDragEnd,
     updateAvailableCounts,
+    setRenderStudentList,
     studentBatchList
   } = useDivisionCreation()
 
@@ -50,6 +53,7 @@ const DivisionCreation = () => {
   useEffect(() => {
     updateAvailableCounts()
   }, [divisions])
+
 
   return (
     <div className="mx-auto p-4">
@@ -85,16 +89,16 @@ const DivisionCreation = () => {
         </div>
 
         {renderStudentList && !divisionsAlreadyCreated && (
-          <div className='flex w-full flex-x-4'>
+          <div className='flex w-full gap-x-4'>
           <Button
-            className="mt-4"
+            className="mt-4 w-full"
             variant={'destructive'}
-            onClick={() => handelOnClickForSaveDivisions()}
+            onClick={() => {setRenderStudentList(!renderStudentList)}}
           >
             Change division size 
           </Button>
           <Button
-            className="mt-4"
+            className="mt-4 w-full"
             variant={'default'}
             onClick={() => handelOnClickForSaveDivisions()}
           >
@@ -147,6 +151,11 @@ const DivisionCreation = () => {
                       </ul>
                     )}
                   </Droppable>
+                  <Separator className='mt-4'/>
+                  <div className='flex justify-between mt-1'>
+                    <span className='text-xl font-bold px-4'>Total Students</span>
+                    <span className='text-xl font-bold px-3'>{totalStudentsCount}</span>
+                  </div>
                 </div>
               )}
 
@@ -204,7 +213,7 @@ const DivisionCreation = () => {
           </DragDropContext>
         )}
 
-        {selectedSemester && !divisionsAlreadyCreated && (
+        {selectedSemester && !divisionsAlreadyCreated && !renderStudentList && (
           <div ref={setCapacityDivision}>
             <Card>
               <CardHeader>

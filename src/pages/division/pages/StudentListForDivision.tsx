@@ -105,7 +105,7 @@ const StudentListForDivision = ({
                 {studentBatchList ? (
                   <div className="flex flex-col justify-between border border-b p-2 text-xl font-bold lg:flex-row">
                     <p>Division - {division.division}</p>
-                    <p>Total Studentes - {division.students.length} </p>
+                    <p>Total Students - {division.students.length} </p>
                   </div>
                 ) : null}
                 <div className="h-[500px]">

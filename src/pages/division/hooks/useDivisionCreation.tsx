@@ -37,7 +37,7 @@ const useDivisionCreation = () => {
   const [divisions, setDivisions] = useState<Division[]>([])
   const [divisionsAlreadyCreated, setDivisionsAlreadyCreated] = useState(false)
   const [studentBatchList, setStudentBatchList] = useState<any[]>([])
-
+  const [totalStudentsCount,setTotoalStudentCount] = useState(0)
   //custom hooks
   const [StoredTokens, CallAPI] = useAPI() // custom hooks that used to call API
   //useRef
@@ -47,6 +47,7 @@ const useDivisionCreation = () => {
   const handleOnValueChangeOfStream = async (slug: string) => {
     setSelectedStream(slug)
     setRenderStudentList(false)
+    setMaxDivisionCapacity('')
     try {
       const axiosInstance = axios.create()
       const method = 'get'
@@ -94,6 +95,7 @@ const useDivisionCreation = () => {
   const handleOnValueChangeOfSemester = async (slug: string) => {
     setSelectedSemester(slug)
     setRenderStudentList(false)
+    setMaxDivisionCapacity('')
     try {
       const axiosInstance = axios.create()
       const method = 'get'
@@ -168,7 +170,8 @@ const useDivisionCreation = () => {
         } 
         else {
           const check = get(response_obj, 'response.data.data', {})
-          const subjectChoiceGroup: Group[] = check.map((choice: any) => {
+          setTotoalStudentCount(check?.total_students)
+          const subjectChoiceGroup: Group[] = check?.subject_groups.map((choice: any) => {
             const subjects = choice.subjects.map((subject: any) => {
               const subject_name_word = subject?.subject_name
                 .toUpperCase()
@@ -327,6 +330,7 @@ const useDivisionCreation = () => {
         body,
       )
       if (response_obj.error == false) {
+        setDivisionsAlreadyCreated(true)
         toast.success('Divisions saved successfully')
       } else {
         toast.error(response_obj.errorMessage?.message)
@@ -450,6 +454,8 @@ const useDivisionCreation = () => {
     activeTab,
     renderStudentList,
     divisionsAlreadyCreated,
+    studentBatchList,
+    totalStudentsCount,
     setActiveTab,
     setIsOpenSuggesition,
     setSubjectChoiceGroup,
@@ -465,7 +471,8 @@ const useDivisionCreation = () => {
     updateGroupCount,
     removeGroupFromDivision,
     updateAvailableCounts,
-    studentBatchList
+    setDivisionsAlreadyCreated,
+    setRenderStudentList
   }
 }
 

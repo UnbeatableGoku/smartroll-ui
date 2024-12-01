@@ -3,9 +3,9 @@ import App from '@App'
 import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
-import DivisionCreation from '@pages/Division/pages/DivisionCreation'
-import ForgotPassword from '@pages/Login/ForgotPassword'
-import Login from '@pages/Login/Login'
+import Login from '@pages/login/Login'
+import ForgotPassword from '@pages/login/ForgotPassword'
+import DivisionCreation from '@pages/division/pages/DivisionCreation'
 import NotFound from '@pages/NotFound'
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
 import SubjectSelection from '@pages/Subject/SubjectSelection'
@@ -29,6 +29,7 @@ import {
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
 } from '@constants'
+
 
 const router = createBrowserRouter([
   {
