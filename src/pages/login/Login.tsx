@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label'
 import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 
-
 import NewPassword from '@components/NewPassword/NewPassword'
 import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 
@@ -29,7 +28,7 @@ const Login = () => {
     register,
     handleSubmit,
     isLoading,
-    handleOnClickForForgotPassoword
+    handleOnClickForForgotPassoword,
   } = useLogin()
 
   const onSubmit = (data: LoginFormData) => {
@@ -52,12 +51,17 @@ const Login = () => {
       {isTempPassword ? ( //? Render NewPassword component if isTempPassword is true
         <NewPassword profile_slug={studentSlug} />
       ) : (
-        <div className="flex h-[100dvh] flex-col mx-3">
+        <div className="mx-3 flex h-[100dvh] flex-col">
           <main className="flex h-[100dvh] items-center justify-center bg-black">
-            <div className="w-full max-w-md rounded-lg bg-background p-8 shadow-lg">
-              <h2 className="mb-6 text-center text-2xl font-bold">
-                Login to SmartRoll
-              </h2>
+            <div className="w-full max-w-md rounded-md border border-zinc-700 p-8 shadow-2xl shadow-zinc-800/60">
+              <div className="flex flex-col items-start">
+                <h2 className="mb-2 text-center text-3xl font-bold">
+                  Welcome Back
+                </h2>
+                <h2 className="mb-6 text-center text-lg font-normal text-zinc-400">
+                  Login to SmartRoll
+                </h2>
+              </div>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
@@ -102,16 +106,18 @@ const Login = () => {
                       )}
                     </Button>
                   </div>
-                  <div className='flex justify-end underline cursor-pointer'
-                   onClick={()=>{handleOnClickForForgotPassoword()}}
+                  <div
+                    className="flex cursor-pointer justify-end text-sm text-zinc-400 hover:text-white hover:underline"
+                    onClick={() => {
+                      handleOnClickForForgotPassoword()
+                    }}
                   >
-                  Forgot password
+                    Forgot Password ?
                   </div>
-                  
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? (
-                    <ButtonLoader title="Logging..." />
+                    <ButtonLoader title="Logging In..." />
                   ) : (
                     <button>Login</button>
                   )}

@@ -76,7 +76,7 @@ const ElectiveSubject = () => {
       </Helmet>
       <div className="py-13 bg-gradient-to-b px-4">
         <div className="mx-auto max-w-full">
-          <div className="mb-16 text-center">
+          <div className="mb-8 text-center">
             <h1 className="text-2xl font-bold tracking-tight text-white sm:text-2xl md:text-4xl lg:text-5xl">
               {isSubjectSave && finalizedChoice
                 ? 'Your Finalized Elective Subjects'
@@ -109,7 +109,7 @@ const ElectiveSubject = () => {
                 </div>
               </Alert>
             )}
-            {isSubjectSave && !FinalChoiceLock  &&(
+            {isSubjectSave && !FinalChoiceLock && (
               <Button
                 className="mt-5 w-full bg-white p-2 shadow-md lg:w-auto"
                 onClick={handleOnClickForUnsaveDraft}
@@ -121,7 +121,7 @@ const ElectiveSubject = () => {
           </div>
 
           <div
-            className="group h-96 hidden w-full items-center"
+            className="group hidden h-96 w-full items-center"
             ref={noElectiveSubjectCard}
           >
             <Card className="w-full border-white">
@@ -131,9 +131,9 @@ const ElectiveSubject = () => {
               </CardContent>
             </Card>
           </div>
-          <div className="space-y-10">
+          <div className="space-y-10 py-4">
             {isSubjectSave && finalizedChoice ? (
-              <div className="rounded-2xl border border-zinc-600 p-6 backdrop-blur-sm dark:bg-black lg:p-8">
+              <div className="rounded-2xl border border-zinc-600 p-6 shadow-inner shadow-zinc-700 dark:bg-black lg:p-8">
                 <div className="mb-6">
                   <div className="flex items-center gap-3">
                     <GraduationCap className="h-6 w-6 text-primary" />
@@ -178,12 +178,12 @@ const ElectiveSubject = () => {
                   <div className="rounded-2xl border border-zinc-600 p-6 dark:bg-black lg:p-8">
                     <div className="mb-4">
                       <div className="flex items-center gap-3">
-                        <GraduationCap className="lg:h-6 lg:w-6 w-5 h-5 text-primary" />
-                        <h2 className="lg:text-2xl text-xl font-bold text-white">
+                        <GraduationCap className="h-5 w-5 text-primary lg:h-6 lg:w-6" />
+                        <h2 className="text-xl font-bold text-white lg:text-2xl">
                           {category}
                         </h2>
                       </div>
-                      <p className="mt-2 text-xs lg:text-sm text-gray-400">
+                      <p className="mt-2 text-xs text-gray-400 lg:text-sm">
                         Select one subject from this category
                       </p>
                     </div>
