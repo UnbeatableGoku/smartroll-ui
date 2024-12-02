@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Check, Minus } from 'lucide-react'
+import { Check} from 'lucide-react'
 
 const StudentListForDivision = ({
   divisionsData,

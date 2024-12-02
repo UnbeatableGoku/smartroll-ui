@@ -17,8 +17,6 @@ import {
 import { format } from 'date-fns'
 import {
   CalendarIcon,
-  ChevronDown,
-  ChevronUp,
   GripVertical,
   Lock,
   X,
@@ -47,9 +45,7 @@ const ConfirmSubjectSelection = ({
 }: any) => {
   const [date, setDate] = useState<Date>()
   const [open, setOpen] = useState(false)
-  const [selectedPanelSubject, setSelectedPanelSubject] = useState<
-    string | null
-  >(null)
+  
 
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
@@ -78,26 +74,6 @@ const ConfirmSubjectSelection = ({
     setIsPanelOpen(!isPanelOpen)
   }
 
-  const moveSubject = (direction: 'up' | 'down', index: any) => {
-    const currentIndex = selectedSubjects.findIndex(
-      (s: any) => s.id === selectedPanelSubject,
-    )
-    if (currentIndex === -1) return
-
-    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
-    if (newIndex < 0 || newIndex >= selectedSubjects.length) return
-
-    const newSelectedSubjects = [...selectedSubjects]
-    const [movedSubject] = newSelectedSubjects.splice(currentIndex, 1)
-    newSelectedSubjects.splice(newIndex, 0, movedSubject)
-
-    const subject_slug = selectedSubjects.map((subject: any) => subject.slug)
-    save_teacher_subject_choice(subject_slug)
-  }
-
-  const subjectSelected = (slug: any) => {
-    console.log(slug)
-  }
 
   return (
     <>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { RootState } from '@data/redux/Store'
 import axios from 'axios'
-import { profile } from 'console'
+
 import { get } from 'lodash'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
