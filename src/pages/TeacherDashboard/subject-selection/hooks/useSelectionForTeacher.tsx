@@ -74,6 +74,7 @@ const useSelectionForTeacher = () => {
         setSelectedSubjects(saved_subjects)
         setSaveAsDraft(stream_data.choices_saved)
         getSemensterData(slug)
+        setSubjects(null)
         return
       }
 
@@ -237,7 +238,7 @@ const useSelectionForTeacher = () => {
         setStreamData((prevData) => {
           return prevData.map((stream: StreamInterface) => {
             if (stream.slug == selectedStream) {
-              return { ...stream, choices_saved: true }
+              return { ...stream, choices_saved: true,saved_subjects:check_finalized_choices }
             }
             return stream
           })
@@ -304,8 +305,6 @@ const useSelectionForTeacher = () => {
 
       if (response_obj.error == false) {
         const check = get(response_obj, 'response.data.data', [])
-        console.log('herer', response_obj?.response?.data.data)
-        console.log(check)
         setSelectedSubjects(check)
         setSubjects([])
         setselectedSemester('')

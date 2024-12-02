@@ -30,7 +30,18 @@ const SubjectCard = ({
           : `text-white dark:bg-black`
       } `}
       onClick={() => {
-        isSubjectLock ? null : toggleSubjectSelection(subject)
+        if(isSubjectLock){
+          null
+        }
+        else{
+          if(subject?.similar_subjects && draggable && !selectedSubjects.some((d:any)=>d.slug === subject?.slug)){
+            const stream_codes = subject.similar_subjects.map((data:any)=>{
+              return data.branch_name
+            })
+            alert(`Same subject from\n ${stream_codes.join('\n')} \n will also be selected`)
+          }
+          toggleSubjectSelection(subject)
+        }
       }}
     >
       {draggable &&

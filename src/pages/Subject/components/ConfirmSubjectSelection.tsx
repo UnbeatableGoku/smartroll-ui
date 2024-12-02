@@ -72,7 +72,6 @@ const ConfirmSubjectSelection = ({
         time_stamp,
         notTechSubjects,
       )
-      setIsPanelOpen(false)
     } else {
       save_teacher_subject_choice(subject_slug)
     }
@@ -105,14 +104,14 @@ const ConfirmSubjectSelection = ({
       {/* Overlay */}
       {isPanelOpen && (
         <div
-          className="fixed inset-0 z-20 bg-black bg-opacity-50"
+          className="fixed inset-0 z-20 bg-black bg-opacity-50 w-full"
           onClick={togglePanel}
         />
       )}
 
       {/* Sliding Panel */}
       <div
-        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-background/80 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out sm:w-96 ${
+        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-background/80 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out md:w-[25%] ${
           isPanelOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

@@ -58,7 +58,7 @@ const StudentListForDivision = ({
                     } else {
                       return (
                         <TableCell key={batchName}>
-                          <Minus />{' '}
+                          {/* <Minus />{' '} */}
                           {/* Render Minus icon if the student is not in this batch */}
                         </TableCell>
                       )
@@ -103,9 +103,9 @@ const StudentListForDivision = ({
                 key={division.division}
               >
                 {studentBatchList ? (
-                  <div className="flex flex-col justify-between border border-b p-2 text-xl font-bold lg:flex-row">
+                  <div className="flex text-sm lg:text-xl justify-between border border-b p-2 font-bold">
                     <p>Division - {division.division}</p>
-                    <p>Total Students - {division.students.length} </p>
+                    <p>Students - {division.students.length} </p>
                   </div>
                 ) : null}
                 <div className="h-[500px]">
