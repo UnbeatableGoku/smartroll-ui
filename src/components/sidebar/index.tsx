@@ -3,16 +3,17 @@ import { useMemo } from 'react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { setAuth } from '@data/redux/slices/authSlice'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
-import { LogOut, Menu,UserPen } from 'lucide-react'
+import { LogOut, Menu, UserPen } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { generateSidebarLinks } from '@utils/helpers'
 
+import StackholderProfile from '@components/stackholder/StackholderProfile'
+
 import NotificationDrawer from './NotificationDrawer'
 import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
 import TabLink from './tabLink'
-import StackholderProfile from '@components/stackholder/StackholderProfile'
 
 const Sidebar = () => {
   const dispatch = useDispatch()
@@ -27,8 +28,6 @@ const Sidebar = () => {
     navigate('/login')
   }
 
-  
-
   const {
     activeIndex,
     collapsed,
@@ -37,14 +36,19 @@ const Sidebar = () => {
     setActiveIndex,
     setOpen,
     setSidebarLinks,
-    setIsProfileModalOpen
+    setIsProfileModalOpen,
   } = useSidebarLinkSelector()
 
-
   const menuItems = [
-    { icon: UserPen, label: 'Profile', event: () => {setIsProfileModalOpen(true)}},
-   { icon: LogOut, label: 'Logout', event: handelLogout, alert: false },
- ]
+    {
+      icon: UserPen,
+      label: 'Profile',
+      event: () => {
+        setIsProfileModalOpen(true)
+      },
+    },
+    { icon: LogOut, label: 'Logout', event: handelLogout, alert: false },
+  ]
 
   const validLinks = useMemo(
     () => generateSidebarLinks(setSidebarLinks()),
@@ -60,12 +64,12 @@ const Sidebar = () => {
 
   return (
     <div className="fixed bottom-4 left-0 right-0 flex justify-center">
-      <div className="flex items-center gap-1 rounded-full border border-zinc-300/60 bg-black/80 transition-transform duration-300 ease-in-out hover:scale-105 dark:bg-black">
+      <div className="sh flex items-center gap-1 rounded-lg border border-zinc-700 p-1 shadow-inner shadow-slate-900 backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105 dark:bg-black/40">
         <NotificationDrawer></NotificationDrawer>
         {menuItems.map((item, index) => (
           <button
             key={item.label}
-            className="group relative flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="group relative flex h-11 w-11 items-center justify-center rounded-md text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             onMouseEnter={() => setActiveIndex(index)}
             onMouseLeave={() => setActiveIndex(null)}
             onClick={() => {
@@ -84,14 +88,14 @@ const Sidebar = () => {
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <button
-              className="group relative flex h-12 w-12 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="group relative flex h-12 w-12 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
               aria-label="User Menu"
             >
               <Menu className="h-6 w-6 transition-transform duration-200 ease-in-out group-hover:scale-110" />
             </button>
           </DialogTrigger>
           <VisuallyHidden.Root>
-            <DialogContent className="dark:bg-black sm:max-w-[425px]">
+            <DialogContent className="max-w-[380px] rounded-md border border-zinc-700 shadow-inner shadow-zinc-800 dark:bg-black">
               {/* <DialogHeader >
               <DialogTitle className='dark:text-white'>Options</DialogTitle>
             </DialogHeader> */}
@@ -116,7 +120,12 @@ const Sidebar = () => {
           </VisuallyHidden.Root>
         </Dialog>
       </div>
-      <StackholderProfile isOpen={isProfileModalOpen} onClose={()=>{setIsProfileModalOpen(false)}}></StackholderProfile>
+      <StackholderProfile
+        isOpen={isProfileModalOpen}
+        onClose={() => {
+          setIsProfileModalOpen(false)
+        }}
+      ></StackholderProfile>
     </div>
   )
 }

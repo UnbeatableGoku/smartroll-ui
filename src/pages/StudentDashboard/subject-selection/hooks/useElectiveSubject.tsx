@@ -15,7 +15,7 @@ const useElectiveSubject = () => {
   const [totalCategories, setTotalCategories] = useState<string[]>([])
   const [selectedSubjects, setSelectedSubjects] = useState<Array<{}>>([])
   const [deadline, setDeadline] = useState<string>()
-  const [FinalChoiceLock,setFinalChoiceLock] = useState<boolean>(false)
+  const [FinalChoiceLock, setFinalChoiceLock] = useState<boolean>(false)
 
   //useRef
 
@@ -62,11 +62,8 @@ const useElectiveSubject = () => {
 
         setElectiveSubject(electiveSubjectData)
 
-        if(electiveSubjectData.length == 0){
-          if (!noElectiveSubjectCard.current?.classList.contains('hidden')) {
-              noElectiveSubjectCard?.current?.classList.add('hidden')
-            noElectiveSubjectCard?.current?.classList.remove('flex')
-        }
+        if (!noElectiveSubjectCard.current?.classList.contains('hidden')) {
+          noElectiveSubjectCard?.current?.classList.add('hidden')
         }
 
         // Set finalized choices
@@ -78,14 +75,11 @@ const useElectiveSubject = () => {
           setFinalizedChoice([])
           setIsSubjectSave(false)
         }
-        
-        
       } else {
         toast.error(response_obj.errorMessage?.message)
         if (response_obj.errorMessage?.statusCode === 404) {
           if (noElectiveSubjectCard.current) {
             noElectiveSubjectCard.current.classList.remove('hidden')
-            noElectiveSubjectCard.current.classList.add('flex')
           }
         }
       }

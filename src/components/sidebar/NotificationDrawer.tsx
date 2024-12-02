@@ -1,4 +1,4 @@
-import {  useState } from 'react'
+import { useState } from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -7,16 +7,16 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Bell } from 'lucide-react'
 
-import useNotification from './hooks/useNotification'
 import { Separator } from '@components/ui/separator'
 
+import useNotification from './hooks/useNotification'
 
 interface Notification {
   slug: string
   status: string
   type: string
   message: string
-  type_code : string
+  type_code: string
 }
 
 const NotificationDrawer = () => {
@@ -26,17 +26,15 @@ const NotificationDrawer = () => {
     seenNotifications,
     unSeenNotifications,
     handleOnClickForMarkNotifications,
-    replaceLink
+    replaceLink,
   } = useNotification()
 
-
-  
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"
-          className="group relative flex h-12 w-12 items-center justify-around rounded-full text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          className="group relative flex h-11 w-11 items-center justify-center rounded-md text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           onClick={() => {
             handleOnClickForNotifications()
           }}
@@ -45,11 +43,9 @@ const NotificationDrawer = () => {
           {unSeenNotifications.length > 0 && (
             <Badge
               variant="destructive"
-              className="absolute right-[-4px] top-1 h-5 min-w-[1.25rem] px-1 justify-around"
+              className="absolute right-[-4px] top-1 h-5 min-w-[1.25rem] justify-around px-1"
             >
-             <p>
-              {unSeenNotifications.length}
-            </p> 
+              <p>{unSeenNotifications.length}</p>
             </Badge>
           )}
         </Button>
@@ -74,7 +70,7 @@ const NotificationDrawer = () => {
                   <NotificationItem
                     key={notification.slug}
                     notification={notification}
-                    replace = {replaceLink}
+                    replace={replaceLink}
                   />
                 ))
               ) : (
@@ -101,12 +97,12 @@ const NotificationDrawer = () => {
               {unSeenNotifications.length > 0 ? (
                 unSeenNotifications.map((notification) => (
                   <>
-                  <NotificationItem
-                    key={notification.slug}
-                    notification={notification}
-                    replace = {replaceLink}
-                  />
-                  <Separator></Separator>
+                    <NotificationItem
+                      key={notification.slug}
+                      notification={notification}
+                      replace={replaceLink}
+                    />
+                    <Separator></Separator>
                   </>
                 ))
               ) : (
@@ -122,7 +118,13 @@ const NotificationDrawer = () => {
   )
 }
 
-const NotificationItem = ({ notification,replace }: { notification: Notification,replace:any }) => (
+const NotificationItem = ({
+  notification,
+  replace,
+}: {
+  notification: Notification
+  replace: any
+}) => (
   <div
     className={`flex items-start space-x-4 p-4 ${notification.status === 'seen' ? 'opacity-60' : ''}`}
   >
@@ -131,7 +133,9 @@ const NotificationItem = ({ notification,replace }: { notification: Notification
     />
     <div className="min-w-0 flex-1">
       <p className="text-sm font-medium dark:text-white">{notification.type}</p>
-      <p className="text-sm font-medium dark:text-white">{replace(notification.message,notification.type_code)}</p>
+      <p className="text-sm font-medium dark:text-white">
+        {replace(notification.message, notification.type_code)}
+      </p>
     </div>
   </div>
 )
