@@ -292,7 +292,6 @@ const useSubjectSelection = () => {
         semester_slug: selectedSemester,
         new_deadline_timestamp: new Date(deadLine).getTime() / 1000,
       }
-      console.log(body)
       const response_obj = await CallAPI(
         StoredTokens,
         axiosInstance,
@@ -306,6 +305,22 @@ const useSubjectSelection = () => {
         response_obj.response?.data.data.is_changed
       ) {
         setDeadLine(response_obj.response?.data.data.deadline_timestamp)
+        setunloackSubjectAfterDeadline(false)
+        setSemesterResponse((prevArray:any)=>{
+          return prevArray.map((semester:any)=>{
+              if(semester.slug == selectedSemester)
+              {
+                return {
+                 ...semester,
+                  deadline_reached: response_obj.response?.data.data.is_changed ? false : true,
+                  subject_choice_deadline: deadLine,
+                }
+              }
+              else{
+                return semester
+              }
+          })
+        })
         toast.success('Deadline is successfully updated')
         setOpenDeadlineDailog(!openDeadlineDailog)
       } else {
