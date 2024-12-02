@@ -1,0 +1,35 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main  # Replace with your branch name if different
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'  # Specify your Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the project
+        run: npm run build
+
+      # Notify on success
+      - name: Notify on Success
+        if: success()
+        run: echo "✅ Build succeeded for ${{ github.ref_name }}"
+
+      # Notify on failure
+      - name: Notify on Failure
+        if: failure()
+        run: echo "❌ Build failed for ${{ github.ref_name }}. Check logs for details."
