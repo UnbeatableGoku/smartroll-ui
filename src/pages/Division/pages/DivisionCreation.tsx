@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 
-
 import useDivisionCreation from '../hooks/useDivisionCreation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,9 +9,10 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
-import StudentListForDivision from './StudentListForDivision'
-import DivisionCreationSuggesition from './DivisionCreationSuggesition'
 import { Separator } from '@components/ui/separator'
+
+import DivisionCreationSuggesition from './DivisionCreationSuggesition'
+import StudentListForDivision from './StudentListForDivision'
 
 const DivisionCreation = () => {
   const { stream, handleStream } = useStream()
@@ -43,7 +43,7 @@ const DivisionCreation = () => {
     onDragEnd,
     updateAvailableCounts,
     setRenderStudentList,
-    studentBatchList
+    studentBatchList,
   } = useDivisionCreation()
 
   useEffect(() => {
@@ -53,7 +53,6 @@ const DivisionCreation = () => {
   useEffect(() => {
     updateAvailableCounts()
   }, [divisions])
-
 
   return (
     <div className="mx-auto p-4">
@@ -89,21 +88,23 @@ const DivisionCreation = () => {
         </div>
 
         {renderStudentList && !divisionsAlreadyCreated && (
-          <div className='flex w-full gap-x-4'>
-          <Button
-            className="mt-4 w-full"
-            variant={'destructive'}
-            onClick={() => {setRenderStudentList(!renderStudentList)}}
-          >
-            Change division size 
-          </Button>
-          <Button
-            className="mt-4 w-full"
-            variant={'default'}
-            onClick={() => handelOnClickForSaveDivisions()}
-          >
-            Confirm Divisions
-          </Button>
+          <div className="flex w-full gap-x-4">
+            <Button
+              className="mt-4 w-full"
+              variant={'destructive'}
+              onClick={() => {
+                setRenderStudentList(!renderStudentList)
+              }}
+            >
+              Change division size
+            </Button>
+            <Button
+              className="mt-4 w-full"
+              variant={'default'}
+              onClick={() => handelOnClickForSaveDivisions()}
+            >
+              Confirm Divisions
+            </Button>
           </div>
         )}
         {selectedSemester && !divisionsAlreadyCreated && (
@@ -151,10 +152,14 @@ const DivisionCreation = () => {
                       </ul>
                     )}
                   </Droppable>
-                  <Separator className='mt-4'/>
-                  <div className='flex justify-between mt-1'>
-                    <span className='text-xl font-bold px-4'>Total Students</span>
-                    <span className='text-xl font-bold px-3'>{totalStudentsCount}</span>
+                  <Separator className="mt-4" />
+                  <div className="mt-1 flex justify-between">
+                    <span className="px-4 text-xl font-bold">
+                      Total Students
+                    </span>
+                    <span className="px-3 text-xl font-bold">
+                      {totalStudentsCount}
+                    </span>
                   </div>
                 </div>
               )}
