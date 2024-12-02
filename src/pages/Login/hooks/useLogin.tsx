@@ -119,48 +119,43 @@ const useLogin = () => {
       } else {
         navigate('/login')
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       toast.error(error.message)
     }
-
   }
 
-
-  //function :: handle the forogot password button 
+  //function :: handle the forogot password button
 
   const handleOnClickForForgotPassoword = async () => {
     try {
-      const email = prompt('Please enter the Email address for forgot password')
+      const email = prompt('Please Enter The Email Address For Forgot Password')
       const headers = {
         'Content-Type': 'application/json', // Assuming JSON for login
         'ngrok-skip-browser-warning': 'true',
       }
-    
-      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (email && regex.test(email)) {
-        const response = await axios.post(`${window.base_url}/auth/api/forgot_password/`, { email: email }, { headers: headers })
-        if (response.data.data = true) {
-          toast.success('Email has been sent successfully. Please check your email.')
-        }
 
-      }
-      else {
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+      if (email && regex.test(email)) {
+        const response = await axios.post(
+          `${window.base_url}/auth/api/forgot_password/`,
+          { email: email },
+          { headers: headers },
+        )
+        if ((response.data.data = true)) {
+          toast.success(
+            'Email has been sent successfully. Please check your email.',
+          )
+        }
+      } else {
         return toast.error('Please enter a valid email address')
       }
-
-
-
-
+    } catch (error: any) {
+      if (error.status === 403) {
+        return toast.error('Please try again after 24 hours')
+      }
+      toast.error(error.response.data.message || 'something went wrong')
     }
-    catch (error: any) {
-      if(error.status === 403){
-        return toast.error('Please try again after 24 hours')  
-      }   
-      toast.error(error.response.data.message  || 'something went wrong')
-    }
-
-  } 
+  }
   return {
     studentSlug,
     isTempPassword,
@@ -172,7 +167,7 @@ const useLogin = () => {
     handleLogin,
     redirectLogin,
     setShowPassword,
-    handleOnClickForForgotPassoword
+    handleOnClickForForgotPassoword,
   }
 }
 
