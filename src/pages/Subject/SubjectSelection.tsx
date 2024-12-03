@@ -149,7 +149,7 @@ const SubjectSelection = () => {
             </div>
           )}
           {
-            isSubjectLock &&
+            selectedSemester &&
             <UpdateDeadlineDialog semesterSlug={selectedSemester} deadline={deadLine} setDeadLine={setDeadLine} handleOnClickToUpdateDeadline={handleOnClickToUpdateDeadline} openDeadlineDailog={openDeadlineDailog} setOpenDeadlineDailog={setOpenDeadlineDailog}></UpdateDeadlineDialog> 
           }
           </div>
