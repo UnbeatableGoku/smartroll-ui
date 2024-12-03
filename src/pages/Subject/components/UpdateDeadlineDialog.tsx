@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label"
 
 const UpdateDeadlineDialog = ({deadline,setDeadLine,handleOnClickToUpdateDeadline,openDeadlineDailog,setOpenDeadlineDailog}:any) => {
   return (
-    <div className="mt-5">
+    <div className="mt-3">
     <Dialog open={openDeadlineDailog} onOpenChange={setOpenDeadlineDailog}>
       <DialogTrigger asChild>
         <Button variant="default">Extend Deadline</Button>

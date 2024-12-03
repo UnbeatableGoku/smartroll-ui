@@ -87,7 +87,7 @@ const ConfirmSubjectSelection = ({
 
       {/* Sliding Panel */}
       <div
-        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-background/80 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out md:w-[25%] ${
+        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-background/80 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out lg:w-1/2  ${
           isPanelOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

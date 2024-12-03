@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { BookOpen } from 'lucide-react'
+import { AlertTriangle, BookOpen } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 
 import Selection from '@components/common/form/selectiom/Selection'
@@ -13,6 +13,7 @@ import ConfirmSubjectSelection from './components/ConfirmSubjectSelection'
 import SubjectCard from './components/SubjectCard'
 import useSubjectSelection from './hooks/useSubjectSelection'
 import UpdateDeadlineDialog from './components/UpdateDeadlineDialog'
+import { Alert, AlertTitle } from '@components/ui/alert'
 
 const SubjectSelection = () => {
   const {
@@ -133,25 +134,37 @@ const SubjectSelection = () => {
               </Button>
             </div>
           )}
+          <div className='flex  w-full items-center gap-x-8 justify-center'>
+          
 
           {unlockSubjectAfterDeadline == true && isSubjectLock == true && (
-            <div className="">
+            <div>
               <Button
                 onClick={UnlockSubjectAfterDeadline}
                 className={`z-10 mt-3 w-full lg:w-auto`}
               >
                 <BookOpen className="mr-2 h-4 w-4" />
                 Unlock Subject Selection
-                <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
-                  {selectedSubjects.length}
-                </span>
               </Button>
             </div>
           )}
           {
-            !unlockSubjectAfterDeadline && isSubjectLock &&
+            isSubjectLock &&
             <UpdateDeadlineDialog semesterSlug={selectedSemester} deadline={deadLine} setDeadLine={setDeadLine} handleOnClickToUpdateDeadline={handleOnClickToUpdateDeadline} openDeadlineDailog={openDeadlineDailog} setOpenDeadlineDailog={setOpenDeadlineDailog}></UpdateDeadlineDialog> 
           }
+          </div>
+          
+
+
+              {deadLine && <Alert className="mt-5 w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
+                <div className="">
+                  <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
+                    <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
+                    <span>Decision Deadline : {deadLine} </span>
+                  </AlertTitle>
+                </div>
+              </Alert>}
+            
         </div>
 
         <div className="p-4">
