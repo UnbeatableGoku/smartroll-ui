@@ -84,7 +84,6 @@ const useElectiveSubject = () => {
         }
       }
     } catch (error: any) {
-      console.log(error)
       setIsSubjectSave(false)
       if (!error.response) {
         toast.error(
