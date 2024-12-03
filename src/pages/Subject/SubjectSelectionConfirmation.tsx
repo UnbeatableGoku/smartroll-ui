@@ -380,7 +380,7 @@ const SubjectSelectionConfirmation = () => {
               {students.length > 0 ? (
                 <div className="flex flex-col justify-between border border-b p-2 text-xl font-bold lg:flex-row">
                   <p>Subject - {getSubjectName(selectedSubject)}</p>
-                  <p>Total Stundents - {students.length} </p>
+                  <p>Total Students - {students.length} </p>
                 </div>
               ) : null}
               {students.length > 0 && renderTable(students, 'student')}
