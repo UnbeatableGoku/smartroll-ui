@@ -105,7 +105,7 @@ const useLogin = () => {
   const redirectLogin = () => {
     try {
       if (access_token) {
-        console.log(access_token)
+        
         const decode = jwtDecode<DecodedToken>(access_token)
         if (decode?.obj?.profile?.role === 'admin') {
           navigate('/')
