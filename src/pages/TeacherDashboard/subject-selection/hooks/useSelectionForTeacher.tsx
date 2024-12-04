@@ -6,12 +6,12 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { SelectionResponse, StreamInterface } from 'types/common'
+import { SelectionResponse} from 'types/common'
 
 import useStream from '@components/common/uploadTimeTable/useStream'
 
 const useSelectionForTeacher = () => {
-  const { streamData, setStreamData, stream, handleStream } = useStream()
+  const { stream, handleStream } = useStream()
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const [semesters, setSemesters] = useState<Array<any>>([]) // state to store the list of the semesters
   const [academicYears, setAcademicYears] = useState<Array<any>>([]) // state to strore the list of academic years
@@ -39,61 +39,8 @@ const useSelectionForTeacher = () => {
     try {
       setselectedStream(slug)
       setselectedSemester('')
-      const stream_data: StreamInterface | undefined = streamData.find(
-        (stream: StreamInterface) => stream.slug === slug,
-      )
-
-      if (stream_data == undefined) {
-        return
-      }
-
-      if (stream_data.choices_locked) {
-        //for perment subject choice lock
-        const saved_subjects = stream_data.saved_subjects
-        if (saved_subjects) {
-          setSelectedSubjects(saved_subjects)
-          setSubjects(saved_subjects)
-          if (!noSubjectFoundCard.current?.classList.contains('hidden')) {
-            noSubjectFoundCard.current?.classList.add('hidden')
-          }
-        } else {
-          setSelectedSubjects([])
-          setSubjects([])
-        }
-
-        setSaveAsDraft(stream_data.choices_saved)
-        return setIsSubjectLock(true)
-      }
-
-      setIsSubjectLock(stream_data.choices_locked)
-      if (
-        stream_data.saved_subjects != null &&
-        stream_data.choices_saved == false
-      ) {
-        const saved_subjects = stream_data.saved_subjects
-        setSelectedSubjects(saved_subjects)
-        setSaveAsDraft(stream_data.choices_saved)
-        getSemensterData(slug)
-        setSubjects(null)
-        return
-      }
-
-      if (stream_data.saved_subjects != null && stream_data.choices_saved) {
-        const saved_subjects = stream_data.saved_subjects
-        setSelectedSubjects(saved_subjects)
-        setSubjects(saved_subjects)
-        setSaveAsDraft(stream_data.choices_saved)
-        getSemensterData(slug)
-        return
-      }
-
-      if (stream_data.saved_subjects == null) {
-        setSelectedSubjects([])
-        setSubjects(null)
-        setSaveAsDraft(stream_data.choices_saved)
-        setIsSubjectLock(stream_data.choices_locked)
-      }
-      getSemensterData(slug)
+      getSlectedSubjectDataByStream(slug)
+      
     } catch (error) {
       console.error('Error fetching Semester', error)
       toast.error('Error fetching Semester. See console for more information.')
@@ -101,6 +48,89 @@ const useSelectionForTeacher = () => {
 
     // setSelectedSubjects([])
   }
+
+//function:: to load the selected subjects data
+
+const getSlectedSubjectDataByStream = async(streamId:string)=>{
+  try{
+    const header = {
+      'ngrok-skip-browser-warning': true,
+      Authorization: `Bearer ${StoredTokens.accessToken}`,
+    }
+    const axiosInstance = axios.create()
+    const method = 'get'
+    const endpoint = `/manage/get_saved_subjects_from_stream/${streamId}`
+    const response_obj = await CallAPI(
+      StoredTokens,
+      axiosInstance,
+      endpoint,
+      method,
+      header,
+    )
+
+    if(response_obj.error === false){
+        const stream_data = response_obj?.response?.data.data
+
+        if (stream_data == undefined) {
+          return
+        }
+
+        if (stream_data.choices_locked) {
+          //for perment subject choice lock
+          const saved_subjects = stream_data.saved_subjects
+          if (saved_subjects) {
+            setSelectedSubjects(saved_subjects)
+            setSubjects(saved_subjects)
+            if (!noSubjectFoundCard.current?.classList.contains('hidden')) {
+              noSubjectFoundCard.current?.classList.add('hidden')
+            }
+          } else {
+            setSelectedSubjects([])
+            setSubjects([])
+          }
+
+          setSaveAsDraft(stream_data.choices_saved)
+          return setIsSubjectLock(true)
+        }
+
+        setIsSubjectLock(stream_data.choices_locked)
+        if ( stream_data.saved_subjects != null && stream_data.choices_saved == false) {
+          const saved_subjects = stream_data.saved_subjects
+          setSelectedSubjects(saved_subjects)
+          setSaveAsDraft(stream_data.choices_saved)
+          getSemensterData(streamId)
+          setSubjects(null)
+          return
+        }
+
+        if (stream_data.saved_subjects != null && stream_data.choices_saved) {
+          const saved_subjects = stream_data.saved_subjects
+          setSelectedSubjects(saved_subjects)
+          setSubjects(saved_subjects)
+          setSaveAsDraft(stream_data.choices_saved)
+          getSemensterData(streamId)
+          return
+        }
+
+        if (stream_data.saved_subjects == null) {
+          setSelectedSubjects([])
+          setSubjects(null)
+          setSaveAsDraft(stream_data.choices_saved)
+          setIsSubjectLock(stream_data.choices_locked)
+        }
+        getSemensterData(streamId)
+    }
+    else{
+      toast.error(response_obj.errorMessage?.message)
+    }
+  }
+  catch(error:any){
+    toast.error(error.message|| 'somenting went wrong')
+  }
+}
+
+
+
 
   //fucition to ge the semester data based on the stream (onValuechange of stream)
   const getSemensterData = async (slug: string) => {
@@ -235,14 +265,14 @@ const useSelectionForTeacher = () => {
         )
         setSubjects(check_finalized_choices)
         setSaveAsDraft(true)
-        setStreamData((prevData) => {
-          return prevData.map((stream: StreamInterface) => {
-            if (stream.slug == selectedStream) {
-              return { ...stream, choices_saved: true,saved_subjects:check_finalized_choices }
-            }
-            return stream
-          })
-        })
+        // setStreamData((prevData) => {
+        //   return prevData.map((stream: StreamInterface) => {
+        //     if (stream.slug == selectedStream) {
+        //       return { ...stream, choices_saved: true,saved_subjects:check_finalized_choices }
+        //     }
+        //     return stream
+        //   })
+        // })
         // setIsSubjectLock(true)
         setSelectedSubjects(check_finalized_choices)
         toast.success('Subjects saved successfully')
@@ -308,14 +338,14 @@ const useSelectionForTeacher = () => {
         setSelectedSubjects(check)
         setSubjects([])
         setselectedSemester('')
-        setStreamData((prevData) => {
-          return prevData.map((stream: StreamInterface) => {
-            if (stream.slug == selectedStream) {
-              return { ...stream, choices_saved: false }
-            }
-            return stream
-          })
-        })
+        // setStreamData((prevData) => {
+        //   return prevData.map((stream: StreamInterface) => {
+        //     if (stream.slug == selectedStream) {
+        //       return { ...stream, choices_saved: false }
+        //     }
+        //     return stream
+        //   })
+        // })
         setSaveAsDraft(false)
         toast.success('Now your choice is open to modify subject selection')
         getSemensterData(selectedStream)
