@@ -31,6 +31,7 @@ const DivisionCreation = () => {
     renderStudentList,
     divisionsAlreadyCreated,
     totalStudentsCount,
+    isDeadllineReached,
     setActiveTab,
     handleOnValueChangeOfStream,
     handleOnValueChangeOfSemester,
@@ -164,61 +165,11 @@ const DivisionCreation = () => {
                 </div>
               )}
 
-              {/* {!isSuggesitionAccept && <div>
-                                <h2 className="text-xl font-semibold mb-2">Divisions</h2>
-                                {divisions.length === 0 ? (
-                                    <Button onClick={createDivisions} className="w-full">Create Divisions</Button>
-                                ) : (
-                                    <div className="space-y-4">
-                                        {divisions.map((division) => (
-                                            <Droppable key={division.id} droppableId={division.id}>
-                                                {(provided) => (
-                                                    <Card>
-                                                        <CardHeader>
-                                                            <CardTitle>Division {division.id.split('-')[1]}</CardTitle>
-                                                        </CardHeader>
-                                                        <CardContent>
-                                                            <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2 min-h-[50px]">
-                                                                {division.groups.map((group) => {
-                                                                    const groupDetails = sujectChoiceGroup.find(g => g.slug === group.groupId)
-                                                                    return (
-                                                                        <li key={group.groupId} className="flex items-center justify-between dark:bg-black p-2 rounded">
-                                                                            <span>{groupDetails?.subjects}</span>
-                                                                            <div className="flex items-center space-x-2">
-                                                                                <Input
-                                                                                    type="number"
-                                                                                    value={group.count}
-                                                                                    onChange={(e) => updateGroupCount(division.id, group.groupId, parseInt(e.target.value) || 0)}
-                                                                                    className="w-20"
-                                                                                    min="0"
-                                                                                    max={groupDetails?.totalCount}
-                                                                                />
-                                                                                <Button
-                                                                                    variant="destructive"
-                                                                                    size="icon"
-                                                                                    onClick={() => removeGroupFromDivision(division.id, group.groupId)}
-                                                                                >
-                                                                                    <Minus className="h-4 w-4" />
-                                                                                </Button>
-                                                                            </div>
-                                                                        </li>
-                                                                    )
-                                                                })}
-                                                                {provided.placeholder}
-                                                            </ul>
-                                                        </CardContent>
-                                                    </Card>
-                                                )}
-                                            </Droppable>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>} */}
             </div>
           </DragDropContext>
         )}
 
-        {selectedSemester && !divisionsAlreadyCreated && !renderStudentList && (
+        {selectedSemester && !divisionsAlreadyCreated && !renderStudentList && isDeadllineReached && (
           <div ref={setCapacityDivision}>
             <Card>
               <CardHeader>
@@ -239,6 +190,7 @@ const DivisionCreation = () => {
                         id="maxCount"
                         type="number"
                         value={maxDivisionCapacity}
+                        className='border-white'
                         onChange={(e) => {
                           setMaxDivisionCapacity(e.target.value)
                         }}

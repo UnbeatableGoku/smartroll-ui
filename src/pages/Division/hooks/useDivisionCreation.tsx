@@ -38,6 +38,7 @@ const useDivisionCreation = () => {
   const [divisionsAlreadyCreated, setDivisionsAlreadyCreated] = useState(false)
   const [studentBatchList, setStudentBatchList] = useState<any[]>([])
   const [totalStudentsCount,setTotoalStudentCount] = useState(0)
+  const [isDeadllineReached,setDeadllineReached] = useState<boolean>(false)
   //custom hooks
   const [StoredTokens, CallAPI] = useAPI() // custom hooks that used to call API
   //useRef
@@ -190,10 +191,13 @@ const useDivisionCreation = () => {
           setSubjectChoiceGroup(subjectChoiceGroup)
           setDivisionsAlreadyCreated(false)
         }
+        setDeadllineReached(true)
       } else {
         toast.error(response_obj.errorMessage?.message)
         setSubjectChoiceGroup([])
         setDivisionsAlreadyCreated(false)
+        setDeadllineReached(false)
+        //TODO: to set the state false
       }
     } catch (error: any) {
       toast.error(error.message)
@@ -456,6 +460,7 @@ const useDivisionCreation = () => {
     divisionsAlreadyCreated,
     studentBatchList,
     totalStudentsCount,
+    isDeadllineReached,
     setActiveTab,
     setIsOpenSuggesition,
     setSubjectChoiceGroup,

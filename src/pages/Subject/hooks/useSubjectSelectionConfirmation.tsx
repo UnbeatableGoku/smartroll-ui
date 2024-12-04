@@ -26,6 +26,10 @@ const useSubjectSelectionConfirmation = () => {
   const { semesters, loadSemesterByStream, semesterResponse } = useSemester()
   const [StoredTokens, CallAPI] = useAPI() // custom hooks that used to call API
 
+  //useState to open and close the side panel for teacher to subject map
+  const [openPanelForTeacherToSubjectMap,setOpenPanelForTeacherToSubjectMap] = useState<boolean>(false)
+  const [teacherToSubjectMapData,setTeacherToSubjectMapData] = useState<any[]>([])
+
   //function : handle the value change of the stream
   const handleValueChangeOfStream = (value: string) => {
     setSelectedStream(value)
@@ -236,6 +240,78 @@ const useSubjectSelectionConfirmation = () => {
       toast.error('Something went wrong')
     }
   }
+
+
+
+  //function:: to load the teacher to suject map data by 
+  const handleOnClickForLoadTeacherToSubjectMap = async()=>{
+    try{
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_all_subjects_of_teacher`
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
+
+      if(response_obj.error === false){
+        const checkData = get(response_obj,'response.data.data',[])
+        setTeacherToSubjectMapData(checkData)
+        setOpenPanelForTeacherToSubjectMap(!openPanelForTeacherToSubjectMap)
+      } 
+      else{
+        toast.error(response_obj.errorMessage?.message)
+      }
+    }
+    catch(error:any){
+      toast.error(error.message || 'Something went wrong')
+    }
+  }
+
+
+  //function:: handle the teacher subject choice unlock button
+  const handleOnDeleteTeacherSubjectChoice = async(teacher_slug:any,teacherName:string)=>{
+    try{
+      const axiosInstance = axios.create()
+      const method = 'post'
+      const endpoint = `/manage/unlock_subject_choices_for_teacher/`
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const body = {
+        teacher_slug : teacher_slug
+      }
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+        body
+      )
+
+      if(response_obj.error === false && response_obj.response?.data.data){
+          setTeacherToSubjectMapData((prevData)=>{
+            return prevData.filter((data:any)=>data.teacher.slug != teacher_slug)
+          })
+          toast.success(`Subject choice for facult - ${teacherName} is successfully unlock..!!`)
+      }
+      else{
+        toast.error(response_obj.errorMessage?.message)
+      }
+    }
+    catch(error:any){
+      toast.error(error.message || 'Something went wrong')
+    }
+  }
   return {
     selectedStream,
     selectedSemester,
@@ -246,6 +322,9 @@ const useSubjectSelectionConfirmation = () => {
     complementrySbujects,
     selectedSubjectCategory,
     students,
+    openPanelForTeacherToSubjectMap,
+    teacherToSubjectMapData,
+    setOpenPanelForTeacherToSubjectMap,
     setSelectedSemester,
     setSelectedSubject,
     setSubjects,
@@ -260,6 +339,8 @@ const useSubjectSelectionConfirmation = () => {
     setSelectedSubjectCategory,
     getSubjectName,
     handleOnClickForDeleteSubjectOfStudent,
+    handleOnClickForLoadTeacherToSubjectMap,
+    handleOnDeleteTeacherSubjectChoice
   }
 }
 

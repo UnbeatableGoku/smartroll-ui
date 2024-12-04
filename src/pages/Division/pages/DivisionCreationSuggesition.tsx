@@ -40,15 +40,29 @@ const DivisionCreationSuggesition = ({
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="w-[300px]">
+                          <TableHead className="w-[300px]" rowSpan={2}>
                             Subject Name
                           </TableHead>
-                          <TableHead className="text-center">
+                          <TableHead className="w-auto" rowSpan={2}>
+                            No. divisions
+                          </TableHead>
+                          <TableHead className="text-center" colSpan={3}>
                             Initial Hours
                           </TableHead>
-                          <TableHead className="text-center">
-                            Teaching Hours
+                          <TableHead className="text-center" colSpan={3}>
+                            Final Hours
                           </TableHead>
+                          <TableHead className="w-auto" rowSpan={2}>
+                            Total
+                          </TableHead>
+                        </TableRow>
+                        <TableRow>
+                          <TableHead className="text-center">Theory</TableHead>
+                          <TableHead className="text-center">Tutorial</TableHead>
+                          <TableHead className="text-center">Practical</TableHead>
+                          <TableHead className="text-center">Theory</TableHead>
+                          <TableHead className="text-center">Tutorial</TableHead>
+                          <TableHead className="text-center">Practical</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -57,11 +71,29 @@ const DivisionCreationSuggesition = ({
                             <TableCell className="font-medium">
                               {subject.subject_name}
                             </TableCell>
-                            <TableCell className="text-center">
-                              {subject.initial_hours}
+                            <TableCell className="font-medium text-center">
+                              {subject.total_divisions}
                             </TableCell>
                             <TableCell className="text-center">
-                              {subject.final_hours}
+                              {subject.initial_theory_hours}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {subject.initial_tutorial}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {subject.initial_practical_hours}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {subject.final_theory_hours}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {subject.final_tutorial_hours}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {subject.final_practical_hours}
+                            </TableCell>
+                            <TableCell className="text-center text-lg font-bold">
+                              {subject.final_practical_hours + subject.final_tutorial_hours + subject.final_theory_hours} 
                             </TableCell>
                           </TableRow>
                         ))}
