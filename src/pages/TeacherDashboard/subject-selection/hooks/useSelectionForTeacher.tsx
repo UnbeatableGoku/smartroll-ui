@@ -265,6 +265,7 @@ const getSlectedSubjectDataByStream = async(streamId:string)=>{
         )
         setSubjects(check_finalized_choices)
         setSaveAsDraft(true)
+        setIsSubjectLock(response_obj.response?.data.data.choices_locked)
         // setStreamData((prevData) => {
         //   return prevData.map((stream: StreamInterface) => {
         //     if (stream.slug == selectedStream) {

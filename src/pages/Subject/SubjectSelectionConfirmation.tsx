@@ -71,6 +71,9 @@ const SubjectSelectionConfirmation = () => {
     teacherToSubjectMapData,
     handleOnClickForLoadTeacherToSubjectMap,
     handleOnDeleteTeacherSubjectChoice,
+    handleOnClickForDownloadExcelForTeacherToSubjectMap,
+    downloadTeachetToSubjectMapRef,
+    handleOnClickForDownloadExcelForSubjectToTeacherMap
   } = useSubjectSelectionConfirmation()
 
   useEffect(() => {
@@ -278,7 +281,9 @@ const SubjectSelectionConfirmation = () => {
                   <Button className='lg:w-auto w-full'
                     onClick={()=>{handleOnClickForLoadTeacherToSubjectMap()}}
                   >Teacher to subject map</Button> 
-                  <Button className='lg:w-auto w-full'>Subject to teacher map</Button>
+                  <Button 
+                   onClick={()=>{handleOnClickForDownloadExcelForSubjectToTeacherMap()}}
+                  className='lg:w-auto w-full'>Subject to teacher map</Button>
                 </div>}
             <div className="mt-5 flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
               {/* Stream Selection Card */}
@@ -406,7 +411,7 @@ const SubjectSelectionConfirmation = () => {
           </Tabs>
         </div>
       </div>
-      {teacherToSubjectMapData.length > 0 && <TeacherToSubjectMapPanel openPanelForTeacherToSubjectMap={openPanelForTeacherToSubjectMap} setOpenPanelForTeacherToSubjectMap={setOpenPanelForTeacherToSubjectMap} teacherToSubjectMapData={teacherToSubjectMapData} handleOnDeleteTeacherSubjectChoice={handleOnDeleteTeacherSubjectChoice} ></TeacherToSubjectMapPanel>}
+      {teacherToSubjectMapData.length > 0 && <TeacherToSubjectMapPanel openPanelForTeacherToSubjectMap={openPanelForTeacherToSubjectMap} setOpenPanelForTeacherToSubjectMap={setOpenPanelForTeacherToSubjectMap} teacherToSubjectMapData={teacherToSubjectMapData} handleOnDeleteTeacherSubjectChoice={handleOnDeleteTeacherSubjectChoice} handleOnClickForDownloadExcelForTeacherToSubjectMap={handleOnClickForDownloadExcelForTeacherToSubjectMap} downloadTeachetToSubjectMapRef={downloadTeachetToSubjectMapRef}></TeacherToSubjectMapPanel>}
     </>
   )
 }
