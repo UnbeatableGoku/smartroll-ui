@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import useSelectionForTeacher from '../../hooks/useSelectionForTeacher'
 import ConfirmSubjectSelection from '@pages/Subject/components/ConfirmSubjectSelection'
 import SubjectCard from '@pages/Subject/components/SubjectCard'
 import useSubjectSelection from '@pages/Subject/hooks/useSubjectSelection'
@@ -12,13 +13,10 @@ import { Button } from '@components/ui/button'
 import { Card, CardContent, CardHeader } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
 
-import useSelectionForTeacher from '../../hooks/useSelectionForTeacher'
-
 ConfirmSubjectSelection
 
 const SubjectChoice = () => {
   const { handleSubjectSelection } = useSubjectSelection()
-
 
   const {
     loadSemesterByStreamForTeacher,
@@ -38,15 +36,11 @@ const SubjectChoice = () => {
     choice_deadline,
     saveAsDraft,
     setSaveAsDraft,
-    handleOnClickForUnsaveDraft
+    handleOnClickForUnsaveDraft,
   } = useSelectionForTeacher()
 
   const [isPanelOpen, setIsPanelOpen] = useState(false)
   const togglePanel = () => setIsPanelOpen(!isPanelOpen)
-
-
-
-
 
   return (
     <>
@@ -71,20 +65,18 @@ const SubjectChoice = () => {
                   optionTitle={null}
                 />
 
-              {!isSubjectLock && !saveAsDraft &&
-                <div>
-                  {/* Connecting Lines */}
-                  <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
-                  <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
-                </div>}
-
-            </div>
-
-          )}
-          {
-            !isSubjectLock && !saveAsDraft &&
-            <div className="relative w-full md:w-[240px] lg:w-[320px]">
-              {/* Semester Selection Card */}
+                {!isSubjectLock && !saveAsDraft && (
+                  <div>
+                    {/* Connecting Lines */}
+                    <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
+                    <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
+                  </div>
+                )}
+              </div>
+            )}
+            {!isSubjectLock && !saveAsDraft && (
+              <div className="relative w-full md:w-[240px] lg:w-[320px]">
+                {/* Semester Selection Card */}
 
                 <Selection
                   title="Semester"
@@ -96,69 +88,71 @@ const SubjectChoice = () => {
                   optionTitle={'Semester'}
                 />
               </div>
-            }
+            )}
           </div>
 
-        {!isSubjectLock && !saveAsDraft && selectedSubjects.length > 0 &&
-          <Button onClick={togglePanel} className="mt-3 w-full lg:w-auto">
-            <BookOpen className="mr-2 h-4 w-4" />
-            View subject choices
-            <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
-              {selectedSubjects.length}
-            </span>
-          </Button>}
+          {!isSubjectLock && !saveAsDraft && selectedSubjects.length > 0 && (
+            <Button onClick={togglePanel} className="mt-3 w-full lg:w-auto">
+              <BookOpen className="mr-2 h-4 w-4" />
+              View subject choices
+              <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+                {selectedSubjects.length}
+              </span>
+            </Button>
+          )}
 
-        {!isSubjectLock && saveAsDraft &&
-          <Button className="mt-3 w-full lg:w-auto"
-            onClick={handleOnClickForUnsaveDraft}
-          >
-            <BookOpen className="mr-2 h-4 w-4" />
-            Unsave Draft
-          </Button>}
+          {!isSubjectLock && saveAsDraft && (
+            <Button
+              className="mt-3 w-full lg:w-auto"
+              onClick={handleOnClickForUnsaveDraft}
+            >
+              <BookOpen className="mr-2 h-4 w-4" />
+              Unsave Draft
+            </Button>
+          )}
 
-        {choice_deadline &&  !isSubjectLock &&
-          <Alert className="w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
-            <div className="">
-              <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
-                <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
-                <span>Decision Deadline : {choice_deadline} </span>
-              </AlertTitle>
-            </div>
-          </Alert>
-        }
+          {choice_deadline && !isSubjectLock && (
+            <Alert className="w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
+              <div className="">
+                <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
+                  <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
+                  <span>Decision Deadline : {choice_deadline} </span>
+                </AlertTitle>
+              </div>
+            </Alert>
+          )}
 
+          <div className="group hidden w-full" ref={noSubjectFoundCard}>
+            <Card>
+              <CardHeader className="pb-2"></CardHeader>
+              <CardContent className="text-center">
+                No Subjects are available for this semester.
+              </CardContent>
+            </Card>
+          </div>
 
-        <div className="group w-full hidden" ref={noSubjectFoundCard}>
-          <Card>
-            <CardHeader className="pb-2"></CardHeader>
-            <CardContent className="text-center">
-              No Subjects are available for this semester.
-            </CardContent>
-          </Card>
-        </div>
+          <div className="group hidden w-full" ref={noSubjectFoundCard}>
+            <Card>
+              <CardHeader className="pb-2"></CardHeader>
+              <CardContent className="text-center">
+                The deadline has passed, and you haven't selected any subjects.
+              </CardContent>
+            </Card>
+          </div>
 
-        <div className="group w-full hidden" ref={noSubjectFoundCard}>
-          <Card>
-            <CardHeader className="pb-2"></CardHeader>
-            <CardContent className="text-center">
-            The deadline has passed, and you haven't selected any subjects.
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="w-full p-4">
-          {/* Check if subjects is null or loading */}
-          {subjects === null ? (
-            <div className="flex w-full flex-col items-center gap-4">
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-              <Skeleton className="sm:h-18 h-20 w-full" />
-            </div>
-          ) : // If subjects is not null, display them in the grid
+          <div className="w-full p-4">
+            {/* Check if subjects is null or loading */}
+            {subjects === null ? (
+              <div className="flex w-full flex-col items-center gap-4">
+                <Skeleton className="sm:h-18 h-20 w-full" />
+                <Skeleton className="sm:h-18 h-20 w-full" />
+                <Skeleton className="sm:h-18 h-20 w-full" />
+                <Skeleton className="sm:h-18 h-20 w-full" />
+                <Skeleton className="sm:h-18 h-20 w-full" />
+                <Skeleton className="sm:h-18 h-20 w-full" />
+                <Skeleton className="sm:h-18 h-20 w-full" />
+              </div>
+            ) : // If subjects is not null, display them in the grid
             subjects.length > 0 ? (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {subjects.map((subject, index) => (
