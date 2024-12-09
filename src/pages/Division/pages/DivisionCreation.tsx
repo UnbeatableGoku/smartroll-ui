@@ -154,7 +154,7 @@ const DivisionCreation = () => {
                     )}
                   </Droppable>
                   <Separator className="mt-4" />
-                  <div className="mt-1 flex justify-between">
+                  <div className="mt-3 flex justify-between">
                     <span className="px-4 text-xl font-bold">
                       Total Students
                     </span>
