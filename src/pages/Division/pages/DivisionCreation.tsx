@@ -111,7 +111,7 @@ const DivisionCreation = () => {
         {selectedSemester && !divisionsAlreadyCreated && (
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="flex flex-col gap-4">
-              {!renderStudentList && (
+              {!renderStudentList && totalStudentsCount > 0 && (
                 <div>
                   <h2 className="mb-2 text-xl font-semibold">
                     Subject Choice Groups
@@ -154,14 +154,14 @@ const DivisionCreation = () => {
                     )}
                   </Droppable>
                   <Separator className="mt-4" />
-                  <div className="mt-3 flex justify-between">
+                  {totalStudentsCount > 0 && <div className="mt-3 flex justify-between">
                     <span className="px-4 text-xl font-bold">
                       Total Students
                     </span>
                     <span className="px-3 text-xl font-bold">
                       {totalStudentsCount}
                     </span>
-                  </div>
+                  </div>}
                 </div>
               )}
 

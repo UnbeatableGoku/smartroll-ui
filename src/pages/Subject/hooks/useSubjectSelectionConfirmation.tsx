@@ -234,6 +234,7 @@ const useSubjectSelectionConfirmation = () => {
           //check te student is exist
           return prevData.filter((student: any) => student.slug != student_slug)
         })
+        toast.success('Subject deleted successfully')
       } else {
         toast.error(response_obj.errorMessage?.message)
       }

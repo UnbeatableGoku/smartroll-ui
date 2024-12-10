@@ -49,6 +49,7 @@ const useDivisionCreation = () => {
     setSelectedStream(slug)
     setRenderStudentList(false)
     setMaxDivisionCapacity('')
+    setTotoalStudentCount(0)
     try {
       const axiosInstance = axios.create()
       const method = 'get'
@@ -197,6 +198,7 @@ const useDivisionCreation = () => {
         setSubjectChoiceGroup([])
         setDivisionsAlreadyCreated(false)
         setDeadllineReached(false)
+        setTotoalStudentCount(0)
         //TODO: to set the state false
       }
     } catch (error: any) {
