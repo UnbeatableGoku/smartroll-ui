@@ -200,7 +200,8 @@ const DivisionCreation = () => {
                   <Button
                     type="button"
                     className="w-full"
-                    onClick={() => {
+                    onClick={(e:any) => {
+                        e.preventDefault()
                       handleOnClickForDisplaySuggestion()
                     }}
                   >
