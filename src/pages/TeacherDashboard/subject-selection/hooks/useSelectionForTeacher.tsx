@@ -30,9 +30,9 @@ const useSelectionForTeacher = () => {
   const noSubjectFoundCard = useRef<HTMLDivElement>(null)
   const noSubjectSelectedCard = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    handleStream()
-  }, [])
+  // useEffect(() => {
+  //   handleStream()
+  // }, [])
 
   //function :: load the semester data based on the stream
   const loadSemesterByStreamForTeacher = async (slug: string) => {

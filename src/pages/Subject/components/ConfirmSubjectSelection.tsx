@@ -17,6 +17,8 @@ import {
 import { format } from 'date-fns'
 import {
   CalendarIcon,
+  ChevronDown,
+  ChevronUp,
   GripVertical,
   Lock,
   X,
@@ -42,11 +44,12 @@ const ConfirmSubjectSelection = ({
   isSubjectLock,
   notTechSubjects,
   handleOnCheckForNonTechSubject,
+  moveSubject
 }: any) => {
   const [date, setDate] = useState<Date>()
   const [open, setOpen] = useState(false)
-  
 
+  console.log(selectedSubjects)
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
     setOpen(false)
@@ -69,6 +72,7 @@ const ConfirmSubjectSelection = ({
         notTechSubjects,
       )
     } else {
+      // console.log(subject_slug)
       save_teacher_subject_choice(subject_slug)
     }
     setIsPanelOpen(!isPanelOpen)
@@ -87,14 +91,13 @@ const ConfirmSubjectSelection = ({
 
       {/* Sliding Panel */}
       <div
-        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-background/80 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out lg:w-1/2  ${
-          isPanelOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-background/80 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out lg:w-full  ${isPanelOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         <div className="flex h-full flex-col">
           <div className="border-b p-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Selected Subjects</h2>
+              <h2 className="text-xl lg:text-4xl font-bold">Adjust priority</h2>
               <Button
                 variant="ghost"
                 size="icon"
@@ -112,19 +115,17 @@ const ConfirmSubjectSelection = ({
             <div className="space-y-4">
               {draggable
                 ? selectedSubjects.map((subject: any, index: any) => (
+                  <>
+
                     <Card
                       key={subject.slug}
                       className="group"
-                      draggable
-                      onDragStart={() => onDragStart(index)}
-                      onDragOver={(e) => e.preventDefault()}
-                      onDrop={() => onDrop(index)}
                     >
                       <CardHeader className="pb-2">
                         <div className="flex w-full items-start justify-between">
                           {/* Grip Icon for Draggable Indicator */}
-                          <div className="jus flex w-full items-center space-x-2">
-                            <GripVertical className="cursor-grab text-muted-foreground" />
+                          <div className="flex w-full items-center space-x-2">
+
                             <CardTitle className="flex w-full justify-between gap-x-2 text-lg font-semibold leading-none">
                               <div>{subject.subject_name}</div>
                               <div>
@@ -142,64 +143,91 @@ const ConfirmSubjectSelection = ({
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent className="pb-2">
+                      <CardContent className="pb-2 flex justify-between">
                         <div className="flex flex-col text-sm text-muted-foreground">
+                          <span className='font-bold text-white'>Stream Code - {subject.stream_code}</span>
                           <span>Subject Code - {subject.subject_code}</span>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Badge
+                            variant="secondary"
+                            className={`bg-[#f1141f] ${subject.is_technical ? 'hidden bg-[#ffa31a]' : 'w-20 bg-[#f1141f] dark:text-white'} hover:bg-[#f1141f]/30`}
+                          >
+                            {!subject.is_technical ? 'Non-Tech.' : ''}
+                          </Badge>
+                          <Badge
+                            variant="secondary"
+                            className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
+                          >
+                            Sem -{subject?.sem_year}
+                          </Badge>
                         </div>
                       </CardContent>
                       <CardFooter className="flex justify-between text-xs text-muted-foreground">
                         Type: {subject.category}
-                        <Badge
-                          variant="secondary"
-                          className={`bg-[#f1141f] ${subject.is_technical ? 'hidden bg-[#ffa31a]' : 'w-20 bg-[#f1141f] dark:text-white'} hover:bg-[#f1141f]/30`}
-                        >
-                          {!subject.is_technical ? 'Non-Tech.' : ''}
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
-                        >
-                          Sem -{subject?.sem_year}
-                        </Badge>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="default"
+                            size="icon"
+                            onClick={() => moveSubject(index, "up")}
+                            disabled={index === 0}
+                            aria-label={`Move ${subject.name} up`}
+                            
+                          >
+                            <ChevronUp className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            size="icon"
+                            onClick={() => moveSubject(index, "down")}
+                            disabled={index === selectedSubjects.length - 1}
+                            aria-label={`Move ${subject.name} down`}
+                            // className='bg-white'
+                          >
+                            <ChevronDown className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </CardFooter>
                     </Card>
-                  ))
+                  </>
+                ))
+
                 : selectedSubjects.map((subject: any) => (
-                    <Card key={subject.slug} className="group">
-                      <CardHeader className="pb-2">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              checked={notTechSubjects.includes(subject.slug)}
-                              onCheckedChange={() => {
-                                handleOnCheckForNonTechSubject(subject.slug)
-                              }}
-                            />
-                            <CardTitle className="text-lg font-semibold leading-none">
-                              {subject.subject_name}
-                            </CardTitle>
+                  <Card key={subject.slug} className="group">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            checked={notTechSubjects.includes(subject.slug)}
+                            onCheckedChange={() => {
+                              handleOnCheckForNonTechSubject(subject.slug)
+                            }}
+                          />
+                          <CardTitle className="text-lg font-semibold leading-none">
+                            {subject.subject_name}
+                          </CardTitle>
+                        </div>
+                        {notTechSubjects.includes(subject.slug) ? (
+                          <div className="rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black">
+                            Tech.
                           </div>
-                          {notTechSubjects.includes(subject.slug) ? (
-                            <div className="rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black">
-                              Tech.
-                            </div>
-                          ) : (
-                            <div className="w-24 rounded-full bg-[#e51717] px-2 py-1 text-center text-xs font-semibold text-black dark:text-white">
-                              Non-tech.
-                            </div>
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pb-2">
-                        <div className="flex items-center justify-between text-sm text-muted-foreground">
-                          <span>Subject Code - {subject.subject_code}</span>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="text-xs text-muted-foreground">
-                        Type: {subject.category}
-                      </CardFooter>
-                    </Card>
-                  ))}
+                        ) : (
+                          <div className="w-24 rounded-full bg-[#e51717] px-2 py-1 text-center text-xs font-semibold text-black dark:text-white">
+                            Non-tech.
+                          </div>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pb-2">
+                      <div className="flex items-center justify-between text-sm text-muted-foreground">
+                        <span>Subject Code - {subject.subject_code}</span>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="text-xs text-muted-foreground">
+                      Type: {subject.category}
+                    </CardFooter>
+                  </Card>
+                ))}
             </div>
           </ScrollArea>
 

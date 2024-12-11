@@ -95,7 +95,11 @@ const TeacherToSubjectMapPanel = ({ openPanelForTeacherToSubjectMap, setOpenPane
                                                 <TableRow id={`subjects-${teacher.teacher.slug}`}>
                                                     <TableCell colSpan={4} className="p-0">
                                                         <div className="p-4 dark:bg-black">
-
+                                                        <Button variant={'destructive'} size={'sm'} title='Unclock subject choice' className='w-full flex items-center'
+                                                                                                onClick={() => { confirm(`Are you sure you want to unlock subject choice of ${teacher.teacher.profile.name}`) ? handleOnDeleteTeacherSubjectChoice(teacher.teacher.slug, teacher.teacher.profile.name) : null }}
+                                                                                            >
+                                                                                              <span>Unlock choice </span> <Unlock></Unlock>
+                                                                                            </Button>
                                                             <ScrollArea className="h-auto flex flex-col">
                                                                 {
                                                                     teacher.selected_subjects ?
@@ -105,12 +109,7 @@ const TeacherToSubjectMapPanel = ({ openPanelForTeacherToSubjectMap, setOpenPane
                                                                                     <ul className="mt-4 border px-2 py-2 rounded-sm">
                                                                                         <div className='flex w-full justify-between items-center mb-2'>
                                                                                             <h3 className="mb-2 font-semibold">{stream.stream_name.split('|')[0]}</h3>
-                                                                                            <Button variant={'destructive'} size={'sm'} title='Unclock subject choice'
-                                                                                                onClick={() => { confirm(`Are you sure you want to unlock subject choice of ${teacher.teacher.profile.name}`) ? handleOnDeleteTeacherSubjectChoice(teacher.teacher.slug, teacher.teacher.profile.name,stream.stream_name) : null }}
-                                                                                                disabled = {!stream.choices_locked}
-                                                                                            >
-                                                                                                <Unlock></Unlock>
-                                                                                            </Button>
+                                                                                            
                                                                                         </div>
                                                                                         {stream.subjects.map(
                                                                                             (subject: any, index: any) => (
@@ -134,12 +133,6 @@ const TeacherToSubjectMapPanel = ({ openPanelForTeacherToSubjectMap, setOpenPane
                                                                                     <div className='border px-2 py-2 rounded-sm mt-4'>
                                                                                     <div className='flex w-full justify-between items-center'>
                                                                                     <h3 className="mb-2 font-semibold items-center justify-between">{stream.stream_name.split('|')[0]}</h3>
-                                                                                    <Button variant={'destructive'} title='Unclock subject choice'
-                                                                                        onClick={() => { confirm(`Are you sure you want to unlock subject choice of ${teacher.teacher.profile.name}`) ? handleOnDeleteTeacherSubjectChoice(teacher.teacher.slug, teacher.teacher.profile.name,stream.stream_name) : null }}
-                                                                                        disabled = {!stream.choices_locked}
-                                                                                    >
-                                                                                        <Unlock></Unlock>
-                                                                                    </Button>
                                                                                     </div>
                                                                                     <div className='text-center w-full mt-1 rounded border bg-background p-2'>No Subject choice found</div>
                                                                                     </div>

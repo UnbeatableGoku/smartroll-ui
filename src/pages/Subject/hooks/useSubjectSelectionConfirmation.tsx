@@ -290,7 +290,6 @@ const useSubjectSelectionConfirmation = () => {
       }
       const body = {
         teacher_slug : teacher_slug,
-        stream_slug : stream.split('|')[1]
       }
       const response_obj = await CallAPI(
         StoredTokens,

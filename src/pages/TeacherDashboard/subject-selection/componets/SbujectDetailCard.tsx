@@ -1,24 +1,22 @@
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Badge } from '@components/ui/badge'
+import { Card, CardContent, CardHeader } from '@components/ui/card'
 import { DownloadCloud } from 'lucide-react'
 
+
+
+
+
 interface CourseCardProps {
-  toggleSubjectSelection: (subject: any) => void
-  subject: any
-  selectedSubjects: string[]
-  isSubjectLock: any
-  setIsSubjectLock: any
-  draggable: boolean
-  index: number
-}
-const SubjectCard = ({
-  subject,
-  toggleSubjectSelection,
-  selectedSubjects,
-  isSubjectLock,
-  draggable = false,
-  index,
-}: CourseCardProps) => {
+    toggleSubjectSelection: (subject: any) => void
+    subject: any
+    selectedSubjects: Array<[]>
+    isSubjectLock: any
+    setIsSubjectLock: any
+    index: number,
+  }
+
+const SbujectDetailCard = ({subject,toggleSubjectSelection,selectedSubjects,isSubjectLock,index}:CourseCardProps) => {
+    
   return (
     <Card
       key={subject.slug}
@@ -34,7 +32,7 @@ const SubjectCard = ({
           null
         }
         else{
-          if(subject?.similar_subjects && draggable && !selectedSubjects.some((d:any)=>d.slug === subject?.slug)){
+          if(subject?.similar_subjects && !selectedSubjects.some((d:any)=>d.slug === subject?.slug)){
             const stream_codes = subject.similar_subjects.map((data:any)=>{
               return data.branch_name
             })
@@ -44,7 +42,7 @@ const SubjectCard = ({
         }
       }}
     >
-      {draggable && isSubjectLock &&
+      {isSubjectLock &&
         selectedSubjects.some(
           (selectedsubject: any) => selectedsubject.slug === subject.slug,
         ) && (
@@ -52,7 +50,7 @@ const SubjectCard = ({
             <div
               className={`absolute right-2 ${subject?.is_technical != null ? (subject?.is_technical ? 'top-2' : 'top-9') : 'top-2'} top-6 rounded-full bg-[#ffa31a] px-2 py-1 text-xs font-semibold text-black`}
             >
-              Priority - {index + 1}
+             Priority - {subject.priority}
             </div>
             <div>
               {subject?.is_technical != null && (
@@ -67,7 +65,7 @@ const SubjectCard = ({
           </>
         )}
 
-      {draggable && (
+      
         <div>
           {subject?.is_technical != null && (
             <div
@@ -78,24 +76,9 @@ const SubjectCard = ({
             </div>
           )}
         </div>
-      )}
+      
 
-      {!draggable &&
-        isSubjectLock &&
-        selectedSubjects.some(
-          (selectedsubject: any) => selectedsubject.slug === subject.slug,
-        ) && (
-          <div>
-            {subject?.is_technical != null && (
-              <div
-                className={`absolute right-2 top-2 rounded-full ${subject?.is_technical ? 'hidden bg-[#ffa31a]' : 'bg-[#e3103a] text-white'} px-2 py-1 text-xs font-semibold text-black`}
-              >
-                {/* Your label or content here */}
-                {subject?.is_technical ? 'Tech' : 'Non-tech'}
-              </div>
-            )}
-          </div>
-        )}
+      
 
       <CardHeader className="mt-0 flex flex-row items-center justify-between px-3 pb-0 lg:mt-3 lg:px-6 lg:pb-3">
         <h2 className="text-sm font-bold tracking-tight md:text-xl">
@@ -103,7 +86,7 @@ const SubjectCard = ({
         </h2>
       </CardHeader>
       <CardContent className="space-y-2 px-3 py-3 lg:space-y-6 lg:px-6 lg:py-6">
-        <p className="hidden text-lg font-normal sm:block md:block lg:block">
+        <p className="hidden text-2xl font-bold sm:block md:block lg:block">
           Sem : {subject.sem_year}
         </p>
         <div className="flex flex-row justify-between gap-4">
@@ -138,6 +121,7 @@ const SubjectCard = ({
         <div className="w-full justify-between">
           <div className="w-full">
             <div className="flex w-full flex-row gap-x-3 text-center">
+                {/* display the subject total  L T P and total */}
               <div className="flex w-2/5 justify-around rounded-lg bg-white/10 p-2">
                 <div>
                   <p className="text-sm font-medium text-white/60">L</p>
@@ -158,7 +142,7 @@ const SubjectCard = ({
                   </p>
                 </div>
               </div>
-
+                {/* display the subject total  E M I V and total */}
               <div className="flex w-3/5 justify-around rounded-lg bg-white/10 p-2">
                 <div>
                   <p className="text-sm font-medium text-white/60">E</p>
@@ -216,4 +200,4 @@ const SubjectCard = ({
   )
 }
 
-export default SubjectCard
+export default SbujectDetailCard
