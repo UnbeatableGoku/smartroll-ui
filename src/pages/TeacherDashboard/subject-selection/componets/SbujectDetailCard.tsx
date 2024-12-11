@@ -15,7 +15,7 @@ interface CourseCardProps {
     index: number,
   }
 
-const SbujectDetailCard = ({subject,toggleSubjectSelection,selectedSubjects,isSubjectLock,index}:CourseCardProps) => {
+const SbujectDetailCard = ({subject,toggleSubjectSelection,selectedSubjects,isSubjectLock}:CourseCardProps) => {
     
   return (
     <Card

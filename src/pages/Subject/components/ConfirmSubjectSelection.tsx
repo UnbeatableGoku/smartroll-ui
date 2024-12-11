@@ -19,7 +19,6 @@ import {
   CalendarIcon,
   ChevronDown,
   ChevronUp,
-  GripVertical,
   Lock,
   X,
 } from 'lucide-react'
@@ -38,8 +37,6 @@ const ConfirmSubjectSelection = ({
   selectedSubjects,
   handleSubjectSelection,
   draggable = false,
-  onDrop,
-  setDraggedIndex,
   save_teacher_subject_choice,
   isSubjectLock,
   notTechSubjects,
@@ -55,10 +52,7 @@ const ConfirmSubjectSelection = ({
     setOpen(false)
   }
 
-  // Handle drag start
-  const onDragStart = (index: number) => {
-    setDraggedIndex(index)
-  }
+ 
 
   const onHandleClick = () => {
     const subject_slug = selectedSubjects.map((subject: any) => subject.slug)

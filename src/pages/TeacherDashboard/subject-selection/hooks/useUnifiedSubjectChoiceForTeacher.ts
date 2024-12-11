@@ -16,7 +16,7 @@ const useUnifiedSubjectChoiceForTeacher = () => {
     const [availableSubjects,setAvailableSubjects] = useState<Array<[]>>([])
     const [deadLineData,setDeadlineData] = useState<string | null>(null)
     const [saveSubjectDraft,setSaveSubjectDraft] = useState<boolean>(false)
-    const [selectedSubjects, setSelectedSubjects] = useState<any[]>([]);
+    const [selectedSubjects] = useState<any[]>([]);
     const [saveSubjectFinalLock,setSaveSubjectFinalLock] = useState<boolean>(false)
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 

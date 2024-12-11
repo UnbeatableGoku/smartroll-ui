@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import axios from 'axios'
 import { get } from 'lodash'
@@ -11,7 +11,7 @@ import { SelectionResponse} from 'types/common'
 import useStream from '@components/common/uploadTimeTable/useStream'
 
 const useSelectionForTeacher = () => {
-  const { stream, handleStream } = useStream()
+  const { stream} = useStream()
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const [semesters, setSemesters] = useState<Array<any>>([]) // state to store the list of the semesters
   const [academicYears, setAcademicYears] = useState<Array<any>>([]) // state to strore the list of academic years
