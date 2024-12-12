@@ -185,17 +185,16 @@ const SbujectDetailCard = ({subject,toggleSubjectSelection,selectedSubjects,isSu
             <DialogTrigger asChild>
               <Button variant="outline" className="gap-2" size={'sm'}>
                 <FileText className="h-4 w-4" />
-                View teachers
+                Other faculties
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle className='dark:text-white text-xl'>Show teacher list</DialogTitle>
+                <DialogTitle className='dark:text-white text-xl'>{subject.subject_name}</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <ScrollArea className='h-64'>
                 <div className="space-y-4">
-                  <h3 className="font-medium dark:text-white">{subject.subject_name} </h3>
                   <ul className="list-disc pl-4 space-y-2 dark:text-white">
                     {
                      subject.teachers ?  subject.teachers.map((teacher:any)=>(
