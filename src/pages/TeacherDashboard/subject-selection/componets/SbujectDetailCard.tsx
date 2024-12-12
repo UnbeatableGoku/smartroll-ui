@@ -1,6 +1,9 @@
 import { Badge } from '@components/ui/badge'
+import { Button } from '@components/ui/button'
 import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { DownloadCloud } from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@components/ui/dialog'
+import { ScrollArea } from '@components/ui/scroll-area'
+import { DownloadCloud, FileText } from 'lucide-react'
 
 
 
@@ -176,8 +179,39 @@ const SbujectDetailCard = ({subject,toggleSubjectSelection,selectedSubjects,isSu
             className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
           >
             {subject?.category}
+            
           </Badge>
-
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2" size={'sm'}>
+                <FileText className="h-4 w-4" />
+                View teachers
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle className='dark:text-white text-xl'>Show teacher list</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <ScrollArea className='h-64'>
+                <div className="space-y-4">
+                  <h3 className="font-medium dark:text-white">{subject.subject_name} </h3>
+                  <ul className="list-disc pl-4 space-y-2 dark:text-white">
+                    {
+                     subject.teachers ?  subject.teachers.map((teacher:any)=>(
+                        <li>{teacher.profile__name} </li>
+                      )) : (
+                        <li>No teacher have selected this subject </li>
+                      )
+                    }
+                    
+                    
+                  </ul>
+                </div>
+                </ScrollArea>
+              </div>
+            </DialogContent>
+          </Dialog>
           <Badge
             variant="secondary"
             className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
