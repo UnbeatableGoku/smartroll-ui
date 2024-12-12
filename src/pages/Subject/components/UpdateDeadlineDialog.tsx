@@ -17,10 +17,10 @@ import { Label } from "@/components/ui/label"
 
 const UpdateDeadlineDialog = ({deadline,setDeadLine,handleOnClickToUpdateDeadline,openDeadlineDailog,setOpenDeadlineDailog}:any) => {
   return (
-    <div className="mt-3">
+    <div className="mt-3 w-full">
     <Dialog open={openDeadlineDailog} onOpenChange={setOpenDeadlineDailog}>
       <DialogTrigger asChild>
-        <Button variant="default">Extend Deadline</Button>
+        <Button variant="default" className="w-full">Extend Deadline</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>

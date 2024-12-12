@@ -402,6 +402,35 @@ const useSubjectSelectionConfirmation = () => {
     }
 }
 
+const handleOnClickForLoadStudentToSubjectMap = async(semester_slug:string)=>{
+  try{
+    const axiosInstance = axios.create()
+    const method = 'get'
+    const endpoint = `/manage/get_student_to_subject_excel/${semester_slug}`
+    const header = {
+      'ngrok-skip-browser-warning': true,
+      Authorization: `Bearer ${StoredTokens.accessToken}`,
+    }
+    const response_obj = await CallAPI(
+      StoredTokens,
+      axiosInstance,
+      endpoint,
+      method,
+      header,
+    )
+
+    if(response_obj.error === false){
+      console.log(response_obj.response)
+      downloadExcelFile(response_obj.response?.data?.data?.file_content,response_obj.response?.data?.data?.file_name)
+    }
+    else{
+      toast.error(response_obj.errorMessage?.message)
+    }
+  }
+  catch(error:any){
+    toast.error(error.message || 'Something went wrong')
+  }
+}
   const downloadExcelFile = (base64String:string,filename:string) => {
     // Decode base64 string into binary
     const byteCharacters = atob(base64String); // decode base64 to raw binary
@@ -465,7 +494,8 @@ const useSubjectSelectionConfirmation = () => {
     handleOnDeleteTeacherSubjectChoice,
     handleOnClickForDownloadExcelForTeacherToSubjectMap,
     downloadTeachetToSubjectMapRef,
-    handleOnClickForDownloadExcelForSubjectToTeacherMap
+    handleOnClickForDownloadExcelForSubjectToTeacherMap,
+    handleOnClickForLoadStudentToSubjectMap
   }
 }
 

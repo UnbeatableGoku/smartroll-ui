@@ -10,6 +10,7 @@ import useUnifiedSubjectChoiceForTeacher from '../../hooks/useUnifiedSubjectChoi
 import SbujectDetailCard from '../../componets/SbujectDetailCard'
 import ConfirmSubjectSelection from '@pages/Subject/components/ConfirmSubjectSelection'
 import useSubjectSelection from '@pages/Subject/hooks/useSubjectSelection'
+import FilterOption from '../../componets/FilterOption'
 const UnifiedSubjectChoice = () => {
     const { handleSubjectSelection } = useSubjectSelection()
     const {
@@ -33,7 +34,9 @@ const UnifiedSubjectChoice = () => {
             <div className="flex flex-col flex-wrap items-center justify-evenly space-y-5 lg:flex-col">
 
 
-
+            <div className=''>
+            <FilterOption availableSubjects={availableSubjects}></FilterOption>
+            </div>
 
                 {deadLineData && !saveSubjectFinalLock &&
                     <Alert className="w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
@@ -96,8 +99,8 @@ const UnifiedSubjectChoice = () => {
                     ) : (
                         // Render available subjects
                         availableSubjects.map((stream: any) => (
-                            <div key={stream.stream} className='rounded-sm mb-14'>
-                                <div className='text-lg lg:text-4xl font-bold px-2 py-10 text-center'>{stream.stream}</div>
+                            <div key={stream.stream} className='rounded-sm mb-14' id={stream.stream}>
+                                <div className='text-2xl lg:text-4xl font-extrabold px-2 py-10 text-center'>{stream.stream}</div>
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 px-2 py-2">
                                     {stream.subjects.map((subject: any, subjectIndex: number) => (
                                         <SbujectDetailCard

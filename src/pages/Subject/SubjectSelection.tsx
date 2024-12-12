@@ -120,11 +120,19 @@ const SubjectSelection = () => {
               />
             </div>
           </div>
+          {deadLine && <Alert className="mt-5 w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
+                <div className="">
+                  <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
+                    <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
+                    <span>Decision Deadline : {deadLine} </span>
+                  </AlertTitle>
+                </div>
+              </Alert>}
           {isSubjectLock == false && selectedSubjects.length > 0 && (
-            <div className={`${isSubjectLock ? 'hidden' : 'block'}`}>
+            <div className={`${isSubjectLock ? 'hidden' : 'block'} w-full`}>
               <Button
                 onClick={togglePanel}
-                className={`z-10 mt-3 w-full lg:w-auto`}
+                className={`z-10 mt-3 w-full`}
               >
                 <BookOpen className="mr-2 h-4 w-4" />
                 Lock Subjects
@@ -134,14 +142,14 @@ const SubjectSelection = () => {
               </Button>
             </div>
           )}
-          <div className='flex  w-full items-center gap-x-8 justify-center'>
+          <div className='flex flex-col  w-full items-center gap-x-8 justify-center'>
           
 
           {unlockSubjectAfterDeadline == true && isSubjectLock == true && (
-            <div>
+            <div className='w-full'>
               <Button
                 onClick={UnlockSubjectAfterDeadline}
-                className={`z-10 mt-3 w-full lg:w-auto`}
+                className={`z-10 mt-3 w-full`}
               >
                 <BookOpen className="mr-2 h-4 w-4" />
                 Unlock Subject Selection
@@ -156,14 +164,7 @@ const SubjectSelection = () => {
           
 
 
-              {deadLine && <Alert className="mt-5 w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
-                <div className="">
-                  <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
-                    <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
-                    <span>Decision Deadline : {deadLine} </span>
-                  </AlertTitle>
-                </div>
-              </Alert>}
+            
             
         </div>
 
