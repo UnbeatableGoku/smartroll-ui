@@ -11,7 +11,8 @@ import StudentDivision from '@pages/StudentDashboard/student-division/pages/Stud
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
 import SubjectSelection from '@pages/Subject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
-import SubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/SubjectChoice'
+
+import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
 import { Navigate } from 'react-router-dom'
@@ -169,7 +170,7 @@ const router = createBrowserRouter([
             index: true,
             element: (
               <ProtectedRoute roleRequired="teacher">
-                <SubjectChoice />
+                <UnifiedSubjectChoice></UnifiedSubjectChoice>
               </ProtectedRoute>
             ),
           },

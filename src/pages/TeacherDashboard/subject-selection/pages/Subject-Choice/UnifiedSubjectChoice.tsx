@@ -61,7 +61,7 @@ const UnifiedSubjectChoice = () => {
                         onClick={handleOnClickForUnsaveDraft}
                     >
                         <BookOpen className="mr-2 h-4 w-4" />
-                        Unsave Draft
+                        Unsave subject choice
                     </Button>}
                 <div className="group w-full hidden" ref={noSubjectFoundCard}>
                     <Card>
@@ -97,7 +97,7 @@ const UnifiedSubjectChoice = () => {
                         // Render available subjects
                         availableSubjects.map((stream: any) => (
                             <div key={stream.stream} className='rounded-sm mb-14'>
-                                <div className='text-4xl font-bold px-2 py-10 text-center'>{stream.stream}</div>
+                                <div className='text-lg lg:text-4xl font-bold px-2 py-10 text-center'>{stream.stream}</div>
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 px-2 py-2">
                                     {stream.subjects.map((subject: any, subjectIndex: number) => (
                                         <SbujectDetailCard
