@@ -25,7 +25,7 @@ const MainLayout = () => {
           <div className="relative flex w-full flex-col">
             <Header />
 
-            <main className="h-100 mx-auto w-full overflow-y-auto bg-shade p-2 dark:bg-black lg:p-8">
+            <main className="h-screen mx-auto w-full overflow-y-auto p-2 dark:bg-black lg:p-8">
               <Outlet />
             </main>
             <Sidebar />
