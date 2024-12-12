@@ -97,7 +97,7 @@ const ConfirmSubjectSelection = ({
         <div className="flex h-full flex-col">
           <div className="border-b p-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl lg:text-4xl font-bold">Adjust priority</h2>
+              <h2 className="text-xl lg:text-4xl font-bold">Adjust Priority By Drag & Drop</h2>
               <Button
                 variant="ghost"
                 size="icon"
@@ -268,7 +268,7 @@ const ConfirmSubjectSelection = ({
               }}
             >
               <Lock className="mr-2 h-4 w-4" />
-              {draggable ? 'Save As Draft' : 'Lock Subject'}
+              {draggable ? 'Save Choices' : 'Lock Subject'}
             </Button>
           </div>
         </div>

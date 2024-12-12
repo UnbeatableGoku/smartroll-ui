@@ -93,7 +93,7 @@ const ElectiveSubject = () => {
                 className="mt-6 w-full bg-white p-2 shadow-md lg:w-auto"
               >
                 <BookOpen className="mr-2 h-4 w-4" />
-                View choices
+                View Choices
                 <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
                   {selectedSubjects.length}
                 </span>
