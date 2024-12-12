@@ -17,8 +17,7 @@ import {
 import { format } from 'date-fns'
 import {
   CalendarIcon,
-  ChevronDown,
-  ChevronUp,
+  GripVertical,
   Lock,
   X,
 } from 'lucide-react'
@@ -28,7 +27,7 @@ import { cn } from '@utils'
 import { Badge } from '@components/ui/badge'
 import { Checkbox } from '@components/ui/checkbox'
 import { ScrollArea } from '@components/ui/scroll-area'
-
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 const ConfirmSubjectSelection = ({
   isPanelOpen,
   setIsPanelOpen,
@@ -41,9 +40,10 @@ const ConfirmSubjectSelection = ({
   isSubjectLock,
   notTechSubjects,
   handleOnCheckForNonTechSubject,
-  moveSubject,
   similarSubjects,
-  subjectList
+  subjectList,
+  onDragEnd,
+  
 }: any) => {
   const [date, setDate] = useState<Date>()
   const [open, setOpen] = useState(false)
@@ -55,6 +55,8 @@ const ConfirmSubjectSelection = ({
   }
 
  
+  
+
 
   const onHandleClick = () => {
     const subject_slug = selectedSubjects.map((subject: any) => subject.slug)
@@ -112,80 +114,79 @@ const ConfirmSubjectSelection = ({
           <ScrollArea className="flex-grow p-4">
             <div className="space-y-4">
               {draggable
-                ?subjectList.map((subject: any, index: any) => (
-                    <Card
-                      key={subject.slug}
-                      className="group"
-                    >
-                      <CardHeader className="pb-2">
-                        <div className="flex w-full items-start justify-between">
-                          {/* Grip Icon for Draggable Indicator */}
-                          <div className="flex w-full items-center space-x-2">
-
-                            <CardTitle className="flex w-full justify-between gap-x-2 text-lg font-semibold leading-none">
-                              <div>{subject.subject_name}</div>
-                              <div>
-                                <Badge
-                                  variant="secondary"
-                                  className={`bg-[#ffa31a] hover:bg-[#ffa31a]/70 dark:text-black`}
-                                >
-                                  <span className="hidden lg:block">
-                                    Priority -{' '}
-                                  </span>{' '}
-                                  {index + 1}
-                                </Badge>
+                ? (
+                  <DragDropContext onDragEnd={onDragEnd}>
+                  <Droppable droppableId="subjects">
+                    {(provided) => (
+                      <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+                        {subjectList.map((subject:any, index:number) => (
+                          <Draggable key={subject.slug} draggableId={subject.slug} index={index}>
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                className={`${snapshot.isDragging ? 'shadow-lg' : ''}`}
+                              >
+                                <Card className="group">
+                                  <CardHeader className="pb-2">
+                                    <div className="flex w-full items-start justify-between">
+                                      <div className="flex w-full items-center space-x-2">
+                                        <div {...provided.dragHandleProps}>
+                                          <GripVertical className="cursor-grab text-muted-foreground" />
+                                        </div>
+                                        <CardTitle className="flex w-full justify-between gap-x-2 text-lg lg:text-lg font-bold leading-none">
+                                          <div>{subject.subject_name}</div>
+                                          <div>
+                                            <Badge
+                                              variant="secondary"
+                                              className={`bg-[#ffa31a] hover:bg-[#ffa31a]/70 dark:text-black`}
+                                            >
+                                              <span className="hidden lg:block">
+                                                Priority -{' '}
+                                              </span>{' '}
+                                              {index + 1}
+                                            </Badge>
+                                          </div>
+                                        </CardTitle>
+                                      </div>
+                                    </div>
+                                  </CardHeader>
+                                  <CardContent className="pb-2 flex justify-between">
+                                    <div className="flex flex-col lg:flex-row lg:space-x-4 text-sm text-muted-foreground">
+                                    
+                                      <span className='font-semibold text-white text-xs lg:text-sm'>Stream Code - {subject.stream_code + '  | '}</span> 
+                                      <span className='font-semibold text-white text-xs lg:text-sm'>Subject Code - {subject.subject_code + '  | '}</span> 
+                                      <span className='text-xs lg:text-sm'>Type: {subject.category}</span> 
+                                    </div>
+                                    <div className="flex space-x-2">
+                                      <Badge
+                                        variant="secondary"
+                                        className={`bg-[#f1141f] ${subject.is_technical ? 'hidden bg-[#ffa31a]' : 'w-20 bg-[#f1141f] dark:text-white'} hover:bg-[#f1141f]/30`}
+                                      >
+                                        {!subject.is_technical ? 'Non-Tech.' : ''}
+                                      </Badge>
+                                      <Badge
+                                        variant="secondary"
+                                        className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
+                                      >
+                                        Sem -{subject?.sem_year}
+                                      </Badge>
+                                    </div>
+                                  </CardContent>
+                                  {/* <CardFooter className="flex justify-between text-xs text-muted-foreground">
+                                    <span>Type: {subject.category}</span>
+                                  </CardFooter> */}
+                                </Card>
                               </div>
-                            </CardTitle>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pb-2 flex justify-between">
-                        <div className="flex flex-col text-sm text-muted-foreground">
-                          <span className='font-bold text-white'>Stream Code - {subject.stream_code}</span>
-                          <span>Subject Code - {subject.subject_code}</span>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Badge
-                            variant="secondary"
-                            className={`bg-[#f1141f] ${subject.is_technical ? 'hidden bg-[#ffa31a]' : 'w-20 bg-[#f1141f] dark:text-white'} hover:bg-[#f1141f]/30`}
-                          >
-                            {!subject.is_technical ? 'Non-Tech.' : ''}
-                          </Badge>
-                          <Badge
-                            variant="secondary"
-                            className="bg-blue-500/20 text-blue-200 hover:bg-blue-500/30"
-                          >
-                            Sem -{subject?.sem_year}
-                          </Badge>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="flex justify-between text-xs text-muted-foreground">
-                        Type: {subject.category}{subject.slug}
-                        <div className="flex space-x-2">
-                          <Button
-                            variant="default"
-                            size="icon"
-                            onClick={() => moveSubject(index, "up")}
-                            disabled={index === 0}
-                            aria-label={`Move ${subject.name} up`}
-                            
-                          >
-                            <ChevronUp className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="secondary"
-                            size="icon"
-                            onClick={() => moveSubject(index, "down")}
-                            disabled={index === selectedSubjects.length - 1}
-                            aria-label={`Move ${subject.name} down`}
-                            // className='bg-white'
-                          >
-                            <ChevronDown className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </CardFooter>
-                    </Card>
-                ))
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+                )
 
                 : selectedSubjects.map((subject: any) => (
                   <Card key={subject.slug} className="group">

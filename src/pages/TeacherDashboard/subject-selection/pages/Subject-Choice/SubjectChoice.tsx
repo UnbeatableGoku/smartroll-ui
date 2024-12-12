@@ -207,93 +207,93 @@
 // export default SubjectChoice
 
 
-import { useState } from "react";
-import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  closestCorners,
-} from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable } from "@dnd-kit/sortable";
+// import { useState } from "react";
+// import {
+//   DndContext,
+//   KeyboardSensor,
+//   PointerSensor,
+//   useSensor,
+//   useSensors,
+//   closestCorners,
+// } from "@dnd-kit/core";
+// import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable } from "@dnd-kit/sortable";
 
-import {
+// import {
   
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+//   verticalListSortingStrategy,
+// } from "@dnd-kit/sortable";
 
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import "./App.css";
+// import { restrictToParentElement } from "@dnd-kit/modifiers";
+// import "./App.css";
 
-export default function App() {
+// export default function App() {
 
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({id});
+//   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({id});
 
-  const [tasks, setTasks] = useState([
-    { id: 1, title: "Add tests to homepage" },
-    { id: 2, title: "Fix styling in about section" },
-    { id: 3, title: "Learn how to center a div" },
-    { id: 4, title: "Another task example" },
-    { id: 5, title: "Test scrolling functionality" },
-  ]);
+//   const [tasks, setTasks] = useState([
+//     { id: 1, title: "Add tests to homepage" },
+//     { id: 2, title: "Fix styling in about section" },
+//     { id: 3, title: "Learn how to center a div" },
+//     { id: 4, title: "Another task example" },
+//     { id: 5, title: "Test scrolling functionality" },
+//   ]);
 
-  const addTask = (title:any) => {
-    setTasks((tasks) => [...tasks, { id: tasks.length + 1, title }]);
-  };
+//   const addTask = (title:any) => {
+//     setTasks((tasks) => [...tasks, { id: tasks.length + 1, title }]);
+//   };
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+//   const sensors = useSensors(
+//     useSensor(PointerSensor),
+//     useSensor(KeyboardSensor, {
+//       coordinateGetter: sortableKeyboardCoordinates,
+//     })
+//   );
 
-  const getTaskPos = (id:any) => tasks.findIndex((task) => task.id === id);
+//   const getTaskPos = (id:any) => tasks.findIndex((task) => task.id === id);
 
-  const handleDragEnd = (event:any) => {
-    const { active, over } = event;
+//   const handleDragEnd = (event:any) => {
+//     const { active, over } = event;
 
-    if (!over || active.id === over.id) return;
+//     if (!over || active.id === over.id) return;
 
-    setTasks((tasks) => {
-      const originalPos = getTaskPos(active.id);
-      const newPos = getTaskPos(over.id);
+//     setTasks((tasks) => {
+//       const originalPos = getTaskPos(active.id);
+//       const newPos = getTaskPos(over.id);
 
-      return arrayMove(tasks, originalPos, newPos);
-    });
-  };
+//       return arrayMove(tasks, originalPos, newPos);
+//     });
+//   };
 
-  return (
-    <div className="App">
-      <h1>My Tasks ✅</h1>
-      <Input onSubmit={addTask} />
-      <div className="scroll-container">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCorners}
-          modifiers={[restrictToParentElement]}
-          onDragEnd={handleDragEnd}
-          autoScroll={true}// Enable auto-scrolling near edges
-        >
-         <div className="column">
-            <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
-            {tasks.map((task) => (
-           <div
-           ref={setNodeRef}
-           style={style}
-           {...attributes}
-           {...listeners}
-           className="task"
-         >
-           <input type="checkbox" className="checkbox" />
-           {title}
-         </div>
-        ))}
-      </SortableContext>
-    </div>
-        </DndContext>
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div className="App">
+//       <h1>My Tasks ✅</h1>
+//       <Input onSubmit={addTask} />
+//       <div className="scroll-container">
+//         <DndContext
+//           sensors={sensors}
+//           collisionDetection={closestCorners}
+//           modifiers={[restrictToParentElement]}
+//           onDragEnd={handleDragEnd}
+//           autoScroll={true}// Enable auto-scrolling near edges
+//         >
+//          <div className="column">
+//             <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
+//             {tasks.map((task) => (
+//            <div
+//            ref={setNodeRef}
+//            style={style}
+//            {...attributes}
+//            {...listeners}
+//            className="task"
+//          >
+//            <input type="checkbox" className="checkbox" />
+//            {title}
+//          </div>
+//         ))}
+//       </SortableContext>
+//     </div>
+//         </DndContext>
+//       </div>
+//     </div>
+//   );
+// }

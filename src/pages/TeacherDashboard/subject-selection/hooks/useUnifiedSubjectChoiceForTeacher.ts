@@ -63,9 +63,15 @@ const useUnifiedSubjectChoiceForTeacher = () => {
             }
           }
         })
+
+        const sortedSaveSubjects = savedSubjectsObjs.map((streamObj:any) => ({
+          ...streamObj,
+          subjects: streamObj.subjects.sort((a:any, b:any) => a.priority - b.priority),
+        }));
         setSimilarSubjects(similar_subject)
         setSaveSubjects(sortedSubjects)
-        setAvailableSubjects(savedSubjectsObjs)
+
+        setAvailableSubjects(sortedSaveSubjects)
         setActiveSection(savedSubjectsObjs[0].stream)
       }
 
@@ -88,7 +94,11 @@ const useUnifiedSubjectChoiceForTeacher = () => {
         setSimilarSubjects(similar_subject)
         setSaveSubjects(sortedSubjects)
         const availableSubhjectsObjs = get(response_obj, 'response.data.data.subject_choices.available_subjects', [])
-        setAvailableSubjects(availableSubhjectsObjs)
+        const sortedAvailableSubjects = availableSubhjectsObjs.map((streamObj:any) => ({
+          ...streamObj,
+          subjects: streamObj.subjects.sort((a:any, b:any) => a.priority - b.priority),
+        }));
+        setAvailableSubjects(sortedAvailableSubjects)
         setActiveSection(availableSubhjectsObjs[0].stream)
       }
     }
@@ -169,10 +179,9 @@ const useUnifiedSubjectChoiceForTeacher = () => {
   //function :: to darg and drop the selected subjects from setSelectedSubjects
   const onDrop = (index: number) => {
     if (draggedIndex !== null) {
-      const updatedSubjects = [...savedSubjects]
+      const updatedSubjects = [...subjectList]
       const [movedSubject] = updatedSubjects.splice(draggedIndex, 1)
       updatedSubjects.splice(index, 0, movedSubject)
-      console.log(updatedSubjects)
       setSaveSubjects(updatedSubjects)
       setDraggedIndex(null)
     }
@@ -216,9 +225,14 @@ const useUnifiedSubjectChoiceForTeacher = () => {
           }
         })
 
+        const sortedSaveSubjects = savedSubjectObjs.map((streamObj:any) => ({
+          ...streamObj,
+          subjects: streamObj.subjects.sort((a:any, b:any) => a.priority - b.priority),
+        }));
+
         setSimilarSubjects(similar_subject)
         setSaveSubjects(sortedSubjects)
-        setAvailableSubjects(savedSubjectObjs)
+        setAvailableSubjects(sortedSaveSubjects)
         setActiveSection(savedSubjectObjs[0].stream)
 
         // setSaveSubjects(check_finalized_choices)
@@ -286,14 +300,18 @@ const useUnifiedSubjectChoiceForTeacher = () => {
         setSimilarSubjects(similar_subject)
         setSaveSubjects(sortedSubjects)
         const availableSubjectobjs = get(response_obj, 'response.data.data.subject_choices.available_subjects', [])
-
-        setAvailableSubjects(availableSubjectobjs)
+        const sortedAvailableSubjects = availableSubjectobjs.map((streamObj:any) => ({
+          ...streamObj,
+          subjects: streamObj.subjects.sort((a:any, b:any) => a.priority - b.priority),
+        }));
+        setAvailableSubjects(sortedAvailableSubjects)
         setActiveSection(availableSubjectobjs[0].stream)
         toast.success('Now your choice is open to modify subject selection')
       } else {
         toast.error(response_obj.errorMessage?.message)
       }
     } catch (error: any) {
+      console.error(error)
       console.error('Error fetching Semester', error)
       toast.error(error.message)
     }
@@ -309,6 +327,34 @@ const useUnifiedSubjectChoiceForTeacher = () => {
     console.log(final_subjects)
     setSubjectList(final_subjects)
     setIsPanelOpen(!isPanelOpen)
+  }
+
+  const onDragEnd = (result: any) => {
+    if (!result.destination) {
+      return
+    }
+
+    const items = Array.from(subjectList)
+    const [reorderedItem] = items.splice(result.source.index, 1)
+    items.splice(result.destination.index, 0, reorderedItem)
+
+    setSubjectList(items)
+  }
+
+  const moveSubjectDrag = (index: number, direction: "up" | "down") => {
+    if (
+      (direction === "up" && index === 0) ||
+      (direction === "down" && index === subjectList.length - 1)
+    ) {
+      return
+    }
+
+    const newSubjects = [...subjectList]
+    const newIndex = direction === "up" ? index - 1 : index + 1
+    const [movedSubject] = newSubjects.splice(index, 1)
+    newSubjects.splice(newIndex, 0, movedSubject)
+
+    setSubjectList(newSubjects)
   }
 
   return {
@@ -332,9 +378,12 @@ const useUnifiedSubjectChoiceForTeacher = () => {
     setIsPanelOpen,
     subjectList,
     activeSection,
-    setActiveSection
+    setActiveSection,
+    onDragEnd,
+    moveSubjectDrag
   }
 }
+
 
 
 

@@ -16,7 +16,7 @@ interface CourseCardProps {
     similarSubjects: Array<[]>
   }
 
-const SbujectDetailCard = ({subject,toggleSubjectSelection,selectedSubjects,isSubjectLock,similarSubjects}:CourseCardProps) => {
+const SbujectDetailCard = ({subject,toggleSubjectSelection,selectedSubjects,isSubjectLock}:CourseCardProps) => {
     
   return (
     <Card

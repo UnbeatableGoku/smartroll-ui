@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect} from 'react'
 import useSelectionForTeacher from '../../hooks/useSelectionForTeacher'
 import { Helmet } from 'react-helmet'
 import { Button } from '@components/ui/button'
@@ -22,7 +22,7 @@ const UnifiedSubjectChoice = () => {
 
     // custom hooks to handle the teacher subject choice actios
 
-    const { availableSubjects, deadLineData, saveSubjectDraft, saveSubjectFinalLock, savedSubjects, toggleSubjectSelection, onDrop, setDraggedIndex, save_teacher_subject_choice, moveSubject, handleOnClickForUnsaveDraft,similarSubjects,togglePanel,isPanelOpen,setIsPanelOpen,subjectList,activeSection,setActiveSection} = useUnifiedSubjectChoiceForTeacher()
+    const { availableSubjects, deadLineData, saveSubjectDraft, saveSubjectFinalLock, savedSubjects, toggleSubjectSelection, onDrop, setDraggedIndex, save_teacher_subject_choice, moveSubject, handleOnClickForUnsaveDraft,similarSubjects,togglePanel,isPanelOpen,setIsPanelOpen,subjectList,activeSection,setActiveSection,onDragEnd,moveSubjectDrag} = useUnifiedSubjectChoiceForTeacher()
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -42,9 +42,8 @@ const UnifiedSubjectChoice = () => {
         })
     
         return () => observer.disconnect()
-      }, [])
+      }, [availableSubjects])
     
-    console.log(savedSubjects)
     return (
         <>
             <Helmet>
@@ -65,7 +64,7 @@ const UnifiedSubjectChoice = () => {
               }`}
               onClick={(e) => {
                 e.preventDefault()
-                setActiveSection(item.streaminging)
+                setActiveSection(item.stream)
                 document.getElementById(item.stream)?.scrollIntoView({
                   behavior: 'smooth'
                 })
@@ -142,8 +141,8 @@ const UnifiedSubjectChoice = () => {
                     ) : (
                         // Render available subjects
                         availableSubjects.map((stream: any) => (
-                            <div key={stream.stream} className='rounded-sm mb-14' id={stream.stream}>
-                                <div className='text-2xl lg:text-4xl font-extrabold px-2 py-10 text-center'>{stream.stream}</div>
+                            <div key={stream.stream} className='rounded-sm mb-14'>
+                                <div className='text-2xl lg:text-4xl font-extrabold px-2 py-10 text-center' id={stream.stream}>{stream.stream}</div>
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 px-2 py-2">
                                     {stream.subjects.map((subject: any, subjectIndex: number) => (
                                         <SbujectDetailCard
@@ -178,6 +177,9 @@ const UnifiedSubjectChoice = () => {
                     moveSubject={moveSubject}
                     similarSubjects = {similarSubjects}
                     subjectList = {subjectList}
+                    onDragEnd ={onDragEnd}
+                    moveSubjectDrag={moveSubjectDrag}
+                    
                 ></ConfirmSubjectSelection>}
             </div>
         </>
