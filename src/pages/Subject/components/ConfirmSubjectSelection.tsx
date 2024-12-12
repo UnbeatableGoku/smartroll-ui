@@ -41,12 +41,14 @@ const ConfirmSubjectSelection = ({
   isSubjectLock,
   notTechSubjects,
   handleOnCheckForNonTechSubject,
-  moveSubject
+  moveSubject,
+  similarSubjects,
+  subjectList
 }: any) => {
   const [date, setDate] = useState<Date>()
   const [open, setOpen] = useState(false)
 
-  console.log(selectedSubjects)
+  
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
     setOpen(false)
@@ -66,8 +68,10 @@ const ConfirmSubjectSelection = ({
         notTechSubjects,
       )
     } else {
-      // console.log(subject_slug)
-      save_teacher_subject_choice(subject_slug)
+      const similar_subject_slug = similarSubjects.map((subject:any)=> subject.slug)
+      const subject_slug_lst = subjectList.map((subject:any)=> subject.slug )
+      const final_subject_slug_lst = subject_slug_lst.concat(similar_subject_slug)
+      save_teacher_subject_choice(final_subject_slug_lst)
     }
     setIsPanelOpen(!isPanelOpen)
   }
@@ -108,9 +112,7 @@ const ConfirmSubjectSelection = ({
           <ScrollArea className="flex-grow p-4">
             <div className="space-y-4">
               {draggable
-                ? selectedSubjects.map((subject: any, index: any) => (
-                  <>
-
+                ?subjectList.map((subject: any, index: any) => (
                     <Card
                       key={subject.slug}
                       className="group"
@@ -158,7 +160,7 @@ const ConfirmSubjectSelection = ({
                         </div>
                       </CardContent>
                       <CardFooter className="flex justify-between text-xs text-muted-foreground">
-                        Type: {subject.category}
+                        Type: {subject.category}{subject.slug}
                         <div className="flex space-x-2">
                           <Button
                             variant="default"
@@ -183,7 +185,6 @@ const ConfirmSubjectSelection = ({
                         </div>
                       </CardFooter>
                     </Card>
-                  </>
                 ))
 
                 : selectedSubjects.map((subject: any) => (
