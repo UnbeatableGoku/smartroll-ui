@@ -7,13 +7,16 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@components/ui/button'
 import { Check} from 'lucide-react'
 
 const StudentListForDivision = ({
   divisionsData,
   setActiveTab,
   activeTab,
-  studentBatchList
+  studentBatchList,
+  handleOnClickForDownloadExcel,
+  divisionsAlreadyCreated
 }: any) => {
   const renderTable = (data: any) => {
     return (
@@ -102,6 +105,11 @@ const StudentListForDivision = ({
                 className="mt-4 overflow-hidden"
                 key={division.division}
               >
+                {divisionsAlreadyCreated && <Button className='w-full my-4'
+                  onClick={(e)=>{e.preventDefault();handleOnClickForDownloadExcel(division.division)}}
+                >
+                  Download Divison Excel
+                </Button>}
                 {studentBatchList ? (
                   <div className="flex text-sm lg:text-xl justify-between border border-b p-2 font-bold">
                     <p>Division - {division.division}</p>
@@ -121,3 +129,5 @@ const StudentListForDivision = ({
 }
 
 export default StudentListForDivision
+
+

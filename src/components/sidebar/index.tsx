@@ -63,8 +63,8 @@ const Sidebar = () => {
   )
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 flex justify-center">
-      <div className="sh flex items-center gap-1 rounded-lg border border-zinc-700 p-1 shadow-inner shadow-slate-900 backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105 dark:bg-black/40">
+    <div className="fixed bottom-4 left-0 right-0 flex justify-center" style={{'pointerEvents':'none'}}>
+      <div className="sh flex items-center gap-1 rounded-lg border border-zinc-700 p-1 shadow-inner shadow-slate-900 backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105 dark:bg-black/40" style={{'pointerEvents':'auto'}}>
         <NotificationDrawer></NotificationDrawer>
         {menuItems.map((item, index) => (
           <button

@@ -15,7 +15,7 @@ const StackholderProfile = ({ isOpen, onClose }: ProfileModalProps) => {
     if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" style={{'pointerEvents':'auto'}}> 
     <Card className="w-full max-w-2xl bg-zinc-900 border-zinc-800 relative">
       <Button
         className="absolute right-2 top-2 text-zinc-400 hover:text-white"

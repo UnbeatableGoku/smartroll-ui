@@ -22,7 +22,8 @@ const useSidebarLinkSelector = () => {
       //   'TIMETABLE',
       'SUBJECT-SELECT',
       'SUBJECT_SELECTION_CONFIRMATION',
-      'DIVISION_CREATION'
+      'DIVISION_CREATION',
+      'SUBJECT_ALLOCATION'
     ],
     teacher: ['SUBJECT-CHOICE'],
     student: ['ELECTIVE_SUBJECT', 'STUDENT_DIVISION'],

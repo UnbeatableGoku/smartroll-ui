@@ -446,6 +446,75 @@ const useDivisionCreation = () => {
     setSubjectChoiceGroup(updatedGroups)
   }
 
+  const handleOnClickForDownloadExcel = async(division_name:string)=>{
+    try{
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_division_student_data_excel`
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const params = {
+          semester_slug : selectedSemester,
+          division_name : division_name
+      }
+      console.log(params)
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+        null,
+        params
+      )
+  
+      if(response_obj.error === false){
+        console.log(response_obj.response)
+        downloadExcelFile(response_obj.response?.data?.data?.file_content,response_obj.response?.data?.data?.file_name)
+      }
+      else{
+        toast.error(response_obj.errorMessage?.message)
+      }
+    }
+    catch(error:any){
+      toast.error(error.message || 'Something went wrong')
+    }
+  }
+
+  const downloadExcelFile = (base64String:string,filename:string) => {
+    // Decode base64 string into binary
+    const byteCharacters = atob(base64String); // decode base64 to raw binary
+    const byteArrays = [];
+
+    // Convert the binary string into a byte array
+    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+      const slice = byteCharacters.slice(offset, offset + 1024);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      byteArrays.push(new Uint8Array(byteNumbers));
+    }
+
+    // Create a Blob from the byte array
+    const blob = new Blob(byteArrays, { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Create an anchor element for download
+     // Create an anchor element for download
+     const link = document.createElement('a');
+     link.href = URL.createObjectURL(blob);
+     link.download = filename; // Specify the file name
+     document.body.appendChild(link);
+     
+     // Trigger the click event to download
+     link.click();
+     
+     // Clean up by removing the link element
+     document.body.removeChild(link);
+  };
+
   return {
     selectedStream,
     divisions,
@@ -479,7 +548,8 @@ const useDivisionCreation = () => {
     removeGroupFromDivision,
     updateAvailableCounts,
     setDivisionsAlreadyCreated,
-    setRenderStudentList
+    setRenderStudentList,
+    handleOnClickForDownloadExcel
   }
 }
 

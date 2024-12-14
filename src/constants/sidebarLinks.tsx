@@ -115,6 +115,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     ),
     path: '/division-creation',
   },
+  {
+    id: 'SUBJECT_ALLOCATION',
+    name: 'Subject Allocation',
+    icon: (
+      <SquareCheck
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/admin/subject-allocation',
+  },
 
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]

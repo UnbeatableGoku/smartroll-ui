@@ -11,7 +11,7 @@ import StudentDivision from '@pages/StudentDashboard/student-division/pages/Stud
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
 import SubjectSelection from '@pages/Subject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
-
+import TeacherAllocation from '@pages/SubjectAllocation/pages/TeacherAllocation'
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
@@ -31,6 +31,7 @@ import {
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
+  SUBJECT_ALLOCATION
 } from '@constants'
 
 
@@ -222,6 +223,24 @@ const router = createBrowserRouter([
           },
         ],
       },
+
+      //Teacher Allocation
+      {
+        path: SUBJECT_ALLOCATION.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="admin">
+                <TeacherAllocation />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+
     ],
   },
   { path: '*', element: <NotFound /> },

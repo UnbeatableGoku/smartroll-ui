@@ -77,6 +77,12 @@ export const FORGOT_PASSWORD: Page = {
   path: '/update_password',
   name: 'forgot-password',
 }
+
+export const SUBJECT_ALLOCATION:Page = {
+  id: 'SUBJECT_ALLOCATION',
+  path: '/admin/subject-allocation',
+  name: 'Subject Allocation'
+}
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES

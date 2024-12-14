@@ -45,6 +45,7 @@ const DivisionCreation = () => {
     updateAvailableCounts,
     setRenderStudentList,
     studentBatchList,
+    handleOnClickForDownloadExcel
   } = useDivisionCreation()
 
   useEffect(() => {
@@ -220,6 +221,8 @@ const DivisionCreation = () => {
             setActiveTab={setActiveTab}
             handelOnClickForSaveDivisions={handelOnClickForSaveDivisions}
             studentBatchList={studentBatchList}
+            handleOnClickForDownloadExcel={handleOnClickForDownloadExcel}
+            divisionsAlreadyCreated={divisionsAlreadyCreated}
           ></StudentListForDivision>
         )}
       </div>

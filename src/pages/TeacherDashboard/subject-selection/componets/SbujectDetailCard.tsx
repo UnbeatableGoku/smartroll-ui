@@ -183,7 +183,9 @@ const SbujectDetailCard = ({subject,toggleSubjectSelection,selectedSubjects,isSu
           </Badge>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="gap-2" size={'sm'}>
+              <Button variant="outline" className="gap-2" size={'sm'}
+                onClick={(e:any)=>e.stopPropagation()}
+              >
                 <FileText className="h-4 w-4" />
                 Other faculties
               </Button>
@@ -193,11 +195,11 @@ const SbujectDetailCard = ({subject,toggleSubjectSelection,selectedSubjects,isSu
                 <DialogTitle className='dark:text-white text-xl'>{subject.subject_name}</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <ScrollArea className='h-64'>
+                <ScrollArea className={`${subject.teachers.length > 0 ? 'h-64':'h-auto'} `}>
                 <div className="space-y-4">
                   <ul className="list-disc pl-4 space-y-2 dark:text-white">
                     {
-                     subject.teachers ?  subject.teachers.map((teacher:any)=>(
+                     subject.teachers.length > 0 ?  subject.teachers.map((teacher:any)=>(
                         <li>{teacher.profile__name} </li>
                       )) : (
                         <li>No teacher have selected this subject </li>
