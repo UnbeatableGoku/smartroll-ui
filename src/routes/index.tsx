@@ -14,6 +14,7 @@ import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirm
 import TeacherAllocation from '@pages/SubjectAllocation/pages/TeacherAllocation'
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
+import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAllocation'
 import ErrorPage from '@pages/errorPage'
 import { Navigate } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
@@ -31,7 +32,8 @@ import {
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
-  SUBJECT_ALLOCATION
+  SUBJECT_ALLOCATION,
+  LOAD_ALLOCATION_FOR_TEACHER_END
 } from '@constants'
 
 
@@ -224,7 +226,7 @@ const router = createBrowserRouter([
         ],
       },
 
-      //Teacher Allocation
+      //subject load Allocation (admin side)
       {
         path: SUBJECT_ALLOCATION.path,
 
@@ -241,6 +243,22 @@ const router = createBrowserRouter([
         ],
       },
 
+      //subject load Allocation (teacher view)
+      {
+        path: LOAD_ALLOCATION_FOR_TEACHER_END.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="teacher">
+                <LoadAllocation />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
     ],
   },
   { path: '*', element: <NotFound /> },

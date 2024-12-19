@@ -127,6 +127,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     ),
     path: '/admin/subject-allocation',
   },
+  {
+    id: 'LOAD_ALLOCATION_FOR_TEACHER_END',
+    name: 'Load allocation',
+    icon: (
+      <SquareCheck
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-dashboard/load-allocation',
+  },
 
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]

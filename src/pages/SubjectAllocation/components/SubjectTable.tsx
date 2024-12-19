@@ -110,7 +110,7 @@ const SubjectTable = ({ SubjectToTeacherAllocation, handleOnChangeManageHoursFor
             </Table>
 
             <Sheet open={!!selectedSubject} onOpenChange={() => {setSelectedSubject(null);setSaveStateButton(false)}}>
-                <SheetContent className='sm:max-w-[540px] pb-10'>
+                <SheetContent className='w-full sm:max-w-xl pb-10'>
                     <SheetHeader>
                         <SheetTitle>{selectedSubject?.subject.subject_name}</SheetTitle>
                     </SheetHeader>

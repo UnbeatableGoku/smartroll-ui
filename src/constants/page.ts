@@ -83,6 +83,11 @@ export const SUBJECT_ALLOCATION:Page = {
   path: '/admin/subject-allocation',
   name: 'Subject Allocation'
 }
+export const LOAD_ALLOCATION_FOR_TEACHER_END:Page = {
+  id: 'LOAD_LOAD_ALLOCATION_FOR_TEACHER_END',
+  path: '/teacher-dashboard/load-allocation',
+  name: 'Load allocation'
+}
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES

@@ -25,7 +25,7 @@ const useSidebarLinkSelector = () => {
       'DIVISION_CREATION',
       'SUBJECT_ALLOCATION'
     ],
-    teacher: ['SUBJECT-CHOICE'],
+    teacher: ['SUBJECT-CHOICE','LOAD_ALLOCATION_FOR_TEACHER_END'],
     student: ['ELECTIVE_SUBJECT', 'STUDENT_DIVISION'],
   }
 

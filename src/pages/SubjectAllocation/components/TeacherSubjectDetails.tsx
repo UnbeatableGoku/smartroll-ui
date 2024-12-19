@@ -36,7 +36,7 @@ const TeacherSubjectDetails = ({selectedTeacher,}:any) => {
 
       
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full my-10">
       <TabsList className="w-full flex">
         <TabsTrigger value="theory" className='w-full'>Theory</TabsTrigger>
         <TabsTrigger value="lab" className='w-full'>Lab</TabsTrigger>

@@ -10,10 +10,6 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import TeacherSubjectDetails from './TeacherSubjectDetails'
 import { TeacherToSubjectMap } from 'types/common'
-import { PlusCircle } from 'lucide-react'
-import { Button } from '@components/ui/button'
-
-
 
 interface props {
     TeacherToSubjectAllocation: TeacherToSubjectMap[] | null
@@ -73,14 +69,11 @@ const TeacherSubjectTable = ({ TeacherToSubjectAllocation,setSelectedTeacher,sel
             </Table>
 
             <Sheet open={!!selectedTeacher} onOpenChange={() => setSelectedTeacher(null)}>
-                <SheetContent className='sm:max-w-[540px]'>
+                <SheetContent className='w-full sm:max-w-xl pb-10'>
                     <SheetHeader>
                         <SheetTitle>{selectedTeacher?.teacher.profile.name}</SheetTitle>
                     </SheetHeader>
                     {selectedTeacher && (<>
-                        <Button className="mt-4 w-full">
-                            <PlusCircle className="mr-2 h-4 w-4" /> Add Teacher
-                        </Button>
                         <TeacherSubjectDetails
                             selectedTeacher={selectedTeacher}
                             selectedTeacherSlug = {selectedTeacherSlug}
