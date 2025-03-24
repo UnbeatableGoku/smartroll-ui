@@ -29,10 +29,21 @@ export const PAGE_SUBJECT_CHOICE: Page = {
   path: '/teacher-dashboard/subject-choice',
   name: 'subject-choice',
 }
+export const PAGE_TEACHER_ALLOCATION: Page = {
+  id: 'TEACHER_ALLOCATION',
+  path: '/subject/teacher-allocation',
+  name: 'Teacher Allocation',
+}
 export const PAGE_ELECTIVE_SUBJECT: Page = {
   id: 'ELECTIVE_SUBJECT',
   path: '/student-dashboard/elective-subject',
   name: 'Elective Subject',
+}
+
+export const PAGE_STUDENT_DIVISION: Page = {
+  id: 'STUDENT_DIVISION',
+  path: '/student-dashboard/division',
+  name: 'Student Division',
 }
 
 export const PAGE_STUDENT_DASHBOARD: Page = {
@@ -63,6 +74,13 @@ export const DIVISION_CREATION: Page = {
   id: 'DIVISION_CREATION',
   path: '/division-creation',
   name: 'division-creation',
+}
+
+export const FORGOT_PASSWORD: Page = {
+  // update_password
+  id: 'FORGOT_PASSWORD',
+  path: '/update_password',
+  name: 'forgot-password',
 }
 /**
  * --------------------------------------------------------------------------

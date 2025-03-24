@@ -1,5 +1,5 @@
 import { DashboardIcon, UserIcon } from '@icons'
-import { BookCheck, LibraryBig } from 'lucide-react'
+import { BookCheck, LibraryBig, UsersRound } from 'lucide-react'
 
 import { SidebarLink } from 'types/common'
 
@@ -61,6 +61,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     path: '/student-dashboard/elective-subject',
   },
   {
+    id: 'STUDENT_DIVISION',
+    name: 'Division',
+    icon: (
+      <UsersRound
+        className="h-26 w-26 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/student-dashboard/division',
+  },
+  {
     id: 'SUBJECT-CHOICE',
     name: 'Subject-Choice',
     icon: (
@@ -71,6 +83,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
       />
     ),
     path: '/subject-choice',
+  },
+  {
+    id: 'TEACHER_ALLOCATION',
+    name: 'Teacher Allocation',
+    icon: (
+      <UsersRound
+        className="h-26 w-26 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-allocation',
   },
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]

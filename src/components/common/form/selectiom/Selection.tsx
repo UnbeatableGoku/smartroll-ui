@@ -1,5 +1,3 @@
-
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
@@ -40,7 +38,7 @@ const Selection = ({
               onValueChange(value)
             }}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full text-wrap">
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>

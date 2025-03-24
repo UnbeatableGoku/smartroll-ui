@@ -3,37 +3,37 @@ import App from '@App'
 import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
-import { Navigate } from 'react-router-dom'; 
-// import Dashboard from '@pages/Dashboard'
+import DivisionCreation from '@pages/Division/pages/DivisionCreation'
+import ForgotPassword from '@pages/Login/ForgotPassword'
+import Login from '@pages/Login/Login'
 import NotFound from '@pages/NotFound'
-import SubjectSelection from '@pages/Sbuject/SubjectSelection'
-import SubjectSelectionConfirmation from '@pages/Sbuject/SubjectSelectionConfirmation'
-// import StudentDashboard from '@pages/StudentDashboard'
-import ElectiveSubject from '@pages/StudentDashboard/pages/ElectiveSubject'
-// import TeacherDashboard from '@pages/TeacherDashboard'
-import SubjectChoice from '@pages/TeacherDashboard/pages/Subject-Choice/SubjectChoice'
+import StudentDivision from '@pages/StudentDashboard/student-division/pages/StudentDivision'
+import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
+import SubjectSelection from '@pages/Subject/SubjectSelection'
+import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
+import TeacherAllocation from '@pages/Subject/TeacherAllocation/TeacherAllocation'
+import TeacherDashboard from '@pages/TeacherDashboard'
+import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
-import Login from '@pages/login/Login'
+import { Navigate } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 
 import {
+  DIVISION_CREATION,
+  FORGOT_PASSWORD,
   PAGE_DASHBOARD,
   PAGE_ELECTIVE_SUBJECT,
   PAGE_LOGIN,
   PAGE_STUDENT_DASHBOARD,
+  PAGE_STUDENT_DIVISION,
   PAGE_SUBJECT_CHOICE,
   PAGE_SUBJECT_SELECT,
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
+  PAGE_TEACHER_ALLOCATION,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
-  DIVISION_CREATION
 } from '@constants'
-
-import PageAccessWrapper from '@components/common/pageAccessWrapper'
-
-import { EDITOR_ROUTES, VIEW_ONLY_ROUTES } from './router'
-import DivisionCreation from '@pages/division/pages/DivisionCreation'
 
 const router = createBrowserRouter([
   {
@@ -51,6 +51,15 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        element: <LogoLayout />,
+        children: [
+          {
+            path: FORGOT_PASSWORD.path,
+            element: <ForgotPassword />,
+          },
+        ],
+      },
       // for displaying the dashboard page layout with access control
       {
         path: PAGE_DASHBOARD.path, // Use relative path here
@@ -58,20 +67,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element:  <Navigate to="/subject/subject-select" replace />
+            element: <Navigate to="/subject/subject-select" replace />,
             // element: (
             //   <ProtectedRoute roleRequired="admin">
             //     <Dashboard />
             //   </ProtectedRoute>
             // ),
-          },
-          {
-            element: <PageAccessWrapper />,
-            children: VIEW_ONLY_ROUTES,
-          },
-          {
-            element: <PageAccessWrapper checkEditAccess />,
-            children: EDITOR_ROUTES,
           },
         ],
       },
@@ -99,12 +100,11 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element : <Navigate to="/teacher-dashboard/subject-choice" replace />
-            // element: (
-            //   <ProtectedRoute roleRequired="teacher">
-            //     <TeacherDashboard />
-            //   </ProtectedRoute>
-            // ),
+            element: (
+              <ProtectedRoute roleRequired="teacher">
+                <TeacherDashboard />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
@@ -116,7 +116,9 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element : <Navigate to="/student-dashboard/elective-subject" replace />
+            element: (
+              <Navigate to="/student-dashboard/elective-subject" replace />
+            ),
             // element: (
             //   <ProtectedRoute roleRequired="student">
             //     <StudentDashboard />
@@ -125,8 +127,37 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: PAGE_STUDENT_DIVISION.path,
 
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="student">
+                <StudentDivision />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
       // subject selection route (admin side)
+      {
+        path: PAGE_TEACHER_ALLOCATION.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="admin">
+                <TeacherAllocation />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
       {
         path: PAGE_SUBJECT_SELECT.path,
 
@@ -152,7 +183,7 @@ const router = createBrowserRouter([
             index: true,
             element: (
               <ProtectedRoute roleRequired="teacher">
-                <SubjectChoice />
+                <UnifiedSubjectChoice></UnifiedSubjectChoice>
               </ProtectedRoute>
             ),
           },
@@ -200,11 +231,7 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              
-                <DivisionCreation></DivisionCreation>
-              
-            ),
+            element: <DivisionCreation />,
           },
         ],
       },

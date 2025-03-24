@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-
 import { DecodedToken } from 'types/common'
 
 interface authState {
@@ -11,8 +10,8 @@ interface authState {
 
 const initialState: authState = {
   isAuth: true,
-  accessToken: localStorage.getItem('accessToken'),
-  refreshToken: localStorage.getItem('refreshToken'),
+  accessToken: localStorage.getItem('accessToken') != "undefined" && localStorage.getItem('accessToken') ? localStorage.getItem('accessToken') : null,
+  refreshToken: localStorage.getItem('refreshToken') != "undefined" ? localStorage.getItem('refreshToken') : null,
   userProfile: null,
 }
 
@@ -24,9 +23,9 @@ const authSlice = createSlice({
       state,
       action: PayloadAction<{
         isAuth: boolean
-        access: string
-        refresh: string
-      }>,
+        access: string | null
+        refresh: string | null
+      }>
     ) => {
       return {
         ...state,
@@ -41,8 +40,27 @@ const authSlice = createSlice({
         userProfile: action.payload,
       }
     },
+    setUpdateEmail: (state, action: PayloadAction<string>) => {
+      // This will safely update the email inside the userProfile
+      if (state.userProfile && state.userProfile.obj && state.userProfile.obj.profile) {
+        return {
+          ...state,
+          userProfile: {
+            ...state.userProfile,
+            obj: {
+              ...state.userProfile.obj,
+              profile: {
+                ...state.userProfile.obj.profile,
+                email: action.payload, // Update the email
+              },
+            },
+          },
+        }
+      }
+      return state; // If userProfile is null or doesn't have the right structure, return unchanged state
+    },
   },
 })
 
-export const { setAuth, setUserProfile } = authSlice.actions
+export const { setAuth, setUserProfile, setUpdateEmail } = authSlice.actions
 export default authSlice.reducer

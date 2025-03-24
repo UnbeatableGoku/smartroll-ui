@@ -22,7 +22,7 @@ const useNewPassword = () => {
         'ngrok-skip-browser-warning': 'true',
       }
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/auth/api/set_new_password_stakeholders/`,
+        `${window.base_url}/auth/api/set_new_password_for_stakeholders/`,
         newPasswordData,
         { headers },
       )
@@ -49,7 +49,7 @@ const useNewPassword = () => {
         // Show success toast and navigate
         toast.success('Password Updated Successfully!')
         if (decode.obj.profile.role === 'teacher') {
-          navigate('/teacher-dashboard/subject-choice')
+          navigate('/teacher-dashboard/')
         } else {
           navigate('/student-dashboard/elective-subject')
         }
@@ -60,12 +60,49 @@ const useNewPassword = () => {
         }
       }
     } catch (error: any) {
-      console.error('Error Updating Password', error)
-      toast.error(error.response.data.message)
+      if (error.status == 404) {
+        toast.error(error.message)
+      }
+      if (error.status == 500) {
+        toast.error(error.response.data.message)
+      }
+    }
+  }
+
+  //function:: to handel the forgot password
+  const handleForgotPassword = async (
+    profile_slug: string,
+    ForgotPasswordCode: any,
+    password: string,
+  ) => {
+    try {
+      const headers = {
+        'Content-Type': 'application/json', // Assuming JSON for login
+        'ngrok-skip-browser-warning': 'true',
+      }
+      const body = {
+        password: password,
+        profile_forgot_password_code: ForgotPasswordCode,
+        profile_slug,
+      }
+      const response = await axios.post(
+        `${window.base_url}/auth/api/set_updated_password/`,
+        body,
+        { headers: headers },
+      )
+      if (response.data.data === true) {
+        toast.success('Your password has been updated successfully')
+        navigate('/login')
+      }
+    } catch (error: any) {
+      toast.error(
+        error.response.data.message || error.message || 'someting went wrong',
+      )
     }
   }
   return {
     handleNewPassword,
+    handleForgotPassword,
   }
 }
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@data/redux/Store'
 import { jwtDecode } from 'jwt-decode'
+import { toast } from 'sonner'
 
 interface DecodedToken {
   token_type: string
@@ -31,13 +32,14 @@ const useAuth = () => {
   
   useEffect(() => {
     const accessToken = Auth?.accessToken
-    if (accessToken) {
+    if (accessToken != undefined && accessToken != null) {
       try {
         const decoded = jwtDecode<DecodedToken>(accessToken) // Decode the token
         if (decoded) {
           setRole(decoded.obj.profile.role) // Set the role from decoded token
         }
-      } catch (error) {
+      } catch (error:any) {
+        toast.error(error.message)
         console.error("Invalid token", error)
         setRole(null) // Reset role if token is invalid
       }

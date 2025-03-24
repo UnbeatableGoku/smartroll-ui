@@ -18,6 +18,7 @@ interface CallAPIResponse {
     data: any
     error: boolean
     message: string
+    statusCode: any
   }
 }
 
@@ -96,19 +97,27 @@ const useAPI = () => {
           // Handle token expiration
           localStorage.removeItem('accessToken')
           localStorage.removeItem('refreshToken')
+          const token = {
+            access: null,
+            refresh: null,
+            isAuth: false,
+          }
+          dispatch(setAuth(token))
           navigate('/login')
           dispatch(setLoader(false))
           return {
             error: true,
-            errorMessage: { data: null, error: true, message: 'Token Expired' },
+            errorMessage: { data: null, error: true, message: 'Token Expired', statusCode: result.status },
           }
         }
       } else {
         // Handle other errors
         dispatch(setLoader(false))
+        const errorResponse = { ...error.response?.data, statusCode: error.response.status }
+
         return {
           error: true,
-          errorMessage: error.response?.data || 'Unknown error',
+          errorMessage: errorResponse || 'Unknown error',
         }
       }
     }
@@ -121,6 +130,7 @@ const useAPI = () => {
         data: null,
         error: true,
         message: 'Unexpected error occurred',
+        statusCode: 500,
       },
     }
   }
@@ -139,7 +149,7 @@ const makeRequest = async (
 ): Promise<AxiosResponse> => {
   if (method === 'get') {
     return await reqInstance.get(
-      `${import.meta.env.VITE_BASE_URL}${endpoint}`,
+      `${window.base_url}${endpoint}`,
       {
         headers: headers,
         params,
@@ -147,7 +157,7 @@ const makeRequest = async (
     )
   } else if (method === 'post') {
     return await reqInstance.post(
-      `${import.meta.env.VITE_BASE_URL}${endpoint}`,
+      `${window.base_url}${endpoint}`,
       body,
       { headers },
     )
@@ -166,13 +176,14 @@ const expireToken = async (
 
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/auth/api/token/refresh/`,
+      `${window.base_url}/auth/api/token/refresh/`,
       { refresh: refreshToken },
       { headers },
     )
     return response.data
   } catch (error: any) {
     if (error.response?.status === 401) {
+
       return { action: 'tokenExpired', status: error.response.status }
     }
     throw error

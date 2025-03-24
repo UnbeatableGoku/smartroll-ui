@@ -28,10 +28,20 @@ export const PAGE_ELECTIVE_SUBJECT: Page = {
   path: '/student-dashboard/elective-subject',
   name: 'Elective Subject',
 }
+export const PAGE_STUDENT_DIVISION: Page = {
+  id: 'STUDENT_DIVISION',
+  path: '/student-dashboard/division',
+  name: 'Student Division',
+}
 export const PAGE_SUBJECT_CHOICE: Page = {
   id: 'SUBJECT-CHOICE',
   path: '/subject-choice',
   name: 'subject-choice',
+}
+export const PAGE_TEACHER_ALLOCATION: Page = {
+  id: 'TEACHER_ALLOCATION',
+  path: '/subject/teacher-allocation',
+  name: 'Teacher Allocation',
 }
 
 export const PAGE_STUDENT_DASHBOARD: Page = {
@@ -50,6 +60,13 @@ export const PAGE_NOT_FOUND: Page = {
   id: 'NOT_FOUND',
   path: '/not-found',
   name: 'Page Not Found',
+}
+
+export const FORGOT_PASSWORD: Page = {
+  // update_password
+  id: 'FORGOT_PASSWORD',
+  path: '/update_password',
+  name: 'forgot-password',
 }
 
 /**
