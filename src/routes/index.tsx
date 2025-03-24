@@ -6,6 +6,8 @@ import MainLayout from '@layout/mainLayout'
 import DivisionCreation from '@pages/Division/pages/DivisionCreation'
 import ForgotPassword from '@pages/Login/ForgotPassword'
 import Login from '@pages/Login/Login'
+import ForgotPassword from '@pages/Login/ForgotPassword'
+import Login from '@pages/Login/Login'
 import NotFound from '@pages/NotFound'
 import StudentDivision from '@pages/StudentDashboard/student-division/pages/StudentDivision'
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
@@ -29,6 +31,7 @@ import {
   PAGE_SUBJECT_CHOICE,
   PAGE_SUBJECT_SELECT,
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
+  PAGE_TEACHER_ALLOCATION,
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
 } from '@constants'
@@ -141,6 +144,21 @@ const router = createBrowserRouter([
         ],
       },
       // subject selection route (admin side)
+      {
+        path: PAGE_TEACHER_ALLOCATION.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="admin">
+                <TeacherAllocation />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
       {
         path: PAGE_SUBJECT_SELECT.path,
 

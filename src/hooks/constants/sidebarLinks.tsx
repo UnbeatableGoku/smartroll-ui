@@ -84,5 +84,17 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     ),
     path: '/subject-choice',
   },
+  {
+    id: 'TEACHER_ALLOCATION',
+    name: 'Teacher Allocation',
+    icon: (
+      <UsersRound
+        className="h-26 w-26 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-allocation',
+  },
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]
