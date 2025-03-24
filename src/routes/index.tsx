@@ -35,6 +35,7 @@ import {
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
 } from '@constants'
+import TeacherAllocation from '@pages/Subject/TeacherAllocation/TeacherAllocation'
 
 const router = createBrowserRouter([
   {
