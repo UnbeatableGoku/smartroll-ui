@@ -9,7 +9,7 @@ import { DecodedToken } from 'types/common'
 
 interface NewPasswordData {
   password: string
-  profile_slug: string,
+  profile_slug: string
 }
 const useNewPassword = () => {
   const navigate = useNavigate()
@@ -49,7 +49,7 @@ const useNewPassword = () => {
         // Show success toast and navigate
         toast.success('Password Updated Successfully!')
         if (decode.obj.profile.role === 'teacher') {
-          navigate('/teacher-dashboard/subject-choice')
+          navigate('/teacher-dashboard/')
         } else {
           navigate('/student-dashboard/elective-subject')
         }
@@ -60,19 +60,22 @@ const useNewPassword = () => {
         }
       }
     } catch (error: any) {
-      if(error.status == 404){
+      if (error.status == 404) {
         toast.error(error.message)
       }
-      if(error.status==500){
+      if (error.status == 500) {
         toast.error(error.response.data.message)
       }
     }
   }
 
-
-  //function:: to handel the forgot password 
-  const handleForgotPassword = async(profile_slug:string,ForgotPasswordCode:any,password:string)=>{
-    try{
+  //function:: to handel the forgot password
+  const handleForgotPassword = async (
+    profile_slug: string,
+    ForgotPasswordCode: any,
+    password: string,
+  ) => {
+    try {
       const headers = {
         'Content-Type': 'application/json', // Assuming JSON for login
         'ngrok-skip-browser-warning': 'true',
@@ -82,19 +85,24 @@ const useNewPassword = () => {
         profile_forgot_password_code: ForgotPasswordCode,
         profile_slug,
       }
-      const response = await axios.post(`${window.base_url}/auth/api/set_updated_password/`,body,{headers:headers})
-      if(response.data.data === true){
+      const response = await axios.post(
+        `${window.base_url}/auth/api/set_updated_password/`,
+        body,
+        { headers: headers },
+      )
+      if (response.data.data === true) {
         toast.success('Your password has been updated successfully')
         navigate('/login')
       }
-    }
-    catch(error:any){
-      toast.error(error.response.data.message || error.message || 'someting went wrong')
+    } catch (error: any) {
+      toast.error(
+        error.response.data.message || error.message || 'someting went wrong',
+      )
     }
   }
   return {
     handleNewPassword,
-    handleForgotPassword
+    handleForgotPassword,
   }
 }
 
