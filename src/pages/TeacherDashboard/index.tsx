@@ -23,8 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { format } from 'date-fns'
-import { Clock, FileDown, Users } from 'lucide-react'
+import { BadgeCheck, Ban, Clock, FileDown, Users } from 'lucide-react'
 
 import { cn } from '@utils'
 
@@ -92,21 +91,9 @@ const TeacherDashboard = () => {
   >(null)
   // const today = new Date()
 
-  console.log(students)
-
   useEffect(() => {
     getLectureDetails()
   }, [])
-
-  // const startSession = (session: (typeof initialSessions)[0]) => {
-  //   // Update session status to "Ongoing"
-  //   const updatedSessions = sessions.map((s) =>
-  //     s.id === session.id ? { ...s, status: 'Ongoing' } : s,
-  //   )
-  //   setSessions(updatedSessions)
-  //   setActiveSession({ ...session, status: 'Ongoing' })
-  //   setIsSheetOpen(true)
-  // }
 
   const endSession = () => {
     if (activeSession) {
@@ -130,12 +117,6 @@ const TeacherDashboard = () => {
     setIsSheetOpen(false)
     socket?.disconnect()
   }
-  console.log(
-    'Attendance Data',
-    students?.marked_attendances?.map((student) =>
-      student.is_present.toString(),
-    ),
-  )
 
   return (
     <div className="min-h-screen">
@@ -238,7 +219,11 @@ const TeacherDashboard = () => {
                   }`}
                 >
                   <Button
-                    className="w-full"
+                    className={cn(
+                      `w-full`,
+                      sessionData[lecture.session.session_id] === 'ongoing' &&
+                        'bg-white text-black',
+                    )}
                     onClick={() => {
                       startSessionHandler(
                         lecture?.session.session_id,
@@ -331,15 +316,15 @@ const TeacherDashboard = () => {
                   </p>
                   <p className="font-medium text-foreground">
                     {onGoingSessionData?.lecture?.batches.map(
-                      (b) => b.division.division_name,
+                      (b: any) => b.division.division_name,
                     )}{' '}
                     •{' '}
                     {onGoingSessionData?.lecture?.batches.map(
-                      (b) => b.batch_name,
+                      (b: any) => b.batch_name,
                     )}
                   </p>
                 </div>
-                <div>
+                <div className="capitalize">
                   <p className="text-sm text-muted-foreground">Status</p>
                   <SessionStatusBadge
                     status={onGoingSessionData?.lecture?.session?.active}
@@ -355,43 +340,70 @@ const TeacherDashboard = () => {
                   Attendance
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {students?.marked_attendances?.length} students present
+                  {students?.length} students present
                 </p>
               </div>
               <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-border">
-                      <TableHead>Enrollment Number</TableHead>
-                      <TableHead>Student Name</TableHead>
-                      <TableHead>Branch </TableHead>
-                      <TableHead>Attendance Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {students?.marked_attendances?.map((student) => (
-                      <TableRow
-                        key={student?.slug}
-                        className="border-border text-foreground"
-                      >
-                        <TableCell className="font-medium">
-                          {student?.student?.enrollment}
-                        </TableCell>
-                        <TableCell>{student?.student?.profile?.name}</TableCell>
-                        <TableCell>
-                          {student?.batches.map((b) => b.division.full_name)}
-                        </TableCell>
-                        <TableCell>{student?.is_present}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                {students.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      {students?.length > 0 && (
+                        <TableRow className="border-border">
+                          <TableHead>Enrollment Number</TableHead>
+                          <TableHead>Student Name</TableHead>
+                          <TableHead>Branch </TableHead>
+                          <TableHead>Attendance Status</TableHead>
+                        </TableRow>
+                      )}
+                    </TableHeader>
+                    <TableBody>
+                      {students?.map((student: any) => (
+                        <TableRow
+                          key={student?.slug}
+                          className="border-border text-foreground"
+                        >
+                          <TableCell className="font-medium">
+                            {student?.student?.enrollment}
+                          </TableCell>
+                          <TableCell>
+                            {student?.student?.profile?.name}
+                          </TableCell>
+                          <TableCell>
+                            {student?.batches.map(
+                              (b: any) => b.division.full_name,
+                            )}
+                          </TableCell>
+                          <TableCell className="capitalize text-white">
+                            {student?.is_present === false ? (
+                              <span className="flex items-center gap-2 text-red-600">
+                                <Ban />
+                                Absent
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-2 text-green-500">
+                                <BadgeCheck />
+                                Present
+                              </span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <div className="flex items-center justify-center p-3 text-white">
+                    No Students Present
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Action Buttons */}
             <div className="flex flex-col gap-2 sm:flex-row">
-              <Button className="flex-1" onClick={endSession}>
+              <Button
+                className="flex-1 bg-destructive text-white"
+                onClick={endSession}
+              >
                 End Session
               </Button>
             </div>

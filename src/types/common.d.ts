@@ -203,6 +203,10 @@ export type Lecture = {
   schedule: string;
 };
 
+export type LecturesResponseSession = {
+  lecture: Lecture[]
+}
+
 export type Branch = {
   branch_name: string;
   branch_slug: string;

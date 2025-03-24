@@ -6,13 +6,12 @@ import MainLayout from '@layout/mainLayout'
 import DivisionCreation from '@pages/Division/pages/DivisionCreation'
 import ForgotPassword from '@pages/Login/ForgotPassword'
 import Login from '@pages/Login/Login'
-import ForgotPassword from '@pages/Login/ForgotPassword'
-import Login from '@pages/Login/Login'
 import NotFound from '@pages/NotFound'
 import StudentDivision from '@pages/StudentDashboard/student-division/pages/StudentDivision'
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
 import SubjectSelection from '@pages/Subject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
+import TeacherAllocation from '@pages/Subject/TeacherAllocation/TeacherAllocation'
 import TeacherDashboard from '@pages/TeacherDashboard'
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
@@ -35,7 +34,6 @@ import {
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
 } from '@constants'
-import TeacherAllocation from '@pages/Subject/TeacherAllocation/TeacherAllocation'
 
 const router = createBrowserRouter([
   {

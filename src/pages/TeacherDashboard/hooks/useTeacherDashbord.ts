@@ -7,21 +7,21 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { LectureDetails, StudentData } from 'types/common'
+import { LectureDetails } from 'types/common'
 
 export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const [socket, setSocket] = useState<Socket | null>(null)
-  const [students, setStudents] = useState<StudentData[]>([])
+  const [students, setStudents] = useState<any>([])
   const [sessionData, setSessionData] = useState<any>()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
-  const [onGoingSessionData, setOngoingSessionData] = useState<any[]>([])
+  const [onGoingSessionData, setOngoingSessionData] = useState<any>(null)
 
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
 
   const clientSocketHandler = (session_id: string, auth_token: string) => {
     const newSocket = io(
-      'https://fingers-assign-warner-genetic.trycloudflare.com/client',
+      'https://extensive-intensive-positioning-automation.trycloudflare.com/client',
       {
         query: { session_id: session_id },
         auth: {
@@ -47,11 +47,12 @@ export const useTeacherDashbord = () => {
       onGoingSessionDataHandler(data)
     })
 
-    newSocket.on('session_data', (studentData) => {
-      //todo: create the handler for this
-      const { data } = studentData
+    newSocket.on('mark_attendance', (attendanceData: any) => {
+      const { attendance_data } = attendanceData.data.data
 
-      // setStudents((prev) => [...prev, data])
+      if (attendance_data) {
+        setStudents((prev: any) => [attendance_data, ...prev])
+      }
     })
 
     newSocket.on('client_error', (message) => {
@@ -106,12 +107,12 @@ export const useTeacherDashbord = () => {
   }
   const onGoingSessionDataHandler = (message: any) => {
     const { event, client, status_code, data } = message
-    console.log('🚀 ~ onGoingSessionDataHandler ~ data:', data)
 
     setOngoingSessionData(data)
     const { marked_attendances } = data
+
     if (marked_attendances.length > 0) {
-      setStudents((prev) => ({ ...prev, marked_attendances }))
+      setStudents(marked_attendances)
     }
   }
 
