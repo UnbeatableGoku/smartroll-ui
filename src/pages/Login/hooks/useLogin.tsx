@@ -88,7 +88,7 @@ const useLogin = () => {
       } else if (decode.obj.profile.role === 'teacher') {
         return navigate('/teacher-dashboard') //:: CHANGE TO '/teacher-dashboard'
       } else if (decode.obj.profile.role === 'student') {
-        return navigate('/student-dashboard/elective-subject') //:: CHANGE TO '/student-dashboard'
+        return navigate('/student-dashboard') //:: CHANGE TO '/student-dashboard'
       } else {
         return navigate('/login')
       }

@@ -16,28 +16,25 @@ export const useTeacherDashbord = () => {
   const [sessionData, setSessionData] = useState<any>()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [onGoingSessionData, setOngoingSessionData] = useState<any>(null)
+  const [manualAttendance, setManualAttendance] = useState<any>([])
+  const [isSessionEnded, setIsSessionEnded] = useState(false)
+  const [finalAttendanceData, setFinalAttendanceData] = useState<any>([])
 
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
 
   const clientSocketHandler = (session_id: string, auth_token: string) => {
-    const newSocket = io(
-      'https://extensive-intensive-positioning-automation.trycloudflare.com/client',
-      {
-        query: { session_id: session_id },
-        auth: {
-          token: auth_token,
-        },
-        withCredentials: true,
-        transports: ['websocket'],
-      },
-    )
+    const newSocket = io('http://localhost:3000/client', {
+      withCredentials: true,
+      transports: ['websocket'],
+    })
     setSocket(newSocket)
     newSocket.on('connect', () => {
       setIsSheetOpen(true)
       console.log('connection established with server')
       newSocket.emit('socket_connection', {
         client: 'FE',
-        data: 'connection establish',
+        session_id: session_id,
+        auth_token: auth_token,
       })
     })
 
@@ -55,12 +52,39 @@ export const useTeacherDashbord = () => {
       }
     })
 
+    newSocket.on('regulization_request', (manualAttendanceData: any) => {
+      setManualAttendance((prev: any) => [
+        manualAttendanceData.data.data.data.attendance_data,
+        ...prev,
+      ])
+    })
+
+    newSocket.on('regulization_approved', (message) => {
+      toast.success('attendance marked')
+      setStudents((prev: any) => [...prev, ...message.data.data.data])
+      setManualAttendance([])
+    })
+
     newSocket.on('client_error', (message) => {
       socketErrorHandler(message)
-      if (message.status_code === 401) {
-        newSocket.disconnect()
-        setIsSheetOpen(false)
-      }
+    })
+
+    newSocket.on('disconnect', () => {
+      // setSocket(null)
+    })
+
+    newSocket.on('session_ended', (message: any) => {
+      setIsSessionEnded(true)
+
+      const { data } = message
+      setFinalAttendanceData(data.data.data.marked_attendances)
+      setSessionData((prevData: any) => ({
+        ...prevData,
+        [onGoingSessionData.session_id]: 'post',
+      }))
+
+      //todo: list of the all the students
+      //todo: set the download excel button
     })
   }
 
@@ -109,16 +133,16 @@ export const useTeacherDashbord = () => {
     const { event, client, status_code, data } = message
 
     setOngoingSessionData(data)
-    const { marked_attendances } = data
-
-    if (marked_attendances.length > 0) {
-      setStudents(marked_attendances)
-    }
+    const { marked_attendances, pending_regulization_requests } = data
+    setManualAttendance(pending_regulization_requests)
+    setStudents(marked_attendances)
   }
 
   const socketErrorHandler = (message: any) => {
-    const { event, client, status_code, data } = message
-    toast.error(`${event} - ${data}`)
+    const { status_code, data } = message
+    toast.error(`${status_code} - ${data}`)
+    socket?.disconnect()
+    setIsSheetOpen(false)
   }
   const getLectureDetails = async () => {
     try {
@@ -175,6 +199,52 @@ export const useTeacherDashbord = () => {
     }
   }
 
+  const handleOnSessionEnd = () => {
+    try {
+      if (!confirm('Are you sure you want to end this session.. ?')) {
+        return
+      }
+      const requestObject = {
+        client: 'FE',
+        session_id: onGoingSessionData.session_id,
+        auth_token: StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+      }
+      socket?.emit('session_ended', requestObject)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
+  const removeStudentAttendanceRequest = (student_enrollment: string) => {
+    try {
+      if (!confirm('Are you sure you want to reject the attendance request?')) {
+        return
+      }
+      setManualAttendance((prev: any) => {
+        return prev.filter(
+          (item: any) => item.student.enrollment !== student_enrollment,
+        )
+      })
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
+  const markManualStudentsAttendance = () => {
+    try {
+      const attendance_slug = manualAttendance.map((item: any) => item.slug)
+      const payload = {
+        client: 'FE',
+        session_id: onGoingSessionData.session_id,
+        data: attendance_slug,
+        auth_token: StoredTokens.accessToken?.replace('Bearer ', ''),
+      }
+      socket?.emit('regulization_request', payload)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
   return {
     getLectureDetails,
     startSessionHandler,
@@ -185,6 +255,12 @@ export const useTeacherDashbord = () => {
     setIsSheetOpen,
     socket,
     onGoingSessionData,
+    manualAttendance,
+    removeStudentAttendanceRequest,
+    markManualStudentsAttendance,
+    finalAttendanceData,
+    isSessionEnded,
+    handleOnSessionEnd,
   }
 }
 function extractLectureStatusData(data: any) {

@@ -51,7 +51,7 @@ const useNewPassword = () => {
         if (decode.obj.profile.role === 'teacher') {
           navigate('/teacher-dashboard/')
         } else {
-          navigate('/student-dashboard/elective-subject')
+          navigate('/student-dashboard')
         }
 
         return {

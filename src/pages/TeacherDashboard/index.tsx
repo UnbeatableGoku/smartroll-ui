@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -23,55 +23,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { FinalAttendanceData } from '@pages/TeacherDashboard/components/FinalAttendanceData'
+import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
 import { BadgeCheck, Ban, Clock, FileDown, Users } from 'lucide-react'
 
 import { cn } from '@utils'
 
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
-
-// Mock data for sessions
-const initialSessions = [
-  {
-    id: 1,
-    lectureName: 'Introduction to React',
-    subject: 'Web Development',
-    scheduledTime: new Date(new Date().setHours(9, 0, 0, 0)),
-    duration: '1 hour',
-    status: 'Upcoming',
-    class: 'CS-301',
-    department: 'Computer Science',
-  },
-  {
-    id: 2,
-    lectureName: 'Data Structures',
-    subject: 'Computer Science',
-    scheduledTime: new Date(new Date().setHours(11, 0, 0, 0)),
-    duration: '2 hours',
-    status: 'Ongoing',
-    class: 'CS-201',
-    department: 'Computer Science',
-  },
-  {
-    id: 3,
-    lectureName: 'Database Management',
-    subject: 'Information Systems',
-    scheduledTime: new Date(new Date().setHours(14, 0, 0, 0)),
-    duration: '1.5 hours',
-    status: 'Upcoming',
-    class: 'IS-401',
-    department: 'Information Technology',
-  },
-  {
-    id: 4,
-    lectureName: 'Machine Learning Basics',
-    subject: 'Artificial Intelligence',
-    scheduledTime: new Date(new Date().setHours(16, 0, 0, 0)),
-    duration: '2 hours',
-    status: 'Upcoming',
-    class: 'AI-501',
-    department: 'Computer Science',
-  },
-]
 
 const TeacherDashboard = () => {
   const {
@@ -84,28 +43,17 @@ const TeacherDashboard = () => {
     socket,
     onGoingSessionData,
     students,
+    manualAttendance,
+    removeStudentAttendanceRequest,
+    markManualStudentsAttendance,
+    finalAttendanceData,
+    isSessionEnded,
+    handleOnSessionEnd,
   } = useTeacherDashbord()
-  const [sessions, setSessions] = useState(initialSessions)
-  const [activeSession, setActiveSession] = useState<
-    (typeof initialSessions)[0] | null
-  >(null)
-  // const today = new Date()
 
   useEffect(() => {
     getLectureDetails()
   }, [])
-
-  const endSession = () => {
-    if (activeSession) {
-      // Update session status to "Completed"
-      const updatedSessions = sessions.map((s) =>
-        s.id === activeSession.id ? { ...s, status: 'Completed' } : s,
-      )
-      setSessions(updatedSessions)
-      setActiveSession(null)
-      setIsSheetOpen(false)
-    }
-  }
 
   const exportAttendance = () => {
     // In a real app, this would generate and download a CSV/PDF
@@ -123,10 +71,10 @@ const TeacherDashboard = () => {
       {/* Main Content */}
       <main className="py-6">
         <div className="mb-6 pl-2">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">
+          <h2 className="text-md font-bold tracking-tight text-foreground md:text-2xl">
             Today's Lectures
           </h2>
-          <p className="text-muted-foreground">
+          <p className="md:text-md text-sm text-muted-foreground">
             Manage your classes and track attendance.
           </p>
         </div>
@@ -142,7 +90,7 @@ const TeacherDashboard = () => {
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <CardTitle className="text-2xl text-foreground">
-                      <span>
+                      <span className="text-[18px] md:text-xl">
                         Subject: {lecture?.subject?.subject_map?.subject_name} (
                         {lecture?.subject?.subject_map?.subject_code})
                       </span>
@@ -172,14 +120,14 @@ const TeacherDashboard = () => {
                           </span>
                         </div> */}
                         <div className="text-lg">
-                          <div>
+                          <div className="text-sm md:text-lg">
                             <span>Sem: </span>
                             <span className="font-medium">
                               {lecture?.subject?.semester.no}
                             </span>
                           </div>
                         </div>
-                        <div className="flex gap-2 text-lg">
+                        <div className="flex gap-2 text-sm md:text-lg">
                           <span>Division: </span>
                           <span className="font-medium">
                             {lecture?.batches
@@ -195,14 +143,14 @@ const TeacherDashboard = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-foreground">
+                    <div className="flex items-center gap-2 text-sm text-foreground md:text-lg">
                       <Clock className="h-4 w-4 text-muted-foreground" />
                       <span>Time: </span>
                       <span className="font-medium">
                         {lecture?.start_time} • {lecture?.end_time}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-foreground">
+                    <div className="flex items-center gap-2 text-sm text-foreground md:text-lg">
                       <Users className="h-4 w-4 text-muted-foreground" />
                       <span>
                         <span>Classroom: </span>
@@ -278,10 +226,10 @@ const TeacherDashboard = () => {
           <div className="space-y-6">
             {/* Session Information */}
             <div className="rounded-lg border border-border bg-card p-4">
-              <h3 className="mb-4 text-lg font-semibold text-foreground">
+              <h3 className="mb-4 text-[12px] font-semibold text-foreground md:text-lg">
                 Session Information
               </h3>
-              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3">
                 <div>
                   <p className="text-sm text-muted-foreground">Teacher</p>
                   <p className="font-medium text-foreground">
@@ -343,69 +291,108 @@ const TeacherDashboard = () => {
                   {students?.length} students present
                 </p>
               </div>
-              <div className="overflow-x-auto">
-                {students.length > 0 ? (
-                  <Table>
-                    <TableHeader>
-                      {students?.length > 0 && (
-                        <TableRow className="border-border">
-                          <TableHead>Enrollment Number</TableHead>
-                          <TableHead>Student Name</TableHead>
-                          <TableHead>Branch </TableHead>
-                          <TableHead>Attendance Status</TableHead>
-                        </TableRow>
-                      )}
-                    </TableHeader>
-                    <TableBody>
-                      {students?.map((student: any) => (
-                        <TableRow
-                          key={student?.slug}
-                          className="border-border text-foreground"
-                        >
-                          <TableCell className="font-medium">
-                            {student?.student?.enrollment}
-                          </TableCell>
-                          <TableCell>
-                            {student?.student?.profile?.name}
-                          </TableCell>
-                          <TableCell>
-                            {student?.batches.map(
-                              (b: any) => b.division.full_name,
-                            )}
-                          </TableCell>
-                          <TableCell className="capitalize text-white">
-                            {student?.is_present === false ? (
-                              <span className="flex items-center gap-2 text-red-600">
-                                <Ban />
-                                Absent
-                              </span>
-                            ) : (
-                              <span className="flex items-center gap-2 text-green-500">
-                                <BadgeCheck />
-                                Present
-                              </span>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+              <div className="flex h-[450px] w-full justify-center p-4">
+                {isSessionEnded ? (
+                  <FinalAttendanceData
+                    finalAttendanceData={finalAttendanceData}
+                  />
                 ) : (
-                  <div className="flex items-center justify-center p-3 text-white">
-                    No Students Present
-                  </div>
+                  <Tabs defaultValue="Default" className="w-full">
+                    <TabsList className="w-full">
+                      <TabsTrigger value="Default" className="flex-1">
+                        Default
+                      </TabsTrigger>
+                      <TabsTrigger value="manual" className="flex-1">
+                        Manual
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="Default">
+                      <div className="overflow-x-auto">
+                        {students.length > 0 ? (
+                          <Table>
+                            <TableHeader>
+                              {students?.length > 0 && (
+                                <TableRow className="md:text-md border-border text-[12px]">
+                                  <TableHead>Enrollment Number</TableHead>
+                                  <TableHead>Student Name</TableHead>
+                                  <TableHead>Branch </TableHead>
+                                  <TableHead>Attendance Status</TableHead>
+                                </TableRow>
+                              )}
+                            </TableHeader>
+                            <TableBody>
+                              {students?.map((student: any) => (
+                                <TableRow
+                                  key={student?.slug}
+                                  className="border-border text-[12px] text-foreground"
+                                >
+                                  <TableCell className="font-medium">
+                                    {student?.student?.enrollment}
+                                  </TableCell>
+                                  <TableCell>
+                                    {student?.student?.profile?.name}
+                                  </TableCell>
+                                  <TableCell>
+                                    {student?.batches.map(
+                                      (b: any) => b.division.full_name,
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="capitalize text-white">
+                                    {student?.is_present === false ? (
+                                      <span className="flex items-center gap-2 text-[10px] text-red-600 md:text-[12px]">
+                                        <Ban className="size-4 md:size-6" />
+                                        Absent
+                                      </span>
+                                    ) : (
+                                      <span className="flex items-center gap-2 text-[10px] text-green-500 md:text-[12px]">
+                                        <BadgeCheck className="size-4 md:size-6" />
+                                        Present
+                                      </span>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        ) : (
+                          <div className="flex items-center justify-center p-3 text-white">
+                            No Students Present
+                          </div>
+                        )}
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="manual" className="mb-2 p-4">
+                      {manualAttendance.length > 0 && (
+                        <Button
+                          className="w-full"
+                          onClick={() => markManualStudentsAttendance()}
+                        >
+                          Mark All Students
+                        </Button>
+                      )}
+
+                      <ManualMarkedAttendance
+                        manualAttendance={manualAttendance}
+                        removeStudentAttendanceRequest={
+                          removeStudentAttendanceRequest
+                        }
+                      />
+                    </TabsContent>
+                  </Tabs>
                 )}
               </div>
             </div>
 
             {/* Action Buttons */}
             <div className="flex flex-col gap-2 sm:flex-row">
-              <Button
-                className="flex-1 bg-destructive text-white"
-                onClick={endSession}
-              >
-                End Session
-              </Button>
+              {!isSessionEnded && (
+                <Button
+                  className="flex-1 bg-destructive text-white"
+                  onClick={() => handleOnSessionEnd()}
+                >
+                  End Session
+                </Button>
+              )}
             </div>
           </div>
         </SheetContent>
@@ -428,7 +415,13 @@ function SessionStatusBadge({ status }: { status: string }) {
   }
 
   return (
-    <Badge variant={variant} className={cn(classname, 'text-white')}>
+    <Badge
+      variant={variant}
+      className={cn(
+        classname,
+        'rounded-md text-[8px] text-white md:text-[12px]',
+      )}
+    >
       {status}
     </Badge>
   )

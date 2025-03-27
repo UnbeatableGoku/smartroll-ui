@@ -6,6 +6,7 @@ import { Navigate } from 'react-router-dom'
 import {
   PAGE_ELECTIVE_SUBJECT,
   PAGE_LOGIN,
+  PAGE_STUDENT_DASHBOARD,
   PAGE_SUBJECT_CHOICE,
   PAGE_SUBJECT_SELECT,
   PAGE_TEACHER_DASHBOARD,
@@ -40,7 +41,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     else if (role == 'teacher') {
       return <Navigate to={PAGE_TEACHER_DASHBOARD.path} replace />
     } else if (role == 'student') {
-      return <Navigate to={PAGE_ELECTIVE_SUBJECT.path} replace />
+      return <Navigate to={PAGE_STUDENT_DASHBOARD.path} replace />
     } else {
       return <Navigate to={PAGE_LOGIN.path} replace />
     }
