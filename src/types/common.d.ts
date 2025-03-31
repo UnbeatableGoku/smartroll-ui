@@ -66,7 +66,8 @@ export interface StreamInterface {
 
 declare global {
   interface Window {
-    base_url: string
+    base_url: string,
+    socket_url: string
   }
 }
 

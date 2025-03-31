@@ -25,7 +25,7 @@ export const useTeacherDashbord = () => {
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
 
   const clientSocketHandler = (session_id: string, auth_token: string) => {
-    const newSocket = io('http://localhost:3000/client', {
+    const newSocket = io(`${window.socket_url}/client`, {
       withCredentials: true,
       transports: ['websocket'],
     })
