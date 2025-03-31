@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Table,
@@ -9,33 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import useStudentDashboard from '@pages/StudentDashboard/hooks/useStudentDashboard'
-import { useTeacherDashbord } from '@pages/TeacherDashboard/hooks/useTeacherDashbord'
-import { Ban } from 'lucide-react'
-
-// Sample data - in a real app, this would come from an API or props
-const initialData = [
-  { id: 1, enrollment: 'A12345', name: 'John Doe', course: 'Computer Science' },
-  { id: 2, enrollment: 'B67890', name: 'Jane Smith', course: 'Data Science' },
-  {
-    id: 3,
-    enrollment: 'C13579',
-    name: 'Robert Johnson',
-    course: 'Cybersecurity',
-  },
-  {
-    id: 4,
-    enrollment: 'D24680',
-    name: 'Emily Williams',
-    course: 'Web Development',
-  },
-  {
-    id: 5,
-    enrollment: 'E35791',
-    name: 'Michael Brown',
-    course: 'Artificial Intelligence',
-  },
-]
 
 export const ManualMarkedAttendance = ({
   manualAttendance,
@@ -44,22 +15,6 @@ export const ManualMarkedAttendance = ({
   manualAttendance: any
   removeStudentAttendanceRequest: any
 }) => {
-  const [selectedRows, setSelectedRows] = useState<typeof initialData>([])
-  const [selectAll, setSelectAll] = useState(true)
-  // Initialize with all rows selected
-  useEffect(() => {
-    setSelectedRows([...initialData])
-  }, [])
-
-  // Update selectAll state when individual selections change
-  useEffect(() => {
-    if (selectedRows.length === initialData.length) {
-      setSelectAll(true)
-    } else {
-      setSelectAll(false)
-    }
-  }, [selectedRows])
-
   return (
     <div className="w-full pt-4">
       <div className="rounded-md border">
@@ -93,8 +48,7 @@ export const ManualMarkedAttendance = ({
                   <TableCell className="capitalize text-white">
                     <Checkbox
                       checked={true}
-                      onCheckedChange={(checked) => {
-                        console.log('object')
+                      onCheckedChange={() => {
                         removeStudentAttendanceRequest(
                           student?.student?.enrollment,
                         )
@@ -114,15 +68,3 @@ export const ManualMarkedAttendance = ({
     </div>
   )
 }
-
-{
-  /* <TableHead className="flex items-center gap-2">
-                <span>Select All Students</span>
-                <Checkbox
-                  checked={selectAll}
-                  onCheckedChange={handleSelectAll}
-                  aria-label="Select all"
-                /> */
-}
-
-//

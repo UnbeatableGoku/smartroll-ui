@@ -17,11 +17,11 @@ const useStudentDashboard = () => {
       if (result.state === 'granted') {
         set_permission_state(true)
       } else if (result.state === 'prompt') {
-        navigator.geolocation.getCurrentPosition((position) => {
+        navigator.geolocation.getCurrentPosition(() => {
           set_permission_state(true)
         })
       } else if (result.state === 'denied') {
-        navigator.geolocation.getCurrentPosition((position) => {
+        navigator.geolocation.getCurrentPosition(() => {
           set_permission_state(true)
         })
       }

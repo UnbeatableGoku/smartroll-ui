@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
@@ -24,7 +23,7 @@ const useTeacherAllocation = () => {
       )
 
       if (response_obj.error == false) {
-        const teacherData = get(response_obj, 'response.data.data', [])
+        // const teacherData = get(response_obj, 'response.data.data', [])
       } else {
         toast.error(response_obj.errorMessage?.message)
       }
@@ -32,6 +31,6 @@ const useTeacherAllocation = () => {
       toast.error(error.message)
     }
   }
-  return {}
+  return { getTeacherData }
 }
 export default useTeacherAllocation

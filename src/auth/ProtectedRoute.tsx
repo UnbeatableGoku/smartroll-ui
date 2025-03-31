@@ -4,10 +4,8 @@ import React from 'react'
 import { Navigate } from 'react-router-dom'
 
 import {
-  PAGE_ELECTIVE_SUBJECT,
   PAGE_LOGIN,
   PAGE_STUDENT_DASHBOARD,
-  PAGE_SUBJECT_CHOICE,
   PAGE_SUBJECT_SELECT,
   PAGE_TEACHER_DASHBOARD,
 } from '@constants'

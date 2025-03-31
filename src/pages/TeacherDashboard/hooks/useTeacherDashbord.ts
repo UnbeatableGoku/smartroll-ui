@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import axios from 'axios'
-import { get, merge } from 'lodash'
+import { get } from 'lodash'
 import { Socket, io } from 'socket.io-client'
 import { toast } from 'sonner'
 
@@ -129,7 +129,7 @@ export const useTeacherDashbord = () => {
     }
   }
   const onGoingSessionDataHandler = (message: any) => {
-    const { event, client, status_code, data } = message
+    const { data } = message
 
     setOngoingSessionData(data)
     const { marked_attendances, pending_regulization_requests } = data
@@ -419,40 +419,6 @@ export const useTeacherDashbord = () => {
     } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
     }
-  }
-
-  const downloadExcelFile = (base64String: string, filename: string) => {
-    // Decode base64 string into binary
-    const byteCharacters = atob(base64String) // decode base64 to raw binary
-    const byteArrays = []
-
-    // Convert the binary string into a byte array
-    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-      const slice = byteCharacters.slice(offset, offset + 1024)
-      const byteNumbers = new Array(slice.length)
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i)
-      }
-      byteArrays.push(new Uint8Array(byteNumbers))
-    }
-
-    // Create a Blob from the byte array
-    const blob = new Blob(byteArrays, {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    })
-
-    // Create an anchor element for download
-    // Create an anchor element for download
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = filename // Specify the file name
-    document.body.appendChild(link)
-
-    // Trigger the click event to download
-    link.click()
-
-    // Clean up by removing the link element
-    document.body.removeChild(link)
   }
 
   return {

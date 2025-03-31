@@ -1,25 +1,3 @@
-import React from 'react'
-
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { Plus } from 'lucide-react'
-
-import { Button } from '@components/ui/button'
-
 const SidePanel = () => {
   return (
     <div>
