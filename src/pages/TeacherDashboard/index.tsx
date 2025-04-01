@@ -78,7 +78,7 @@ const TeacherDashboard = () => {
   return (
     <div className="min-h-screen">
       {/* Main Content */}
-      <main className="py-6">
+      <main className="pb-16 pt-6">
         <div className="mb-6 pl-2">
           <h2 className="text-md font-bold tracking-tight text-foreground md:text-2xl">
             Today's Lectures
@@ -89,31 +89,34 @@ const TeacherDashboard = () => {
         </div>
 
         {/* Session List */}
-        <div className="grid w-full grid-cols-1 gap-4 p-2">
+        <div className="grid w-full grid-cols-1 gap-6 p-1 md:p-2">
           {lectureDetails.length > 0 ? (
             lectureDetails?.map((l: any) => (
-              <div key={l?.id || Math.random()}>
-                <div className="w-full rounded-md bg-zinc-700 p-4">
+              <div
+                key={l?.id || Math.random()}
+                className="rounded-lg border-2 border-white/20 bg-secondary/30 p-3"
+              >
+                <div className="sm:text-md flex w-full items-center rounded-sm border-[8px] border-l-chart-1 bg-muted p-[6px] text-sm">
                   {l.branch_name}
                 </div>
                 {l?.lectures?.map((lecture: any, index: number) => (
-                  <div className="mt-3 px-2 md:px-8">
+                  <div className="px-1 py-4 md:px-8">
                     <Card
                       key={lecture?.id || index}
-                      className="w-full overflow-hidden border-border bg-card"
+                      className="w-full overflow-hidden border-border bg-zinc-600/10"
                     >
-                      <CardHeader className="pb-3">
+                      <CardHeader className="p-4 pb-3">
                         <div className="flex items-start justify-between">
-                          <CardTitle className="text-2xl text-foreground">
+                          <CardTitle className="p-0 text-2xl text-foreground">
                             <div className="md:flex md:items-center md:gap-4">
-                              <span className="text-[18px] md:text-xl">
+                              <span className="text-[16px] md:text-xl">
                                 Subject:{' '}
                                 {lecture?.subject?.subject_map?.subject_name} (
                                 {lecture?.subject?.subject_map?.subject_code})
                               </span>
                               <Badge
                                 variant="secondary"
-                                className="my-2 flex w-12 items-center justify-center rounded-sm bg-chart-3 capitalize"
+                                className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
                               >
                                 {lecture?.type}
                               </Badge>
@@ -134,31 +137,35 @@ const TeacherDashboard = () => {
                           />
                         </div>
                       </CardHeader>
-                      <CardContent className="pt-4">
+                      <CardContent className="px-4">
                         <div className="grid gap-4">
                           <div className="flex items-center gap-2 text-sm text-foreground">
                             <div className="flex flex-col gap-2">
                               <div className="text-lg">
-                                <div className="text-sm md:text-lg">
-                                  <span>Sem: </span>
-                                  <span className="font-medium">
-                                    {lecture?.subject?.semester.no}
-                                  </span>
+                                <div className="flex gap-4 text-sm md:text-lg">
+                                  <div>
+                                    <span>Sem: </span>
+                                    <span className="font-medium">
+                                      {lecture?.subject?.semester.no}
+                                    </span>
+                                  </div>
+                                  <div className="flex gap-2 text-sm md:text-lg">
+                                    <span>Division: </span>
+                                    <span className="font-medium">
+                                      {lecture?.batches
+                                        ?.map(
+                                          (d: any) => d?.division.division_name,
+                                        )
+                                        .join(', ')}
+                                    </span>
+                                    • <span>Batch: </span>
+                                    <span className="font-medium">
+                                      {lecture?.batches
+                                        ?.map((d: any) => d?.batch_name)
+                                        .join(', ')}
+                                    </span>
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="flex gap-2 text-sm md:text-lg">
-                                <span>Division: </span>
-                                <span className="font-medium">
-                                  {lecture?.batches
-                                    ?.map((d: any) => d?.division.division_name)
-                                    .join(', ')}
-                                </span>
-                                • <span>Batch: </span>
-                                <span className="font-medium">
-                                  {lecture?.batches
-                                    ?.map((d: any) => d?.batch_name)
-                                    .join(', ')}
-                                </span>
                               </div>
                             </div>
                           </div>
@@ -174,7 +181,7 @@ const TeacherDashboard = () => {
                             <div className="flex w-full items-center gap-2">
                               {/* {lecture?.classroom?.class_name ?? 'N/A'}
                                */}
-                              <div className="flex items-center gap-4">
+                              <div className="flex flex-wrap items-center gap-4">
                                 <form
                                   onSubmit={(e) => {
                                     handleClassroom(
@@ -199,59 +206,61 @@ const TeacherDashboard = () => {
                                       lecture?.session?.classroom_final?.slug
                                     }
                                   />
-                                  <Select
-                                    disabled={
-                                      sessionData[
-                                        lecture.session.session_id
-                                      ] === 'post'
-                                        ? true
-                                        : false
-                                    }
-                                    defaultValue={
-                                      lecture?.session?.classroom_final?.slug
-                                    }
-                                    onValueChange={(value) => {
-                                      // Update the correct hidden input field
-                                      const inputElement =
-                                        document.getElementById(
-                                          `${lecture.slug}${lecture?.session?.classroom_final?.slug}`,
-                                        ) as HTMLInputElement
-                                      if (inputElement) {
-                                        inputElement.value = value
+                                  <div className="flex items-center gap-4">
+                                    {' '}
+                                    <Select
+                                      disabled={
+                                        sessionData[
+                                          lecture.session.session_id
+                                        ] === 'post'
+                                          ? true
+                                          : false
                                       }
-                                    }}
-                                  >
-                                    <SelectTrigger
-                                      className="w-auto border border-white/40 bg-zinc-700/40 px-4 text-white"
-                                      id={`select-${lecture.slug}${lecture?.session?.classroom_final?.slug}`}
+                                      defaultValue={
+                                        lecture?.session?.classroom_final?.slug
+                                      }
+                                      onValueChange={(value) => {
+                                        // Update the correct hidden input field
+                                        const inputElement =
+                                          document.getElementById(
+                                            `${lecture.slug}${lecture?.session?.classroom_final?.slug}`,
+                                          ) as HTMLInputElement
+                                        if (inputElement) {
+                                          inputElement.value = value
+                                        }
+                                      }}
                                     >
-                                      <SelectValue placeholder="Select Classroom" />
-                                    </SelectTrigger>
-                                    <SelectContent className="h-[250px] bg-neutral-700 text-white">
-                                      {classRooms.map((c: any) => (
-                                        <SelectItem
-                                          key={`${c.slug}-${c.class_name}`}
-                                          value={c.slug}
-                                        >
-                                          {c.class_name}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-
-                                  <Button
-                                    type="submit"
-                                    className="bg-white text-black"
-                                    disabled={
-                                      sessionData[
-                                        lecture.session.session_id
-                                      ] === 'post'
-                                        ? true
-                                        : false
-                                    }
-                                  >
-                                    Change
-                                  </Button>
+                                      <SelectTrigger
+                                        className="w-auto border border-white/40 bg-zinc-700/40 px-4 text-white"
+                                        id={`select-${lecture.slug}${lecture?.session?.classroom_final?.slug}`}
+                                      >
+                                        <SelectValue placeholder="None" />
+                                      </SelectTrigger>
+                                      <SelectContent className="h-[250px] bg-neutral-700 text-white">
+                                        {classRooms.map((c: any) => (
+                                          <SelectItem
+                                            key={`${c.slug}-${c.class_name}`}
+                                            value={c.slug}
+                                          >
+                                            {c.class_name}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    <Button
+                                      type="submit"
+                                      className="bg-white text-black"
+                                      disabled={
+                                        sessionData[
+                                          lecture.session.session_id
+                                        ] === 'post'
+                                          ? true
+                                          : false
+                                      }
+                                    >
+                                      Change
+                                    </Button>
+                                  </div>
                                 </form>
                               </div>
                             </div>
@@ -330,35 +339,39 @@ const TeacherDashboard = () => {
             className="h-[100dvh] overflow-y-auto border-border bg-background sm:max-w-full"
           >
             <SheetHeader className="mb-6 flex flex-row items-center justify-between">
-              <SheetTitle className="text-2xl text-foreground">
+              <SheetTitle className="text-md text-foreground md:text-2xl">
                 Session Details
               </SheetTitle>
             </SheetHeader>
 
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {/* Session Information */}
-              <div className="rounded-lg border border-border bg-card p-4">
+              <div className="rounded-lg border border-border bg-card p-2 md:p-4">
                 <div className="flex justify-between">
-                  <h3 className="mb-4 text-[16px] font-semibold text-foreground md:text-lg">
+                  <h3 className="mb-2 text-[14px] font-semibold text-foreground md:mb-4 md:text-lg">
                     Session Information
                   </h3>
                   <Badge
                     variant="secondary"
-                    className="my-2 flex w-12 items-center justify-center rounded-sm bg-chart-3 capitalize"
+                    className="my-1 flex w-12 items-center justify-center rounded-sm bg-chart-3 capitalize md:my-2"
                   >
                     {onGoingSessionData?.lecture?.type}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">Teacher</p>
-                    <p className="font-medium text-foreground">
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Teacher
+                    </p>
+                    <p className="sm:text-md text-sm font-medium text-foreground">
                       {onGoingSessionData?.lecture?.teacher?.profile.name}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Subject</p>
-                    <p className="font-medium text-foreground">
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Subject
+                    </p>
+                    <p className="sm:text-md text-sm font-medium text-foreground">
                       {
                         onGoingSessionData?.lecture?.subject?.subject_map
                           .subject_name
@@ -366,23 +379,28 @@ const TeacherDashboard = () => {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Time</p>
-                    <p className="font-medium text-foreground">
-                      {onGoingSessionData?.lecture?.start_time} •{' '}
-                      {onGoingSessionData?.lecture?.end_time}
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Classroom
                     </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Classroom</p>
-                    <p className="font-medium text-foreground">
+                    <p className="sm:text-md text-sm font-medium text-foreground">
                       {onGoingSessionData?.lecture?.classroom?.class_name}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Time
+                    </p>
+                    <p className="sm:text-md text-sm font-medium text-foreground">
+                      {onGoingSessionData?.lecture?.start_time} •{' '}
+                      {onGoingSessionData?.lecture?.end_time}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="sm:text-md text-sm text-muted-foreground">
                       Division and Batch
                     </p>
-                    <p className="font-medium text-foreground">
+                    <p className="sm:text-md text-sm font-medium text-foreground">
                       {onGoingSessionData?.lecture?.batches.map(
                         (b: any) => b.division.division_name,
                       )}{' '}
@@ -393,25 +411,37 @@ const TeacherDashboard = () => {
                     </p>
                   </div>
                   <div className="capitalize">
-                    <p className="text-sm text-muted-foreground">Status</p>
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Status
+                    </p>
                     <SessionStatusBadge
                       status={onGoingSessionData?.lecture?.session?.active}
                     />
                   </div>
                 </div>
               </div>
-
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-2 sm:flex-row">
+                {!isSessionEnded && (
+                  <Button
+                    className="flex-1 bg-destructive text-white"
+                    onClick={() => handleOnSessionEnd()}
+                  >
+                    End Session
+                  </Button>
+                )}
+              </div>
               {/* Attendance Table */}
               <div className="rounded-lg border border-border">
-                <div className="flex items-center justify-between border-b border-border bg-muted/40 p-4">
-                  <h3 className="text-lg font-semibold text-foreground">
+                <div className="flex items-center justify-between border-b border-border bg-muted/40 p-2 md:p-4">
+                  <h3 className="text-md font-semibold text-foreground sm:text-lg">
                     Attendance
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     {students?.length} students present
                   </p>
                 </div>
-                <div className="flex h-[450px] w-full justify-center p-4">
+                <div className="flex h-[500px] w-full justify-center overflow-y-auto p-4">
                   {isSessionEnded ? (
                     <FinalAttendanceData
                       finalAttendanceData={finalAttendanceData}
@@ -438,9 +468,9 @@ const TeacherDashboard = () => {
                               <TableHeader>
                                 {students?.length > 0 && (
                                   <TableRow className="md:text-md border-border text-[12px]">
-                                    <TableHead>Enrollment Number</TableHead>
+                                    {/* <TableHead>Enrollment Number</TableHead> */}
                                     <TableHead>Student Name</TableHead>
-                                    <TableHead>Branch </TableHead>
+                                    {/* <TableHead>Branch </TableHead> */}
                                     <TableHead>Attendance Status</TableHead>
                                   </TableRow>
                                 )}
@@ -451,18 +481,18 @@ const TeacherDashboard = () => {
                                     key={student?.slug}
                                     className="border-border text-[12px] text-foreground"
                                   >
-                                    <TableCell className="font-medium">
+                                    {/* <TableCell className="font-medium">
                                       {student?.student?.enrollment}
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell>
                                       {student?.student?.profile?.name}
                                     </TableCell>
-                                    <TableCell>
+                                    {/* <TableCell>
                                       {student?.batches.map(
                                         (b: any) => b.division.full_name,
                                       )}
-                                    </TableCell>
-                                    <TableCell className="capitalize text-white">
+                                    </TableCell> */}
+                                    <TableCell className="flex items-center justify-center capitalize text-white">
                                       {student?.is_present === false ? (
                                         <span className="flex items-center gap-2 text-[10px] text-red-600 md:text-[12px]">
                                           <Ban className="size-4 md:size-6" />
@@ -507,18 +537,6 @@ const TeacherDashboard = () => {
                   )}
                 </div>
               </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col gap-2 sm:flex-row">
-                {!isSessionEnded && (
-                  <Button
-                    className="flex-1 bg-destructive text-white"
-                    onClick={() => handleOnSessionEnd()}
-                  >
-                    End Session
-                  </Button>
-                )}
-              </div>
             </div>
           </SheetContent>
         </Sheet>
@@ -529,15 +547,16 @@ const TeacherDashboard = () => {
 
 function SessionStatusBadge({ status }: { status: string }) {
   let variant: 'default' | 'secondary' | 'outline' = 'outline'
-  let classname: 'bg-red-500' | 'bg-chart-1' | 'bg-zinc-800' = 'bg-zinc-800'
+  let classname: 'bg-red-500' | 'bg-chart-1' | 'bg-chart-2' | 'bg-zinc-800' =
+    'bg-zinc-800'
 
   if (status === 'Inactive') {
     variant = 'secondary'
   } else if (status === 'Active') {
     variant = 'secondary'
-    classname = 'bg-chart-1'
+    classname = 'bg-chart-2'
   } else {
-    classname = 'bg-chart-1'
+    classname = 'bg-red-500'
   }
 
   return (

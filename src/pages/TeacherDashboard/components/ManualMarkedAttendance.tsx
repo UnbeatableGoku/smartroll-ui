@@ -23,9 +23,9 @@ export const ManualMarkedAttendance = ({
             <TableHeader>
               {manualAttendance?.length > 0 && (
                 <TableRow className="border-border">
-                  <TableHead>Enrollment Number</TableHead>
+                  {/* <TableHead>Enrollment Number</TableHead> */}
                   <TableHead>Student Name</TableHead>
-                  <TableHead>Branch </TableHead>
+                  {/* <TableHead>Branch </TableHead> */}
                   <TableHead>Comment</TableHead>
                   <TableHead>Action</TableHead>
                 </TableRow>
@@ -37,13 +37,13 @@ export const ManualMarkedAttendance = ({
                   key={student?.slug}
                   className="border-border text-foreground"
                 >
-                  <TableCell className="font-medium">
+                  {/* <TableCell className="font-medium">
                     {student?.student?.enrollment}
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>{student?.student?.profile?.name}</TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     {student?.batches.map((b: any) => b.division.full_name)}
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>{student?.regulization_comment}</TableCell>
                   <TableCell className="capitalize text-white">
                     <Checkbox
@@ -60,7 +60,7 @@ export const ManualMarkedAttendance = ({
             </TableBody>
           </Table>
         ) : (
-          <div className="flex items-center justify-center p-3 text-white">
+          <div className="flex items-center justify-center p-2 text-sm text-white">
             No Students Present
           </div>
         )}

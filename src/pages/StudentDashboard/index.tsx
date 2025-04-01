@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import useStudentDashboard from '@pages/StudentDashboard/hooks/useStudentDashboard'
-import { Clock, Users } from 'lucide-react'
+import { CheckIcon, Clock, Users } from 'lucide-react'
 
 import { cn } from '@utils'
 
@@ -58,8 +58,11 @@ const StudentDashboard = () => {
           {/* Session List */}
           <div className="grid w-full grid-cols-1 gap-4 p-2">
             {lectureDetails?.map((l: any) => (
-              <div className="w-full" key={l?.id || Math.random()}>
-                <div className="w-full rounded-md bg-zinc-700 p-4">
+              <div
+                className="w-full rounded-lg border-2 border-white/20 bg-secondary/30 p-3"
+                key={l?.id || Math.random()}
+              >
+                <div className="sm:text-md flex w-full items-center rounded-sm border-[8px] border-l-chart-1 bg-muted p-[6px] text-sm">
                   {l.stream.branch.branch_name}
                 </div>
                 <div className="px-2 md:px-8">
@@ -71,10 +74,10 @@ const StudentDashboard = () => {
                           key={lecture?.id || index}
                         >
                           <CardHeader className="pb-2 sm:pb-3">
-                            <div className="flex items-start justify-between">
+                            <div className="flex items-start justify-between gap-4">
                               <CardTitle className="break-words text-lg text-foreground sm:text-xl md:text-2xl">
-                                <div className="md:flex md:items-center md:gap-4">
-                                  <span className="text-[18px] md:text-xl">
+                                <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                                  <span className="text-sm md:text-xl">
                                     Subject:{' '}
                                     {
                                       lecture?.subject?.subject_map
@@ -89,59 +92,79 @@ const StudentDashboard = () => {
                                   </span>
                                   <Badge
                                     variant="secondary"
-                                    className="my-2 flex w-12 items-center justify-center rounded-sm bg-chart-3 capitalize"
+                                    className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
                                   >
                                     {lecture?.type}
                                   </Badge>
                                 </div>
                               </CardTitle>
-                              <SessionStatusBadge
-                                status={
+                              <Badge
+                                className={cn(
+                                  'flex w-24 items-center justify-center',
                                   lecture?.attendance_marked
-                                    ? 'Attendance Marked'
-                                    : 'Attendance Not Marked'
-                                }
-                              />
+                                    ? 'bg-chart-2'
+                                    : 'bg-red-500',
+                                )}
+                                variant={'outline'}
+                              >
+                                {lecture?.attendance_marked ? (
+                                  <span>Marked</span>
+                                ) : (
+                                  <span>Not Marked</span>
+                                )}
+                              </Badge>
                             </div>
                           </CardHeader>
                           <CardContent className="space-y-3 pt-2 sm:space-y-4 sm:pt-4">
-                            <div className="grid gap-2 sm:gap-4">
+                            <div className="grid gap-4 sm:gap-4">
                               <div className="flex flex-col gap-1 text-sm text-foreground sm:gap-2 sm:text-base">
-                                <div className="flex flex-col gap-1 sm:gap-2">
-                                  <div className="text-base sm:text-lg">
+                                <div className="flex flex-col gap-4 sm:gap-2">
+                                  <div className="text-xs sm:text-lg">
                                     <span>Teacher: </span>
                                     <span className="font-medium">
                                       {lecture?.teacher ?? 'N/A'}
                                     </span>
                                   </div>
-                                  <div className="text-base sm:text-lg">
+                                  <div className="flex gap-4 text-xs sm:text-lg">
                                     <div>
                                       <span>Sem: </span>
                                       <span className="font-medium">
                                         {lecture?.subject?.semester.no}
                                       </span>
                                     </div>
-                                  </div>
-                                  <div className="flex flex-col gap-1 text-base sm:flex-row sm:items-center sm:gap-2 sm:text-lg">
-                                    <div>
-                                      <span>Division: </span>
-                                      <span className="font-medium">
-                                        {lecture?.batches
-                                          ?.map(
-                                            (d: any) =>
-                                              d?.division.division_name,
-                                          )
-                                          .join(', ')}
+                                    <div className="flex flex-row gap-1 text-xs sm:items-center sm:gap-2 sm:text-lg">
+                                      <div>
+                                        <span>Division: </span>
+                                        <span className="font-medium">
+                                          {lecture?.batches
+                                            ?.map(
+                                              (d: any) =>
+                                                d?.division.division_name,
+                                            )
+                                            .join(', ')}
+                                        </span>
+                                      </div>
+                                      <span className="hidden sm:inline">
+                                        •
                                       </span>
+                                      <div>
+                                        <span>Batch: </span>
+                                        <span className="font-medium">
+                                          {lecture?.batches
+                                            ?.map((d: any) => d?.batch_name)
+                                            .join(', ')}
+                                        </span>
+                                      </div>
                                     </div>
-                                    <span className="hidden sm:inline">•</span>
-                                    <div>
-                                      <span>Batch: </span>
-                                      <span className="font-medium">
-                                        {lecture?.batches
-                                          ?.map((d: any) => d?.batch_name)
-                                          .join(', ')}
-                                      </span>
+                                    <div className="flex items-center gap-2 text-xs text-foreground sm:text-lg">
+                                      <Users className="h-3 w-3 text-muted-foreground sm:h-4 sm:w-4" />
+                                      <div>
+                                        <span>Classroom: </span>
+                                        <span className="font-medium">
+                                          {lecture?.classroom?.class_name ??
+                                            'N/A'}
+                                        </span>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -153,21 +176,12 @@ const StudentDashboard = () => {
                                   {lecture?.start_time} • {lecture?.end_time}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-2 text-xs text-foreground sm:text-sm">
-                                <Users className="h-3 w-3 text-muted-foreground sm:h-4 sm:w-4" />
-                                <span>
-                                  <span>Classroom: </span>
-                                  <span className="font-medium">
-                                    {lecture?.classroom?.class_name ?? 'N/A'}
-                                  </span>
-                                </span>
-                              </div>
                             </div>
                           </CardContent>
                           <CardFooter
                             className={`grid grid-cols-2 gap-2 ${lecture?.status === 'Upcoming' ? '' : 'flex-col'}`}
                           >
-                            {!lecture?.attendance_marked && (
+                            {lecture?.attendance_marked && (
                               <>
                                 <Button
                                   className="cursor-pointer"
@@ -178,7 +192,7 @@ const StudentDashboard = () => {
                                   Mark Attendance
                                 </Button>
                                 <Button
-                                  className="cursor-pointer rounded-lg bg-blue-600 py-2 font-semibold text-white transition hover:bg-blue-700"
+                                  className="cursor-pointer bg-blue-950 text-white transition hover:bg-blue-700"
                                   onClick={(e) =>
                                     handleManualMarking(e.target, lecture?.slug)
                                   }
@@ -204,12 +218,20 @@ const StudentDashboard = () => {
 
 function SessionStatusBadge({ status }: { status: any }) {
   let variant: 'default' | 'secondary' | 'outline' = 'outline'
-
+  let classname: 'bg-red-500' | 'bg-chart-1' | 'bg-chart-2' | 'bg-zinc-800' =
+    'bg-zinc-800'
+  if (status === 'Marked') {
+    classname = 'bg-chart-1'
+    variant = 'secondary'
+  } else {
+    classname = 'bg-chart-2'
+  }
   return (
     <Badge
       variant={variant}
       className={cn(
         'rounded-md bg-chart-1 text-center text-[10px] text-white md:text-[12px]',
+        classname,
       )}
     >
       {status}

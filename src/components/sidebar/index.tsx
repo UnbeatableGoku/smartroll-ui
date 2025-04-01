@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { setAuth } from '@data/redux/slices/authSlice'
@@ -18,6 +18,7 @@ import TabLink from './tabLink'
 const Sidebar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
   const handelLogout = () => {
     //clear local storage
     localStorage.removeItem('accessToken')
@@ -63,7 +64,7 @@ const Sidebar = () => {
   )
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 flex justify-center">
+    <div className="menu fixed bottom-4 left-0 right-0 flex justify-center">
       <div className="sh flex items-center gap-1 rounded-lg border border-zinc-700 p-1 shadow-inner shadow-slate-900 backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105 dark:bg-black/40">
         <NotificationDrawer></NotificationDrawer>
         {menuItems.map((item, index) => (
