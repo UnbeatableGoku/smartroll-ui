@@ -90,40 +90,49 @@ const StudentDashboard = () => {
                                     }
                                     )
                                   </span>
-                                  <Badge
-                                    variant="secondary"
-                                    className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
-                                  >
-                                    {lecture?.type}
-                                  </Badge>
+                                  <div className="flex gap-4">
+                                    <Badge
+                                      variant="secondary"
+                                      className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
+                                    >
+                                      {lecture?.type}
+                                    </Badge>
+                                    <Badge
+                                      className={cn(
+                                        'w-auto bg-chart-2',
+                                        !lecture?.attendance_marked && 'hidden',
+                                      )}
+                                      variant={'outline'}
+                                      id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}
+                                    >
+                                      <span>Present</span>
+                                    </Badge>
+                                  </div>
                                 </div>
                               </CardTitle>
-                              <Badge
-                                className={cn(
-                                  'flex w-24 items-center justify-center',
-                                  lecture?.attendance_marked
-                                    ? 'bg-chart-2'
-                                    : 'bg-red-500',
-                                )}
-                                variant={'outline'}
-                              >
-                                {lecture?.attendance_marked ? (
-                                  <span>Marked</span>
-                                ) : (
-                                  <span>Not Marked</span>
-                                )}
-                              </Badge>
                             </div>
                           </CardHeader>
                           <CardContent className="space-y-3 pt-2 sm:space-y-4 sm:pt-4">
                             <div className="grid gap-4 sm:gap-4">
                               <div className="flex flex-col gap-1 text-sm text-foreground sm:gap-2 sm:text-base">
                                 <div className="flex flex-col gap-4 sm:gap-2">
-                                  <div className="text-xs sm:text-lg">
-                                    <span>Teacher: </span>
-                                    <span className="font-medium">
-                                      {lecture?.teacher ?? 'N/A'}
-                                    </span>
+                                  <div className="flex gap-4">
+                                    <div className="text-xs sm:text-lg">
+                                      <span>Teacher: </span>
+                                      <span className="font-medium">
+                                        {lecture?.teacher ?? 'N/A'}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-foreground sm:text-lg">
+                                      <Users className="h-3 w-3 text-muted-foreground sm:h-4 sm:w-4" />
+                                      <div>
+                                        <span>Classroom: </span>
+                                        <span className="font-medium">
+                                          {lecture?.classroom?.class_name ??
+                                            'N/A'}
+                                        </span>
+                                      </div>
+                                    </div>
                                   </div>
                                   <div className="flex gap-4 text-xs sm:text-lg">
                                     <div>
@@ -156,16 +165,6 @@ const StudentDashboard = () => {
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="flex items-center gap-2 text-xs text-foreground sm:text-lg">
-                                      <Users className="h-3 w-3 text-muted-foreground sm:h-4 sm:w-4" />
-                                      <div>
-                                        <span>Classroom: </span>
-                                        <span className="font-medium">
-                                          {lecture?.classroom?.class_name ??
-                                            'N/A'}
-                                        </span>
-                                      </div>
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -179,20 +178,25 @@ const StudentDashboard = () => {
                             </div>
                           </CardContent>
                           <CardFooter
-                            className={`grid grid-cols-2 gap-2 ${lecture?.status === 'Upcoming' ? '' : 'flex-col'}`}
+                            className={`flex w-full flex-wrap gap-2 p-3 md:flex-nowrap`}
                           >
                             {!lecture?.attendance_marked && (
                               <>
                                 <Button
-                                  className="cursor-pointer"
+                                  className="md:text-md w-full cursor-pointer text-xs"
                                   onClick={(e) =>
-                                    mark_attendance(e.target, lecture?.slug)
+                                    mark_attendance(
+                                      e.target,
+                                      lecture?.slug,
+                                      lecture?.session?.session_id,
+                                    )
                                   }
                                 >
                                   Mark Attendance
                                 </Button>
                                 <Button
-                                  className="cursor-pointer bg-blue-950 text-white transition hover:bg-blue-700"
+                                  className="md:text-md w-full bg-blue-950 text-xs text-white transition hover:bg-blue-700"
+                                  id={`${lecture?.slug}${lecture?.session?.session_id}`}
                                   onClick={(e) =>
                                     handleManualMarking(e.target, lecture?.slug)
                                   }

@@ -68,7 +68,12 @@ const useStudentDashboard = () => {
     }
   }
 
-  const mark_attendance = async (btn: any, lecture_slug: string) => {
+  const mark_attendance = async (
+    btn: any,
+    lecture_slug: string,
+    session_id: string,
+  ) => {
+    btn.disabled = true
     if (!navigator.geolocation) {
       toast.error('Geolocation is not supported by this browser.')
       return
@@ -103,12 +108,24 @@ const useStudentDashboard = () => {
               if (code === 100) {
                 btn.disabled = true
                 btn.classList.add('btn-outline-secondary')
+                const manualBtn = document.getElementById(
+                  `${lecture_slug}${session_id}`,
+                ) as HTMLButtonElement
+                manualBtn.disabled = true
+
+                const presentBadge = document.getElementById(
+                  `badge_${lecture_slug}${session_id}`,
+                ) as HTMLElement
+                presentBadge.classList.remove('hidden')
+              } else {
+                btn.disabled = false
               }
 
               toast.success('Attendance Marked successfully!')
             }
           } else {
             toast.error(response_obj.errorMessage?.message)
+            btn.disabled = false
           }
         },
         (error) => {
@@ -118,6 +135,7 @@ const useStudentDashboard = () => {
         { enableHighAccuracy: true, maximumAge: 0 },
       )
     } catch (error) {
+      btn.disabled = false
       toast.error(
         'Location services are not available, Please enable it from you browser',
       )

@@ -76,7 +76,7 @@ const TeacherDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="h-auto">
       {/* Main Content */}
       <main className="pb-16 pt-6">
         <div className="mb-6 pl-2">
@@ -383,7 +383,10 @@ const TeacherDashboard = () => {
                       Classroom
                     </p>
                     <p className="sm:text-md text-sm font-medium text-foreground">
-                      {onGoingSessionData?.lecture?.classroom?.class_name}
+                      {
+                        onGoingSessionData?.lecture?.session?.classroom_final
+                          ?.class_name
+                      }
                     </p>
                   </div>
                   <div>
