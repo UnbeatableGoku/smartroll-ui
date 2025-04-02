@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { setAuth } from '@data/redux/slices/authSlice'

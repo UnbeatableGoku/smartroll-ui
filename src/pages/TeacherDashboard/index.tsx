@@ -492,7 +492,7 @@ const TeacherDashboard = () => {
                                         (b: any) => b.division.full_name,
                                       )}
                                     </TableCell> */}
-                                    <TableCell className="flex items-center justify-center capitalize text-white">
+                                    <TableCell className="capitalize text-white">
                                       {student?.is_present === false ? (
                                         <span className="flex items-center gap-2 text-[10px] text-red-600 md:text-[12px]">
                                           <Ban className="size-4 md:size-6" />

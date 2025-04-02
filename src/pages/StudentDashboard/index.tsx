@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import useStudentDashboard from '@pages/StudentDashboard/hooks/useStudentDashboard'
-import { CheckIcon, Clock, Users } from 'lucide-react'
+import { Clock, Users } from 'lucide-react'
 
 import { cn } from '@utils'
 
@@ -181,7 +181,7 @@ const StudentDashboard = () => {
                           <CardFooter
                             className={`grid grid-cols-2 gap-2 ${lecture?.status === 'Upcoming' ? '' : 'flex-col'}`}
                           >
-                            {lecture?.attendance_marked && (
+                            {!lecture?.attendance_marked && (
                               <>
                                 <Button
                                   className="cursor-pointer"
@@ -216,26 +216,4 @@ const StudentDashboard = () => {
   )
 }
 
-function SessionStatusBadge({ status }: { status: any }) {
-  let variant: 'default' | 'secondary' | 'outline' = 'outline'
-  let classname: 'bg-red-500' | 'bg-chart-1' | 'bg-chart-2' | 'bg-zinc-800' =
-    'bg-zinc-800'
-  if (status === 'Marked') {
-    classname = 'bg-chart-1'
-    variant = 'secondary'
-  } else {
-    classname = 'bg-chart-2'
-  }
-  return (
-    <Badge
-      variant={variant}
-      className={cn(
-        'rounded-md bg-chart-1 text-center text-[10px] text-white md:text-[12px]',
-        classname,
-      )}
-    >
-      {status}
-    </Badge>
-  )
-}
 export default StudentDashboard
