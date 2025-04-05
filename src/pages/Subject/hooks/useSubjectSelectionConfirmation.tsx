@@ -27,8 +27,11 @@ const useSubjectSelectionConfirmation = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hooks that used to call API
 
   //useState to open and close the side panel for teacher to subject map
-  const [openPanelForTeacherToSubjectMap,setOpenPanelForTeacherToSubjectMap] = useState<boolean>(false)
-  const [teacherToSubjectMapData,setTeacherToSubjectMapData] = useState<any[]>([])
+  const [openPanelForTeacherToSubjectMap, setOpenPanelForTeacherToSubjectMap] =
+    useState<boolean>(false)
+  const [teacherToSubjectMapData, setTeacherToSubjectMapData] = useState<any[]>(
+    [],
+  )
   const downloadTeachetToSubjectMapRef = useRef<HTMLAnchorElement>()
 
   //function : handle the value change of the stream
@@ -243,11 +246,9 @@ const useSubjectSelectionConfirmation = () => {
     }
   }
 
-
-
-  //function:: to load the teacher to suject map data by 
-  const handleOnClickForLoadTeacherToSubjectMap = async()=>{
-    try{
+  //function:: to load the teacher to suject map data by
+  const handleOnClickForLoadTeacherToSubjectMap = async () => {
+    try {
       const axiosInstance = axios.create()
       const method = 'get'
       const endpoint = `/manage/get_all_subjects_of_teacher`
@@ -263,24 +264,25 @@ const useSubjectSelectionConfirmation = () => {
         header,
       )
 
-      if(response_obj.error === false){
-        const checkData = get(response_obj,'response.data.data',[])
+      if (response_obj.error === false) {
+        const checkData = get(response_obj, 'response.data.data', [])
         setTeacherToSubjectMapData(checkData)
         setOpenPanelForTeacherToSubjectMap(!openPanelForTeacherToSubjectMap)
-      } 
-      else{
+      } else {
         toast.error(response_obj.errorMessage?.message)
       }
-    }
-    catch(error:any){
+    } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
     }
   }
 
-
   //function:: handle the teacher subject choice unlock button
-  const handleOnDeleteTeacherSubjectChoice = async(teacher_slug:any,teacherName:string,stream:string)=>{
-    try{
+  const handleOnDeleteTeacherSubjectChoice = async (
+    teacher_slug: any,
+    teacherName: string,
+    stream: string,
+  ) => {
+    try {
       const axiosInstance = axios.create()
       const method = 'post'
       const endpoint = `/manage/unlock_subject_choices_for_teacher/`
@@ -289,7 +291,7 @@ const useSubjectSelectionConfirmation = () => {
         Authorization: `Bearer ${StoredTokens.accessToken}`,
       }
       const body = {
-        teacher_slug : teacher_slug,
+        teacher_slug: teacher_slug,
       }
       const response_obj = await CallAPI(
         StoredTokens,
@@ -297,83 +299,81 @@ const useSubjectSelectionConfirmation = () => {
         endpoint,
         method,
         header,
-        body
+        body,
       )
 
-      if(response_obj.error === false && response_obj.response?.data.data){
-        if(response_obj.response?.data?.data?.choices_unlocked){
-          setTeacherToSubjectMapData((prevData)=>{
-            return prevData.filter((data:any)=>data.teacher.slug != teacher_slug)
+      if (response_obj.error === false && response_obj.response?.data.data) {
+        if (response_obj.response?.data?.data?.choices_unlocked) {
+          setTeacherToSubjectMapData((prevData) => {
+            return prevData.filter(
+              (data: any) => data.teacher.slug != teacher_slug,
+            )
           })
-        }
-        else{
-
-          
-         
+        } else {
           setTeacherToSubjectMapData((prevData: any) => {
             // Find the teacher with the matching slug
-            const updatedData = prevData.map((teacher:any)=>{
-              if(teacher.teacher.slug === teacher_slug){
-                const updatedStreams = teacher.selected_subjects.map((streamData:any)=>{
-                  if(streamData.stream_name === stream){
-                    
-                    return {...streamData, choices_locked: false}
-                  }
-                  return streamData
-                })
-                return {...teacher, selected_subjects: updatedStreams}
+            const updatedData = prevData.map((teacher: any) => {
+              if (teacher.teacher.slug === teacher_slug) {
+                const updatedStreams = teacher.selected_subjects.map(
+                  (streamData: any) => {
+                    if (streamData.stream_name === stream) {
+                      return { ...streamData, choices_locked: false }
+                    }
+                    return streamData
+                  },
+                )
+                return { ...teacher, selected_subjects: updatedStreams }
               }
               return teacher
             })
-          
-            return updatedData;
-          });
-          
+
+            return updatedData
+          })
         }
-          toast.success(`Subject choice for facult - ${teacherName} is successfully unlock..!!`)
-      }
-      else{
+        toast.success(
+          `Subject choice for facult - ${teacherName} is successfully unlock..!!`,
+        )
+      } else {
         toast.error(response_obj.errorMessage?.message)
       }
-    }
-    catch(error:any){
+    } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
     }
   }
 
-  //function:: to download the teacher to subject map 
-  const handleOnClickForDownloadExcelForTeacherToSubjectMap = async()=>{
-      try{
-        const axiosInstance = axios.create()
-        const method = 'get'
-        const endpoint = `/manage/get_teacher_to_subject_excel`
-        const header = {
-          'ngrok-skip-browser-warning': true,
-          Authorization: `Bearer ${StoredTokens.accessToken}`,
-        }
-        
-        const response_obj = await CallAPI(
-          StoredTokens,
-          axiosInstance,
-          endpoint,
-          method,
-          header,
+  //function:: to download the teacher to subject map
+  const handleOnClickForDownloadExcelForTeacherToSubjectMap = async () => {
+    try {
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_teacher_to_subject_excel`
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
+      if (response_obj.error === false) {
+        downloadExcelFile(
+          response_obj.response?.data?.data?.file_content,
+          response_obj.response?.data?.data?.file_name,
         )
-        if(response_obj.error === false){
-          console.log(response_obj.response)
-          downloadExcelFile(response_obj.response?.data?.data?.file_content,response_obj.response?.data?.data?.file_name)
-        }
-        else{
-          toast.error(response_obj.errorMessage?.message)
-        }
+      } else {
+        toast.error(response_obj.errorMessage?.message)
       }
-      catch(error:any){
-        toast.error(error.message || 'Something went wrong')
-      }
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong')
+    }
   }
 
-  const handleOnClickForDownloadExcelForSubjectToTeacherMap = async()=>{
-    try{
+  const handleOnClickForDownloadExcelForSubjectToTeacherMap = async () => {
+    try {
       const axiosInstance = axios.create()
       const method = 'get'
       const endpoint = `/manage/get_subject_to_teacher_excel`
@@ -381,7 +381,7 @@ const useSubjectSelectionConfirmation = () => {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
       }
-      
+
       const response_obj = await CallAPI(
         StoredTokens,
         axiosInstance,
@@ -389,79 +389,83 @@ const useSubjectSelectionConfirmation = () => {
         method,
         header,
       )
-      if(response_obj.error === false){
-        console.log(response_obj.response)
-        downloadExcelFile(response_obj.response?.data?.data?.file_content,response_obj.response?.data?.data?.file_name)
-      }
-      else{
+      if (response_obj.error === false) {
+        downloadExcelFile(
+          response_obj.response?.data?.data?.file_content,
+          response_obj.response?.data?.data?.file_name,
+        )
+      } else {
         toast.error(response_obj.errorMessage?.message)
       }
-    }
-    catch(error:any){
+    } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
     }
-}
+  }
 
-const handleOnClickForLoadStudentToSubjectMap = async(semester_slug:string)=>{
-  try{
-    const axiosInstance = axios.create()
-    const method = 'get'
-    const endpoint = `/manage/get_student_to_subject_excel/${semester_slug}`
-    const header = {
-      'ngrok-skip-browser-warning': true,
-      Authorization: `Bearer ${StoredTokens.accessToken}`,
-    }
-    const response_obj = await CallAPI(
-      StoredTokens,
-      axiosInstance,
-      endpoint,
-      method,
-      header,
-    )
+  const handleOnClickForLoadStudentToSubjectMap = async (
+    semester_slug: string,
+  ) => {
+    try {
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_student_to_subject_excel/${semester_slug}`
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
 
-    if(response_obj.error === false){
-      console.log(response_obj.response)
-      downloadExcelFile(response_obj.response?.data?.data?.file_content,response_obj.response?.data?.data?.file_name)
-    }
-    else{
-      toast.error(response_obj.errorMessage?.message)
+      if (response_obj.error === false) {
+        downloadExcelFile(
+          response_obj.response?.data?.data?.file_content,
+          response_obj.response?.data?.data?.file_name,
+        )
+      } else {
+        toast.error(response_obj.errorMessage?.message)
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong')
     }
   }
-  catch(error:any){
-    toast.error(error.message || 'Something went wrong')
-  }
-}
-  const downloadExcelFile = (base64String:string,filename:string) => {
+  const downloadExcelFile = (base64String: string, filename: string) => {
     // Decode base64 string into binary
-    const byteCharacters = atob(base64String); // decode base64 to raw binary
-    const byteArrays = [];
+    const byteCharacters = atob(base64String) // decode base64 to raw binary
+    const byteArrays = []
 
     // Convert the binary string into a byte array
     for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-      const slice = byteCharacters.slice(offset, offset + 1024);
-      const byteNumbers = new Array(slice.length);
+      const slice = byteCharacters.slice(offset, offset + 1024)
+      const byteNumbers = new Array(slice.length)
       for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
+        byteNumbers[i] = slice.charCodeAt(i)
       }
-      byteArrays.push(new Uint8Array(byteNumbers));
+      byteArrays.push(new Uint8Array(byteNumbers))
     }
 
     // Create a Blob from the byte array
-    const blob = new Blob(byteArrays, { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const blob = new Blob(byteArrays, {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    })
 
     // Create an anchor element for download
-     // Create an anchor element for download
-     const link = document.createElement('a');
-     link.href = URL.createObjectURL(blob);
-     link.download = filename; // Specify the file name
-     document.body.appendChild(link);
-     
-     // Trigger the click event to download
-     link.click();
-     
-     // Clean up by removing the link element
-     document.body.removeChild(link);
-  };
+    // Create an anchor element for download
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = filename // Specify the file name
+    document.body.appendChild(link)
+
+    // Trigger the click event to download
+    link.click()
+
+    // Clean up by removing the link element
+    document.body.removeChild(link)
+  }
 
   return {
     selectedStream,
@@ -495,7 +499,7 @@ const handleOnClickForLoadStudentToSubjectMap = async(semester_slug:string)=>{
     handleOnClickForDownloadExcelForTeacherToSubjectMap,
     downloadTeachetToSubjectMapRef,
     handleOnClickForDownloadExcelForSubjectToTeacherMap,
-    handleOnClickForLoadStudentToSubjectMap
+    handleOnClickForLoadStudentToSubjectMap,
   }
 }
 

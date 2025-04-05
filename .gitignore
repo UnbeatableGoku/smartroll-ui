@@ -53,3 +53,4 @@ dist-ssr
 *.env.example
 *.env.local
 *.env.staging
+.qodo

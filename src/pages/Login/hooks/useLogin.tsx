@@ -86,9 +86,9 @@ const useLogin = () => {
       if (decode.obj.profile.role === 'admin') {
         return navigate('/subject/subject-select') //:: CHANGE TO '/'
       } else if (decode.obj.profile.role === 'teacher') {
-        return navigate('/teacher-dashboard/subject-choice') //:: CHANGE TO '/teacher-dashboard'
+        return navigate('/teacher-dashboard') //:: CHANGE TO '/teacher-dashboard'
       } else if (decode.obj.profile.role === 'student') {
-        return navigate('/student-dashboard/elective-subject') //:: CHANGE TO '/student-dashboard'
+        return navigate('/student-dashboard') //:: CHANGE TO '/student-dashboard'
       } else {
         return navigate('/login')
       }
@@ -105,7 +105,6 @@ const useLogin = () => {
   const redirectLogin = () => {
     try {
       if (access_token) {
-        
         const decode = jwtDecode<DecodedToken>(access_token)
         if (decode?.obj?.profile?.role === 'admin') {
           navigate('/')
