@@ -79,13 +79,25 @@ const TeacherDashboard = () => {
     <div className="h-auto">
       {/* Main Content */}
       <main className="pb-16 pt-6">
-        <div className="mb-6 pl-2">
-          <h2 className="text-md font-bold tracking-tight text-foreground md:text-2xl">
-            Today's Lectures
-          </h2>
-          <p className="md:text-md text-sm text-muted-foreground">
-            Manage your classes and track attendance.
-          </p>
+        <div className="px-2 py-2">
+          <Select>
+            <SelectTrigger className="w-full border border-white/40 bg-zinc-700/40 px-4 text-white">
+              <SelectValue placeholder="Select day" />
+            </SelectTrigger>
+            <SelectContent className="h-auto bg-neutral-700 text-white">
+              {[
+                { id: 1, name: 'Monday' },
+                { id: 2, name: 'Tuesday' },
+                { id: 3, name: 'Wednesday' },
+                { id: 4, name: 'Thursday' },
+                { id: 5, name: 'Friday' },
+              ].map((day) => (
+                <SelectItem key={day.id} value={day.name}>
+                  {day.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Session List */}
@@ -100,27 +112,23 @@ const TeacherDashboard = () => {
                   {l.branch_name}
                 </div>
                 {l?.lectures?.map((lecture: any, index: number) => (
-                  <div className="px-1 py-4 md:px-8">
+                  <div className="px-1 pt-4 md:px-8">
                     <Card
                       key={lecture?.id || index}
                       className="w-full overflow-hidden border-border bg-zinc-600/10"
                     >
-                      <CardHeader className="p-4 pb-3">
+                      <CardHeader className="p-4">
                         <div className="flex items-start justify-between">
-                          <CardTitle className="p-0 text-2xl text-foreground">
-                            <div className="md:flex md:items-center md:gap-4">
-                              <span className="text-[16px] md:text-xl">
-                                Subject:{' '}
-                                {lecture?.subject?.subject_map?.subject_name} (
-                                {lecture?.subject?.subject_map?.subject_code})
-                              </span>
-                              <Badge
-                                variant="secondary"
-                                className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
-                              >
-                                {lecture?.type}
-                              </Badge>
-                            </div>
+                          <CardTitle className="text-2xl text-foreground">
+                            <span className="text-[16px] md:text-xl">
+                              {lecture?.subject?.subject_map?.subject_name}
+                            </span>
+                            <Badge
+                              variant="secondary"
+                              className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
+                            >
+                              {lecture?.type}
+                            </Badge>
                           </CardTitle>
                           <SessionStatusBadge
                             status={

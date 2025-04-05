@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
+
 import { RootState } from '@data/redux/Store'
 import { jwtDecode } from 'jwt-decode'
+import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
 
 interface DecodedToken {
@@ -29,7 +30,6 @@ const useAuth = () => {
   const [role, setRole] = useState<string | null>(null) // Track role
   const [loading, setLoading] = useState<boolean>(true) // Track loading state
   const Auth = useSelector((state: RootState) => state.auth) // Get auth from redux
-  
   useEffect(() => {
     const accessToken = Auth?.accessToken
     if (accessToken != undefined && accessToken != null) {
@@ -38,9 +38,9 @@ const useAuth = () => {
         if (decoded) {
           setRole(decoded.obj.profile.role) // Set the role from decoded token
         }
-      } catch (error:any) {
+      } catch (error: any) {
         toast.error(error.message)
-        console.error("Invalid token", error)
+        console.error('Invalid token', error)
         setRole(null) // Reset role if token is invalid
       }
     } else {
@@ -48,7 +48,7 @@ const useAuth = () => {
     }
     setLoading(false) // Set loading to false after processing
   }, [Auth?.accessToken]) // Re-run effect when accessToken changes
-  
+
   return { role, loading } // Return role and loading state
 }
 

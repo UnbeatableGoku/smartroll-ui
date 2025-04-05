@@ -39,8 +39,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     else if (role == 'teacher') {
       return <Navigate to={PAGE_TEACHER_DASHBOARD.path} replace />
     } else if (role == 'student') {
-      return <Navigate to={PAGE_STUDENT_DASHBOARD.path} replace />
-    } else {
       return <Navigate to={PAGE_LOGIN.path} replace />
     }
   }
