@@ -1,11 +1,8 @@
 // src/components/common/ProtectedRoute.tsx
-import React from 'react'
-
 import { Navigate } from 'react-router-dom'
 
 import {
-  PAGE_LOGIN,
-  PAGE_STUDENT_DASHBOARD,
+  PAGE_LOGIN, // PAGE_STUDENT_DASHBOARD,
   PAGE_SUBJECT_SELECT,
   PAGE_TEACHER_DASHBOARD,
 } from '@constants'
@@ -20,8 +17,8 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   roleRequired,
-}) => {
-  const { role, loading } = useAuth()
+}: any) => {
+  const { role, loading, Auth } = useAuth()
 
   if (loading) {
     return <div>Loading...</div> // Show a loading state until role is determined
@@ -39,7 +36,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     else if (role == 'teacher') {
       return <Navigate to={PAGE_TEACHER_DASHBOARD.path} replace />
     } else if (role == 'student') {
-      return <Navigate to={PAGE_STUDENT_DASHBOARD.path} replace />
+      const callbackUrl = `smartrollauth://callback?access_token=${Auth.accessToken}&refresh_token=${Auth.refreshToken}`
+      return (window.location.href = callbackUrl)
     } else {
       return <Navigate to={PAGE_LOGIN.path} replace />
     }

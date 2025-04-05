@@ -33,7 +33,6 @@ const useSubjectToTeacherAllocation = () => {
 
     useEffect(() => {
         if (!isDataLoaded) {
-            console.log("first")
             loadSubjetAllocationData()
         }
     }, [isDataLoaded, dispatch])

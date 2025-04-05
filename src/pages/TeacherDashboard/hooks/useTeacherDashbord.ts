@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { get } from 'lodash'
@@ -6,8 +6,11 @@ import { Socket, io } from 'socket.io-client'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-
+import { RootState } from '@data/redux/Store'
 import { LectureDetails } from 'types/common'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { setClassRoomList} from '@data/redux/slices/classRoomsSlice'
 
 export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
@@ -23,7 +26,56 @@ export const useTeacherDashbord = () => {
   const [open, setOpen] = useState(false)
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
+  
+  const dispatch = useDispatch()
+  // do some changes 
 
+  const {isalreadyLoaded,classes} = useSelector((state: RootState) => state.classRoomSlice)
+  const [classesList, setClasses] = useState<any>(classes)
+  useEffect(()=>{
+    if(!isalreadyLoaded){
+      // call the classroom load data
+      loadClassRooms()
+    }
+  },[isalreadyLoaded,dispatch])
+
+
+
+
+
+
+
+
+  const loadClassRooms = async()=>{
+    try{
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_classrooms_for_teacher`
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
+      if(response_obj.error === false){
+        const response = get(response_obj, 'response.data.data', [])
+        setClasses(response)
+        const payload = {
+          isalreadyLoaded : true,
+          classes:response
+        }
+        dispatch(setClassRoomList(payload))
+      }
+    }
+    catch(error:any){
+      toast.error(error.message || "something went wrong")
+    }
+  }
   const clientSocketHandler = (session_id: string, auth_token: string) => {
     const newSocket = io(`${window.socket_url}/client`, {
       withCredentials: true,
