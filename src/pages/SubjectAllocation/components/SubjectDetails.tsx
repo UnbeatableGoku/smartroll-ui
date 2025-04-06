@@ -39,7 +39,7 @@ const SubjectDetails = ({allocation,handleOnChangeManageHoursForSubjectToTeacher
                   <Input
                     type="number"
                     value={teacher.hours}
-                    onChange={(e) => handleOnChangeManageHoursForSubjectToTeacher(teacher.hours,Number(e.target.value),allocation.subject.slug,teacher.teacher.slug,allocation.subject.is_practical ? 'practical': 'theory' , activeTab,true )}
+                    onChange={(e) => handleOnChangeManageHoursForSubjectToTeacher(teacher.hours,Number(e.target.value),allocation.subject.slug,teacher.teacher.slug,allocation.subject.subject_map.is_practical ? 'practical': 'theory' , activeTab,true )}
                     min={0}
                     step={activeTab === 'lab' ? 2 : 1} 
                     className="w-20"
@@ -48,7 +48,7 @@ const SubjectDetails = ({allocation,handleOnChangeManageHoursForSubjectToTeacher
                 </TableCell>
                 <TableCell>
                     <Button variant={'destructive'} size={'icon'}
-                      onClick={(e:any)=> {e.preventDefault(); handleOnClickToDeleteAllocation(allocation.subject.slug,teacher.teacher.slug,allocation.subject.is_practical ? 'practical': 'theory' , activeTab)}}
+                      onClick={(e:any)=> {e.preventDefault(); handleOnClickToDeleteAllocation(allocation.subject.slug,teacher.teacher.slug,allocation.subject.subject_map.is_practical ? 'practical': 'theory' , activeTab)}}
                     >
                         <Trash></Trash>
                     </Button>

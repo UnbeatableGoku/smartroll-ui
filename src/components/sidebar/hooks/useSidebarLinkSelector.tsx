@@ -23,9 +23,9 @@ const useSidebarLinkSelector = () => {
       'SUBJECT-SELECT',
       'SUBJECT_SELECTION_CONFIRMATION',
       'DIVISION_CREATION',
-      'SUBJECT_ALLOCATION'
+      'TEACHER_ALLOCATION',
     ],
-    teacher: ['SUBJECT-CHOICE'],
+    teacher: ['SUBJECT-CHOICE','LOAD_ALLOCATION_FOR_TEACHER_END'],
     student: ['ELECTIVE_SUBJECT', 'STUDENT_DIVISION'],
   }
 

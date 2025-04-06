@@ -68,6 +68,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     path: '/subject/subject-selection-confirmation',
   },
   {
+    id: 'TEACHER_ALLOCATION',
+    name: 'Teacher Allocation',
+    icon: (
+      <UsersRound
+        className="h-26 w-26 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/subject/teacher-allocation',
+  },
+  {
     id: 'ELECTIVE_SUBJECT',
     name: 'Elective Subject',
     icon: (
@@ -91,6 +103,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     ),
     path: '/student-dashboard/division',
   },
+
   {
     id: 'SUBJECT-CHOICE',
     name: 'Subject-Choice',
@@ -126,6 +139,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
       />
     ),
     path: '/admin/subject-allocation',
+  },
+  {
+    id: 'LOAD_ALLOCATION_FOR_TEACHER_END',
+    name: 'Load allocation',
+    icon: (
+      <SquareCheck
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-dashboard/load-allocation',
   },
 
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },

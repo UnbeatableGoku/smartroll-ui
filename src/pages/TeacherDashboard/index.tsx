@@ -1,8 +1,571 @@
+import { useEffect } from 'react'
 
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import DialogBox from '@pages/TeacherDashboard/components/DialogBox'
+import { FinalAttendanceData } from '@pages/TeacherDashboard/components/FinalAttendanceData'
+import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
+import { BadgeCheck, Ban, Clock, FileDown, Users } from 'lucide-react'
+
+import { cn } from '@utils'
+
+import { useTeacherDashbord } from './hooks/useTeacherDashbord'
+// No need for unused type imports
 
 const TeacherDashboard = () => {
+  const {
+    startSessionHandler,
+    getLectureDetails,
+    lectureDetails,
+    sessionData,
+    isSheetOpen,
+    setIsSheetOpen,
+    socket,
+    onGoingSessionData,
+    students,
+    manualAttendance,
+    removeStudentAttendanceRequest,
+    markManualStudentsAttendance,
+    finalAttendanceData,
+    isSessionEnded,
+    handleOnSessionEnd,
+    handleClassroom,
+    open,
+    setOpen,
+    classRoomData,
+    changeClassRoomAPI,
+    handleOnClickForDownloadExcelForAttendance,
+    currentDay,
+    classesList
+  } = useTeacherDashbord()
+
+  useEffect(() => {
+    getLectureDetails()
+  }, [])
+
+  const handleSheet = () => {
+    setIsSheetOpen(false)
+    socket?.disconnect()
+  }
+
   return (
-    <div>teacher dashboard</div>
+    <div className="h-auto">
+      {/* Main Content */}
+      <main className="pb-16 pt-6">
+        <div className="px-2 py-2">
+          <Select onValueChange={(value) => getLectureDetails(value)} value={currentDay}>
+            <SelectTrigger className="w-full border border-white/40 bg-zinc-700/40 px-4 text-white">
+              <SelectValue placeholder="Select day" />
+            </SelectTrigger>
+            <SelectContent className="h-auto bg-neutral-700 text-white">
+              {[
+                { id: 'monday', name: 'Monday' },
+                { id: 'tuesday', name: 'Tuesday' },
+                { id: 'wednesday', name: 'Wednesday' },
+                { id: 'thursday', name: 'Thursday' },
+                { id: 'friday', name: 'Friday' },
+                { id: 'saturday', name: 'Saturday' },
+                { id: 'sunday', name: 'Sunday' },
+              ].map((day) => (
+                <SelectItem key={day.id} value={day.id}>
+                  {day.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Session List */}
+        <div className="grid w-full grid-cols-1 gap-6 p-1 md:p-2">
+          {lectureDetails.length > 0 ? (
+            lectureDetails?.map((l: any) => (
+              <div
+                key={l?.id || Math.random()}
+                className="rounded-lg border-2 border-white/20 bg-secondary/30 p-3"
+              >
+                <div className="sm:text-md flex w-full items-center rounded-sm border-[8px] border-l-chart-1 bg-muted p-[6px] text-sm">
+                  {l.branch_name}
+                </div>
+                {l?.lectures.length > 0 && l?.lectures?.map((lecture: any, index: number) => (
+                  <div className="px-1 pt-4 md:px-8">
+                    <Card
+                      key={lecture?.id || index}
+                      className="w-full overflow-hidden border-border bg-zinc-600/10"
+                    >
+                      <CardHeader className="p-4">
+                        <div className="flex items-start justify-between">
+                          <CardTitle className="text-2xl text-foreground">
+                            <span className="text-[16px] md:text-xl">
+                              {lecture?.subject?.subject_map?.subject_name}
+                            </span>
+                            <Badge
+                              variant="secondary"
+                              className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
+                            >
+                              {lecture?.type}
+                            </Badge>
+                          </CardTitle>
+                          <SessionStatusBadge
+                            status={
+                              sessionData[lecture.session.session_id] === 'pre'
+                                ? 'Inactive'
+                                : sessionData[lecture.session.session_id] ===
+                                    'ongoing'
+                                  ? 'Active'
+                                  : sessionData[lecture.session.session_id] ===
+                                      'post'
+                                    ? 'Ended'
+                                    : 'Unknown'
+                            }
+                          />
+                        </div>
+                      </CardHeader>
+                      <CardContent className="px-4">
+                        <div className="grid gap-4">
+                          <div className="flex items-center gap-2 text-sm text-foreground">
+                            <div className="flex flex-col gap-2">
+                              <div className="text-lg">
+                                <div className="flex gap-4 text-sm md:text-lg">
+                                  <div>
+                                    <span>Sem: </span>
+                                    <span className="font-medium">
+                                      {lecture?.subject?.semester.no}
+                                    </span>
+                                  </div>
+                                  <div className="flex gap-2 text-sm md:text-lg">
+                                    <span>Division: </span>
+                                    <span className="font-medium">
+                                      {lecture?.batches
+                                        ?.map(
+                                          (d: any) => d?.division.division_name,
+                                        )
+                                        .join(', ')}
+                                    </span>
+                                    • <span>Batch: </span>
+                                    <span className="font-medium">
+                                      {lecture?.batches
+                                        ?.map((d: any) => d?.batch_name)
+                                        .join(', ')}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-foreground md:text-lg">
+                            <Clock className="h-4 w-4 text-muted-foreground" />
+                            <span>Time: </span>
+                            <span className="font-medium">
+                              {lecture?.start_time} • {lecture?.end_time}
+                            </span>
+                          </div>
+                          <div className="flex flex-col w-full  gap-1 text-sm text-foreground md:text-lg">
+                            <div className='flex items-center gap-2'>
+                            <Users className="h-4 w-4 text-muted-foreground" />
+                            <div className="flex w-full items-center gap-2">
+                              {/* {lecture?.classroom?.class_name ?? 'N/A'}
+                               */}
+                              <div className="flex flex-wrap items-center gap-4">
+                                <form
+                                  className="flex items-center space-x-2"
+                                >
+                                  <span>Classroom: </span>
+                                  <input
+                                    type="hidden"
+                                    value={lecture.slug}
+                                    name="lecture_slug"
+                                  ></input>
+                                  <input
+                                    type="hidden"
+                                    name="mySelect"
+                                    id={`${lecture.slug}${lecture?.session?.classroom_final?.slug}`}
+                                    defaultValue={
+                                      lecture?.session?.classroom_final?.slug
+                                    }
+                                  />
+                                  <div className="flex items-center gap-4">
+                                    {' '}
+                                    <Select
+                                      disabled={
+                                        sessionData[
+                                          lecture.session.session_id
+                                        ] === 'post'
+                                          ? true
+                                          : false
+                                      }
+                                      defaultValue={
+                                        lecture?.session?.classroom_final?.slug
+                                      }
+                                      onValueChange={(value) => { 
+                                        handleClassroom(lecture?.slug, value,lecture?.session?.classroom_final?.slug)
+                                      }}
+                                    >
+                                      <SelectTrigger
+                                        className="w-auto border border-white/40 bg-zinc-700/40 px-4 text-white"
+                                        id={`select-${lecture.slug}${lecture?.session?.classroom_final?.slug}`}
+                                        value={lecture?.session?.classroom_final?.slug}
+                                      >
+                                        <SelectValue placeholder="None" />
+                                      </SelectTrigger>
+                                      <SelectContent className="h-[250px] bg-neutral-700 text-white">
+                                        {classesList.map((c: any) => (
+                                          <SelectItem
+                                            key={`${c.slug}-${c.class_name}`}
+                                            value={c.slug}
+                                          >
+                                            {c.class_name}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                            </div>
+                            <div className='hidden' id={`class_message-${lecture?.slug}${lecture?.session?.classroom_final?.slug}`}>hee</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                      <CardFooter
+                        className={`flex gap-2 ${lecture?.status === 'Upcoming' ? '' : 'flex-col'}`}
+                      >
+                        {sessionData[lecture.session.session_id] !== 'post' && (
+                          <Button
+                            className={cn(
+                              `w-full`,
+                              sessionData[lecture.session.session_id] ===
+                                'ongoing' && 'bg-white text-black',
+                            )}
+                            onClick={() => {
+                              startSessionHandler(
+                                lecture?.session.session_id,
+                                lecture?.slug,
+                                lecture?.session?.classroom_final?.slug
+                              )
+                            }}
+                            disabled={
+                              sessionData[lecture.session.session_id] === 'post'
+                                ? true
+                                : false
+                            }
+                          >
+                            {sessionData[lecture.session.session_id] ===
+                              'ongoing' && 'Join Session'}
+                            {sessionData[lecture.session.session_id] ===
+                              'pre' && 'Start Session'}
+                            {sessionData[lecture.session.session_id] ===
+                              'post' && 'Session Ended'}
+                          </Button>
+                        )}
+                        {sessionData[lecture.session.session_id] === 'post' && (
+                          <Button
+                            variant="outline"
+                            className="w-full bg-chart-1/60 text-foreground"
+                            onClick={() => {
+                              handleOnClickForDownloadExcelForAttendance(
+                                lecture?.session?.session_id,
+                              )
+                            }}
+                          >
+                            <FileDown className="mr-2 h-4 w-4" />
+                            Export Attendance
+                          </Button>
+                        )}
+                      </CardFooter>
+                    </Card>
+                  </div>
+                ))}
+                {
+                  l?.lectures.length === 0 && <div>
+                    there is no lecture 
+                  </div>
+                }
+              </div>
+            ))
+          ) : (
+            <div className="text-white">there is no lecture</div>
+          )}
+          {classRoomData && (
+            <DialogBox
+              open={open}
+              setOpen={setOpen}
+              classRoomData={classRoomData}
+              changeClassRoomAPI={changeClassRoomAPI}
+            />
+          )}
+        </div>
+      </main>
+
+      {/* Session Details Sheet */}
+      {onGoingSessionData && (
+        <Sheet open={isSheetOpen} onOpenChange={handleSheet}>
+          <SheetContent
+            side="bottom"
+            className="h-[100dvh] overflow-y-auto border-border bg-background sm:max-w-full"
+          >
+            <SheetHeader className="mb-6 flex flex-row items-center justify-between">
+              <SheetTitle className="text-md text-foreground md:text-2xl">
+                Session Details
+              </SheetTitle>
+            </SheetHeader>
+
+            <div className="space-y-4 md:space-y-6">
+              {/* Session Information */}
+              <div className="rounded-lg border border-border bg-card p-2 md:p-4">
+                <div className="flex justify-between">
+                  <h3 className="mb-2 text-[14px] font-semibold text-foreground md:mb-4 md:text-lg">
+                    Session Information
+                  </h3>
+                  <Badge
+                    variant="secondary"
+                    className="my-1 flex w-12 items-center justify-center rounded-sm bg-chart-3 capitalize md:my-2"
+                  >
+                    {onGoingSessionData?.lecture?.type}
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-4">
+                  <div>
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Teacher
+                    </p>
+                    <p className="sm:text-md text-sm font-medium text-foreground">
+                      {onGoingSessionData?.lecture?.teacher?.profile.name}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Subject
+                    </p>
+                    <p className="sm:text-md text-sm font-medium text-foreground">
+                      {
+                        onGoingSessionData?.lecture?.subject?.subject_map
+                          .subject_name
+                      }
+                    </p>
+                  </div>
+                  <div>
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Classroom
+                    </p>
+                    <p className="sm:text-md text-sm font-medium text-foreground">
+                      {
+                        onGoingSessionData?.lecture?.session?.classroom_final
+                          ?.class_name
+                      }
+                    </p>
+                  </div>
+                  <div>
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Time
+                    </p>
+                    <p className="sm:text-md text-sm font-medium text-foreground">
+                      {onGoingSessionData?.lecture?.start_time} •{' '}
+                      {onGoingSessionData?.lecture?.end_time}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Division and Batch
+                    </p>
+                    <p className="sm:text-md text-sm font-medium text-foreground">
+                      {onGoingSessionData?.lecture?.batches.map(
+                        (b: any) => b.division.division_name,
+                      )}{' '}
+                      •{' '}
+                      {onGoingSessionData?.lecture?.batches.map(
+                        (b: any) => b.batch_name,
+                      )}
+                    </p>
+                  </div>
+                  <div className="capitalize">
+                    <p className="sm:text-md text-sm text-muted-foreground">
+                      Status
+                    </p>
+                    <SessionStatusBadge
+                      status={onGoingSessionData?.lecture?.session?.active}
+                    />
+                  </div>
+                </div>
+              </div>
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-2 sm:flex-row">
+                {!isSessionEnded && (
+                  <Button
+                    className="flex-1 bg-destructive text-white"
+                    onClick={() => handleOnSessionEnd()}
+                  >
+                    End Session
+                  </Button>
+                )}
+              </div>
+              {/* Attendance Table */}
+              <div className="rounded-lg border border-border">
+                <div className="flex items-center justify-between border-b border-border bg-muted/40 p-2 md:p-4">
+                  <h3 className="text-md font-semibold text-foreground sm:text-lg">
+                    Attendance
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {students?.length} students present
+                  </p>
+                </div>
+                <div className="flex h-[500px] w-full justify-center overflow-y-auto p-4">
+                  {isSessionEnded ? (
+                    <FinalAttendanceData
+                      finalAttendanceData={finalAttendanceData}
+                    />
+                  ) : (
+                    <Tabs defaultValue="Default" className="w-full">
+                      <TabsList className="w-full">
+                        <TabsTrigger value="Default" className="flex-1">
+                          Default
+                        </TabsTrigger>
+                        <TabsTrigger value="manual" className="relative flex-1">
+                          <span className="relative">
+                            Manual
+                            {manualAttendance.length > 0 && (
+                              <span className="absolute -right-3 size-2 animate-ping rounded-full bg-red-700"></span>
+                            )}
+                          </span>
+                        </TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="Default">
+                        <div className="overflow-x-auto">
+                          {students.length > 0 ? (
+                            <Table>
+                              <TableHeader>
+                                {students?.length > 0 && (
+                                  <TableRow className="md:text-md border-border text-[12px]">
+                                    {/* <TableHead>Enrollment Number</TableHead> */}
+                                    <TableHead>Student Name</TableHead>
+                                    {/* <TableHead>Branch </TableHead> */}
+                                    <TableHead>Attendance Status</TableHead>
+                                  </TableRow>
+                                )}
+                              </TableHeader>
+                              <TableBody>
+                                {students?.map((student: any) => (
+                                  <TableRow
+                                    key={student?.slug}
+                                    className="border-border text-[12px] text-foreground"
+                                  >
+                                    {/* <TableCell className="font-medium">
+                                      {student?.student?.enrollment}
+                                    </TableCell> */}
+                                    <TableCell>
+                                      {student?.student?.profile?.name}
+                                    </TableCell>
+                                    {/* <TableCell>
+                                      {student?.batches.map(
+                                        (b: any) => b.division.full_name,
+                                      )}
+                                    </TableCell> */}
+                                    <TableCell className="capitalize text-white">
+                                      {student?.is_present === false ? (
+                                        <span className="flex items-center gap-2 text-[10px] text-red-600 md:text-[12px]">
+                                          <Ban className="size-4 md:size-6" />
+                                          Absent
+                                        </span>
+                                      ) : (
+                                        <span className="flex items-center gap-2 text-[10px] text-green-500 md:text-[12px]">
+                                          <BadgeCheck className="size-4 md:size-6" />
+                                          Present
+                                        </span>
+                                      )}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          ) : (
+                            <div className="flex items-center justify-center p-3 text-white">
+                              No Students Present
+                            </div>
+                          )}
+                        </div>
+                      </TabsContent>
+                      <TabsContent value="manual" className="mb-2 p-4">
+                        {manualAttendance.length > 0 && (
+                          <Button
+                            className="w-full"
+                            onClick={() => markManualStudentsAttendance()}
+                          >
+                            Mark All Students
+                          </Button>
+                        )}
+
+                        <ManualMarkedAttendance
+                          manualAttendance={manualAttendance}
+                          removeStudentAttendanceRequest={
+                            removeStudentAttendanceRequest
+                          }
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  )}
+                </div>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      )}
+    </div>
+  )
+}
+
+function SessionStatusBadge({ status }: { status: string }) {
+  let variant: 'default' | 'secondary' | 'outline' = 'outline'
+  let classname = 'bg-zinc-800'
+
+  if (status === 'Inactive') {
+    variant = 'secondary'
+  } else if (status === 'Active') {
+    variant = 'secondary'
+    classname = 'bg-chart-2'
+  } else {
+    classname = 'bg-red-500'
+  }
+
+  return (
+    <Badge
+      variant={variant}
+      className={cn(
+        classname,
+        'rounded-md text-[10px] text-white md:text-[12px]',
+      )}
+    >
+      {status}
+    </Badge>
   )
 }
 

@@ -29,6 +29,11 @@ export const PAGE_SUBJECT_CHOICE: Page = {
   path: '/teacher-dashboard/subject-choice',
   name: 'subject-choice',
 }
+export const PAGE_TEACHER_ALLOCATION: Page = {
+  id: 'TEACHER_ALLOCATION',
+  path: '/subject/teacher-allocation',
+  name: 'Teacher Allocation',
+}
 export const PAGE_ELECTIVE_SUBJECT: Page = {
   id: 'ELECTIVE_SUBJECT',
   path: '/student-dashboard/elective-subject',
@@ -82,6 +87,11 @@ export const SUBJECT_ALLOCATION:Page = {
   id: 'SUBJECT_ALLOCATION',
   path: '/admin/subject-allocation',
   name: 'Subject Allocation'
+}
+export const LOAD_ALLOCATION_FOR_TEACHER_END:Page = {
+  id: 'LOAD_LOAD_ALLOCATION_FOR_TEACHER_END',
+  path: '/teacher-dashboard/load-allocation',
+  name: 'Load allocation'
 }
 /**
  * --------------------------------------------------------------------------

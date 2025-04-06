@@ -8,7 +8,7 @@ import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import { DecodedToken } from 'types/common'
@@ -25,15 +25,26 @@ type LoginFormData = {
 
 //? HOOK
 const useLogin = () => {
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { register, handleSubmit, reset } = useForm<LoginFormData>()
   const [showPassword, setShowPassword] = useState(false)
   const [studentSlug, setStudentSlug] = useState<string>('')
   const [isTempPassword, setIsTempPassword] = useState<boolean>(false)
+  const [callbackUrl] = useState<string | null>(
+    queryParams.get('redirect_uri') ?? null,
+  )
+  const [fromApp] = useState<string | null>(queryParams.get('from_app') ?? null)
+  const [deviceId] = useState<string | null>(
+    queryParams.get('device_id') ?? null,
+  )
   const access_token = useSelector((state: RootState) => state.auth.accessToken)
   const navigate = useNavigate()
 
   const dispatch = useDispatch()
+
   //? LOGIN FUNCTIONALITY
 
   const handleLogin = async (userdata: UserData) => {
@@ -46,7 +57,7 @@ const useLogin = () => {
     try {
       const response = await axios.post(
         `${window.base_url}/auth/api/login/`,
-        userdata,
+        { ...userdata, device_id: deviceId },
         { headers },
       )
       setIsLoading(false)
@@ -59,11 +70,19 @@ const useLogin = () => {
         return
       }
 
-      const token: { access: string; refresh: string; isAuth: boolean } = {
+      const token: {
+        access: string
+        refresh: string
+        isAuth: boolean
+        callbackUrl: string | null
+        fromApp: string | null
+      } = {
         ...response.data,
         isAuth: true,
+        callbackUrl,
+        fromApp,
       }
-
+      console.log(token)
       if (
         token.access == undefined &&
         token.refresh == undefined &&
@@ -78,6 +97,8 @@ const useLogin = () => {
       //? set the tokens to local storage
       localStorage.setItem('accessToken', token.access)
       localStorage.setItem('refreshToken', token.refresh)
+      localStorage.setItem('callbackUrl', callbackUrl ?? '')
+      localStorage.setItem('fromApp', fromApp ?? '')
 
       const decode: DecodedToken = jwtDecode<DecodedToken>(response.data.access)
       dispatch(setUserProfile(decode))
@@ -86,9 +107,16 @@ const useLogin = () => {
       if (decode.obj.profile.role === 'admin') {
         return navigate('/subject/subject-select') //:: CHANGE TO '/'
       } else if (decode.obj.profile.role === 'teacher') {
-        return navigate('/teacher-dashboard/subject-choice') //:: CHANGE TO '/teacher-dashboard'
+        return navigate('/teacher-dashboard') //:: CHANGE TO '/teacher-dashboard'
       } else if (decode.obj.profile.role === 'student') {
-        return navigate('/student-dashboard/elective-subject') //:: CHANGE TO '/student-dashboard'
+        if (!callbackUrl || !fromApp || !deviceId) {
+          return navigate('/student-dashboard') //:: CHANGE TO '/student-dashboard'
+        } else {
+          const callbackUrlParse: string = `${callbackUrl}?access_token=${token.access}&refresh_token=${token.access}`
+          return (window.location.href = callbackUrlParse)
+        }
+        //   const callbackUrl = `smartrollauth://callback?access_token=${Auth.accessToken}&refresh_token=${Auth.refreshToken}`
+        // return (window.location.href = callbackUrl)
       } else {
         return navigate('/login')
       }
@@ -105,12 +133,15 @@ const useLogin = () => {
   const redirectLogin = () => {
     try {
       if (access_token) {
-        
         const decode = jwtDecode<DecodedToken>(access_token)
         if (decode?.obj?.profile?.role === 'admin') {
           navigate('/')
         } else if (decode?.obj?.profile?.role === 'student') {
-          navigate('/student-dashboard')
+          if (!callbackUrl || !fromApp || !deviceId) {
+            return navigate('/student-dashboard')
+          }
+          const callbackUrlParse: string = `${callbackUrl}?access_token=${localStorage.getItem('accessToken')}&refresh_token=${localStorage.getItem('refreshToken')}`
+          return (window.location.href = callbackUrlParse)
         } else if (decode?.obj?.profile?.role === 'teacher') {
           navigate('/teacher-dashboard')
         } else {

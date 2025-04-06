@@ -1,9 +1,11 @@
 // src/components/common/ProtectedRoute.tsx
-import React from 'react'
-
 import { Navigate } from 'react-router-dom'
 
-import { PAGE_LOGIN,PAGE_SUBJECT_SELECT,PAGE_ELECTIVE_SUBJECT,PAGE_SUBJECT_CHOICE } from '@constants'
+import {
+  PAGE_LOGIN, // PAGE_STUDENT_DASHBOARD,
+  PAGE_SUBJECT_SELECT,
+  PAGE_TEACHER_DASHBOARD,
+} from '@constants'
 
 import useAuth from '@hooks/useAuth'
 
@@ -15,8 +17,8 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   roleRequired,
-}) => {
-  const { role, loading } = useAuth()
+}: any) => {
+  const { role, loading} = useAuth()
 
   if (loading) {
     return <div>Loading...</div> // Show a loading state until role is determined
@@ -26,19 +28,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (!role) {
     return <Navigate to={PAGE_LOGIN.path} replace />
   }
-  
-  
+
   // Optionally check for specific roles if roleRequired is provided
   if (roleRequired && role !== roleRequired) {
-    if(role == 'admin')
+    if (role == 'admin')
       return <Navigate to={PAGE_SUBJECT_SELECT.path} replace />
-    else if (role == 'teacher'){
-      return <Navigate to={PAGE_SUBJECT_CHOICE.path} replace />
-    }
-    else if (role =='student'){
-      return <Navigate to={PAGE_ELECTIVE_SUBJECT.path} replace />
-    }
-    else{
+    else if (role == 'teacher') {
+      return <Navigate to={PAGE_TEACHER_DASHBOARD.path} replace />
+    } else if (role == 'student') {
       return <Navigate to={PAGE_LOGIN.path} replace />
     }
   }

@@ -70,7 +70,7 @@ const SubjectTable = ({ SubjectToTeacherAllocation, handleOnChangeManageHoursFor
                             onClick={() => setSelectedSubject(allocation)}
                             className="cursor-pointer hover:bg-zinc-600/45"
                         >
-                            <TableCell className='font-semibold border border-zinc-500'>{allocation.subject.subject_name}</TableCell>
+                            <TableCell className='font-semibold border border-zinc-500'>{allocation.subject.subject_map.subject_name}</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>{allocation?.teacher_allocation.theory?.total_hours}</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>{allocation?.teacher_allocation.lab?.total_hours}</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>{allocation?.teacher_allocation.practical?.total_hours}</TableCell>
@@ -91,7 +91,7 @@ const SubjectTable = ({ SubjectToTeacherAllocation, handleOnChangeManageHoursFor
                             onClick={() => setSelectedSubject(allocation)}
                             className="cursor-pointer hover:bg-zinc-600/45"
                         >
-                            <TableCell className='font-semibold border border-zinc-500'>{allocation.subject.subject_name}</TableCell>
+                            <TableCell className='font-semibold border border-zinc-500'>{allocation.subject.subject_map.subject_name}</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>0</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>0</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>{allocation.teacher_allocation.practical.total_hours}</TableCell>
@@ -110,7 +110,7 @@ const SubjectTable = ({ SubjectToTeacherAllocation, handleOnChangeManageHoursFor
             </Table>
 
             <Sheet open={!!selectedSubject} onOpenChange={() => {setSelectedSubject(null);setSaveStateButton(false)}}>
-                <SheetContent className='sm:max-w-[540px] pb-10'>
+                <SheetContent className='w-full sm:max-w-xl pb-10'>
                     <SheetHeader>
                         <SheetTitle>{selectedSubject?.subject.subject_name}</SheetTitle>
                     </SheetHeader>

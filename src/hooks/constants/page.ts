@@ -38,6 +38,11 @@ export const PAGE_SUBJECT_CHOICE: Page = {
   path: '/subject-choice',
   name: 'subject-choice',
 }
+export const PAGE_TEACHER_ALLOCATION: Page = {
+  id: 'TEACHER_ALLOCATION',
+  path: '/subject/teacher-allocation',
+  name: 'Teacher Allocation',
+}
 
 export const PAGE_STUDENT_DASHBOARD: Page = {
   id: 'STUDENT-DASHBOARD',
