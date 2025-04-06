@@ -152,8 +152,8 @@ export const useTeacherDashbord = () => {
     lecture_slug: string,
     classroomSlug:string
   ) => {
+    
     const selectedClassRoom = document.getElementById(`select-${lecture_slug}${classroomSlug}`) as HTMLSelectElement
-    console.log(selectedClassRoom.value);
     try {
       const header = {
         'ngrok-skip-browser-warning': true,
@@ -168,16 +168,31 @@ export const useTeacherDashbord = () => {
         endpoint,
         method,
         header,
-        { lecture_slug: lecture_slug },
+        { lecture_slug: lecture_slug,classroom_slug:selectedClassRoom.value },
       )
-
+      
       if (response_obj.error === false) {
         const { data } = response_obj?.response?.data
+        console.log(data.active);
 
         setSessionData((prevData: any) => ({
           ...prevData,
           [data.session_id]: data.active,
         }))
+        const updatedLectureDetails = lectureDetails.map((branch: any) => {
+          return {
+            ...branch,
+            lectures: branch.lectures.map((lecture: any) => {
+              if (lecture.session.session_id === data.session_id) {
+                return data.lecture; 
+              } else {
+                return lecture;
+              }
+            }),
+          };
+        });
+        setLectureDetails(updatedLectureDetails)
+        
         if (data.active === 'ongoing') {
           clientSocketHandler(
             session_id,

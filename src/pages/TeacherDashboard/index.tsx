@@ -32,7 +32,6 @@ import {
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DialogBox from '@pages/TeacherDashboard/components/DialogBox'
-import { FinalAttendanceData } from '@pages/TeacherDashboard/components/FinalAttendanceData'
 import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
 import { BadgeCheck, Ban, Clock, FileDown, Users } from 'lucide-react'
 
@@ -55,8 +54,6 @@ const TeacherDashboard = () => {
     manualAttendance,
     removeStudentAttendanceRequest,
     markManualStudentsAttendance,
-    finalAttendanceData,
-    isSessionEnded,
     handleOnSessionEnd,
     handleClassroom,
     open,
@@ -77,6 +74,7 @@ const TeacherDashboard = () => {
     socket?.disconnect()
   }
 
+  console.log(lectureDetails);
   return (
     <div className="h-auto">
       {/* Main Content */}
@@ -420,14 +418,14 @@ const TeacherDashboard = () => {
               </div>
               {/* Action Buttons */}
               <div className="flex flex-col gap-2 sm:flex-row">
-                {!isSessionEnded && (
+                 
                   <Button
                     className="flex-1 bg-destructive text-white"
                     onClick={() => handleOnSessionEnd()}
                   >
                     End Session
                   </Button>
-                )}
+                
               </div>
               {/* Attendance Table */}
               <div className="rounded-lg border border-border">
@@ -440,11 +438,6 @@ const TeacherDashboard = () => {
                   </p>
                 </div>
                 <div className="flex h-[500px] w-full justify-center overflow-y-auto p-4">
-                  {isSessionEnded ? (
-                    <FinalAttendanceData
-                      finalAttendanceData={finalAttendanceData}
-                    />
-                  ) : (
                     <Tabs defaultValue="Default" className="w-full">
                       <TabsList className="w-full">
                         <TabsTrigger value="Default" className="flex-1">
@@ -532,7 +525,6 @@ const TeacherDashboard = () => {
                         />
                       </TabsContent>
                     </Tabs>
-                  )}
                 </div>
               </div>
             </div>
