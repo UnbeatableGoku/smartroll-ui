@@ -30,7 +30,6 @@ const useAuth = () => {
   const [role, setRole] = useState<string | null>(null) // Track role
   const [loading, setLoading] = useState<boolean>(true) // Track loading state
   const Auth = useSelector((state: RootState) => state.auth) // Get auth from redux
-
   useEffect(() => {
     const accessToken = Auth?.accessToken
 
@@ -51,7 +50,7 @@ const useAuth = () => {
     setLoading(false) // Set loading to false after processing
   }, [Auth?.accessToken]) // Re-run effect when accessToken changes
 
-  return { role, loading, Auth } // Return role and loading state
+  return { role, loading } // Return role and loading state
 }
 
 export default useAuth

@@ -39,6 +39,7 @@ import { BadgeCheck, Ban, Clock, FileDown, Users } from 'lucide-react'
 import { cn } from '@utils'
 
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
+// No need for unused type imports
 
 const TeacherDashboard = () => {
   const {
@@ -58,12 +59,13 @@ const TeacherDashboard = () => {
     isSessionEnded,
     handleOnSessionEnd,
     handleClassroom,
-    classRooms,
     open,
     setOpen,
     classRoomData,
     changeClassRoomAPI,
     handleOnClickForDownloadExcelForAttendance,
+    currentDay,
+    classesList
   } = useTeacherDashbord()
 
   useEffect(() => {
@@ -79,13 +81,27 @@ const TeacherDashboard = () => {
     <div className="h-auto">
       {/* Main Content */}
       <main className="pb-16 pt-6">
-        <div className="mb-6 pl-2">
-          <h2 className="text-md font-bold tracking-tight text-foreground md:text-2xl">
-            Today's Lectures
-          </h2>
-          <p className="md:text-md text-sm text-muted-foreground">
-            Manage your classes and track attendance.
-          </p>
+        <div className="px-2 py-2">
+          <Select onValueChange={(value) => getLectureDetails(value)} value={currentDay}>
+            <SelectTrigger className="w-full border border-white/40 bg-zinc-700/40 px-4 text-white">
+              <SelectValue placeholder="Select day" />
+            </SelectTrigger>
+            <SelectContent className="h-auto bg-neutral-700 text-white">
+              {[
+                { id: 'monday', name: 'Monday' },
+                { id: 'tuesday', name: 'Tuesday' },
+                { id: 'wednesday', name: 'Wednesday' },
+                { id: 'thursday', name: 'Thursday' },
+                { id: 'friday', name: 'Friday' },
+                { id: 'saturday', name: 'Saturday' },
+                { id: 'sunday', name: 'Sunday' },
+              ].map((day) => (
+                <SelectItem key={day.id} value={day.id}>
+                  {day.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Session List */}
@@ -99,28 +115,24 @@ const TeacherDashboard = () => {
                 <div className="sm:text-md flex w-full items-center rounded-sm border-[8px] border-l-chart-1 bg-muted p-[6px] text-sm">
                   {l.branch_name}
                 </div>
-                {l?.lectures?.map((lecture: any, index: number) => (
-                  <div className="px-1 py-4 md:px-8">
+                {l?.lectures.length > 0 && l?.lectures?.map((lecture: any, index: number) => (
+                  <div className="px-1 pt-4 md:px-8">
                     <Card
                       key={lecture?.id || index}
                       className="w-full overflow-hidden border-border bg-zinc-600/10"
                     >
-                      <CardHeader className="p-4 pb-3">
+                      <CardHeader className="p-4">
                         <div className="flex items-start justify-between">
-                          <CardTitle className="p-0 text-2xl text-foreground">
-                            <div className="md:flex md:items-center md:gap-4">
-                              <span className="text-[16px] md:text-xl">
-                                Subject:{' '}
-                                {lecture?.subject?.subject_map?.subject_name} (
-                                {lecture?.subject?.subject_map?.subject_code})
-                              </span>
-                              <Badge
-                                variant="secondary"
-                                className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
-                              >
-                                {lecture?.type}
-                              </Badge>
-                            </div>
+                          <CardTitle className="text-2xl text-foreground">
+                            <span className="text-[16px] md:text-xl">
+                              {lecture?.subject?.subject_map?.subject_name}
+                            </span>
+                            <Badge
+                              variant="secondary"
+                              className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
+                            >
+                              {lecture?.type}
+                            </Badge>
                           </CardTitle>
                           <SessionStatusBadge
                             status={
@@ -176,20 +188,14 @@ const TeacherDashboard = () => {
                               {lecture?.start_time} • {lecture?.end_time}
                             </span>
                           </div>
-                          <div className="flex w-full items-center gap-2 text-sm text-foreground md:text-lg">
+                          <div className="flex flex-col w-full  gap-1 text-sm text-foreground md:text-lg">
+                            <div className='flex items-center gap-2'>
                             <Users className="h-4 w-4 text-muted-foreground" />
                             <div className="flex w-full items-center gap-2">
                               {/* {lecture?.classroom?.class_name ?? 'N/A'}
                                */}
                               <div className="flex flex-wrap items-center gap-4">
                                 <form
-                                  onSubmit={(e) => {
-                                    handleClassroom(
-                                      e,
-                                      lecture?.slug,
-                                      lecture?.session?.classroom_final?.slug,
-                                    )
-                                  }}
                                   className="flex items-center space-x-2"
                                 >
                                   <span>Classroom: </span>
@@ -219,25 +225,19 @@ const TeacherDashboard = () => {
                                       defaultValue={
                                         lecture?.session?.classroom_final?.slug
                                       }
-                                      onValueChange={(value) => {
-                                        // Update the correct hidden input field
-                                        const inputElement =
-                                          document.getElementById(
-                                            `${lecture.slug}${lecture?.session?.classroom_final?.slug}`,
-                                          ) as HTMLInputElement
-                                        if (inputElement) {
-                                          inputElement.value = value
-                                        }
+                                      onValueChange={(value) => { 
+                                        handleClassroom(lecture?.slug, value,lecture?.session?.classroom_final?.slug)
                                       }}
                                     >
                                       <SelectTrigger
                                         className="w-auto border border-white/40 bg-zinc-700/40 px-4 text-white"
                                         id={`select-${lecture.slug}${lecture?.session?.classroom_final?.slug}`}
+                                        value={lecture?.session?.classroom_final?.slug}
                                       >
                                         <SelectValue placeholder="None" />
                                       </SelectTrigger>
                                       <SelectContent className="h-[250px] bg-neutral-700 text-white">
-                                        {classRooms.map((c: any) => (
+                                        {classesList.map((c: any) => (
                                           <SelectItem
                                             key={`${c.slug}-${c.class_name}`}
                                             value={c.slug}
@@ -247,23 +247,12 @@ const TeacherDashboard = () => {
                                         ))}
                                       </SelectContent>
                                     </Select>
-                                    <Button
-                                      type="submit"
-                                      className="bg-white text-black"
-                                      disabled={
-                                        sessionData[
-                                          lecture.session.session_id
-                                        ] === 'post'
-                                          ? true
-                                          : false
-                                      }
-                                    >
-                                      Change
-                                    </Button>
                                   </div>
                                 </form>
                               </div>
                             </div>
+                            </div>
+                            <div className='hidden' id={`class_message-${lecture?.slug}${lecture?.session?.classroom_final?.slug}`}>hee</div>
                           </div>
                         </div>
                       </CardContent>
@@ -281,6 +270,7 @@ const TeacherDashboard = () => {
                               startSessionHandler(
                                 lecture?.session.session_id,
                                 lecture?.slug,
+                                lecture?.session?.classroom_final?.slug
                               )
                             }}
                             disabled={
@@ -315,6 +305,11 @@ const TeacherDashboard = () => {
                     </Card>
                   </div>
                 ))}
+                {
+                  l?.lectures.length === 0 && <div>
+                    there is no lecture 
+                  </div>
+                }
               </div>
             ))
           ) : (
@@ -550,8 +545,7 @@ const TeacherDashboard = () => {
 
 function SessionStatusBadge({ status }: { status: string }) {
   let variant: 'default' | 'secondary' | 'outline' = 'outline'
-  let classname: 'bg-red-500' | 'bg-chart-1' | 'bg-chart-2' | 'bg-zinc-800' =
-    'bg-zinc-800'
+  let classname = 'bg-zinc-800'
 
   if (status === 'Inactive') {
     variant = 'secondary'

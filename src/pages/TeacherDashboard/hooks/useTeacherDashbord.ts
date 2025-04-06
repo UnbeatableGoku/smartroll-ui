@@ -22,13 +22,21 @@ export const useTeacherDashbord = () => {
   const [manualAttendance, setManualAttendance] = useState<any>([])
   const [isSessionEnded, setIsSessionEnded] = useState(false)
   const [finalAttendanceData, setFinalAttendanceData] = useState<any>([])
-  const [classRooms, setClassRooms] = useState<any>([])
+  const [classRooms] = useState<any>([])
   const [open, setOpen] = useState(false)
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
   
+
+  //days list 
+  const days = ["monday","tuesday","wednesday","thursday","friday","saturday"]
+  const [dayList] = useState(days)
+  const [currentDay,setCurrentDay] = useState<string>("")
+  
   const dispatch = useDispatch()
   // do some changes 
+
+
 
   const {isalreadyLoaded,classes} = useSelector((state: RootState) => state.classRoomSlice)
   const [classesList, setClasses] = useState<any>(classes)
@@ -142,7 +150,10 @@ export const useTeacherDashbord = () => {
   const startSessionHandler = async (
     session_id: string,
     lecture_slug: string,
+    classroomSlug:string
   ) => {
+    const selectedClassRoom = document.getElementById(`select-${lecture_slug}${classroomSlug}`) as HTMLSelectElement
+    console.log(selectedClassRoom.value);
     try {
       const header = {
         'ngrok-skip-browser-warning': true,
@@ -195,7 +206,7 @@ export const useTeacherDashbord = () => {
     socket?.disconnect()
     setIsSheetOpen(false)
   }
-  const getLectureDetails = async () => {
+  const getLectureDetails = async (day:string ="current") => {
     try {
       const header = {
         'ngrok-skip-browser-warning': true,
@@ -203,7 +214,7 @@ export const useTeacherDashbord = () => {
       }
       const axiosInstance = axios.create()
       const method = 'get'
-      const endpoint = `/manage/get_timetable_for_teacher`
+      const endpoint = `/manage/get_timetable_for_teacher/${day}`
       const response_obj = await CallAPI(
         StoredTokens,
         axiosInstance,
@@ -214,13 +225,12 @@ export const useTeacherDashbord = () => {
 
       if (response_obj.error === false) {
         const response = get(response_obj, 'response.data.data', [])
-        let classRoomList = {}
+        const day = get(response_obj,'response.data.day',"")
         const data = response.map((branch: any) => {
           const lecture_obj = {
             branch_name: branch.branch_name,
             branch_slug: branch.slug,
           }
-          classRoomList = branch.classrooms
           const lecture_list: any = []
           branch?.streams[0]?.semesters?.map((semester: any) => {
             semester?.divisions?.map((division: any) => {
@@ -243,7 +253,8 @@ export const useTeacherDashbord = () => {
         const lectureStatusData = extractLectureStatusData(data)
         setSessionData(lectureStatusData)
         setLectureDetails(data)
-        setClassRooms(classRoomList)
+        
+        setCurrentDay(day)
       } else {
         toast.error(response_obj.errorMessage?.message)
       }
@@ -299,31 +310,27 @@ export const useTeacherDashbord = () => {
   }
 
   const handleClassroom = async (
-    e: React.FormEvent<HTMLFormElement>,
     lectureSlug: any,
     classRoomSlug: string,
+    finalClassRoomSlug :string
   ) => {
-    e.preventDefault()
-
-    const selectedValue = document.getElementById(
+    // Get the input element
+    document.getElementById(
       `${lectureSlug}${classRoomSlug}`,
     ) as HTMLInputElement
 
     const selectElement = document.getElementById(
-      `select-${lectureSlug}${classRoomSlug}`,
-    ) as HTMLElement
+      `select-${lectureSlug}${finalClassRoomSlug}`,
+    ) as HTMLSelectElement
     // Force updating the default value dynamically
-    if (selectElement) {
-      // Remove the element and re-add it to force React to re-render it
-      selectElement.removeAttribute('data-state') // Reset select state
-      selectElement.setAttribute('data-default-value', selectedValue?.value) // Set new default value
-    }
-    updateClassRoomHandler(lectureSlug, selectedValue?.value)
+    selectElement.value = classRoomSlug
+    classRoomDetailsAPI(lectureSlug, classRoomSlug,finalClassRoomSlug)
   }
 
-  const updateClassRoomHandler = async (
+  const classRoomDetailsAPI = async (
     lectureSlug: any,
     classRoom_slug: any,
+    finalClassRoomSlug:string
   ) => {
     try {
       const header = {
@@ -350,16 +357,15 @@ export const useTeacherDashbord = () => {
       if (response_obj.error === false) {
         const response = get(
           response_obj,
-          'response.data.data.associated_lecture',
+          'response.data.data',
           null,
         )
-        const responseData = {
-          lecture_slug: lectureSlug,
-          classroom_slug: classRoom_slug,
-          details: response,
+        const messageDiv = document.getElementById(`class_message-${lectureSlug}${finalClassRoomSlug}`) as HTMLDivElement
+        if(!response.associated_lecture){
+          return messageDiv.classList.add('hidden')
         }
-        setClassRoomData(responseData)
-        setOpen(true)
+        messageDiv.innerHTML = `${response.associated_lecture.teacher} already has a lecture of ${response.associated_lecture.subject} in selected class`
+        messageDiv.classList.remove('hidden')
       } else {
         toast.error(response_obj.errorMessage?.message)
       }
@@ -493,11 +499,14 @@ export const useTeacherDashbord = () => {
     classRooms,
     setOpen,
     open,
-    updateClassRoomHandler,
     setClassRoomData,
     classRoomData,
     changeClassRoomAPI,
     handleOnClickForDownloadExcelForAttendance,
+    dayList,
+    currentDay,
+    setCurrentDay,
+    classesList
   }
 }
 function extractLectureStatusData(data: any) {

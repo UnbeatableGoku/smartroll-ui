@@ -70,7 +70,7 @@ const SubjectTable = ({ SubjectToTeacherAllocation, handleOnChangeManageHoursFor
                             onClick={() => setSelectedSubject(allocation)}
                             className="cursor-pointer hover:bg-zinc-600/45"
                         >
-                            <TableCell className='font-semibold border border-zinc-500'>{allocation.subject.subject_name}</TableCell>
+                            <TableCell className='font-semibold border border-zinc-500'>{allocation.subject.subject_map.subject_name}</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>{allocation?.teacher_allocation.theory?.total_hours}</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>{allocation?.teacher_allocation.lab?.total_hours}</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>{allocation?.teacher_allocation.practical?.total_hours}</TableCell>
@@ -91,7 +91,7 @@ const SubjectTable = ({ SubjectToTeacherAllocation, handleOnChangeManageHoursFor
                             onClick={() => setSelectedSubject(allocation)}
                             className="cursor-pointer hover:bg-zinc-600/45"
                         >
-                            <TableCell className='font-semibold border border-zinc-500'>{allocation.subject.subject_name}</TableCell>
+                            <TableCell className='font-semibold border border-zinc-500'>{allocation.subject.subject_map.subject_name}</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>0</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>0</TableCell>
                             <TableCell className='text-center font-semibold border border-zinc-500'>{allocation.teacher_allocation.practical.total_hours}</TableCell>

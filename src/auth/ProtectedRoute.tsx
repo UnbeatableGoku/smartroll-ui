@@ -18,7 +18,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   roleRequired,
 }: any) => {
-  const { role, loading, Auth } = useAuth()
+  const { role, loading} = useAuth()
 
   if (loading) {
     return <div>Loading...</div> // Show a loading state until role is determined
@@ -36,9 +36,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     else if (role == 'teacher') {
       return <Navigate to={PAGE_TEACHER_DASHBOARD.path} replace />
     } else if (role == 'student') {
-      const callbackUrl = `smartrollauth://callback?access_token=${Auth.accessToken}&refresh_token=${Auth.refreshToken}`
-      return (window.location.href = callbackUrl)
-    } else {
       return <Navigate to={PAGE_LOGIN.path} replace />
     }
   }
