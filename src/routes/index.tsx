@@ -7,7 +7,7 @@ import DivisionCreation from '@pages/Division/pages/DivisionCreation'
 import ForgotPassword from '@pages/Login/ForgotPassword'
 import Login from '@pages/Login/Login'
 import NotFound from '@pages/NotFound'
-import StudentDashboard from '@pages/StudentDashboard'
+// import StudentDashboard from '@pages/StudentDashboard'
 import StudentDivision from '@pages/StudentDashboard/student-division/pages/StudentDivision'
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
 import SubjectSelection from '@pages/Subject/SubjectSelection'
@@ -120,11 +120,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              <ProtectedRoute roleRequired="student">
-                <StudentDashboard />
-              </ProtectedRoute>
-            ),
+            element: <Navigate to="/student-dashboard/division" replace />,
+            // element: (
+            //   <ProtectedRoute roleRequired="student">
+            //     <StudentDashboard />
+            //   </ProtectedRoute>
+            // ),
           },
         ],
       },
