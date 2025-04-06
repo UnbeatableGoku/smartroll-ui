@@ -173,7 +173,6 @@ export const useTeacherDashbord = () => {
       
       if (response_obj.error === false) {
         const { data } = response_obj?.response?.data
-        console.log(data.active);
 
         setSessionData((prevData: any) => ({
           ...prevData,
@@ -379,7 +378,7 @@ export const useTeacherDashbord = () => {
         if(!response.associated_lecture){
           return messageDiv.classList.add('hidden')
         }
-        messageDiv.innerHTML = `${response.associated_lecture.teacher} already has a lecture of ${response.associated_lecture.subject} in selected class`
+        messageDiv.innerHTML = `${response.associated_lecture.teacher} already has a lecture in selected class`
         messageDiv.classList.remove('hidden')
       } else {
         toast.error(response_obj.errorMessage?.message)

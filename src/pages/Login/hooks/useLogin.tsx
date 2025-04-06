@@ -82,7 +82,6 @@ const useLogin = () => {
         callbackUrl,
         fromApp,
       }
-      console.log(token)
       if (
         token.access == undefined &&
         token.refresh == undefined &&
