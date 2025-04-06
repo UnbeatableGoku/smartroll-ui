@@ -264,7 +264,7 @@ const TeacherDashboard = () => {
                                 </div>
                               </div>
                               <div
-                                className="hidden w-fit gap-1 rounded-md bg-red-500/40 p-1 text-[10px] md:p-2 md:text-sm"
+                                className="hidden w-fit gap-1 rounded-md text-[10px] text-yellow-500 md:text-sm"
                                 id={`class_message-${lecture?.slug}${lecture?.session?.classroom_final?.slug}`}
                               ></div>
                             </div>
@@ -323,15 +323,23 @@ const TeacherDashboard = () => {
                     </div>
                   ))}
                 {l?.lectures.length === 0 && (
-                  <div className="md:text-md rounded-md bg-red-600/40 p-2 text-center text-sm text-white">
-                    No lectures scheduled for today.
+                  <div className="px-1 pt-4 md:px-8">
+                    <Card className="w-full overflow-hidden border-border bg-zinc-600/10 text-center">
+                      <CardHeader className="p-4">
+                        No lectures scheduled for today.
+                      </CardHeader>
+                    </Card>
                   </div>
                 )}
               </div>
             ))
           ) : (
-            <div className="md:text-md rounded-md bg-red-600/40 p-2 text-center text-sm text-white">
-              No lectures scheduled for today.
+            <div className="px-1 pt-4 md:px-8">
+              <Card className="w-full overflow-hidden border-border bg-zinc-600/10 text-center">
+                <CardHeader className="p-4">
+                  No lectures scheduled for today.
+                </CardHeader>
+              </Card>
             </div>
           )}
           {classRoomData && (
