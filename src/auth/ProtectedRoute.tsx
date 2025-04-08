@@ -2,7 +2,8 @@
 import { Navigate } from 'react-router-dom'
 
 import {
-  PAGE_LOGIN, PAGE_STUDENT_DIVISION, // PAGE_STUDENT_DASHBOARD,
+  PAGE_LOGIN,
+  PAGE_STUDENT_DASHBOARD,
   PAGE_SUBJECT_SELECT,
   PAGE_TEACHER_DASHBOARD,
 } from '@constants'
@@ -18,7 +19,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   roleRequired,
 }: any) => {
-  const { role, loading} = useAuth()
+  const { role, loading } = useAuth()
 
   if (loading) {
     return <div>Loading...</div> // Show a loading state until role is determined
@@ -36,7 +37,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     else if (role == 'teacher') {
       return <Navigate to={PAGE_TEACHER_DASHBOARD.path} replace />
     } else if (role == 'student') {
-      return <Navigate to={PAGE_STUDENT_DIVISION.path} replace />
+      return <Navigate to={PAGE_STUDENT_DASHBOARD.path} replace />
     }
   }
 

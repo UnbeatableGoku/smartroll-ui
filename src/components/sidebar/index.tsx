@@ -65,12 +65,12 @@ const Sidebar = () => {
 
   return (
     <div className="menu fixed bottom-4 left-0 right-0 flex justify-center">
-      <div className="sh flex items-center gap-1 rounded-lg border border-zinc-700 p-1 shadow-inner shadow-slate-900 backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105 dark:bg-black/40">
+      <div className="sh flex items-center gap-1 rounded-[12px] border border-zinc-700 bg-[#F7F7F7] p-1 shadow-soft backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105">
         <NotificationDrawer></NotificationDrawer>
         {menuItems.map((item, index) => (
           <button
             key={item.label}
-            className="group relative flex h-11 w-11 items-center justify-center rounded-md text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="group relative flex h-11 w-11 items-center justify-center rounded-md text-black transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             onMouseEnter={() => setActiveIndex(index)}
             onMouseLeave={() => setActiveIndex(null)}
             onClick={() => {
@@ -80,7 +80,7 @@ const Sidebar = () => {
           >
             <item.icon className="h-5 w-5 transition-transform duration-200 ease-in-out group-hover:scale-110" />
             {activeIndex === index && (
-              <span className="absolute -top-8 rounded-md bg-black/80 px-2 py-1 text-xs opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-100">
+              <span className="absolute -top-8 rounded-md bg-white px-2 py-1 text-xs opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-100">
                 {item.label}
               </span>
             )}
@@ -92,16 +92,16 @@ const Sidebar = () => {
               className="group relative flex h-12 w-12 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
               aria-label="User Menu"
             >
-              <Menu className="h-6 w-6 transition-transform duration-200 ease-in-out group-hover:scale-110" />
+              <Menu className="h-6 w-6 text-black transition-transform duration-200 ease-in-out group-hover:scale-110" />
             </button>
           </DialogTrigger>
           <VisuallyHidden.Root>
-            <DialogContent className="max-w-[380px] rounded-md border border-zinc-700 shadow-inner shadow-zinc-800 dark:bg-black">
+            <DialogContent className="max-w-[380px] rounded-md border border-zinc-700 bg-[#F7F7F7] shadow-inner shadow-zinc-800">
               {/* <DialogHeader >
               <DialogTitle className='dark:text-white'>Options</DialogTitle>
             </DialogHeader> */}
-              <div className="grid gap-4 py-4 dark:bg-black dark:text-white">
-                <ul>
+              <div className="grid gap-4 bg-[#F7F7F7] py-4 text-black">
+                <ul className="text-black">
                   {[...validLinks].map((page, index) => (
                     <TabLink
                       name={page.name}
@@ -110,6 +110,7 @@ const Sidebar = () => {
                       key={page.id}
                       subTabs={page.children}
                       collapsed={collapsed}
+                      className="text-black"
                       //Returns true for first parent with children
                       defalutOpen={firstParentWithChild === index}
                       onClick={() => setOpen(false)} // Close dialog on item click

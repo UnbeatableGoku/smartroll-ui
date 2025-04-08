@@ -26,6 +26,7 @@ export const useTeacherDashbord = () => {
   const [open, setOpen] = useState(false)
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
+  const [date, setDate] = useState<any>(getWeekDates())
   
 
   //days list 
@@ -46,13 +47,6 @@ export const useTeacherDashbord = () => {
       loadClassRooms()
     }
   },[isalreadyLoaded,dispatch])
-
-
-
-
-
-
-
 
   const loadClassRooms = async()=>{
     try{
@@ -267,8 +261,15 @@ export const useTeacherDashbord = () => {
         const lectureStatusData = extractLectureStatusData(data)
         setSessionData(lectureStatusData)
         setLectureDetails(data)
+        setDate((prev: any) => prev.map((d: any) => {
+          if (d.longDay === day) {
+            return { ...d, isActive: true }
+          }
+          else{
+            return { ...d, isActive: false }
+          }
+        }))
         
-        setCurrentDay(day)
       } else {
         toast.error(response_obj.errorMessage?.message)
       }
@@ -520,6 +521,7 @@ export const useTeacherDashbord = () => {
     dayList,
     currentDay,
     setCurrentDay,
+    date,
     classesList
   }
 }
@@ -534,4 +536,31 @@ function extractLectureStatusData(data: any) {
     })
   })
   return lectureStatusMap
+}
+
+function getWeekDates() {
+  const today = new Date()
+  const currentDay = today.getDay()
+  const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay
+
+  const monday = new Date(today)
+  monday.setDate(today.getDate() + mondayOffset)
+
+  const result = []
+
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(monday)
+    d.setDate(monday.getDate() + i)
+
+    const longDay = d.toLocaleString('en-US', {weekday: 'long'}).toLocaleLowerCase()
+    const shortDay = d
+      .toLocaleString('en-US', { weekday: 'short' })
+      .toUpperCase()
+    const day = String(d.getDate()).padStart(2, '0')
+    const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase()
+
+    result.push({ longDay,shortDay, day, month, isActive: false })
+  }
+
+  return result
 }

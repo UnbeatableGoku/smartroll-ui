@@ -14,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://smartroll.mnv-dev.site/api',
+        target: 'https://smartroll.live/api',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

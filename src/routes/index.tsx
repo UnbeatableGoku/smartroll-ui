@@ -7,6 +7,7 @@ import DivisionCreation from '@pages/Division/pages/DivisionCreation'
 import ForgotPassword from '@pages/Login/ForgotPassword'
 import Login from '@pages/Login/Login'
 import NotFound from '@pages/NotFound'
+import StudentDashboard from '@pages/StudentDashboard'
 // import StudentDashboard from '@pages/StudentDashboard'
 import StudentDivision from '@pages/StudentDashboard/student-division/pages/StudentDivision'
 import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
@@ -14,9 +15,9 @@ import SubjectSelection from '@pages/Subject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
 import TeacherAllocation from '@pages/Subject/TeacherAllocation/TeacherAllocation'
 import TeacherDashboard from '@pages/TeacherDashboard'
+import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAllocation'
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
-import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAllocation'
 import ErrorPage from '@pages/errorPage'
 import { Navigate } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
@@ -24,6 +25,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import {
   DIVISION_CREATION,
   FORGOT_PASSWORD,
+  LOAD_ALLOCATION_FOR_TEACHER_END,
   PAGE_DASHBOARD,
   PAGE_ELECTIVE_SUBJECT,
   PAGE_LOGIN,
@@ -36,7 +38,6 @@ import {
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
   SUBJECT_ALLOCATION,
-  LOAD_ALLOCATION_FOR_TEACHER_END
 } from '@constants'
 
 const router = createBrowserRouter([
@@ -120,12 +121,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Navigate to="/student-dashboard/division" replace />,
-            // element: (
-            //   <ProtectedRoute roleRequired="student">
-            //     <StudentDashboard />
-            //   </ProtectedRoute>
-            // ),
+            // element: <Navigate to="/student-dashboard/division" replace />,
+            element: (
+              <ProtectedRoute roleRequired="student">
+                <StudentDashboard />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
