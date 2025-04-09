@@ -80,7 +80,7 @@ const TeacherDashboard = () => {
       {/* Main Content */}
       <main className="py-6 pb-16">
         {/* Calendar-style Date Selector */}
-        <div className="flex overflow-x-auto border-b border-white/20 px-2 pb-4">
+        <div className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 md:justify-center">
           {date.map((day: any) => (
             <div
               key={`${day.day_name}-${day.day}`}
@@ -149,7 +149,7 @@ const TeacherDashboard = () => {
                         </CardHeader>
                         <CardContent className="px-4">
                           <div className="grid gap-4">
-                            <div className="flex items-center gap-2 text-sm text-foreground">
+                            <div className="flex items-center gap-2 text-sm text-black">
                               <div className="flex flex-col gap-2">
                                 <div className="flex items-center gap-[6px] text-lg">
                                   <div className="flex gap-4 text-sm md:text-lg">
@@ -180,14 +180,14 @@ const TeacherDashboard = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-foreground md:text-lg">
+                            <div className="flex items-center gap-2 text-sm text-black md:text-lg">
                               <Clock className="size-5 text-[#00000080]" />
                               {/* <span className="text-sm   text-black">Time: </span> */}
                               <span className="font-semibold text-black">
                                 {lecture?.start_time} • {lecture?.end_time}
                               </span>
                             </div>
-                            <div className="flex w-full flex-col gap-3 text-sm text-foreground md:text-lg">
+                            <div className="flex w-full flex-col gap-3 text-sm text-black md:text-lg">
                               <div className="flex items-center gap-2">
                                 <Users className="size-5 text-[#00000080]" />
                                 <div className="flex w-full items-center gap-2">
@@ -263,7 +263,7 @@ const TeacherDashboard = () => {
                                 </div>
                               </div>
                               <div
-                                className="hidden w-fit gap-1 rounded-md text-[10px] text-yellow-500 md:text-sm"
+                                className="hidden w-fit gap-1 rounded-md text-[14px] text-red-700"
                                 id={`class_message-${lecture?.slug}${lecture?.session?.classroom_final?.slug}`}
                               ></div>
                             </div>
@@ -362,7 +362,7 @@ const TeacherDashboard = () => {
             className="h-[100dvh] overflow-y-auto border-border bg-[#F7F7F7] sm:max-w-full"
           >
             <SheetHeader className="mb-6 flex flex-row items-center justify-between">
-              <SheetTitle className="text-md text-foreground md:text-2xl">
+              <SheetTitle className="text-md text-black md:text-2xl">
                 Attendance Details
               </SheetTitle>
             </SheetHeader>
@@ -371,27 +371,27 @@ const TeacherDashboard = () => {
               {/* Attendance Table */}
               <div className="rounded-[6px] bg-[#F7F7F7] shadow-soft">
                 <div className="flex items-center justify-between p-3 md:p-4">
-                  <h3 className="text-md font-semibold text-foreground sm:text-lg">
+                  <h3 className="text-md font-semibold text-black sm:text-lg">
                     Attendance
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-black">
                     Students: {students?.length}
                   </p>
                 </div>
                 <div className="mx-2 h-[1px] max-w-full bg-gray-300"></div>
 
-                <div className="flex h-[500px] w-full justify-center overflow-y-auto p-4">
+                <div className="flex h-[75vh] w-full justify-center overflow-y-auto p-4">
                   <Tabs defaultValue="Default" className="w-full">
-                    <TabsList className="mb-4 flex w-full gap-4">
+                    <TabsList className="mb-4 flex w-full gap-4 bg-[#F7F7F7]">
                       <TabsTrigger
                         value="Default"
-                        className="flex-1 rounded-[6px] shadow-soft data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
+                        className="flex-1 rounded-[6px] bg-white text-black shadow-soft data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
                       >
                         Default
                       </TabsTrigger>
                       <TabsTrigger
                         value="manual"
-                        className="relative flex-1 rounded-[6px] shadow-soft data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
+                        className="relative flex-1 rounded-[6px] bg-white text-black shadow-soft data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
                       >
                         <span className="relative">
                           Manual
@@ -409,7 +409,10 @@ const TeacherDashboard = () => {
                               {students?.length > 0 && (
                                 <TableRow className="md:text-md border-border text-[12px]">
                                   <TableHead>Student Name</TableHead>
-                                  <TableHead> P/A</TableHead>
+                                  <TableHead className="text-center">
+                                    {' '}
+                                    P/A
+                                  </TableHead>
                                 </TableRow>
                               )}
                             </TableHeader>
@@ -417,13 +420,13 @@ const TeacherDashboard = () => {
                               {students?.map((student: any) => (
                                 <TableRow
                                   key={student?.slug}
-                                  className="border-border text-[12px] text-foreground"
+                                  className="border-border text-[12px] text-black"
                                 >
                                   <TableCell>
                                     {student?.student?.profile?.name}
                                   </TableCell>
 
-                                  <TableCell className="capitalize text-white">
+                                  <TableCell className="inline-flex w-full items-center justify-center capitalize text-white">
                                     {student?.is_present === false ? (
                                       <span className="flex items-center gap-2 text-[10px] text-red-600 md:text-[12px]">
                                         <Ban className="size-4 md:size-6" />
@@ -450,7 +453,7 @@ const TeacherDashboard = () => {
                     <TabsContent value="manual" className="space-y-4">
                       {manualAttendance.length > 0 && (
                         <Button
-                          className="w-full rounded-[4px] bg-[#0261BE] text-white"
+                          className="w-full rounded-[4px] bg-[#0261BE] text-white hover:bg-[#0261BE]/60"
                           onClick={() => markManualStudentsAttendance()}
                         >
                           Mark All Students

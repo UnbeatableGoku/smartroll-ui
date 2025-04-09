@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { setAuth } from '@data/redux/slices/authSlice'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
-import { LogOut, Menu, UserPen } from 'lucide-react'
+import { Home, LogOut, Menu, UserPen } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -42,6 +42,11 @@ const Sidebar = () => {
 
   const menuItems = [
     {
+      icon: Home,
+      label: 'Home',
+      event: () => navigate('/'),
+    },
+    {
       icon: UserPen,
       label: 'Profile',
       event: () => {
@@ -65,8 +70,7 @@ const Sidebar = () => {
 
   return (
     <div className="menu fixed bottom-4 left-0 right-0 flex justify-center">
-      <div className="sh flex items-center gap-1 rounded-[12px] border border-zinc-700 bg-[#F7F7F7] p-1 shadow-soft backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105">
-        <NotificationDrawer></NotificationDrawer>
+      <div className="flex items-center gap-1 rounded-[12px] border border-zinc-700 bg-[#F7F7F7] p-1 shadow-soft backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105">
         {menuItems.map((item, index) => (
           <button
             key={item.label}
@@ -86,6 +90,7 @@ const Sidebar = () => {
             )}
           </button>
         ))}
+        <NotificationDrawer></NotificationDrawer>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <button

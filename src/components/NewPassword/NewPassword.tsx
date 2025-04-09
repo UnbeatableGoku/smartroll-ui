@@ -79,8 +79,8 @@ const NewPassword = ({
       </Helmet>
 
       <div className="flex min-h-screen flex-col">
-        <main className="flex flex-grow items-center justify-center bg-black">
-          <div className="w-full max-w-md rounded-lg border-zinc-700 p-8 shadow-xl shadow-zinc-800/60">
+        <main className="flex flex-grow items-center justify-center bg-white px-4 shadow-soft">
+          <div className="w-full max-w-md rounded-lg bg-[#F7F7F7] p-8 text-black shadow-soft">
             <h2 className="mb-6 text-center text-2xl font-bold">
               New Password
             </h2>
@@ -96,7 +96,7 @@ const NewPassword = ({
                     {...register('password', {
                       required: 'Password is required',
                     })}
-                    className="pl-10"
+                    className="border-none pl-10 shadow-soft"
                   />
                   <Button
                     type="button"
@@ -127,7 +127,7 @@ const NewPassword = ({
                     {...register('confirmPassword', {
                       required: 'Please confirm your password',
                     })}
-                    className="pl-10"
+                    className="border-none pl-10 shadow-soft"
                   />
                   <Button
                     type="button"
@@ -148,7 +148,11 @@ const NewPassword = ({
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/70"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <ButtonLoader title="Updating..." />
                 ) : (

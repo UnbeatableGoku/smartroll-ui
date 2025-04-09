@@ -19,10 +19,10 @@ export const ManualMarkedAttendance = ({
     <div className="w-full">
       <div>
         {manualAttendance.length > 0 ? (
-          <Table>
+          <Table className="text-black">
             <TableHeader>
               {manualAttendance?.length > 0 && (
-                <TableRow className="border-border">
+                <TableRow className="text-black hover:bg-white">
                   <TableHead>Student Name</TableHead>
                   <TableHead>Comment</TableHead>
                   <TableHead>Action</TableHead>
@@ -31,7 +31,10 @@ export const ManualMarkedAttendance = ({
             </TableHeader>
             <TableBody>
               {manualAttendance?.map((student: any) => (
-                <TableRow key={student?.slug}>
+                <TableRow
+                  key={student?.slug}
+                  className="text-black shadow-none hover:bg-white"
+                >
                   <TableCell>{student?.student?.profile?.name}</TableCell>
                   <TableCell>{student?.regulization_comment}</TableCell>
                   <TableCell className="capitalize text-black">

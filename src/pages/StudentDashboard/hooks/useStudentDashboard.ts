@@ -142,7 +142,7 @@ const useStudentDashboard = () => {
     }
   }
 
-  const handleManualMarking = async (btn: any, lecture_slug: string) => {
+  const handleManualMarking = async (btn: any, lecture_slug: string,session_id:string) => {
     try {
       const regulization_commet: string | null = prompt('Enter the comment')
       if (!regulization_commet) {
@@ -174,6 +174,10 @@ const useStudentDashboard = () => {
         if (response === 100) {
           btn.disabled = true
           btn.classList.add('btn-outline-secondary')
+          const markBtn = document.getElementById(
+            `attendance_${lecture_slug}${session_id}`,
+          ) as HTMLButtonElement
+          markBtn.disabled = true
         }
       } else {
         toast.error(response_obj.errorMessage?.message)
