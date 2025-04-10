@@ -9,14 +9,10 @@ import Login from '@pages/Login/Login'
 import NotFound from '@pages/NotFound'
 import StudentDashboard from '@pages/StudentDashboard'
 // import StudentDashboard from '@pages/StudentDashboard'
-import StudentDivision from '@pages/StudentDashboard/student-division/pages/StudentDivision'
-import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/ElectiveSubject'
 import SubjectSelection from '@pages/Subject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
 import TeacherAllocation from '@pages/Subject/TeacherAllocation/TeacherAllocation'
 import TeacherDashboard from '@pages/TeacherDashboard'
-import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAllocation'
-import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
 import { Navigate } from 'react-router-dom'
@@ -25,13 +21,9 @@ import { createBrowserRouter } from 'react-router-dom'
 import {
   DIVISION_CREATION,
   FORGOT_PASSWORD,
-  LOAD_ALLOCATION_FOR_TEACHER_END,
   PAGE_DASHBOARD,
-  PAGE_ELECTIVE_SUBJECT,
   PAGE_LOGIN,
   PAGE_STUDENT_DASHBOARD,
-  PAGE_STUDENT_DIVISION,
-  PAGE_SUBJECT_CHOICE,
   PAGE_SUBJECT_SELECT,
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
   PAGE_TEACHER_ALLOCATION,
@@ -130,21 +122,21 @@ const router = createBrowserRouter([
           },
         ],
       },
-      {
-        path: PAGE_STUDENT_DIVISION.path,
+      // {
+      //   path: PAGE_STUDENT_DIVISION.path,
 
-        element: <MainLayout />,
-        children: [
-          {
-            index: true,
-            element: (
-              <ProtectedRoute roleRequired="student">
-                <StudentDivision />
-              </ProtectedRoute>
-            ),
-          },
-        ],
-      },
+      //   element: <MainLayout />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: (
+      //         <ProtectedRoute roleRequired="student">
+      //           <StudentDivision />
+      //         </ProtectedRoute>
+      //       ),
+      //     },
+      //   ],
+      // },
       // subject selection route (admin side)
       {
         path: PAGE_TEACHER_ALLOCATION.path,
@@ -177,21 +169,21 @@ const router = createBrowserRouter([
         ],
       },
       // subject selection choice (teacher side)
-      {
-        path: PAGE_SUBJECT_CHOICE.path,
+      // {
+      //   path: PAGE_SUBJECT_CHOICE.path,
 
-        element: <MainLayout />,
-        children: [
-          {
-            index: true,
-            element: (
-              <ProtectedRoute roleRequired="teacher">
-                <UnifiedSubjectChoice></UnifiedSubjectChoice>
-              </ProtectedRoute>
-            ),
-          },
-        ],
-      },
+      //   element: <MainLayout />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: (
+      //         <ProtectedRoute roleRequired="teacher">
+      //           <UnifiedSubjectChoice></UnifiedSubjectChoice>
+      //         </ProtectedRoute>
+      //       ),
+      //     },
+      //   ],
+      // },
 
       //SUBJECT SELECTION CONFIRMATION
       {
@@ -211,21 +203,21 @@ const router = createBrowserRouter([
       },
 
       //Elective subject student side
-      {
-        path: PAGE_ELECTIVE_SUBJECT.path,
+      // {
+      //   path: PAGE_ELECTIVE_SUBJECT.path,
 
-        element: <MainLayout />,
-        children: [
-          {
-            index: true,
-            element: (
-              <ProtectedRoute roleRequired="student">
-                <ElectiveSubject />
-              </ProtectedRoute>
-            ),
-          },
-        ],
-      },
+      //   element: <MainLayout />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: (
+      //         <ProtectedRoute roleRequired="student">
+      //           <ElectiveSubject />
+      //         </ProtectedRoute>
+      //       ),
+      //     },
+      //   ],
+      // },
       //Division creation
       {
         path: DIVISION_CREATION.path,
@@ -257,21 +249,21 @@ const router = createBrowserRouter([
       },
 
       //subject load Allocation (teacher view)
-      {
-        path: LOAD_ALLOCATION_FOR_TEACHER_END.path,
+      // {
+      //   path: LOAD_ALLOCATION_FOR_TEACHER_END.path,
 
-        element: <MainLayout />,
-        children: [
-          {
-            index: true,
-            element: (
-              <ProtectedRoute roleRequired="teacher">
-                <LoadAllocation />
-              </ProtectedRoute>
-            ),
-          },
-        ],
-      },
+      //   element: <MainLayout />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: (
+      //         <ProtectedRoute roleRequired="teacher">
+      //           <LoadAllocation />
+      //         </ProtectedRoute>
+      //       ),
+      //     },
+      //   ],
+      // },
     ],
   },
   { path: '*', element: <NotFound /> },

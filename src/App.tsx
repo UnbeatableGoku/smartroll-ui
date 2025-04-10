@@ -6,13 +6,15 @@ import { Toaster } from 'sonner'
 import { Loader } from '@components/common/loader/Loader'
 
 function App() {
-  const isLoading = useSelector((state: RootState) => state.loader.LOADER_STATE)
+  const { LOADER_STATE, message } = useSelector(
+    (state: RootState) => state.loader,
+  )
 
   return (
     <div className="min-h-[100dvh] overflow-hidden text-gray-100 dark:bg-black">
       <Outlet />
       <Toaster richColors position="top-right" />
-      {isLoading && <Loader />}
+      {LOADER_STATE && <Loader message={message} />}
     </div>
   )
 }

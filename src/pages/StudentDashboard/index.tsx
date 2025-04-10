@@ -45,25 +45,205 @@ const StudentDashboard = () => {
       {' '}
       {/* Light background like Teacher's */}
       {!permission_state ? (
-        // Keep the permission prompt/video as is
-        <div className="flex flex-col items-center justify-center bg-white p-4 text-center">
+        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center rounded-lg bg-white p-6 pb-20 text-center shadow-md">
           <h2 className="mb-4 text-2xl font-bold text-black">
             Location Permission Required
           </h2>
-          <p className="mb-6 text-gray-600">
-            Please grant location permission to mark your attendance. Watch the
-            video below for instructions if needed.
+          <p className="mb-6 max-w-2xl text-black">
+            To mark your attendance, we need access to your location. Please
+            enable location services using the instructions below.
           </p>
-          <iframe
-            width="100%"
-            style={{ maxWidth: '560px' }} // Optional: constrain video width
-            height="315"
-            src="https://www.youtube.com/embed/ERhEIsEXG50?si=i9ez0hxneFCuAe6E"
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          ></iframe>
+
+          {/* Location Services Instructions */}
+          <div className="mb-6 w-full max-w-4xl rounded-lg bg-[#F0F7FF] p-4 px-3 shadow-md sm:p-6">
+            <h3 className="mb-3 flex items-center text-lg font-semibold text-black sm:mb-4 sm:text-xl">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="mr-2 h-5 w-5 text-[#0261BE]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              If Location Services Are Disabled on Your Device
+            </h3>
+
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+              {/* Android Location Services */}
+              <div className="rounded-lg bg-white p-3 shadow-md sm:p-4">
+                <h4 className="mb-2 flex items-center text-base font-semibold text-black sm:mb-3 sm:text-lg">
+                  <div className="mr-2 rounded-full bg-[#a4c639] p-1 sm:mr-3 sm:p-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  Android Location Services
+                </h4>
+                <ol className="space-y-2 text-left text-sm text-black sm:space-y-3 sm:text-base">
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      1
+                    </span>
+                    <span>
+                      Swipe down from the top of your screen to open{' '}
+                      <strong>Quick Settings</strong>
+                    </span>
+                  </li>
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      2
+                    </span>
+                    <span>
+                      Look for the <strong>Location</strong> icon and tap it to
+                      turn it on
+                    </span>
+                  </li>
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      3
+                    </span>
+                    <span>
+                      If not visible, go to <strong>Settings</strong> →{' '}
+                      <strong>Location</strong> and toggle ON
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      4
+                    </span>
+                    <span>
+                      Return to Chrome and tap the <strong>three dots</strong>{' '}
+                      menu → <strong>Settings</strong> →{' '}
+                      <strong>Site settings</strong> → <strong>Location</strong>
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      5
+                    </span>
+                    <span>
+                      Make sure SmartRoll is set to <strong>Allow</strong>
+                    </span>
+                  </li>
+                </ol>
+              </div>
+
+              {/* iOS Location Services */}
+              <div className="rounded-lg bg-white p-3 shadow-md sm:p-4">
+                <h4 className="mb-2 flex items-center text-base font-semibold text-black sm:mb-3 sm:text-lg">
+                  <div className="mr-2 rounded-full bg-black p-1 sm:mr-3 sm:p-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  iOS Location Services
+                </h4>
+                <ol className="space-y-2 text-left text-sm text-black sm:space-y-3 sm:text-base">
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      1
+                    </span>
+                    <span>
+                      Open <strong>Settings</strong> on your device
+                    </span>
+                  </li>
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      2
+                    </span>
+                    <span>
+                      Tap <strong>Privacy & Security</strong>
+                    </span>
+                  </li>
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      3
+                    </span>
+                    <span>
+                      Tap <strong>Location Services</strong> and toggle ON
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      4
+                    </span>
+                    <span>
+                      Scroll down and tap <strong>Safari Websites</strong> (or
+                      your browser app)
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      5
+                    </span>
+                    <span>
+                      Under "Allow Location Access", select{' '}
+                      <strong>While Using the App</strong>
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      6
+                    </span>
+                    <span>
+                      Return to Safari, reload the page, and tap{' '}
+                      <strong>Allow</strong> when prompted
+                    </span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 max-w-2xl">
+            <h3 className="mb-2 text-lg font-semibold text-black">
+              Still having trouble?
+            </h3>
+            <p className="mb-4 text-black">
+              Watch this video for additional help:
+            </p>
+            <div
+              className="relative overflow-hidden rounded-lg shadow-md"
+              style={{ paddingTop: '56.25%' }}
+            >
+              <iframe
+                className="absolute left-0 top-0 h-full w-full"
+                src="https://www.youtube.com/embed/ERhEIsEXG50?si=i9ez0hxneFCuAe6E"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
         </div>
       ) : (
         // Main content area - matches Teacher's structure
@@ -126,7 +306,7 @@ const StudentDashboard = () => {
                                   {/* Attendance Marked Badge */}
                                   <Badge
                                     className={cn(
-                                      'flex h-[26px] shrink-0 items-center justify-center rounded-[4px] border-none bg-[#4CB151] p-0 px-3 text-[10px] text-white md:text-[12px]', // Green like "Active"
+                                      'flex h-[26px] w-auto items-center justify-center rounded-[4px] border-none bg-[#4CB151] p-0 px-3 text-[10px] text-white hover:bg-[#4CB151] md:text-[12px]', // Green like "Active"
                                       !lecture?.attendance_marked && 'hidden', // Hide if not marked
                                     )}
                                     id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}

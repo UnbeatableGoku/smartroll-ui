@@ -5,21 +5,41 @@ import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
+import { startRecording } from '@utils/helpers/recorder_process'
+import { useDispatch } from 'react-redux'
+import { setLoader } from '@data/redux/slices/loaderSlice'
 
 const useStudentDashboard = () => {
   const [permission_state, set_permission_state] = useState(false)
   const [lectureDetails, setLectureDetails] = useState<any>([])
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
-
+  const dispatch = useDispatch()
   const get_location_permission = () => {
     // if(!permission_state){
     navigator.permissions.query({ name: 'geolocation' }).then((result) => {
       if (result.state === 'granted') {
         set_permission_state(true)
       } else if (result.state === 'prompt') {
-        navigator.geolocation.getCurrentPosition(() => {
-          set_permission_state(true)
-        })
+        try{
+          navigator.geolocation.getCurrentPosition(
+            () => {
+              set_permission_state(true)
+            },
+            () => {
+
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 5000,
+              maximumAge: 0
+            }
+          );
+        }
+        catch(error:any){
+        }
+        // navigator.geolocation.getCurrentPosition(() => {
+        //   set_permission_state(true)
+        // })
       } else if (result.state === 'denied') {
         navigator.geolocation.getCurrentPosition(() => {
           set_permission_state(true)
@@ -73,18 +93,30 @@ const useStudentDashboard = () => {
     lecture_slug: string,
     session_id: string,
   ) => {
+    dispatch(setLoader({state:true,message : "Marking Attendance. Please do not refresh this page!"}))
     btn.disabled = true
     if (!navigator.geolocation) {
       toast.error('Geolocation is not supported by this browser.')
+      
       return
     }
     try {
+      const {error, message , blob}:any = await startRecording()
+      if(error){
+        btn.disabled = false
+        dispatch(setLoader({state : false , message : null}))
+       return toast.error(message)
+      }
       navigator.geolocation.getCurrentPosition(
         async (positions) => {
-          const latitude = positions.coords.latitude
-          const longitude = positions.coords.longitude
+          const latitude:any = positions.coords.latitude
+          const longitude:any = positions.coords.longitude
+          const formData = new FormData()
+          formData.append('latitude', latitude)
+          formData.append('longitude', longitude)
+          formData.append('lecture_slug', lecture_slug)
+          formData.append('audio', blob,"recording.wav") 
           const headers = {
-            'Content-Type': 'application/json',
             'ngrok-skip-browser-warning': true,
           }
           const axiosInstance = axios.create()
@@ -94,11 +126,7 @@ const useStudentDashboard = () => {
             '/manage/session/mark_attendance_for_student/',
             'post',
             headers,
-            {
-              lecture_slug: lecture_slug,
-              latitude: latitude,
-              longitude: longitude,
-            },
+            formData,
             null,
           )
           if (response_obj.error === false) {
@@ -117,6 +145,7 @@ const useStudentDashboard = () => {
                   `badge_${lecture_slug}${session_id}`,
                 ) as HTMLElement
                 presentBadge.classList.remove('hidden')
+                presentBadge.classList.add('flex')
               } else {
                 btn.disabled = false
               }
