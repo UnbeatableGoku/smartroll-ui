@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
 
+import { RootState } from '@data/redux/Store'
+import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
+import { setLoader } from '@data/redux/slices/loaderSlice'
 import axios from 'axios'
 import { get } from 'lodash'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Socket, io } from 'socket.io-client'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-import { RootState } from '@data/redux/Store'
+
+import { startRecording } from '@utils/helpers/recorder_process'
+
 import { LectureDetails } from 'types/common'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
-import { setClassRoomList} from '@data/redux/slices/classRoomsSlice'
 
 export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
@@ -27,29 +31,35 @@ export const useTeacherDashbord = () => {
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
   const [date, setDate] = useState<any>(getWeekDates())
-  
 
-  //days list 
-  const days = ["monday","tuesday","wednesday","thursday","friday","saturday"]
+  //days list
+  const days = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ]
   const [dayList] = useState(days)
-  const [currentDay,setCurrentDay] = useState<string>("")
-  
+  const [currentDay, setCurrentDay] = useState<string>('')
+
   const dispatch = useDispatch()
-  // do some changes 
+  // do some changes
 
-
-
-  const {isalreadyLoaded,classes} = useSelector((state: RootState) => state.classRoomSlice)
+  const { isalreadyLoaded, classes } = useSelector(
+    (state: RootState) => state.classRoomSlice,
+  )
   const [classesList, setClasses] = useState<any>(classes)
-  useEffect(()=>{
-    if(!isalreadyLoaded){
+  useEffect(() => {
+    if (!isalreadyLoaded) {
       // call the classroom load data
       loadClassRooms()
     }
-  },[isalreadyLoaded,dispatch])
+  }, [isalreadyLoaded, dispatch])
 
-  const loadClassRooms = async()=>{
-    try{
+  const loadClassRooms = async () => {
+    try {
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -64,18 +74,17 @@ export const useTeacherDashbord = () => {
         method,
         header,
       )
-      if(response_obj.error === false){
+      if (response_obj.error === false) {
         const response = get(response_obj, 'response.data.data', [])
         setClasses(response)
         const payload = {
-          isalreadyLoaded : true,
-          classes:response
+          isalreadyLoaded: true,
+          classes: response,
         }
         dispatch(setClassRoomList(payload))
       }
-    }
-    catch(error:any){
-      toast.error(error.message || "something went wrong")
+    } catch (error: any) {
+      toast.error(error.message || 'something went wrong')
     }
   }
   const clientSocketHandler = (session_id: string, auth_token: string) => {
@@ -144,15 +153,36 @@ export const useTeacherDashbord = () => {
   const startSessionHandler = async (
     session_id: string,
     lecture_slug: string,
-    classroomSlug:string
+    classroomSlug: string,
+    session_status: string,
   ) => {
-    
-    const selectedClassRoom = document.getElementById(`select-${lecture_slug}${classroomSlug}`) as HTMLSelectElement
+    const selectedClassRoom = document.getElementById(
+      `select-${lecture_slug}${classroomSlug}`,
+    ) as HTMLSelectElement
     try {
+      dispatch(
+        setLoader({
+          state: true,
+          message: 'Starting the session. Please do not refresh the page!',
+        }),
+      )
+
+      const formData = new FormData()
+      formData.append('lecture_slug', lecture_slug)
+      formData.append('classroom_slug', selectedClassRoom.value)
+      if (session_status === 'pre') {
+        const { error, message, blob }: any = await startRecording()
+        formData.append('audio', blob, 'recording.wav')
+
+        if (error) {
+          return toast.error(message)
+        }
+      }
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
       }
+
       const axiosInstance = axios.create()
       const method = 'post'
       const endpoint = `/manage/session/create_lecture_session/`
@@ -162,9 +192,9 @@ export const useTeacherDashbord = () => {
         endpoint,
         method,
         header,
-        { lecture_slug: lecture_slug,classroom_slug:selectedClassRoom.value },
+        formData,
       )
-      
+
       if (response_obj.error === false) {
         const { data } = response_obj?.response?.data
 
@@ -177,15 +207,15 @@ export const useTeacherDashbord = () => {
             ...branch,
             lectures: branch.lectures.map((lecture: any) => {
               if (lecture.session.session_id === data.session_id) {
-                return data.lecture; 
+                return data.lecture
               } else {
-                return lecture;
+                return lecture
               }
             }),
-          };
-        });
+          }
+        })
         setLectureDetails(updatedLectureDetails)
-        
+
         if (data.active === 'ongoing') {
           clientSocketHandler(
             session_id,
@@ -214,7 +244,7 @@ export const useTeacherDashbord = () => {
     socket?.disconnect()
     setIsSheetOpen(false)
   }
-  const getLectureDetails = async (day:string ="current") => {
+  const getLectureDetails = async (day: string = 'current') => {
     try {
       const header = {
         'ngrok-skip-browser-warning': true,
@@ -233,7 +263,7 @@ export const useTeacherDashbord = () => {
 
       if (response_obj.error === false) {
         const response = get(response_obj, 'response.data.data', [])
-        const day = get(response_obj,'response.data.day',"")
+        const day = get(response_obj, 'response.data.day', '')
         const data = response.map((branch: any) => {
           const lecture_obj = {
             branch_name: branch.branch_name,
@@ -261,15 +291,15 @@ export const useTeacherDashbord = () => {
         const lectureStatusData = extractLectureStatusData(data)
         setSessionData(lectureStatusData)
         setLectureDetails(data)
-        setDate((prev: any) => prev.map((d: any) => {
-          if (d.longDay === day) {
-            return { ...d, isActive: true }
-          }
-          else{
-            return { ...d, isActive: false }
-          }
-        }))
-        
+        setDate((prev: any) =>
+          prev.map((d: any) => {
+            if (d.longDay === day) {
+              return { ...d, isActive: true }
+            } else {
+              return { ...d, isActive: false }
+            }
+          }),
+        )
       } else {
         toast.error(response_obj.errorMessage?.message)
       }
@@ -327,7 +357,7 @@ export const useTeacherDashbord = () => {
   const handleClassroom = async (
     lectureSlug: any,
     classRoomSlug: string,
-    finalClassRoomSlug :string
+    finalClassRoomSlug: string,
   ) => {
     // Get the input element
     document.getElementById(
@@ -339,13 +369,13 @@ export const useTeacherDashbord = () => {
     ) as HTMLSelectElement
     // Force updating the default value dynamically
     selectElement.value = classRoomSlug
-    classRoomDetailsAPI(lectureSlug, classRoomSlug,finalClassRoomSlug)
+    classRoomDetailsAPI(lectureSlug, classRoomSlug, finalClassRoomSlug)
   }
 
   const classRoomDetailsAPI = async (
     lectureSlug: any,
     classRoom_slug: any,
-    finalClassRoomSlug:string
+    finalClassRoomSlug: string,
   ) => {
     try {
       const header = {
@@ -370,13 +400,11 @@ export const useTeacherDashbord = () => {
       )
 
       if (response_obj.error === false) {
-        const response = get(
-          response_obj,
-          'response.data.data',
-          null,
-        )
-        const messageDiv = document.getElementById(`class_message-${lectureSlug}${finalClassRoomSlug}`) as HTMLDivElement
-        if(!response.associated_lecture){
+        const response = get(response_obj, 'response.data.data', null)
+        const messageDiv = document.getElementById(
+          `class_message-${lectureSlug}${finalClassRoomSlug}`,
+        ) as HTMLDivElement
+        if (!response.associated_lecture) {
           return messageDiv.classList.add('hidden')
         }
         messageDiv.innerHTML = `${response.associated_lecture.teacher} already has a lecture in selected class`
@@ -522,7 +550,7 @@ export const useTeacherDashbord = () => {
     currentDay,
     setCurrentDay,
     date,
-    classesList
+    classesList,
   }
 }
 function extractLectureStatusData(data: any) {
@@ -552,14 +580,16 @@ function getWeekDates() {
     const d = new Date(monday)
     d.setDate(monday.getDate() + i)
 
-    const longDay = d.toLocaleString('en-US', {weekday: 'long'}).toLocaleLowerCase()
+    const longDay = d
+      .toLocaleString('en-US', { weekday: 'long' })
+      .toLocaleLowerCase()
     const shortDay = d
       .toLocaleString('en-US', { weekday: 'short' })
       .toUpperCase()
     const day = String(d.getDate()).padStart(2, '0')
     const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase()
 
-    result.push({ longDay,shortDay, day, month, isActive: false })
+    result.push({ longDay, shortDay, day, month, isActive: false })
   }
 
   return result
