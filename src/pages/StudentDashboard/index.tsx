@@ -46,7 +46,7 @@ const StudentDashboard = () => {
       {/* Light background like Teacher's */}
       {!permission_state ? (
         // Keep the permission prompt/video as is
-        <div className="flex h-screen flex-col items-center justify-center bg-white p-4 text-center">
+        <div className="flex flex-col items-center justify-center bg-white p-4 text-center">
           <h2 className="mb-4 text-2xl font-bold text-black">
             Location Permission Required
           </h2>
@@ -64,12 +64,6 @@ const StudentDashboard = () => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           ></iframe>
-          <Button
-            onClick={get_location_permission}
-            className="mt-6 rounded-[4px] bg-[#0261BE] text-white hover:bg-blue-700"
-          >
-            Grant Permission
-          </Button>
         </div>
       ) : (
         // Main content area - matches Teacher's structure

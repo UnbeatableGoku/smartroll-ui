@@ -101,7 +101,7 @@ const Sidebar = () => {
             </button>
           </DialogTrigger>
           <VisuallyHidden.Root>
-            <DialogContent className="max-w-[380px] rounded-md border border-zinc-700 bg-[#F7F7F7] shadow-inner shadow-zinc-800">
+            <DialogContent className="max-w-[380px] rounded-md bg-[#F7F7F7] shadow-soft">
               {/* <DialogHeader >
               <DialogTitle className='dark:text-white'>Options</DialogTitle>
             </DialogHeader> */}

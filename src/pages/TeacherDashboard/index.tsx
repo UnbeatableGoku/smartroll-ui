@@ -78,9 +78,9 @@ const TeacherDashboard = () => {
   return (
     <div className="h-auto">
       {/* Main Content */}
-      <main className="py-6 pb-16">
+      <main className="flex flex-col gap-6 pb-20">
         {/* Calendar-style Date Selector */}
-        <div className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 md:justify-center">
+        <div className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 pt-8 md:justify-center">
           {date.map((day: any) => (
             <div
               key={`${day.day_name}-${day.day}`}
@@ -100,19 +100,19 @@ const TeacherDashboard = () => {
         </div>
 
         {/* Session List */}
-        <div className="gap-6 border-none p-1 md:p-2">
+        <div className="flex flex-col gap-8 border-none p-1 md:p-2">
           {lectureDetails.length > 0 ? (
             lectureDetails?.map((l: any) => (
               <div
                 key={l?.id || Math.random()}
-                className="w-full rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft"
+                className="w-full gap-6 rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft"
               >
                 <div className="text-md flex w-full items-center rounded-sm bg-white/10 p-2 font-medium text-black md:text-[20px]">
                   {l.branch_name}
                 </div>
-                {l?.lectures.length > 0 &&
-                  l?.lectures?.map((lecture: any, index: number) => (
-                    <div className="grid grid-cols-1 gap-6 px-1 pt-4 md:grid-cols-2 md:px-4 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 px-1 pt-4 md:grid-cols-2 md:px-4 lg:grid-cols-3">
+                  {l?.lectures.length > 0 &&
+                    l?.lectures?.map((lecture: any, index: number) => (
                       <Card
                         key={lecture?.id || index}
                         className="w-full overflow-hidden border-none bg-[#F7F7F7] shadow-soft"
@@ -321,12 +321,12 @@ const TeacherDashboard = () => {
                           )}
                         </CardFooter>
                       </Card>
-                    </div>
-                  ))}
+                    ))}
+                </div>
                 {l?.lectures.length === 0 && (
                   <div className="px-1 pt-4 md:px-8">
-                    <Card className="w-full overflow-hidden bg-zinc-600/10 text-center">
-                      <CardHeader className="p-4 text-black">
+                    <Card className="w-full overflow-hidden rounded-md border-none bg-[#F7F7F7] text-center shadow-soft">
+                      <CardHeader className="p-4 text-sm text-black">
                         No lectures scheduled for today.
                       </CardHeader>
                     </Card>
@@ -337,7 +337,7 @@ const TeacherDashboard = () => {
           ) : (
             <div className="px-1 pt-4 md:px-8">
               <Card className="w-full overflow-hidden border-border bg-zinc-600/10 text-center">
-                <CardHeader className="p-4 text-black">
+                <CardHeader className="p-4 text-sm text-black">
                   No lectures scheduled for today.
                 </CardHeader>
               </Card>
