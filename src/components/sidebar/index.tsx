@@ -22,7 +22,10 @@ const Sidebar = () => {
     //clear local storage
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
+    localStorage.removeItem('callbackUrl')
+    localStorage.removeItem('fromApp')
     // clear redux state
+    
     dispatch(setAuth({ access: '', refresh: '', isAuth: false }))
     // redirect to login page
     navigate('/login')
