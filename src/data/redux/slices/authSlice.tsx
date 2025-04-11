@@ -41,13 +41,14 @@ const authSlice = createSlice({
         fromApp?: string | null
       }>,
     ) => {
+      const {isAuth, access, refresh, callbackUrl=null, fromApp=null} = action.payload
       return {
         ...state,
-        isAuth: action.payload.isAuth,
-        accessToken: action.payload.access,
-        refreshToken: action.payload.refresh,
-        callbackUrl: action.payload.callbackUrl,
-        fromApp: action.payload.fromApp,
+        isAuth: isAuth,
+        accessToken: access,
+        refreshToken: refresh,
+        callbackUrl: callbackUrl,
+        fromApp: fromApp,
       }
     },
     setUserProfile: (state, action: PayloadAction<DecodedToken>) => {
