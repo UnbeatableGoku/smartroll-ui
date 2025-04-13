@@ -576,7 +576,7 @@ function getWeekDates() {
 
   const result = []
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 7; i++) {
     const d = new Date(monday)
     d.setDate(monday.getDate() + i)
 
