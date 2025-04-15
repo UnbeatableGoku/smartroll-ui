@@ -12,7 +12,7 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { startRecording } from '@utils/helpers/recorder_process'
+import { createWavBlob } from '@utils/helpers/recorder_process'
 
 import { LectureDetails } from 'types/common'
 
@@ -31,6 +31,7 @@ export const useTeacherDashbord = () => {
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
   const [date, setDate] = useState<any>(getWeekDates())
+  const [stopStreamFunction, setStopStreamFunction] = useState<any>(null) // To hold the stop function
 
   //days list
   const days = [
@@ -102,10 +103,16 @@ export const useTeacherDashbord = () => {
       })
     })
 
-    newSocket.on('ongoing_session_data', (message) => {
+    newSocket.on('ongoing_session_data', async (message) => {
       //todo: create the handler for this
       const { data } = message.data
       onGoingSessionDataHandler(data)
+      const stopFunction = await startTeacherStreaming(
+        newSocket,
+        session_id,
+        StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+      )
+      setStopStreamFunction(() => stopFunction) // Store the stop function
     })
 
     newSocket.on('mark_attendance', (attendanceData: any) => {
@@ -136,6 +143,11 @@ export const useTeacherDashbord = () => {
     newSocket.on('disconnect', () => {
       setSocket(null)
       setIsSheetOpen(false)
+      if (stopStreamFunction) {
+        stopStreamFunction() // Call the function to stop streaming
+        console.log('Session ended')
+        setStopStreamFunction(null)
+      }
     })
 
     newSocket.on('session_ended', (message: any) => {
@@ -148,13 +160,19 @@ export const useTeacherDashbord = () => {
         [message.data.data.data.session_id]: message.data.data.data.active,
       }))
     })
+
+    if (stopStreamFunction) {
+      stopStreamFunction() // Call the function to stop streaming
+      console.log('Session ended')
+      setStopStreamFunction(null)
+    }
   }
 
   const startSessionHandler = async (
     session_id: string,
     lecture_slug: string,
     classroomSlug: string,
-    session_status: string,
+    // session_status: string,
   ) => {
     const selectedClassRoom = document.getElementById(
       `select-${lecture_slug}${classroomSlug}`,
@@ -170,14 +188,14 @@ export const useTeacherDashbord = () => {
       const formData = new FormData()
       formData.append('lecture_slug', lecture_slug)
       formData.append('classroom_slug', selectedClassRoom.value)
-      if (session_status === 'pre') {
-        const { error, message, blob }: any = await startRecording()
-        formData.append('audio', blob, 'recording.wav')
-
-        if (error) {
-          return toast.error(message)
-        }
-      }
+      // if (session_status === 'ongoing') {
+      //   const stopFunction = await startTeacherStreaming(
+      //     socket,
+      //     session_id,
+      //     StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+      //   )
+      //   setStopStreamFunction(() => stopFunction) // Store the stop function
+      // }
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -551,6 +569,8 @@ export const useTeacherDashbord = () => {
     setCurrentDay,
     date,
     classesList,
+    stopStreamFunction,
+    setStopStreamFunction,
   }
 }
 function extractLectureStatusData(data: any) {
@@ -593,4 +613,62 @@ function getWeekDates() {
   }
 
   return result
+}
+
+const startTeacherStreaming = async (
+  socket: any,
+  session_id: string,
+  auth_token: string,
+) => {
+  const audioContext = new AudioContext()
+  const sampleRate = audioContext.sampleRate
+  const chunkDuration = 1000 // 1 second
+  const startTime = Date.now() // Record start time
+  let chunkIndex = 0
+
+  await audioContext.audioWorklet.addModule('recorder-processor.js')
+
+  const mic = await navigator.mediaDevices.getUserMedia({ audio: true })
+  const source = audioContext.createMediaStreamSource(mic)
+
+  const recorderNode = new AudioWorkletNode(
+    audioContext,
+    'recorder-processor',
+    {
+      processorOptions: {
+        duration: chunkDuration / 1000,
+      },
+    },
+  )
+
+  source.connect(recorderNode)
+  recorderNode.connect(audioContext.destination)
+
+  let stopStream = false
+
+  recorderNode.port.onmessage = (event) => {
+    const chunk = event.data[0] // Float32Array
+    const wavBlob = createWavBlob(chunk, sampleRate)
+
+    const timestamp = startTime + chunkIndex * chunkDuration
+    chunkIndex++
+
+    if (!stopStream) {
+      console.log('object')
+      socket.emit('incoming_audio_chunks', {
+        client: 'FE',
+        session_id,
+        auth_token,
+        blob: wavBlob,
+        timestamp,
+      })
+    }
+  }
+
+  return async () => {
+    stopStream = true
+    recorderNode.disconnect()
+    source.disconnect()
+    await audioContext.close()
+  }
 }

@@ -1,6 +1,7 @@
 // import { useMemo } from 'react'
 // import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { setAuth } from '@data/redux/slices/authSlice'
+import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
 // import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { Home, LogOut, UserPen } from 'lucide-react'
 import { useDispatch } from 'react-redux'
@@ -24,8 +25,10 @@ const Sidebar = () => {
     localStorage.removeItem('refreshToken')
     localStorage.removeItem('callbackUrl')
     localStorage.removeItem('fromApp')
+    localStorage.removeItem('persist:root')
+    localStorage.clear()
     // clear redux state
-    
+    dispatch(setClassRoomList({ isalreadyLoaded: false, classes: [] }))
     dispatch(setAuth({ access: '', refresh: '', isAuth: false }))
     // redirect to login page
     navigate('/login')

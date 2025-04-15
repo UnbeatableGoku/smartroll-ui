@@ -41,7 +41,13 @@ const authSlice = createSlice({
         fromApp?: string | null
       }>,
     ) => {
-      const {isAuth, access, refresh, callbackUrl=null, fromApp=null} = action.payload
+      const {
+        isAuth,
+        access,
+        refresh,
+        callbackUrl = null,
+        fromApp = null,
+      } = action.payload
       return {
         ...state,
         isAuth: isAuth,

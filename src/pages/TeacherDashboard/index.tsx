@@ -64,6 +64,8 @@ const TeacherDashboard = () => {
     handleOnClickForDownloadExcelForAttendance,
     date,
     classesList,
+    stopStreamFunction,
+    setStopStreamFunction,
   } = useTeacherDashbord()
 
   useEffect(() => {
@@ -73,6 +75,10 @@ const TeacherDashboard = () => {
   const handleSheet = () => {
     setIsSheetOpen(false)
     socket?.disconnect()
+    if (stopStreamFunction) {
+      stopStreamFunction()
+      setStopStreamFunction(null)
+    }
   }
 
   return (
@@ -287,7 +293,7 @@ const TeacherDashboard = () => {
                                   lecture?.session.session_id,
                                   lecture?.slug,
                                   lecture?.session?.classroom_final?.slug,
-                                  sessionData[lecture.session.session_id],
+                                  // sessionData[lecture.session.session_id],
                                 )
                               }}
                               disabled={
