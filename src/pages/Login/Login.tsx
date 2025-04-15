@@ -51,9 +51,9 @@ const Login = () => {
       {isTempPassword ? ( //? Render NewPassword component if isTempPassword is true
         <NewPassword profile_slug={studentSlug} />
       ) : (
-        <div className="mx-3 flex h-[100dvh] flex-col">
-          <main className="flex h-[100dvh] items-center justify-center bg-black">
-            <div className="w-full max-w-md rounded-md border border-zinc-700 p-8 shadow-2xl shadow-zinc-800/60">
+        <div className="flex h-[100dvh] flex-col">
+          <main className="flex h-[100dvh] items-center justify-center bg-white px-4 shadow-soft">
+            <div className="w-full max-w-md rounded-md bg-[#F7F7F7] p-8 text-black shadow-soft">
               <div className="flex flex-col items-start">
                 <h2 className="mb-2 text-center text-3xl font-bold">
                   Welcome Back
@@ -72,7 +72,7 @@ const Login = () => {
                       type="email"
                       placeholder="Enter your email"
                       {...register('email', { required: true })}
-                      className="pl-10"
+                      className="border-none pl-10 shadow-soft"
                       required
                     />
                   </div>
@@ -86,7 +86,7 @@ const Login = () => {
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Enter your password"
                       {...register('password', { required: true })}
-                      className="pl-10 pr-10"
+                      className="border-none pl-10 pr-10 shadow-soft"
                       required
                     />
                     <Button
@@ -107,7 +107,7 @@ const Login = () => {
                     </Button>
                   </div>
                   <div
-                    className="flex cursor-pointer justify-end text-sm text-zinc-400 hover:text-white hover:underline"
+                    className="flex cursor-pointer justify-end text-sm text-zinc-400 hover:text-black hover:underline"
                     onClick={() => {
                       handleOnClickForForgotPassoword()
                     }}
@@ -115,7 +115,11 @@ const Login = () => {
                     Forgot Password ?
                   </div>
                 </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  className="w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/70"
+                  disabled={isLoading}
+                >
                   {isLoading ? (
                     <ButtonLoader title="Logging In..." />
                   ) : (

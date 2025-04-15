@@ -7,7 +7,6 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 import { setAuth,} from '@data/redux/slices/authSlice'
-import { useNavigate } from 'react-router-dom'
 
 
 const useStackHolderProfile = () => {
@@ -16,7 +15,6 @@ const useStackHolderProfile = () => {
   const [email, setEmail] = useState(profile?.obj.profile.email)
   const [StoredTokens, CallAPI] = useAPI()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   //function:: handle to update the email id of the profile
   const handleOnUpdateProfile = async () => {
     try {
@@ -70,10 +68,10 @@ const useStackHolderProfile = () => {
     //clear local storage
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
+    localStorage.removeItem('callbackUrl')
+    localStorage.removeItem('fromApp')
     // clear redux state
-    dispatch(setAuth({ access: '', refresh: '', isAuth: false }))
-    // redirect to login page
-    navigate('/login')
+    dispatch(setAuth({ access: '', refresh: '', isAuth: false , callbackUrl: '', fromApp: ''}))
   }
   return {
     isEditing,

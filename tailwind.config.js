@@ -66,7 +66,14 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		fontFamily: {
+			poppins: ["Poppins","sans-serif"]
+		},
+		boxShadow: {
+			soft: '0px 2px 8px 0px #0000001A',           // soft medium
+			micro: '0px 0.15px 0.45px 0px #0000001C',     // ultra light shadow
+		  },
   	}
   },
   plugins: [require("tailwindcss-animate")],

@@ -77,7 +77,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     name: 'Subject-Choice',
     icon: (
       <LibraryBig
-        className="h-24 w-24 dark:text-[#8a8686]"
+        className="h-24 w-24 text-black"
         strokeWidth={3}
         absoluteStrokeWidth={false}
       />

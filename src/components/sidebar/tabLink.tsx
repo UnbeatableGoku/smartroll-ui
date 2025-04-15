@@ -3,7 +3,7 @@ import { MouseEventHandler, useCallback, useEffect, useState } from 'react'
 import { ChevronIcon } from '@icons'
 import { Link, useLocation } from 'react-router-dom'
 
-import { Page  } from 'types/common'
+import { Page } from 'types/common'
 
 type TabLinkCommon = {
   buttonAction?: MouseEventHandler<HTMLButtonElement>
@@ -18,7 +18,7 @@ interface TabLinkType extends TabLinkCommon {
   subTabs?: Page[]
   className?: string
   defalutOpen?: boolean
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 interface LinkWrapperType extends TabLinkCommon {
@@ -37,7 +37,6 @@ const TabLink = ({
   path,
   subTabs,
   defalutOpen,
-  className = '',
   icon,
   collapsed = false,
   buttonAction,
@@ -45,7 +44,6 @@ const TabLink = ({
 }: TabLinkType) => {
   const [togglemenu, setTogglemenu] = useState(false)
   const { pathname } = useLocation()
-  
 
   //to open the first dropdown
   const handleInitialToggle = useCallback(() => {
@@ -73,7 +71,7 @@ const TabLink = ({
 
   return (
     <>
-      <li className="my-1" onClick={onClick} >
+      <li className="my-1 text-black" onClick={onClick}>
         <LinkWrapper
           path={path}
           buttonAction={
@@ -84,7 +82,7 @@ const TabLink = ({
             className={`hover:bg-hover-primary flex items-center rounded-md transition-all duration-0 ${parentPath === path ? 'bg-hover-primary font-bold' : 'font-normal'}`}
           >
             <div
-              className={`flex min-h-[40px] flex-1 items-center gap-3 px-3 py-2.5 text-sm transition-all duration-300 ${path ? 'text-sidebar-primary' : 'text-sidebar-secondary'}${className} `}
+              className={`flex min-h-[40px] flex-1 items-center gap-3 px-3 py-2.5 text-sm text-black transition-all duration-300`}
             >
               <span
                 className={`inline-flex h-4 w-4 items-center justify-center ${parentPath === path ? 'text-sidebar-primary' : 'text-sidebar-secondary'}`}
@@ -93,7 +91,7 @@ const TabLink = ({
               </span>
 
               <span
-                className={`origin-left whitespace-nowrap transition-opacity duration-300 ${collapsed && 'hidden scale-0'} capitalize dark:text-white`}
+                className={`origin-left whitespace-nowrap transition-opacity duration-300 ${collapsed && 'hidden scale-0'} capitalize text-black`}
               >
                 {name}
               </span>

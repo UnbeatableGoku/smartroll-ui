@@ -82,7 +82,6 @@ const useLogin = () => {
         callbackUrl,
         fromApp,
       }
-      console.log(token)
       if (
         token.access == undefined &&
         token.refresh == undefined &&
@@ -110,7 +109,7 @@ const useLogin = () => {
         return navigate('/teacher-dashboard') //:: CHANGE TO '/teacher-dashboard'
       } else if (decode.obj.profile.role === 'student') {
         if (!callbackUrl || !fromApp || !deviceId) {
-          return navigate('/student-dashboard/division') //:: CHANGE TO '/student-dashboard'
+          return navigate('/student-dashboard') //:: CHANGE TO '/student-dashboard'
         } else {
           const callbackUrlParse: string = `${callbackUrl}?access_token=${token.access}&refresh_token=${token.access}`
           return (window.location.href = callbackUrlParse)

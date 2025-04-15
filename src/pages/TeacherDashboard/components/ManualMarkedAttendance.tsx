@@ -16,16 +16,14 @@ export const ManualMarkedAttendance = ({
   removeStudentAttendanceRequest: any
 }) => {
   return (
-    <div className="w-full pt-4">
-      <div className="rounded-md border">
+    <div className="w-full">
+      <div>
         {manualAttendance.length > 0 ? (
-          <Table>
+          <Table className="text-black">
             <TableHeader>
               {manualAttendance?.length > 0 && (
-                <TableRow className="border-border">
-                  {/* <TableHead>Enrollment Number</TableHead> */}
+                <TableRow className="text-black hover:bg-white">
                   <TableHead>Student Name</TableHead>
-                  {/* <TableHead>Branch </TableHead> */}
                   <TableHead>Comment</TableHead>
                   <TableHead>Action</TableHead>
                 </TableRow>
@@ -35,17 +33,11 @@ export const ManualMarkedAttendance = ({
               {manualAttendance?.map((student: any) => (
                 <TableRow
                   key={student?.slug}
-                  className="border-border text-foreground"
+                  className="text-black shadow-none hover:bg-white"
                 >
-                  {/* <TableCell className="font-medium">
-                    {student?.student?.enrollment}
-                  </TableCell> */}
                   <TableCell>{student?.student?.profile?.name}</TableCell>
-                  {/* <TableCell>
-                    {student?.batches.map((b: any) => b.division.full_name)}
-                  </TableCell> */}
                   <TableCell>{student?.regulization_comment}</TableCell>
-                  <TableCell className="capitalize text-white">
+                  <TableCell className="capitalize text-black">
                     <Checkbox
                       checked={true}
                       onCheckedChange={() => {
@@ -60,7 +52,7 @@ export const ManualMarkedAttendance = ({
             </TableBody>
           </Table>
         ) : (
-          <div className="flex items-center justify-center p-2 text-sm text-white">
+          <div className="text-md flex items-center justify-center text-black">
             No Students Present
           </div>
         )}

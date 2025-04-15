@@ -1,6 +1,9 @@
 import { useEffect } from 'react'
 
+import { Badge } from '@/components/ui/badge'
+// Ensure this path is correct
 import { Button } from '@/components/ui/button'
+// Ensure this path is correct
 import {
   Card,
   CardContent,
@@ -8,12 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+// Ensure this path is correct
 import useStudentDashboard from '@pages/StudentDashboard/hooks/useStudentDashboard'
-import { Clock, Users } from 'lucide-react'
+import { BadgeCheck, Clock, Users } from 'lucide-react'
 
+// Added BadgeCheck for Present status
 import { cn } from '@utils'
 
-import { Badge } from '@components/ui/badge'
+// Ensure this path is correct
 
 const StudentDashboard = () => {
   const {
@@ -27,188 +32,417 @@ const StudentDashboard = () => {
 
   useEffect(() => {
     get_location_permission()
+  }, []) // Request permission on mount
+
+  useEffect(() => {
     if (permission_state) {
       getLectureDetails()
     }
-  }, [permission_state])
+  }, [permission_state]) // Fetch lectures when permission is granted
 
   return (
-    <div className="min-h-screen">
+    <div className="">
+      {' '}
+      {/* Light background like Teacher's */}
       {!permission_state ? (
-        <iframe
-          width="100%"
-          height="315"
-          src="https://www.youtube.com/embed/ERhEIsEXG50?si=i9ez0hxneFCuAe6E"
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-        ></iframe>
-      ) : (
-        <main className="py-6">
-          <div className="mb-6 pl-2">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Today's Lectures
-            </h2>
-            <p className="text-muted-foreground">
-              Manage your classes and track attendance.
-            </p>
+        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center rounded-lg bg-white p-6 pb-20 text-center shadow-md">
+          <h2 className="mb-4 text-2xl font-bold text-black">
+            Location Permission Required
+          </h2>
+          <p className="mb-6 max-w-2xl text-black">
+            To mark your attendance, we need access to your location. Please
+            enable location services using the instructions below.
+          </p>
+
+          {/* Location Services Instructions */}
+          <div className="mb-6 w-full max-w-4xl rounded-lg bg-[#F0F7FF] p-4 px-3 shadow-md sm:p-6">
+            <h3 className="mb-3 flex items-center text-lg font-semibold text-black sm:mb-4 sm:text-xl">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="mr-2 h-5 w-5 text-[#0261BE]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              If Location Services Are Disabled on Your Device
+            </h3>
+
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+              {/* Android Location Services */}
+              <div className="rounded-lg bg-white p-3 shadow-md sm:p-4">
+                <h4 className="mb-2 flex items-center text-base font-semibold text-black sm:mb-3 sm:text-lg">
+                  <div className="mr-2 rounded-full bg-[#a4c639] p-1 sm:mr-3 sm:p-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  Android Location Services
+                </h4>
+                <ol className="space-y-2 text-left text-sm text-black sm:space-y-3 sm:text-base">
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      1
+                    </span>
+                    <span>
+                      Swipe down from the top of your screen to open{' '}
+                      <strong>Quick Settings</strong>
+                    </span>
+                  </li>
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      2
+                    </span>
+                    <span>
+                      Look for the <strong>Location</strong> icon and tap it to
+                      turn it on
+                    </span>
+                  </li>
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      3
+                    </span>
+                    <span>
+                      If not visible, go to <strong>Settings</strong> →{' '}
+                      <strong>Location</strong> and toggle ON
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      4
+                    </span>
+                    <span>
+                      Return to Chrome and tap the <strong>three dots</strong>{' '}
+                      menu → <strong>Settings</strong> →{' '}
+                      <strong>Site settings</strong> → <strong>Location</strong>
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      5
+                    </span>
+                    <span>
+                      Make sure SmartRoll is set to <strong>Allow</strong>
+                    </span>
+                  </li>
+                </ol>
+              </div>
+
+              {/* iOS Location Services */}
+              <div className="rounded-lg bg-white p-3 shadow-md sm:p-4">
+                <h4 className="mb-2 flex items-center text-base font-semibold text-black sm:mb-3 sm:text-lg">
+                  <div className="mr-2 rounded-full bg-black p-1 sm:mr-3 sm:p-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  iOS Location Services
+                </h4>
+                <ol className="space-y-2 text-left text-sm text-black sm:space-y-3 sm:text-base">
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      1
+                    </span>
+                    <span>
+                      Open <strong>Settings</strong> on your device
+                    </span>
+                  </li>
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      2
+                    </span>
+                    <span>
+                      Tap <strong>Privacy & Security</strong>
+                    </span>
+                  </li>
+                  <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      3
+                    </span>
+                    <span>
+                      Tap <strong>Location Services</strong> and toggle ON
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      4
+                    </span>
+                    <span>
+                      Scroll down and tap <strong>Safari Websites</strong> (or
+                      your browser app)
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      5
+                    </span>
+                    <span>
+                      Under "Allow Location Access", select{' '}
+                      <strong>While Using the App</strong>
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
+                      6
+                    </span>
+                    <span>
+                      Return to Safari, reload the page, and tap{' '}
+                      <strong>Allow</strong> when prompted
+                    </span>
+                  </li>
+                </ol>
+              </div>
+            </div>
           </div>
 
+          <div className="mt-4 max-w-2xl">
+            <h3 className="mb-2 text-lg font-semibold text-black">
+              Still having trouble?
+            </h3>
+            <p className="mb-4 text-black">
+              Watch this video for additional help:
+            </p>
+            <div
+              className="relative overflow-hidden rounded-lg shadow-md"
+              style={{ paddingTop: '56.25%' }}
+            >
+              <iframe
+                className="absolute left-0 top-0 h-full w-full"
+                src="https://www.youtube.com/embed/ERhEIsEXG50?si=i9ez0hxneFCuAe6E"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // Main content area - matches Teacher's structure
+        <main className="py-6 pb-16">
           {/* Session List */}
-          <div className="grid w-full grid-cols-1 gap-4 p-2">
-            {lectureDetails?.map((l: any) => (
+          <div className="space-y-6 p-1 md:p-2">
+            {' '}
+            {/* Use space-y for vertical spacing */}
+            {lectureDetails.map((l: any) => (
               <div
-                className="w-full rounded-lg border-2 border-white/20 bg-secondary/30 p-3"
                 key={l?.id || Math.random()}
+                className="w-full rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft" // Branch container style
               >
-                <div className="sm:text-md flex w-full items-center rounded-sm border-[8px] border-l-chart-1 bg-muted p-[6px] text-sm">
-                  {l.stream.branch.branch_name}
+                {/* Branch Name */}
+                <div className="text-md mb-4 flex w-full items-center rounded-sm p-2 font-medium text-black md:text-[20px]">
+                  {l.stream?.branch?.branch_name || 'Branch Name Missing'}
                 </div>
-                <div className="px-2 md:px-8">
-                  {l?.timetables?.map((timetable: any) =>
-                    timetable?.schedule?.lectures?.map(
-                      (lecture: any, index: number) => (
-                        <Card
-                          className="mt-4 w-full overflow-hidden border-border bg-card"
-                          key={lecture?.id || index}
-                        >
-                          <CardHeader className="pb-2 sm:pb-3">
-                            <div className="flex items-start justify-between gap-4">
-                              <CardTitle className="break-words text-lg text-foreground sm:text-xl md:text-2xl">
-                                <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                                  <span className="text-sm md:text-xl">
-                                    Subject:{' '}
-                                    {
-                                      lecture?.subject?.subject_map
-                                        ?.subject_name
-                                    }{' '}
-                                    (
-                                    {
-                                      lecture?.subject?.subject_map
-                                        ?.subject_code
-                                    }
-                                    )
-                                  </span>
-                                  <div className="flex gap-4">
+
+                {/* Lectures Grid */}
+                <div className="grid grid-cols-1 gap-6 px-1 pt-0 md:grid-cols-2 md:px-4 lg:grid-cols-3">
+                  {' '}
+                  {/* Grid for cards */}
+                  {l?.timetables?.length > 0 ? (
+                    l.timetables.map((timetable: any) =>
+                      timetable?.schedule?.lectures.length > 0 ? (
+                        timetable?.schedule?.lectures?.map(
+                          (lecture: any, index: number) => (
+                            <Card
+                              key={lecture?.id || index}
+                              className="w-full overflow-hidden border-none bg-[#F7F7F7] shadow-soft" // Card style
+                            >
+                              <CardHeader className="p-4 pb-2">
+                                {' '}
+                                {/* Padding like Teacher's */}
+                                <div className="flex items-start justify-between gap-2">
+                                  <CardTitle className="text-[16px] font-semibold text-[#000000] md:text-xl">
+                                    {' '}
+                                    {/* Title style */}
+                                    {/* Subject Name and Code */}
+                                    <span className="block break-words">
+                                      {
+                                        lecture?.subject?.subject_map
+                                          ?.subject_name
+                                      }{' '}
+                                      (
+                                      {
+                                        lecture?.subject?.subject_map
+                                          ?.subject_code
+                                      }
+                                      )
+                                    </span>
+                                    {/* Lecture Type Badge */}
                                     <Badge
                                       variant="secondary"
-                                      className="flex w-fit items-center justify-center rounded-sm bg-chart-4 p-0 px-2 capitalize"
+                                      className="mt-1 flex h-[22px] w-fit items-center justify-center rounded-[4px] bg-[#F99704] p-0 px-2 text-[10px] capitalize text-white hover:bg-[#e6a63f] md:text-[12px]"
                                     >
                                       {lecture?.type}
                                     </Badge>
-                                    <Badge
-                                      className={cn(
-                                        'w-auto bg-chart-2',
-                                        !lecture?.attendance_marked && 'hidden',
-                                      )}
-                                      variant={'outline'}
-                                      id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}
+                                  </CardTitle>
+                                  {/* Attendance Marked Badge */}
+                                  <Badge
+                                    className={cn(
+                                      'flex h-[26px] w-auto items-center justify-center rounded-[4px] border-none bg-[#4CB151] p-0 px-3 text-[10px] text-white hover:bg-[#4CB151] md:text-[12px]', // Green like "Active"
+                                      !lecture?.attendance_marked && 'hidden', // Hide if not marked
+                                    )}
+                                    id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}
+                                  >
+                                    <BadgeCheck className="mr-1 h-3 w-3 md:h-4 md:w-4" />{' '}
+                                    {/* Icon */}
+                                    Present
+                                  </Badge>
+                                </div>
+                              </CardHeader>
+                              <CardContent className="px-4 pt-2">
+                                {' '}
+                                {/* Padding like Teacher's */}
+                                <div className="grid gap-3">
+                                  {' '}
+                                  {/* Content spacing */}
+                                  {/* Teacher Name */}
+                                  <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                    {/* <User className="size-5 text-[#00000080]" /> Optional icon */}
+                                    <span className="text-black">Teacher:</span>
+                                    <span className="font-semibold text-black">
+                                      {lecture?.teacher ?? 'N/A'}
+                                    </span>
+                                  </div>
+                                  {/* Semester, Division, Batch */}
+                                  <div className="flex flex-col gap-1 text-sm text-foreground md:text-base">
+                                    <div className="flex items-center gap-[6px] text-lg">
+                                      <div className="flex gap-4 text-sm md:text-lg">
+                                        <span className="text-black">
+                                          Semester:{' '}
+                                        </span>
+                                        <span className="font-semibold text-black">
+                                          {lecture?.subject?.semester.no}
+                                        </span>
+                                      </div>
+                                      <span className="text-[#000000]">-</span>
+                                      <div className="flex gap-[23px] text-sm text-black md:text-lg">
+                                        {lecture?.type === 'theory' ? (
+                                          <span className="font-semibold">
+                                            {
+                                              lecture?.batches[0]?.division
+                                                .division_name
+                                            }
+                                          </span>
+                                        ) : (
+                                          <span className="font-semibold">
+                                            {lecture?.batches
+                                              ?.map((d: any) => d?.batch_name)
+                                              .join(', ')}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* Classroom */}
+                                  <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                    <Users className="size-5 text-[#00000080]" />{' '}
+                                    {/* Icon Style */}
+                                    <span className="text-black">
+                                      Classroom:
+                                    </span>
+                                    <span className="font-semibold text-black">
+                                      {lecture?.classroom?.class_name ?? 'N/A'}
+                                    </span>
+                                  </div>
+                                  {/* Time */}
+                                  <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                    <Clock className="size-5 text-[#00000080]" />{' '}
+                                    {/* Icon Style */}
+                                    {/* <span className="text-black">Time:</span> */}
+                                    <span className="font-semibold text-black">
+                                      {lecture?.start_time} •{' '}
+                                      {lecture?.end_time}
+                                    </span>
+                                  </div>
+                                </div>
+                              </CardContent>
+                              <CardFooter className="flex flex-col gap-2 p-4 md:flex-row">
+                                {' '}
+                                {/* Footer padding & layout */}
+                                {/* Conditional Buttons */}
+                                {!lecture?.attendance_marked && (
+                                  <>
+                                    <Button
+                                      className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]" // Button style like Teacher's Join/Start
+                                      id={`attendance_${lecture?.slug}${lecture?.session?.session_id}`}
+                                      onClick={(e) =>
+                                        mark_attendance(
+                                          e.target, // Pass the button element itself
+                                          lecture?.slug,
+                                          lecture?.session?.session_id,
+                                        )
+                                      }
+                                      // Add disabled state if needed, e.g., during API call
                                     >
-                                      <span>Present</span>
-                                    </Badge>
-                                  </div>
-                                </div>
-                              </CardTitle>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-3 pt-2 sm:space-y-4 sm:pt-4">
-                            <div className="grid gap-4 sm:gap-4">
-                              <div className="flex flex-col gap-1 text-sm text-foreground sm:gap-2 sm:text-base">
-                                <div className="flex flex-col gap-4 sm:gap-2">
-                                  <div className="flex gap-4">
-                                    <div className="text-xs sm:text-lg">
-                                      <span>Teacher: </span>
-                                      <span className="font-medium">
-                                        {lecture?.teacher ?? 'N/A'}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-xs text-foreground sm:text-lg">
-                                      <Users className="h-3 w-3 text-muted-foreground sm:h-4 sm:w-4" />
-                                      <div>
-                                        <span>Classroom: </span>
-                                        <span className="font-medium">
-                                          {lecture?.classroom?.class_name ??
-                                            'N/A'}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="flex gap-4 text-xs sm:text-lg">
-                                    <div>
-                                      <span>Sem: </span>
-                                      <span className="font-medium">
-                                        {lecture?.subject?.semester.no}
-                                      </span>
-                                    </div>
-                                    <div className="flex flex-row gap-1 text-xs sm:items-center sm:gap-2 sm:text-lg">
-                                      <div>
-                                        <span>Division: </span>
-                                        <span className="font-medium">
-                                          {lecture?.batches
-                                            ?.map(
-                                              (d: any) =>
-                                                d?.division.division_name,
-                                            )
-                                            .join(', ')}
-                                        </span>
-                                      </div>
-                                      <span className="hidden sm:inline">
-                                        •
-                                      </span>
-                                      <div>
-                                        <span>Batch: </span>
-                                        <span className="font-medium">
-                                          {lecture?.batches
-                                            ?.map((d: any) => d?.batch_name)
-                                            .join(', ')}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2 text-xs text-foreground sm:text-sm">
-                                <Clock className="h-3 w-3 text-muted-foreground sm:h-4 sm:w-4" />
-                                <span>Time: </span>
-                                <span className="font-medium">
-                                  {lecture?.start_time} • {lecture?.end_time}
-                                </span>
-                              </div>
-                            </div>
-                          </CardContent>
-                          <CardFooter
-                            className={`flex w-full flex-wrap gap-2 p-3 md:flex-nowrap`}
-                          >
-                            {!lecture?.attendance_marked && (
-                              <>
-                                <Button
-                                  className="md:text-md w-full cursor-pointer text-xs"
-                                  onClick={(e) =>
-                                    mark_attendance(
-                                      e.target,
-                                      lecture?.slug,
-                                      lecture?.session?.session_id,
-                                    )
-                                  }
-                                >
-                                  Mark Attendance
-                                </Button>
-                                <Button
-                                  className="md:text-md w-full bg-blue-950 text-xs text-white transition hover:bg-blue-700"
-                                  id={`${lecture?.slug}${lecture?.session?.session_id}`}
-                                  onClick={(e) =>
-                                    handleManualMarking(e.target, lecture?.slug)
-                                  }
-                                >
-                                  Manual Marking
-                                </Button>
-                              </>
-                            )}
-                          </CardFooter>
-                        </Card>
+                                      Mark Attendance
+                                    </Button>
+                                    <Button
+                                      className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]" // Consistent button style
+                                      id={`${lecture?.slug}${lecture?.session?.session_id}`} // Keep ID for potential targeting
+                                      onClick={
+                                        (e) =>
+                                          handleManualMarking(
+                                            e.target,
+                                            lecture?.slug,
+                                            lecture?.session?.session_id,
+                                          ) // Pass button element
+                                      }
+                                      // Add disabled state if needed
+                                    >
+                                      Manual Marking Request
+                                    </Button>
+                                  </>
+                                )}
+                              </CardFooter>
+                            </Card>
+                          ),
+                        )
+                      ) : (
+                        <div className="col-span-full px-1 pt-4 md:px-4">
+                          <Card className="w-full overflow-hidden border-none bg-[#F7F7F7] text-center shadow-soft">
+                            <CardHeader className="p-4 text-black">
+                              No lectures scheduled in this timetable.
+                            </CardHeader>
+                          </Card>
+                        </div>
                       ),
-                    ),
+                    )
+                  ) : (
+                    <div className="col-span-full px-1 pt-4 md:px-4">
+                      <Card className="w-full overflow-hidden border-none bg-[#F7F7F7] text-center shadow-soft">
+                        <CardHeader className="p-4 text-black">
+                          No lectures scheduled in this timetable.
+                        </CardHeader>
+                      </Card>
+                    </div>
                   )}
                 </div>
               </div>

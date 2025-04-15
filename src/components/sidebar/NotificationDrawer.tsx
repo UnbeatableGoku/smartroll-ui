@@ -34,12 +34,12 @@ const NotificationDrawer = () => {
       <SheetTrigger asChild>
         <Button
           variant="ghost"
-          className="group relative flex h-11 w-11 items-center justify-center rounded-md text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          className="group relative flex h-11 w-11 items-center justify-center rounded-md text-black transition-transform duration-300 ease-in-out hover:scale-105 hover:scale-110 hover:bg-white/10 hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           onClick={() => {
             handleOnClickForNotifications()
           }}
         >
-          <Bell className="h-4 w-4" />
+          <Bell className="size-5" />
           {unSeenNotifications.length > 0 && (
             <Badge
               variant="destructive"
@@ -52,15 +52,25 @@ const NotificationDrawer = () => {
       </SheetTrigger>
       <SheetContent
         side="bottom"
-        className="h-[80vh] overflow-y-auto sm:h-[60vh]"
+        className="h-[80vh] overflow-y-auto bg-[#F7F7F7] sm:h-[60vh]"
       >
         {/* <SheetHeader>
             <SheetTitle>Notifications</SheetTitle>
           </SheetHeader> */}
-        <Tabs defaultValue="unread" className="mt-4 w-full">
-          <TabsList className="mx-auto grid w-1/2 grid-cols-2">
-            <TabsTrigger value="unread">Unread</TabsTrigger>
-            <TabsTrigger value="all">All</TabsTrigger>
+        <Tabs defaultValue="unread" className="mt-4 w-full bg-[#F7F7F7]">
+          <TabsList className="mx-auto grid w-1/2 grid-cols-2 gap-4 bg-[#F7F7F7]">
+            <TabsTrigger
+              value="unread"
+              className="rounded-[6px] bg-white text-black shadow-soft data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
+            >
+              Unread
+            </TabsTrigger>
+            <TabsTrigger
+              value="all"
+              className="rounded-[6px] bg-white text-black shadow-soft data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
+            >
+              All
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="all">
@@ -88,7 +98,7 @@ const NotificationDrawer = () => {
                 onClick={() => {
                   handleOnClickForMarkNotifications()
                 }}
-                className="mr-2 dark:text-white"
+                className="mr-2 border-none bg-[#0261BE] text-white shadow-soft"
               >
                 Mark all as read
               </Button>
