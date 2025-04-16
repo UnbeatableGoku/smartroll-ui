@@ -161,3 +161,27 @@ export const createWavBlob = (
   floatTo16BitPCM(view, 44, float32Array)
   return new Blob([view], { type: 'audio/wav' })
 }
+
+export const createPCMBlob = (float32Array: any) => {
+  const buffer = new ArrayBuffer(float32Array.length * 2) // 2 bytes per sample (16-bit)
+  const view = new DataView(buffer)
+
+  for (let i = 0; i < float32Array.length; i++) {
+    let sample = Math.max(-1, Math.min(1, float32Array[i]))
+    sample = sample < 0 ? sample * 0x8000 : sample * 0x7fff
+    view.setInt16(i * 2, sample, true) // Little-endian
+  }
+
+  return new Blob([view], { type: 'application/octet-stream' })
+}
+
+export const downloadBlob = (blob: any, filename: any) => {
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.style.display = 'none'
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  window.URL.revokeObjectURL(url)
+}

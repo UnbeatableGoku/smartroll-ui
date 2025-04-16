@@ -66,17 +66,19 @@ const TeacherDashboard = () => {
     classesList,
     stopStreamFunction,
     setStopStreamFunction,
+    setSocket,
   } = useTeacherDashbord()
 
   useEffect(() => {
     getLectureDetails()
   }, [])
 
-  const handleSheet = () => {
+  const handleSheet = async () => {
     setIsSheetOpen(false)
     socket?.disconnect()
+    setSocket(null)
     if (stopStreamFunction) {
-      stopStreamFunction()
+      await stopStreamFunction()
       setStopStreamFunction(null)
     }
   }
