@@ -12,11 +12,7 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import {
-  createPCMBlob,
-  createWavBlob,
-  downloadBlob,
-} from '@utils/helpers/recorder_process'
+import { createPCMBlob } from '@utils/helpers/recorder_process'
 
 import { LectureDetails } from 'types/common'
 
@@ -60,11 +56,11 @@ export const useTeacherDashbord = () => {
   // Clean up streaming when component unmounts
   useEffect(() => {
     return () => {
-      // This runs when component unmounts
       if (stopStreamFunction) {
-        console.log('Component unmounted, stopping audio stream')
-        stopStreamFunction()
-        setStopStreamFunction(null)
+        ;(async () => {
+          await stopStreamFunction()
+          setStopStreamFunction(null)
+        })()
       }
     }
   }, [stopStreamFunction])
@@ -128,6 +124,7 @@ export const useTeacherDashbord = () => {
     newSocket.on('ongoing_session_data', async (message) => {
       //todo: create the handler for this
       const { data } = message.data
+
       onGoingSessionDataHandler(data)
       const stopFunction = await startTeacherStreaming(
         newSocket,
@@ -162,33 +159,28 @@ export const useTeacherDashbord = () => {
       socketErrorHandler(message)
     })
 
-    newSocket.on('disconnect', () => {
+    newSocket.on('disconnect', async () => {
       setSocket(null)
       setIsSheetOpen(false)
-      console.log('disconnected')
       if (stopStreamFunction) {
-        stopStreamFunction() // Call the function to stop streaming
-        console.log('Session ended')
+        await stopStreamFunction() // Call the function to stop streaming
         setStopStreamFunction(null)
       }
     })
 
-    newSocket.on('session_ended', (message: any) => {
+    newSocket.on('session_ended', async (message: any) => {
       setIsSessionEnded(true)
-      console.log('session ended')
       const { data } = message
       setFinalAttendanceData(data.data.data.marked_attendances)
       setSessionData((prevData: any) => ({
         ...prevData,
         [message.data.data.data.session_id]: message.data.data.data.active,
       }))
+      if (stopStreamFunction) {
+        await stopStreamFunction() // Call the function to stop streaming
+        setStopStreamFunction(null)
+      }
     })
-
-    if (stopStreamFunction) {
-      stopStreamFunction() // Call the function to stop streaming
-      console.log('Session ended')
-      setStopStreamFunction(null)
-    }
   }
 
   const startSessionHandler = async (
@@ -647,12 +639,10 @@ const startTeacherStreaming = async (
   let audioContext: any | null = null
 
   if (audioContext) {
-    console.log('first')
     audioContext.close()
     audioContext = null
   }
   audioContext = new AudioContext()
-  const sampleRate = audioContext.sampleRate
   const chunkDuration = 1000 // 1 second
   const startTime = Date.now() // Record start time
   let chunkIndex = 0
@@ -680,7 +670,6 @@ const startTeacherStreaming = async (
   recorderNode.port.onmessage = (event) => {
     const chunk = event.data[0] // Float32Array
     const wavBlob = createPCMBlob(chunk)
-    console.log(event)
     const timestamp = startTime + chunkIndex * chunkDuration
     chunkIndex++
 
@@ -694,7 +683,6 @@ const startTeacherStreaming = async (
           timestamp,
         })
       } else {
-        console.log('Socket not available, stopping audio stream')
         stopStream = true
         // Call stopFunction to fully clean up resources when socket is gone
         stopFunction().catch((err) =>
@@ -706,12 +694,16 @@ const startTeacherStreaming = async (
 
   // Clean up function to stop all streaming resources
   const stopFunction = async () => {
-    console.log('Stopping audio stream')
+    socket.disconnect()
     stopStream = true
 
     // Disconnect audio nodes
-    if (recorderNode) recorderNode.disconnect()
-    if (source) source.disconnect()
+    if (recorderNode) {
+      recorderNode.disconnect()
+    }
+    if (source) {
+      source.disconnect()
+    }
 
     // Stop all microphone tracks
     if (mic && mic.getTracks) {
@@ -719,10 +711,8 @@ const startTeacherStreaming = async (
     }
 
     // Close audio context
-    console.log(audioContext.state, 'here')
-    if (audioContext && audioContext.state !== 'closed') {
+    if (audioContext && audioContext.state === 'running') {
       try {
-        console.log('audio context')
         await audioContext.close()
       } catch (err) {
         console.error('Error closing audio context:', err)
@@ -744,7 +734,6 @@ const startTeacherStreaming = async (
   // Monitor socket status and stop streaming if socket disconnects
   const checkSocketInterval = setInterval(() => {
     if (!socket || (socket && !socket.connected)) {
-      console.log('Socket disconnected or not available, cleaning up stream')
       clearInterval(checkSocketInterval)
       stopFunction().catch((err) =>
         console.error('Error stopping stream on socket check:', err),
