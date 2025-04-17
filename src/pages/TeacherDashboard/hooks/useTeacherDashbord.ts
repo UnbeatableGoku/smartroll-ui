@@ -656,7 +656,13 @@ const startTeacherStreaming = async (
   let mic
   let source
   try {
-    mic = await navigator.mediaDevices.getUserMedia({ audio: true })
+    mic = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+      },
+    })
     source = audioContext.createMediaStreamSource(mic)
   } catch (error) {
     // Handle microphone permission error
