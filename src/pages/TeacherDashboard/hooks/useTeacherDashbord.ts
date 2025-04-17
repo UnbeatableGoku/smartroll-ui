@@ -130,6 +130,8 @@ export const useTeacherDashbord = () => {
         newSocket,
         session_id,
         StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+        setSocket,
+        setIsSheetOpen,
       )
       setStopStreamFunction(() => stopFunction) // Store the stop function
     })
@@ -635,6 +637,8 @@ const startTeacherStreaming = async (
   socket: any,
   session_id: string,
   auth_token: string,
+  setSocket: any,
+  setIsSheetOpen: any,
 ) => {
   let audioContext: any | null = null
 
@@ -649,8 +653,22 @@ const startTeacherStreaming = async (
 
   await audioContext.audioWorklet.addModule('recorder-processor.js')
 
-  const mic = await navigator.mediaDevices.getUserMedia({ audio: true })
-  const source = audioContext.createMediaStreamSource(mic)
+  let mic
+  let source
+  try {
+    mic = await navigator.mediaDevices.getUserMedia({ audio: true })
+    source = audioContext.createMediaStreamSource(mic)
+  } catch (error) {
+    // Handle microphone permission error
+    console.error('Microphone permission error:', error)
+    socket?.disconnect()
+    setSocket(null)
+    setIsSheetOpen(false)
+    toast.error(
+      'Microphone access denied. Please allow microphone access to start the session.',
+    )
+    return
+  }
 
   const recorderNode = new AudioWorkletNode(
     audioContext,

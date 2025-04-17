@@ -249,39 +249,50 @@ export default useStudentDashboard
 
 const startStudentRecording = async (duration = 5000) => {
   return new Promise<any>(async (resolve) => {
-    const audioContext = new AudioContext()
-    const sampleRate = audioContext.sampleRate
-    const chunkDuration = 5 // in seconds
+    let audioContext: AudioContext | null = null
+    let mic: MediaStream | null = null
+    let recorderNode: AudioWorkletNode | null = null
+    let source: MediaStreamAudioSourceNode | null = null
 
-    let startTimestamp = 0
-    let hasReceivedAudioData = false
+    const cleanup = async () => {
+      if (recorderNode) {
+        recorderNode.disconnect()
+        recorderNode = null
+      }
+      if (source) {
+        source.disconnect()
+        source = null
+      }
+      if (mic) {
+        mic.getTracks().forEach((track) => track.stop())
+        mic = null
+      }
+      if (audioContext) {
+        await audioContext.close()
+        audioContext = null
+      }
+    }
 
-    // Better handling of AudioContext state
     try {
+      // Create new AudioContext for this recording session
+      audioContext = new AudioContext()
+      const sampleRate = audioContext.sampleRate
+      const chunkDuration = 5 // in seconds
+
+      let startTimestamp = Date.now()
+      let hasReceivedAudioData = false
+
       // Load audio worklet
       await audioContext.audioWorklet.addModule('recorder-processor.js')
 
       // Ensure audio context is running
       if (audioContext.state !== 'running') {
         await audioContext.resume()
-        // Double-check the state after resuming
         if (audioContext.state === 'suspended') {
           throw new Error('Failed to resume AudioContext')
         }
       }
-    } catch (err) {
-      // Clean up resources
-      await audioContext.close().catch(() => {})
-      resolve({
-        error: true,
-        message: `Failed to initialize audio recording: ${err}`,
-        blob: null,
-      })
-      return
-    }
 
-    let mic: MediaStream
-    try {
       mic = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: false,
@@ -294,101 +305,66 @@ const startStudentRecording = async (duration = 5000) => {
       if (!mic || mic.getAudioTracks().length === 0) {
         throw new Error('No audio tracks available')
       }
+
+      source = audioContext.createMediaStreamSource(mic)
+      recorderNode = new AudioWorkletNode(audioContext, 'recorder-processor', {
+        processorOptions: { duration: chunkDuration },
+      })
+
+      source.connect(recorderNode)
+      recorderNode.connect(audioContext.destination)
+
+      const recordedData: Float32Array[] = []
+
+      // Monitor for audio data
+      recorderNode.port.onmessage = (event) => {
+        if (event.data && event.data.length > 0) {
+          hasReceivedAudioData = true
+          for (const chunk of event.data) {
+            recordedData.push(chunk)
+          }
+        }
+      }
+
+      // Set up a check to detect if no audio data is being received
+      const audioDataCheckTimer = setTimeout(() => {
+        if (!hasReceivedAudioData) {
+          console.warn('No audio data received after 2 seconds')
+        }
+      }, 2000)
+
+      // End recording after specified duration
+      setTimeout(async () => {
+        clearTimeout(audioDataCheckTimer)
+
+        // Send command to flush any remaining audio buffer
+        if (recorderNode) {
+          recorderNode.port.postMessage({ command: 'flush' })
+        }
+
+        // Give a small delay to allow any final chunks to be processed
+        setTimeout(async () => {
+          await cleanup()
+
+          // Create audio blob from recorded data
+          const audioBuffer = flattenChunks(recordedData)
+          const wavBlob = createWavBlob(audioBuffer, sampleRate)
+
+          resolve({
+            error: false,
+            message: 'Recording successful.',
+            blob: wavBlob,
+            startTimestamp,
+          })
+        }, 100)
+      }, duration)
     } catch (err) {
-      // Clean up resources
-      await audioContext.close().catch(() => {})
+      await cleanup()
       resolve({
         error: true,
-        message:
-          'Microphone permission denied or not available. Please allow it from site settings.',
+        message: `Failed to record audio: ${err}`,
         blob: null,
       })
-      return
     }
-
-    const source = audioContext.createMediaStreamSource(mic)
-
-    const recorderNode = new AudioWorkletNode(
-      audioContext,
-      'recorder-processor',
-      {
-        processorOptions: { duration: chunkDuration },
-      },
-    )
-
-    source.connect(recorderNode)
-    recorderNode.connect(audioContext.destination)
-
-    const recordedData: Float32Array[] = []
-    startTimestamp = Date.now()
-
-    // Monitor for audio data
-    recorderNode.port.onmessage = (event) => {
-      if (event.data && event.data.length > 0) {
-        hasReceivedAudioData = true
-        for (const chunk of event.data) {
-          recordedData.push(chunk)
-        }
-      }
-    }
-
-    // Set up a check to detect if no audio data is being received
-    const audioDataCheckTimer = setTimeout(() => {
-      if (!hasReceivedAudioData) {
-        console.warn('No audio data received after 2 seconds')
-      }
-    }, 2000)
-
-    // End recording after specified duration
-    setTimeout(() => {
-      clearTimeout(audioDataCheckTimer)
-
-      // Clean up resources
-      recorderNode.disconnect()
-      source.disconnect()
-      mic.getTracks().forEach((track) => track.stop())
-
-      // Send command to flush any remaining audio buffer
-      recorderNode.port.postMessage({ command: 'flush' })
-
-      // Give a small delay to allow any final chunks to be processed
-      setTimeout(() => {
-        audioContext.close()
-
-        // Check if we actually recorded any audio
-        if (recordedData.length === 0) {
-          resolve({
-            error: true,
-            message: 'No audio was recorded. Please try again.',
-            blob: null,
-            startTimestamp,
-          })
-          return
-        }
-
-        // Create audio blob from recorded data
-        const audioBuffer = flattenChunks(recordedData)
-        const wavBlob = createWavBlob(audioBuffer, sampleRate)
-
-        // Validate the blob size (should be more than just the WAV header)
-        if (wavBlob.size <= 44) {
-          resolve({
-            error: true,
-            message: 'Recorded audio is empty. Please try again.',
-            blob: null,
-            startTimestamp,
-          })
-          return
-        }
-
-        downloadBlob(wavBlob, 'recording.wav')
-        resolve({
-          error: false,
-          message: 'Recording successful.',
-          blob: wavBlob,
-          startTimestamp,
-        })
-      }, 100) // Short delay to collect final chunks
-    }, duration)
   })
 }
