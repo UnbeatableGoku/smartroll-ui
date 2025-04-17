@@ -9,11 +9,7 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import {
-  createWavBlob,
-  downloadBlob,
-  flattenChunks,
-} from '@utils/helpers/recorder_process'
+import { createWavBlob, flattenChunks } from '@utils/helpers/recorder_process'
 
 const useStudentDashboard = () => {
   const [permission_state, set_permission_state] = useState(false)
