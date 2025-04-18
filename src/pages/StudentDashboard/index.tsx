@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card'
 // Ensure this path is correct
 import useStudentDashboard from '@pages/StudentDashboard/hooks/useStudentDashboard'
-import { BadgeCheck, Clock, Users } from 'lucide-react'
+import { BadgeCheck, Calendar, Clock, Users } from 'lucide-react'
 
 // Added BadgeCheck for Present status
 import { cn } from '@utils'
@@ -268,21 +268,16 @@ const StudentDashboard = () => {
                   {/* Grid for cards */}
                   {l?.timetables?.length > 0 ? (
                     l.timetables.map((timetable: any) =>
-                      timetable?.schedule?.lectures.length > 0 ? (
-                        timetable?.schedule?.lectures?.map(
+                      timetable?.lectures?.length > 0 ? (
+                        timetable.lectures.map(
                           (lecture: any, index: number) => (
                             <Card
                               key={lecture?.id || index}
-                              className="w-full overflow-hidden border-none bg-[#F7F7F7] shadow-soft" // Card style
+                              className="w-full overflow-hidden border-zinc-200 bg-[#f7f7f7c0] shadow-soft"
                             >
                               <CardHeader className="p-4 pb-2">
-                                {' '}
-                                {/* Padding like Teacher's */}
                                 <div className="flex items-start justify-between gap-2">
                                   <CardTitle className="text-[16px] font-semibold text-[#000000] md:text-xl">
-                                    {' '}
-                                    {/* Title style */}
-                                    {/* Subject Name and Code */}
                                     <span className="block break-words">
                                       {
                                         lecture?.subject?.subject_map
@@ -295,7 +290,6 @@ const StudentDashboard = () => {
                                       }
                                       )
                                     </span>
-                                    {/* Lecture Type Badge */}
                                     <Badge
                                       variant="secondary"
                                       className="mt-1 flex h-[22px] w-fit items-center justify-center rounded-[4px] bg-[#F99704] p-0 px-2 text-[10px] capitalize text-white hover:bg-[#e6a63f] md:text-[12px]"
@@ -303,43 +297,36 @@ const StudentDashboard = () => {
                                       {lecture?.type}
                                     </Badge>
                                   </CardTitle>
-                                  {/* Attendance Marked Badge */}
                                   <Badge
                                     className={cn(
-                                      'flex h-[26px] w-auto items-center justify-center rounded-[4px] border-none bg-[#4CB151] p-0 px-3 text-[10px] text-white hover:bg-[#4CB151] md:text-[12px]', // Green like "Active"
-                                      !lecture?.attendance_marked && 'hidden', // Hide if not marked
+                                      'flex h-[26px] w-auto items-center justify-center rounded-[4px] border-none bg-[#4CB151] p-0 px-3 text-[10px] text-white hover:bg-[#4CB151] md:text-[12px]',
+                                      !lecture?.attendance_marked && 'hidden',
                                     )}
                                     id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}
                                   >
-                                    <BadgeCheck className="mr-1 h-3 w-3 md:h-4 md:w-4" />{' '}
-                                    {/* Icon */}
+                                    <BadgeCheck className="mr-1 h-3 w-3 md:h-4 md:w-4" />
                                     Present
                                   </Badge>
                                 </div>
                               </CardHeader>
+
                               <CardContent className="px-4 pt-2">
-                                {' '}
-                                {/* Padding like Teacher's */}
                                 <div className="grid gap-3">
-                                  {' '}
-                                  {/* Content spacing */}
-                                  {/* Teacher Name */}
                                   <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
-                                    {/* <User className="size-5 text-[#00000080]" /> Optional icon */}
                                     <span className="text-black">Teacher:</span>
                                     <span className="font-semibold text-black">
                                       {lecture?.teacher ?? 'N/A'}
                                     </span>
                                   </div>
-                                  {/* Semester, Division, Batch */}
+
                                   <div className="flex flex-col gap-1 text-sm text-foreground md:text-base">
                                     <div className="flex items-center gap-[6px] text-lg">
                                       <div className="flex gap-4 text-sm md:text-lg">
                                         <span className="text-black">
-                                          Semester:{' '}
+                                          Semester:
                                         </span>
                                         <span className="font-semibold text-black">
-                                          {lecture?.subject?.semester.no}
+                                          {lecture?.subject?.semester?.no}
                                         </span>
                                       </div>
                                       <span className="text-[#000000]">-</span>
@@ -348,7 +335,7 @@ const StudentDashboard = () => {
                                           <span className="font-semibold">
                                             {
                                               lecture?.batches[0]?.division
-                                                .division_name
+                                                ?.division_name
                                             }
                                           </span>
                                         ) : (
@@ -361,10 +348,9 @@ const StudentDashboard = () => {
                                       </div>
                                     </div>
                                   </div>
-                                  {/* Classroom */}
+
                                   <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
-                                    <Users className="size-5 text-[#00000080]" />{' '}
-                                    {/* Icon Style */}
+                                    <Users className="size-5 text-[#00000080]" />
                                     <span className="text-black">
                                       Classroom:
                                     </span>
@@ -372,50 +358,58 @@ const StudentDashboard = () => {
                                       {lecture?.classroom?.class_name ?? 'N/A'}
                                     </span>
                                   </div>
-                                  {/* Time */}
+
                                   <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
-                                    <Clock className="size-5 text-[#00000080]" />{' '}
-                                    {/* Icon Style */}
-                                    {/* <span className="text-black">Time:</span> */}
+                                    <Clock className="size-5 text-[#00000080]" />
                                     <span className="font-semibold text-black">
                                       {lecture?.start_time} •{' '}
                                       {lecture?.end_time}
                                     </span>
                                   </div>
+
+                                  <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                    <Calendar className="size-5 text-[#00000080]" />
+                                    <span className="font-semibold text-black">
+                                      {lecture?.session?.day
+                                        ? new Date(
+                                            lecture.session.day,
+                                          ).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                          })
+                                        : 'N/A'}
+                                    </span>
+                                  </div>
                                 </div>
                               </CardContent>
+
                               <CardFooter className="flex flex-col gap-2 p-4 md:flex-row">
-                                {' '}
-                                {/* Footer padding & layout */}
-                                {/* Conditional Buttons */}
                                 {!lecture?.attendance_marked && (
                                   <>
                                     <Button
-                                      className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]" // Button style like Teacher's Join/Start
+                                      className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
                                       id={`attendance_${lecture?.slug}${lecture?.session?.session_id}`}
                                       onClick={(e) =>
                                         mark_attendance(
-                                          e.target, // Pass the button element itself
+                                          e.target,
                                           lecture?.slug,
                                           lecture?.session?.session_id,
                                         )
                                       }
-                                      // Add disabled state if needed, e.g., during API call
                                     >
                                       Mark Attendance
                                     </Button>
                                     <Button
-                                      className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]" // Consistent button style
-                                      id={`${lecture?.slug}${lecture?.session?.session_id}`} // Keep ID for potential targeting
-                                      onClick={
-                                        (e) =>
-                                          handleManualMarking(
-                                            e.target,
-                                            lecture?.slug,
-                                            lecture?.session?.session_id,
-                                          ) // Pass button element
+                                      className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
+                                      id={`${lecture?.slug}${lecture?.session?.session_id}`}
+                                      onClick={(e) =>
+                                        handleManualMarking(
+                                          e.target,
+                                          lecture?.slug,
+                                          lecture?.session?.session_id,
+                                        )
                                       }
-                                      // Add disabled state if needed
                                     >
                                       Manual Marking Request
                                     </Button>
