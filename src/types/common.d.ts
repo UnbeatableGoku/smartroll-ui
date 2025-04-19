@@ -23,6 +23,7 @@ export interface DecodedToken {
       email: string
       role: string
     }
+    teacher_code: name | null,
     sr_no?: string
     enrollment?: string
     branch: {
