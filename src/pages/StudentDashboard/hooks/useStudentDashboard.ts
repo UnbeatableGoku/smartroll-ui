@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { createWavBlob, flattenChunks } from '@utils/helpers/recorder_process'
+import { createWavBlob, downloadBlob, flattenChunks } from '@utils/helpers/recorder_process'
 
 const useStudentDashboard = () => {
   const [permission_state, set_permission_state] = useState(false)
@@ -109,7 +109,13 @@ const useStudentDashboard = () => {
       if (error) {
         btn.disabled = false
         dispatch(setLoader({ state: false, message: null }))
+        console.log("object");
+        setLoader({
+          state: false,
+          message: 'null',
+        })
         return toast.error(message)
+
       }
       navigator.geolocation.getCurrentPosition(
         async (positions) => {
@@ -245,25 +251,50 @@ export default useStudentDashboard
 
 const startStudentRecording = async (duration = 5000) => {
   return new Promise<any>(async (resolve) => {
-    const audioContext = new AudioContext()
-    const sampleRate = audioContext.sampleRate
-    const chunkDuration = 5000 // 5s per chunk
+    let audioContext: AudioContext | null = null
+    let mic: MediaStream | null = null
+    let recorderNode: AudioWorkletNode | null = null
+    let source: MediaStreamAudioSourceNode | null = null
 
-    let startTimestamp = 0
-
-    try {
-      await audioContext.audioWorklet.addModule('recorder-processor.js')
-    } catch (err) {
-      resolve({
-        error: true,
-        message: `Failed to load AudioWorklet module: ${err}`,
-        blob: null,
-      })
-      return
+    const cleanup = async () => {
+      if (recorderNode) {
+        recorderNode.disconnect()
+        recorderNode = null
+      }
+      if (source) {
+        source.disconnect()
+        source = null
+      }
+      if (mic) {
+        mic.getTracks().forEach((track) => track.stop())
+        mic = null
+      }
+      if (audioContext) {
+        await audioContext.close()
+        audioContext = null
+      }
     }
 
-    let mic: MediaStream
     try {
+      // Create new AudioContext for this recording session
+      audioContext = new AudioContext()
+      const sampleRate = audioContext.sampleRate
+      const chunkDuration = 5 // in seconds
+
+      let startTimestamp = Date.now()
+      let hasReceivedAudioData = false
+
+      // Load audio worklet
+      await audioContext.audioWorklet.addModule('recorder-processor.js')
+
+      // Ensure audio context is running
+      if (audioContext.state !== 'running') {
+        await audioContext.resume()
+        if (audioContext.state === 'suspended') {
+          throw new Error('Failed to resume AudioContext')
+        }
+      }
+
       mic = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: false,
@@ -271,50 +302,71 @@ const startStudentRecording = async (duration = 5000) => {
           autoGainControl: false,
         },
       })
+
+      // Verify we have audio tracks
+      if (!mic || mic.getAudioTracks().length === 0) {
+        throw new Error('No audio tracks available')
+      }
+
+      source = audioContext.createMediaStreamSource(mic)
+      recorderNode = new AudioWorkletNode(audioContext, 'recorder-processor', {
+        processorOptions: { duration: chunkDuration },
+      })
+
+      source.connect(recorderNode)
+      recorderNode.connect(audioContext.destination)
+
+      const recordedData: Float32Array[] = []
+
+      // Monitor for audio data
+      recorderNode.port.onmessage = (event) => {
+        if (event.data && event.data.length > 0) {
+          hasReceivedAudioData = true
+          for (const chunk of event.data) {
+            recordedData.push(chunk)
+          }
+        }
+      }
+
+      // Set up a check to detect if no audio data is being received
+      const audioDataCheckTimer = setTimeout(() => {
+        if (!hasReceivedAudioData) {
+          console.warn('No audio data received after 2 seconds')
+        }
+      }, 2000)
+
+      // End recording after specified duration
+      setTimeout(async () => {
+        clearTimeout(audioDataCheckTimer)
+
+        // Send command to flush any remaining audio buffer
+        if (recorderNode) {
+          recorderNode.port.postMessage({ command: 'flush' })
+        }
+
+        // Give a small delay to allow any final chunks to be processed
+        setTimeout(async () => {
+          await cleanup()
+
+          // Create audio blob from recorded data
+          const audioBuffer = flattenChunks(recordedData)
+          const wavBlob = createWavBlob(audioBuffer, sampleRate)
+          downloadBlob(wavBlob,"record.ts")
+          resolve({
+            error: false,
+            message: 'Recording successful.',
+            blob: wavBlob,
+            startTimestamp,
+          })
+        }, 100)
+      }, duration)
     } catch (err) {
+      await cleanup()
       resolve({
         error: true,
-        message:
-          'Microphone permission denied or not available. Please allow it from site settings.',
+        message: `Failed to record audio: ${err}`,
         blob: null,
       })
-      return
     }
-
-    const source = audioContext.createMediaStreamSource(mic)
-
-    const recorderNode = new AudioWorkletNode(
-      audioContext,
-      'recorder-processor',
-      {
-        processorOptions: { duration: chunkDuration / 1000 },
-      },
-    )
-
-    source.connect(recorderNode)
-    recorderNode.connect(audioContext.destination)
-
-    let recordedData: any[] = []
-
-    startTimestamp = Date.now()
-
-    recorderNode.port.onmessage = (event) => {
-      recordedData.push(event.data[0])
-    }
-
-    setTimeout(() => {
-      recorderNode.disconnect()
-      source.disconnect()
-      audioContext.close()
-
-      const audioBuffer = flattenChunks(recordedData)
-      const wavBlob = createWavBlob(audioBuffer, sampleRate)
-      resolve({
-        error: false,
-        message: 'Recording successful.',
-        blob: wavBlob,
-        startTimestamp,
-      })
-    }, duration)
   })
 }

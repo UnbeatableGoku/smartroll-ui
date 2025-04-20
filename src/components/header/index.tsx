@@ -33,20 +33,34 @@ const Header = () => {
   }, [access])
 
   return (
-    <header className="header-top relative flex w-full items-center justify-center border-none bg-[#F7F7F7] px-10 py-3 shadow-soft md:justify-between">
-      {/* Center the logo */}
-      <div className="h-8">
-        <Link to={PAGE_DASHBOARD.path}>
-          <img src={logo} alt="logo" className="h-full w-auto object-contain" />
-        </Link>
-      </div>
+<header className="header-top relative flex w-full items-center justify-between bg-[#F7F7F7] px-4 py-3 shadow-md md:px-10">
+  {/* Logo on far left */}
+  <div className="h-8">
+    <Link to={PAGE_DASHBOARD.path}>
+      <img src={logo} alt="logo" className="h-full w-auto object-contain" />
+    </Link>
+  </div>
 
-      {/* Align the heading to the right */}
-      <h1 className="ml-auto hidden text-black md:block md:text-sm lg:block">
-        {profile &&
-          `${profile.obj.profile.role === 'teacher' ? 'Faculty' : profile.obj.profile.role.at(0)?.toLowerCase() + profile.obj.profile.role.slice(1)} | ${profile.obj.profile.name}`}
-      </h1>
-    </header>
+  {/* Spacer to push avatar right only on desktop */}
+  <div className="hidden flex-1 md:block" />
+
+  {/* Avatar + Role Icon */}
+  {profile?.obj?.profile?.name && (
+    <div className="flex items-center gap-2 md:ml-auto">
+      {/* Avatar */}
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-sm font-semibold text-white shadow-sm">
+        {profile.obj.profile.role === 'teacher'
+          ? profile.obj.teacher_code?.substring(0, 2).toUpperCase()
+          : profile.obj.profile.name
+              ?.split(' ')
+              .map(word => word[0].toUpperCase())
+              .join('')}
+      </div>
+    </div>
+  )}
+</header>
+
+
   )
 }
 

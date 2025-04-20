@@ -66,20 +66,24 @@ const TeacherDashboard = () => {
     classesList,
     stopStreamFunction,
     setStopStreamFunction,
+    setSocket,
   } = useTeacherDashbord()
 
   useEffect(() => {
     getLectureDetails()
   }, [])
 
-  const handleSheet = () => {
+  const handleSheet = async () => {
     setIsSheetOpen(false)
     socket?.disconnect()
+    setSocket(null)
     if (stopStreamFunction) {
-      stopStreamFunction()
+      await stopStreamFunction()
       setStopStreamFunction(null)
     }
   }
+
+  console.log(students)
 
   return (
     <div className="h-auto">
@@ -420,6 +424,12 @@ const TeacherDashboard = () => {
                                     {' '}
                                     P/A
                                   </TableHead>
+                                  <TableHead className="text-center">
+                                    Prob(%)
+                                  </TableHead>
+                                  <TableHead className="text-center">
+                                    Distance
+                                  </TableHead>
                                 </TableRow>
                               )}
                             </TableHeader>
@@ -427,7 +437,7 @@ const TeacherDashboard = () => {
                               {students?.map((student: any) => (
                                 <TableRow
                                   key={student?.slug}
-                                  className="border-border text-[12px] text-black"
+                                  className={`'border-border'  text-[12px] text-black`}
                                 >
                                   <TableCell>
                                     {student?.student?.profile?.name}
@@ -445,6 +455,12 @@ const TeacherDashboard = () => {
                                         Present
                                       </span>
                                     )}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {`${Number(Math.floor(student?.similarity))} %` || '-'}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {student?.euclidean_distance?.toFixed(3) || '-'}
                                   </TableCell>
                                 </TableRow>
                               ))}
