@@ -83,6 +83,8 @@ const TeacherDashboard = () => {
     }
   }
 
+  console.log(students)
+
   return (
     <div className="h-auto">
       {/* Main Content */}
@@ -422,6 +424,12 @@ const TeacherDashboard = () => {
                                     {' '}
                                     P/A
                                   </TableHead>
+                                  <TableHead className="text-center">
+                                    Prob(%)
+                                  </TableHead>
+                                  <TableHead className="text-center">
+                                    Distance
+                                  </TableHead>
                                 </TableRow>
                               )}
                             </TableHeader>
@@ -429,7 +437,7 @@ const TeacherDashboard = () => {
                               {students?.map((student: any) => (
                                 <TableRow
                                   key={student?.slug}
-                                  className="border-border text-[12px] text-black"
+                                  className={`'border-border'  text-[12px] text-black`}
                                 >
                                   <TableCell>
                                     {student?.student?.profile?.name}
@@ -447,6 +455,12 @@ const TeacherDashboard = () => {
                                         Present
                                       </span>
                                     )}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {`${Number(Math.floor(student?.similarity))} %` || '-'}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {student?.euclidean_distance?.toFixed(3) || '-'}
                                   </TableCell>
                                 </TableRow>
                               ))}

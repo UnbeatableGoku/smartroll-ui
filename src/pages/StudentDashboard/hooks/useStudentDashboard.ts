@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { createWavBlob, flattenChunks } from '@utils/helpers/recorder_process'
+import { createWavBlob, downloadBlob, flattenChunks } from '@utils/helpers/recorder_process'
 
 const useStudentDashboard = () => {
   const [permission_state, set_permission_state] = useState(false)
@@ -109,7 +109,13 @@ const useStudentDashboard = () => {
       if (error) {
         btn.disabled = false
         dispatch(setLoader({ state: false, message: null }))
+        console.log("object");
+        setLoader({
+          state: false,
+          message: 'null',
+        })
         return toast.error(message)
+
       }
       navigator.geolocation.getCurrentPosition(
         async (positions) => {
@@ -345,7 +351,7 @@ const startStudentRecording = async (duration = 5000) => {
           // Create audio blob from recorded data
           const audioBuffer = flattenChunks(recordedData)
           const wavBlob = createWavBlob(audioBuffer, sampleRate)
-
+          downloadBlob(wavBlob,"record.ts")
           resolve({
             error: false,
             message: 'Recording successful.',
