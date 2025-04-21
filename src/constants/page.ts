@@ -6,6 +6,13 @@ export const PAGE_LOGIN: Page = {
   name: 'Login',
 }
 
+export const PAGE_502: Page = {
+  id: '502',
+  path: '/502',
+  name: 'Error502',
+}
+
+
 export const PAGE_DASHBOARD: Page = {
   id: 'DASHBOARD',
   path: '/',

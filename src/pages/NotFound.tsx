@@ -18,10 +18,10 @@ export default function NotFound() {
         <title>Smart Roll | Not Found</title>
       </Helmet>
 
-      <main className="mx-auto max-w-7xl bg-black px-3">
+      <main className="mx-auto  bg-white px-3 w-100">
         <div className="flex h-screen w-full flex-col items-center justify-center">
           <h1 className="text-8xl font-bold text-error">404</h1>
-          <h2 className="mb-2 mt-2 text-3xl font-semibold text-white">
+          <h2 className="mb-2 mt-2 text-3xl font-semibold text-black">
             Page Not Found
           </h2>
           <p className="mb-4 text-sm leading-7 text-zinc-400">
