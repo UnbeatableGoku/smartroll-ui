@@ -111,6 +111,7 @@ const useLogin = () => {
         if (!callbackUrl || !fromApp || !deviceId) {
           return navigate('/student-dashboard') //:: CHANGE TO '/student-dashboard'
         } else {
+          window.history.replaceState(null, '', window.location.pathname);
           const callbackUrlParse: string = `${callbackUrl}?access_token=${token.access}&refresh_token=${token.access}`
           return (window.location.href = callbackUrlParse)
         }
@@ -137,10 +138,10 @@ const useLogin = () => {
           navigate('/')
         } else if (decode?.obj?.profile?.role === 'student') {
           if (!callbackUrl || !fromApp || !deviceId) {
-            return navigate('/student-dashboard/division')
+            return navigate('/student-dashboard')
           }
-          const callbackUrlParse: string = `${callbackUrl}?access_token=${localStorage.getItem('accessToken')}&refresh_token=${localStorage.getItem('refreshToken')}`
-          return (window.location.href = callbackUrlParse)
+          localStorage.clear()
+          return
         } else if (decode?.obj?.profile?.role === 'teacher') {
           navigate('/teacher-dashboard')
         } else {
