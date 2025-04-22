@@ -172,14 +172,6 @@ const useUnifiedSubjectChoiceForTeacher = () => {
       }
     })
 
-    // subject.similar_subjects.map((subject:any)=>{
-    //   console.log(subject)
-    //   const simData = similarSubjects.findIndex((s:any)=>s.slug === subject.slug);
-    //   if(simData != -1){
-    //     console.log(similarSubjects[simData])
-    //   }
-    // })
-
     setSimilarSubjects((prevData: any) => {
       const already_subject = prevData.some((d: any) => d.slug === subject.slug)
 

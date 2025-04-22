@@ -120,10 +120,6 @@ export const useTeacherDashbord = () => {
       })
     })
 
-    socket?.on('disconnect', () => {
-      console.log('disconnected')
-    })
-
     newSocket.on('ongoing_session_data', async (message) => {
       const { data } = message.data
 

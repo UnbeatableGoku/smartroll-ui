@@ -461,7 +461,6 @@ const useDivisionCreation = () => {
         semester_slug: selectedSemester,
         division_name: division_name,
       }
-      console.log(params)
       const response_obj = await CallAPI(
         StoredTokens,
         axiosInstance,
@@ -473,7 +472,6 @@ const useDivisionCreation = () => {
       )
 
       if (response_obj.error === false) {
-        console.log(response_obj.response)
         downloadExcelFile(
           response_obj.response?.data?.data?.file_content,
           response_obj.response?.data?.data?.file_name,

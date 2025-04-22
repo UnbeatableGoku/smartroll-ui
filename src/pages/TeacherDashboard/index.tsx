@@ -83,8 +83,6 @@ const TeacherDashboard = () => {
     }
   }
 
-  console.log(students)
-
   return (
     <div className="h-auto">
       {/* Main Content */}
@@ -437,7 +435,7 @@ const TeacherDashboard = () => {
                               {students?.map((student: any) => (
                                 <TableRow
                                   key={student?.slug}
-                                  className={`'border-border'  text-[12px] text-black`}
+                                  className={`'border-border' text-[12px] text-black`}
                                 >
                                   <TableCell>
                                     {student?.student?.profile?.name}
@@ -457,10 +455,12 @@ const TeacherDashboard = () => {
                                     )}
                                   </TableCell>
                                   <TableCell className="text-center">
-                                    {`${Number(Math.floor(student?.similarity))} %` || '-'}
+                                    {`${Number(Math.floor(student?.similarity))} %` ||
+                                      '-'}
                                   </TableCell>
                                   <TableCell className="text-center">
-                                    {student?.euclidean_distance?.toFixed(3) || '-'}
+                                    {student?.euclidean_distance?.toFixed(3) ||
+                                      '-'}
                                   </TableCell>
                                 </TableRow>
                               ))}
