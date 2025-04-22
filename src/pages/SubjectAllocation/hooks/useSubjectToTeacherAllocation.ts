@@ -56,9 +56,6 @@ const useSubjectToTeacherAllocation = () => {
             setTeacherAllocation(teacherAllocationData)
             dispatch(updateSubjectAllocationState({error:null,isDataLoaded:true,status:null,SubjectToTeacherAllocation:subjectAllocationData,TeacherToSubjectAllocation:teacherAllocationData}))
 
-            //TODO: check the availability of the response 
-            //TODO: stoer the state on the redux state
-
         }
         catch (error: any) {
             toast.error(error.message || "something went wrong.. please contact the administrator")
