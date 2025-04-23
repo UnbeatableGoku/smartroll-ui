@@ -69,6 +69,7 @@ declare global {
   interface Window {
     base_url: string,
     socket_url: string
+    webkitAudioContext? : typeof AudioContext
   }
 }
 

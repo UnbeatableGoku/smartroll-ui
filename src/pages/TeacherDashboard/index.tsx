@@ -37,6 +37,8 @@ import { BadgeCheck, Ban, Clock, FileDown, Users } from 'lucide-react'
 
 import { cn } from '@utils'
 
+import TimerButton from '@components/timerButton'
+
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
 
 // No need for unused type imports
@@ -82,8 +84,6 @@ const TeacherDashboard = () => {
       setStopStreamFunction(null)
     }
   }
-
-  console.log(students)
 
   return (
     <div className="h-auto">
@@ -391,7 +391,18 @@ const TeacherDashboard = () => {
                 </div>
                 <div className="mx-2 h-[1px] max-w-full bg-gray-300"></div>
 
-                <div className="flex h-[75vh] w-full justify-center overflow-y-auto p-4">
+                <div className="flex h-[75vh] w-full flex-col gap-y-3 overflow-y-auto p-4">
+                  <TimerButton
+                    autoStart={true}
+                    initialText="End Session"
+                    runningTextPrefix="Session Ended In ..."
+                    initialDurationSeconds={30}
+                    fillColor="#be0205"
+                    OnSessionEnd={() => {
+                      console.log('session End')
+                    }}
+                  ></TimerButton>
+
                   <Tabs defaultValue="Default" className="w-full">
                     <TabsList className="mb-4 flex w-full gap-4 bg-[#F7F7F7]">
                       <TabsTrigger
@@ -437,7 +448,7 @@ const TeacherDashboard = () => {
                               {students?.map((student: any) => (
                                 <TableRow
                                   key={student?.slug}
-                                  className={`'border-border'  text-[12px] text-black`}
+                                  className={`'border-border' text-[12px] text-black`}
                                 >
                                   <TableCell>
                                     {student?.student?.profile?.name}
@@ -457,10 +468,12 @@ const TeacherDashboard = () => {
                                     )}
                                   </TableCell>
                                   <TableCell className="text-center">
-                                    {`${Number(Math.floor(student?.similarity))} %` || '-'}
+                                    {`${Number(Math.floor(student?.similarity))} %` ||
+                                      '-'}
                                   </TableCell>
                                   <TableCell className="text-center">
-                                    {student?.euclidean_distance?.toFixed(3) || '-'}
+                                    {student?.euclidean_distance?.toFixed(3) ||
+                                      '-'}
                                   </TableCell>
                                 </TableRow>
                               ))}
@@ -494,12 +507,12 @@ const TeacherDashboard = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
-                <Button
+                {/* <Button
                   className="flex-1 rounded-[6px] bg-[#be0205] text-white hover:bg-red-500"
                   onClick={() => handleOnSessionEnd()}
                 >
                   End Session
-                </Button>
+                </Button> */}
               </div>
             </div>
           </SheetContent>

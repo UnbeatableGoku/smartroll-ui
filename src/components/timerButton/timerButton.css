@@ -1,0 +1,56 @@
+/* TimerButton.css */
+
+.timer-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--text-color, #333); /* Use CSS variable with fallback */
+  background-color: var(--base-color, #e0e0e0); /* Use CSS variable */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative; /* Needed for the pseudo-element */
+  overflow: hidden; /* Keep the fill contained */
+  z-index: 1; /* Ensure text is above the fill by default */
+  transition: background-color 0.3s ease;
+  min-width: 180px;
+  text-align: center;
+  white-space: nowrap;
+  width: 100%; /* Or adjust as needed */
+  box-sizing: border-box; /* Include padding/border in width */
+}
+
+/* The filling pseudo-element */
+.timer-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: var(--fill-color, #be0205); /* Fill color from variable */
+  z-index: -1; /* Behind the text */
+  transition: width 0.1s linear; /* Smooth fill animation */
+  width: var(--fill-percentage, 0%); /* Width controlled by JS via variable */
+}
+
+/* Styles when the timer is running (button is disabled) */
+.timer-button:disabled {
+  cursor: not-allowed;
+  color: var(
+    --disabled-text-color,
+    #000
+  ); /* Use disabled text color variable */
+  /* Optional: Slightly different base background when disabled */
+  /* background-color: #c0c0c0; */
+}
+
+/* Ensure the text (inside the span) stays above the fill when disabled */
+.timer-button:disabled span {
+  position: relative; /* Needed to establish stacking context */
+  z-index: 2; /* Ensures text is above the ::before pseudo-element */
+}
+
+/* Make sure span itself doesn't block clicks when enabled */
+.timer-button span {
+  pointer-events: none;
+}

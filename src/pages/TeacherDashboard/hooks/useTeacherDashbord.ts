@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 
 import { RootState } from '@data/redux/Store'
 import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
-import { setLoader } from '@data/redux/slices/loaderSlice'
 import axios from 'axios'
 import { get } from 'lodash'
 import { useSelector } from 'react-redux'
@@ -102,7 +101,11 @@ export const useTeacherDashbord = () => {
       toast.error(error.message || 'something went wrong')
     }
   }
-  const clientSocketHandler = (session_id: string, auth_token: string) => {
+  const clientSocketHandler = (
+    session_id: string,
+    auth_token: string,
+    mic: any,
+  ) => {
     const newSocket = io(`${window.socket_url}/client`, {
       withCredentials: true,
       transports: ['websocket'],
@@ -117,21 +120,15 @@ export const useTeacherDashbord = () => {
       })
     })
 
-    socket?.on('disconnect', () => {
-      console.log('disconnected')
-    })
-
     newSocket.on('ongoing_session_data', async (message) => {
-      //todo: create the handler for this
       const { data } = message.data
 
       onGoingSessionDataHandler(data)
       const stopFunction = await startTeacherStreaming(
         newSocket,
         session_id,
-        StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-        setSocket,
-        setIsSheetOpen,
+        auth_token,
+        mic,
       )
       setStopStreamFunction(() => stopFunction) // Store the stop function
     })
@@ -183,6 +180,8 @@ export const useTeacherDashbord = () => {
         setStopStreamFunction(null)
       }
     })
+
+    newSocket.on('session_timeout', async (message: any) => {})
   }
 
   const startSessionHandler = async (
@@ -195,24 +194,16 @@ export const useTeacherDashbord = () => {
       `select-${lecture_slug}${classroomSlug}`,
     ) as HTMLSelectElement
     try {
-      dispatch(
-        setLoader({
-          state: true,
-          message: 'Starting the session. Please do not refresh the page!',
-        }),
-      )
-
+      //check the microphone permission
+      const { mic_object, error, message } = await checkAndReturnMicPermission()
+      if (error) {
+        toast.error(message)
+        return
+      }
       const formData = new FormData()
       formData.append('lecture_slug', lecture_slug)
       formData.append('classroom_slug', selectedClassRoom.value)
-      // if (session_status === 'ongoing') {
-      //   const stopFunction = await startTeacherStreaming(
-      //     socket,
-      //     session_id,
-      //     StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-      //   )
-      //   setStopStreamFunction(() => stopFunction) // Store the stop function
-      // }
+
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -255,6 +246,7 @@ export const useTeacherDashbord = () => {
           clientSocketHandler(
             session_id,
             StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+            mic_object,
           )
         }
       } else {
@@ -637,8 +629,7 @@ const startTeacherStreaming = async (
   socket: any,
   session_id: string,
   auth_token: string,
-  setSocket: any,
-  setIsSheetOpen: any,
+  mic: any,
 ) => {
   let audioContext: any | null = null
 
@@ -646,35 +637,35 @@ const startTeacherStreaming = async (
     audioContext.close()
     audioContext = null
   }
-  audioContext = new AudioContext()
+  audioContext = new (window.AudioContext || window.webkitAudioContext)()
   const chunkDuration = 1000 // 1 second
   const startTime = Date.now() // Record start time
   let chunkIndex = 0
 
   await audioContext.audioWorklet.addModule('recorder-processor.js')
 
-  let mic
-  let source
-  try {
-    mic = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        echoCancellation: false,
-        noiseSuppression: false,
-        autoGainControl: false,
-      },
-    })
-    source = audioContext.createMediaStreamSource(mic)
-  } catch (error) {
-    // Handle microphone permission error
-    console.error('Microphone permission error:', error)
-    socket?.disconnect()
-    setSocket(null)
-    setIsSheetOpen(false)
-    toast.error(
-      'Microphone access denied. Please allow microphone access to start the session.',
-    )
-    return
-  }
+  // let mic
+  const source = audioContext.createMediaStreamSource(mic)
+  // try {
+  // mic = await navigator.mediaDevices.getUserMedia({
+  //   audio: {
+  //     echoCancellation: false,
+  //     noiseSuppression: false,
+  //     autoGainControl: false,
+  //   },
+  // })
+
+  // } catch (error) {
+  //   // Handle microphone permission error
+  //   console.error('Microphone permission error:', error)
+  //   socket?.disconnect()
+  //   setSocket(null)
+  //   setIsSheetOpen(false)
+  //   toast.error(
+  //     'Microphone access denied. Please allow microphone access to start the session.',
+  //   )
+  //   return
+  // }
 
   const recorderNode = new AudioWorkletNode(
     audioContext,
@@ -731,7 +722,7 @@ const startTeacherStreaming = async (
 
     // Stop all microphone tracks
     if (mic && mic.getTracks) {
-      mic.getTracks().forEach((track) => track.stop())
+      mic.getTracks().forEach((track: any) => track.stop())
     }
 
     // Close audio context
@@ -776,5 +767,36 @@ const startTeacherStreaming = async (
 
     // Stop the stream and clean up resources
     await stopFunction()
+  }
+}
+
+const checkAndReturnMicPermission = async (): Promise<{
+  mic_object: MediaStream | null
+  error: boolean
+  message: string
+}> => {
+  let mic = null,
+    errorFlag = false,
+    message
+  try {
+    mic = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+      },
+    })
+    errorFlag = false
+    message = 'audio permission granted successfully'
+  } catch (error: any) {
+    errorFlag = true
+    message = error.message
+    mic = null
+  } finally {
+    return {
+      mic_object: mic,
+      error: errorFlag,
+      message,
+    }
   }
 }

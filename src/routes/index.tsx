@@ -17,6 +17,7 @@ import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
 import { Navigate } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
+import Error502 from '@components/502'
 
 import {
   DIVISION_CREATION,
@@ -30,6 +31,7 @@ import {
   PAGE_TEACHER_DASHBOARD,
   PAGE_TIMETABLE,
   SUBJECT_ALLOCATION,
+  PAGE_502
 } from '@constants'
 
 const router = createBrowserRouter([
@@ -266,6 +268,7 @@ const router = createBrowserRouter([
       // },
     ],
   },
+  { path: PAGE_502.path, element: <Error502 /> },
   { path: '*', element: <NotFound /> },
 ])
 

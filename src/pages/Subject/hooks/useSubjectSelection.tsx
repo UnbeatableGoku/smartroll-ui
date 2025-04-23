@@ -64,7 +64,9 @@ const useSubjectSelection = () => {
     if (finalized_subject) {
       setSelectedSubjects(finalized_subject) // set the selected subject state
       setSubject(finalized_subject) // load the subject
-      const subjects_slug = finalized_subject.map((subject:any)=> subject.slug)
+      const subjects_slug = finalized_subject.map(
+        (subject: any) => subject.slug,
+      )
       setNotTechSubjects(subjects_slug)
       setIsSubjectLock(semester_subject.subjects_locked) // lock subject selection
     } else {
@@ -129,31 +131,26 @@ const useSubjectSelection = () => {
   const toggleSubjectSelection = (subject: any): void => {
     setSelectedSubjects((prev) =>
       prev.some((d) => d.slug === subject.slug)
-        ? prev.filter((d) => d.slug !== subject .slug)
+        ? prev.filter((d) => d.slug !== subject.slug)
         : [...prev, subject],
     )
 
-
     // setSelectedSubjects((prevArray) => {
-    
+
     //   const streamIndex = prevArray.findIndex(stream => stream.stream_slug === selectedStream);
-    
-    
+
     //   if (streamIndex !== -1) {
     //     const updatedSubjects = prevArray[streamIndex].subjects.some((subject:any) => subject.slug === subject.slug)
     //       ? prevArray[streamIndex].subjects.filter((subject:any) => subject.slug !== subject.slug)
     //       : [...prevArray[streamIndex].subjects, subject];
-          
-    
+
     //     return prevArray.map((stream, index) =>
     //       index === streamIndex ? { ...stream, subjects: updatedSubjects } : stream
     //     );
     //   }
-    
-    
+
     //   return [...prevArray, { stream_slug: selectedStream, subjects: [subject] }];
     // });
-    
 
     setNotTechSubjects((prevArry: any) => {
       return prevArry.includes(subject.slug)
@@ -227,7 +224,6 @@ const useSubjectSelection = () => {
     try {
       const check = prompt('Please Type "unlock" to unlock selected subjects')
       if (check === 'unlock') {
-        //TODO: MAKE THE API CALL TO UNLOCK THE SELECTED SUBJECTS
         const axiosInstance = axios.create()
         const method = 'post'
         const endpoint = `/manage/unlock_subject_choices/`
@@ -250,7 +246,9 @@ const useSubjectSelection = () => {
           const check = get(response_obj, 'response.data.data', false)
           if (check == true) {
             setIsSubjectLock(!isSubjectLock)
-            const subjects_slug = selectedSubjects.map((subject:any)=>subject.slug)
+            const subjects_slug = selectedSubjects.map(
+              (subject: any) => subject.slug,
+            )
             setNotTechSubjects(subjects_slug)
           }
         }
@@ -306,19 +304,19 @@ const useSubjectSelection = () => {
       ) {
         setDeadLine(response_obj.response?.data.data.deadline_timestamp)
         setunloackSubjectAfterDeadline(false)
-        setSemesterResponse((prevArray:any)=>{
-          return prevArray.map((semester:any)=>{
-              if(semester.slug == selectedSemester)
-              {
-                return {
-                 ...semester,
-                  deadline_reached: response_obj.response?.data.data.is_changed ? false : true,
-                  subject_choice_deadline: deadLine,
-                }
+        setSemesterResponse((prevArray: any) => {
+          return prevArray.map((semester: any) => {
+            if (semester.slug == selectedSemester) {
+              return {
+                ...semester,
+                deadline_reached: response_obj.response?.data.data.is_changed
+                  ? false
+                  : true,
+                subject_choice_deadline: deadLine,
               }
-              else{
-                return semester
-              }
+            } else {
+              return semester
+            }
           })
         })
         toast.success('Deadline is successfully updated')

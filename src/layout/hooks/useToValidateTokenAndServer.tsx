@@ -45,7 +45,7 @@ const useToValidateTokenAndServer = () => {
       }
     } catch (error: any) {
       dispatch(setLoader({ state: false, message: null }))
-      navigate('/404')
+      navigate('/502')
     }
   }
 
