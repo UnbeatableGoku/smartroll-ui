@@ -180,6 +180,8 @@ export const useTeacherDashbord = () => {
         setStopStreamFunction(null)
       }
     })
+
+    newSocket.on('session_timeout', async (message: any) => {})
   }
 
   const startSessionHandler = async (
@@ -768,9 +770,13 @@ const startTeacherStreaming = async (
   }
 }
 
-const checkAndReturnMicPermission = async () => {
+const checkAndReturnMicPermission = async (): Promise<{
+  mic_object: MediaStream | null
+  error: boolean
+  message: string
+}> => {
   let mic = null,
-    error,
+    errorFlag = false,
     message
   try {
     mic = await navigator.mediaDevices.getUserMedia({
@@ -780,16 +786,16 @@ const checkAndReturnMicPermission = async () => {
         autoGainControl: false,
       },
     })
-    error = false
+    errorFlag = false
     message = 'audio permission granted successfully'
   } catch (error: any) {
-    error = true
+    errorFlag = true
     message = error.message
     mic = null
   } finally {
     return {
       mic_object: mic,
-      error,
+      error: errorFlag,
       message,
     }
   }
