@@ -32,6 +32,11 @@ export const useTeacherDashbord = () => {
   const [date, setDate] = useState<any>(getWeekDates())
   const [stopStreamFunction, setStopStreamFunction] = useState<any>(null) // To hold the stop function
 
+  // useStaate for the  audioCtx , oscillator ,  gainNode
+
+  const [oscillator, setOscillator] = useState<any>(null)
+  const [gainNode, setGainNode] = useState<any>(null)
+
   //days list
   const days = [
     'monday',
@@ -51,7 +56,6 @@ export const useTeacherDashbord = () => {
     (state: RootState) => state.classRoomSlice,
   )
   const [classesList, setClasses] = useState<any>(classes)
-
   // Clean up streaming when component unmounts
   useEffect(() => {
     return () => {
@@ -120,14 +124,20 @@ export const useTeacherDashbord = () => {
       })
     })
 
-    newSocket.on('ongoing_session_data', async (message) => {
-      const { data } = message.data
+    newSocket?.on('disconnect', () => {
+      setSocket(null)
+      stopSoundFrequency()
+    })
 
+    newSocket.on('ongoing_session_data', async (message) => {
+      //todo: create the handler for this
+      const { data } = message.data
       onGoingSessionDataHandler(data)
+
       const stopFunction = await startTeacherStreaming(
         newSocket,
         session_id,
-        auth_token,
+        StoredTokens?.accessToken?.replace('Bearer ', '') as string,
         mic,
       )
       setStopStreamFunction(() => stopFunction) // Store the stop function
@@ -180,8 +190,16 @@ export const useTeacherDashbord = () => {
         setStopStreamFunction(null)
       }
     })
+  }
 
-    newSocket.on('session_timeout', async (message: any) => {})
+  const stopSoundFrequency = () => {
+    if (oscillator) {
+      oscillator.stop()
+      oscillator.disconnect()
+      gainNode.disconnect()
+      setOscillator(null)
+      setGainNode(null)
+    }
   }
 
   const startSessionHandler = async (
@@ -200,10 +218,10 @@ export const useTeacherDashbord = () => {
         toast.error(message)
         return
       }
+
       const formData = new FormData()
       formData.append('lecture_slug', lecture_slug)
       formData.append('classroom_slug', selectedClassRoom.value)
-
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -223,6 +241,7 @@ export const useTeacherDashbord = () => {
 
       if (response_obj.error === false) {
         const { data } = response_obj?.response?.data
+        const { selected_frequency } = data
 
         setSessionData((prevData: any) => ({
           ...prevData,
@@ -243,6 +262,10 @@ export const useTeacherDashbord = () => {
         setLectureDetails(updatedLectureDetails)
 
         if (data.active === 'ongoing') {
+          const { oscillator, gainNode } =
+            playSoundFrequency(selected_frequency)
+          setOscillator(oscillator)
+          setGainNode(gainNode)
           clientSocketHandler(
             session_id,
             StoredTokens?.accessToken?.replace('Bearer ', '') as string,
@@ -581,6 +604,7 @@ export const useTeacherDashbord = () => {
     stopStreamFunction,
     setStopStreamFunction,
     setSocket,
+    stopSoundFrequency,
   }
 }
 function extractLectureStatusData(data: any) {
@@ -644,28 +668,7 @@ const startTeacherStreaming = async (
 
   await audioContext.audioWorklet.addModule('recorder-processor.js')
 
-  // let mic
   const source = audioContext.createMediaStreamSource(mic)
-  // try {
-  // mic = await navigator.mediaDevices.getUserMedia({
-  //   audio: {
-  //     echoCancellation: false,
-  //     noiseSuppression: false,
-  //     autoGainControl: false,
-  //   },
-  // })
-
-  // } catch (error) {
-  //   // Handle microphone permission error
-  //   console.error('Microphone permission error:', error)
-  //   socket?.disconnect()
-  //   setSocket(null)
-  //   setIsSheetOpen(false)
-  //   toast.error(
-  //     'Microphone access denied. Please allow microphone access to start the session.',
-  //   )
-  //   return
-  // }
 
   const recorderNode = new AudioWorkletNode(
     audioContext,
@@ -768,6 +771,28 @@ const startTeacherStreaming = async (
     // Stop the stream and clean up resources
     await stopFunction()
   }
+}
+
+const playSoundFrequency = (frequency: number) => {
+  let audioCtx: any
+  let oscillator: any
+  let gainNode: any
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+  }
+
+  oscillator = audioCtx.createOscillator()
+  gainNode = audioCtx.createGain()
+
+  oscillator.type = 'sine'
+  oscillator.frequency.value = frequency // 19.5kHz
+  gainNode.gain.value = 1 // Volume (you can adjust)
+
+  oscillator.connect(gainNode)
+  gainNode.connect(audioCtx.destination)
+
+  oscillator.start()
+  return { oscillator, gainNode }
 }
 
 const checkAndReturnMicPermission = async (): Promise<{
