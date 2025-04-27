@@ -10,8 +10,7 @@ import { toast } from 'sonner'
 import useAPI from '@hooks/useApi'
 
 import {
-  createWavBlob,
-  downloadBlob,
+  createWavBlob,  
   flattenChunks,
 } from '@utils/helpers/recorder_process'
 
@@ -352,8 +351,7 @@ const startStudentRecording = async (duration = 5000) => {
 
           // Create audio blob from recorded data
           const audioBuffer = flattenChunks(recordedData)
-          const wavBlob = createWavBlob(audioBuffer, sampleRate)
-          downloadBlob(wavBlob, 'record.ts')
+          const wavBlob = createWavBlob(audioBuffer, sampleRate)          
           resolve({
             error: false,
             message: 'Recording successful.',

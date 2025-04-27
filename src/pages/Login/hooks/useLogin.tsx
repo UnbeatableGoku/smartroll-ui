@@ -111,22 +111,30 @@ const useLogin = () => {
         if (!callbackUrl || !fromApp || !deviceId) {
           return navigate('/student-dashboard') //:: CHANGE TO '/student-dashboard'
         } else {
-          window.history.replaceState(null, '', window.location.pathname);
+          window.history.replaceState(null, '', window.location.pathname)
           const callbackUrlParse: string = `${callbackUrl}?access_token=${token.access}&refresh_token=${token.access}`
           return (window.location.href = callbackUrlParse)
         }
-        //   const callbackUrl = `smartrollauth://callback?access_token=${Auth.accessToken}&refresh_token=${Auth.refreshToken}`
-        // return (window.location.href = callbackUrl)
       } else {
         return navigate('/login')
       }
     } catch (error: any) {
-      // Safely access error.response
-      const message =
-        error.response?.data?.detail || error.message || 'An error occurred'
+      // Safely acces error.response
+      let errorMessage
+      switch (error.status) {
+        case 401:
+          errorMessage = 'Invalid credentials'
+          break
+        case 502:
+          errorMessage = 'Something went wrong. Please try again later'
+          break
+        default:
+          errorMessage =
+            error.response?.data?.detail || error.message || 'An error occurred'
+      }
       setIsLoading(false)
       reset()
-      return toast.error(message)
+      return toast.error(errorMessage)
     }
   }
 

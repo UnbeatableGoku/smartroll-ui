@@ -99,7 +99,6 @@ const TimerButton: React.FC<TimerButtonProps> = ({
     // 2. Timer isn't already running
     // 3. We haven't already attempted auto-start in this cycle
     if (autoStart && !isRunning && !autoStartAttemptedRef.current) {
-      console.log('Attempting Auto-start...')
       autoStartAttemptedRef.current = true // Mark as attempted
 
       // Determine the starting time for auto-start

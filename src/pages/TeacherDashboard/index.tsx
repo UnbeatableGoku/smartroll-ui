@@ -37,8 +37,6 @@ import { BadgeCheck, Ban, Clock, FileDown, Users } from 'lucide-react'
 
 import { cn } from '@utils'
 
-import TimerButton from '@components/timerButton'
-
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
 
 // No need for unused type imports
@@ -50,41 +48,37 @@ const TeacherDashboard = () => {
     lectureDetails,
     sessionData,
     isSheetOpen,
-    setIsSheetOpen,
-    socket,
     onGoingSessionData,
     students,
     manualAttendance,
+    open,
+    classRoomData,
+    date,
+    classesList,
     removeStudentAttendanceRequest,
     markManualStudentsAttendance,
     handleOnSessionEnd,
     handleClassroom,
-    open,
     setOpen,
-    classRoomData,
     changeClassRoomAPI,
     handleOnClickForDownloadExcelForAttendance,
-    date,
-    classesList,
-    stopStreamFunction,
-    setStopStreamFunction,
-    setSocket,
+    handleSheet,
   } = useTeacherDashbord()
 
   useEffect(() => {
     getLectureDetails()
   }, [])
 
-  const handleSheet = async () => {
-    setIsSheetOpen(false)
-    socket?.disconnect()
-    setSocket(null)
-    if (stopStreamFunction) {
-      await stopStreamFunction()
-      setStopStreamFunction(null)
-    }
-  }
-
+  // const handleSheet = async () => {
+  //   setIsSheetOpen(false)
+  //   socket?.disconnect()
+  //   setSocket(null)
+  //   stopSoundFrequency()
+  //   if (stopStreamFunction) {
+  //     await stopStreamFunction()
+  //     setStopStreamFunction(null)
+  //   }
+  // }
   return (
     <div className="h-auto">
       {/* Main Content */}
@@ -392,7 +386,7 @@ const TeacherDashboard = () => {
                 <div className="mx-2 h-[1px] max-w-full bg-gray-300"></div>
 
                 <div className="flex h-[75vh] w-full flex-col gap-y-3 overflow-y-auto p-4">
-                  <TimerButton
+                  {/* <TimerButton
                     autoStart={true}
                     initialText="End Session"
                     runningTextPrefix="Session Ended In ..."
@@ -401,7 +395,7 @@ const TeacherDashboard = () => {
                     OnSessionEnd={() => {
                       console.log('session End')
                     }}
-                  ></TimerButton>
+                  ></TimerButton> */}
 
                   <Tabs defaultValue="Default" className="w-full">
                     <TabsList className="mb-4 flex w-full gap-4 bg-[#F7F7F7]">
@@ -441,6 +435,9 @@ const TeacherDashboard = () => {
                                   <TableHead className="text-center">
                                     Distance
                                   </TableHead>
+                                  <TableHead className="text-center">
+                                    Amplitude
+                                  </TableHead>
                                 </TableRow>
                               )}
                             </TableHeader>
@@ -475,6 +472,9 @@ const TeacherDashboard = () => {
                                     {student?.euclidean_distance?.toFixed(3) ||
                                       '-'}
                                   </TableCell>
+                                  <TableCell className="text-center">
+                                    {student?.amplitude?.toFixed(2) || '-'}
+                                  </TableCell>
                                 </TableRow>
                               ))}
                             </TableBody>
@@ -507,12 +507,12 @@ const TeacherDashboard = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
-                {/* <Button
+                <Button
                   className="flex-1 rounded-[6px] bg-[#be0205] text-white hover:bg-red-500"
                   onClick={() => handleOnSessionEnd()}
                 >
                   End Session
-                </Button> */}
+                </Button>
               </div>
             </div>
           </SheetContent>
