@@ -48,42 +48,37 @@ const TeacherDashboard = () => {
     lectureDetails,
     sessionData,
     isSheetOpen,
-    setIsSheetOpen,
-    socket,
     onGoingSessionData,
     students,
     manualAttendance,
+    open,
+    classRoomData,
+    date,
+    classesList,
     removeStudentAttendanceRequest,
     markManualStudentsAttendance,
     handleOnSessionEnd,
     handleClassroom,
-    open,
     setOpen,
-    classRoomData,
     changeClassRoomAPI,
     handleOnClickForDownloadExcelForAttendance,
-    date,
-    classesList,
-    stopStreamFunction,
-    setStopStreamFunction,
-    setSocket,
-    stopSoundFrequency,
+    handleSheet,
   } = useTeacherDashbord()
 
   useEffect(() => {
     getLectureDetails()
   }, [])
 
-  const handleSheet = async () => {
-    setIsSheetOpen(false)
-    socket?.disconnect()
-    setSocket(null)
-    stopSoundFrequency()
-    if (stopStreamFunction) {
-      await stopStreamFunction()
-      setStopStreamFunction(null)
-    }
-  }
+  // const handleSheet = async () => {
+  //   setIsSheetOpen(false)
+  //   socket?.disconnect()
+  //   setSocket(null)
+  //   stopSoundFrequency()
+  //   if (stopStreamFunction) {
+  //     await stopStreamFunction()
+  //     setStopStreamFunction(null)
+  //   }
+  // }
   return (
     <div className="h-auto">
       {/* Main Content */}

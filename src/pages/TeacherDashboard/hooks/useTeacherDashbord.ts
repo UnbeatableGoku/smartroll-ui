@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
 import { RootState } from '@data/redux/Store'
 import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
 import axios from 'axios'
@@ -11,12 +12,19 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { createPCMBlob } from '@utils/helpers/recorder_process'
-
 import { LectureDetails } from 'types/common'
 
 export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
+  const {
+    loadClassRooms,
+    playSoundFrequency,
+    stopSoundFrequency,
+    extractLectureStatusData,
+    getWeekDates,
+    checkAndReturnMicPermission,
+    startTeacherStreaming,
+  } = TeacherDashboardUtilites()
   const [socket, setSocket] = useState<Socket | null>(null)
   const [students, setStudents] = useState<any>([])
   const [sessionData, setSessionData] = useState<any>()
@@ -32,31 +40,13 @@ export const useTeacherDashbord = () => {
   const [date, setDate] = useState<any>(getWeekDates())
   const [stopStreamFunction, setStopStreamFunction] = useState<any>(null) // To hold the stop function
 
-  // useStaate for the  audioCtx , oscillator ,  gainNode
-
-  const [oscillator, setOscillator] = useState<any>(null)
-  const [gainNode, setGainNode] = useState<any>(null)
-
-  //days list
-  const days = [
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
-  ]
-  const [dayList] = useState(days)
-  const [currentDay, setCurrentDay] = useState<string>('')
-
   const dispatch = useDispatch()
-  // do some changes
 
   const { isalreadyLoaded, classes } = useSelector(
     (state: RootState) => state.classRoomSlice,
   )
   const [classesList, setClasses] = useState<any>(classes)
-  // Clean up streaming when component unmounts
+
   useEffect(() => {
     return () => {
       if (stopStreamFunction) {
@@ -70,41 +60,19 @@ export const useTeacherDashbord = () => {
 
   useEffect(() => {
     setSocket(null)
-    if (!isalreadyLoaded) {
-      // call the classroom load data
-      loadClassRooms()
+
+    const loadData = async () => {
+      if (!isalreadyLoaded) {
+        const payload = await loadClassRooms()
+        setClasses(payload.classes)
+        dispatch(setClassRoomList(payload))
+        // you can now use payload if needed
+      }
     }
+
+    loadData() // call the inner async function
   }, [isalreadyLoaded, dispatch])
 
-  const loadClassRooms = async () => {
-    try {
-      const header = {
-        'ngrok-skip-browser-warning': true,
-        Authorization: `Bearer ${StoredTokens.accessToken}`,
-      }
-      const axiosInstance = axios.create()
-      const method = 'get'
-      const endpoint = `/manage/get_classrooms_for_teacher`
-      const response_obj = await CallAPI(
-        StoredTokens,
-        axiosInstance,
-        endpoint,
-        method,
-        header,
-      )
-      if (response_obj.error === false) {
-        const response = get(response_obj, 'response.data.data', [])
-        setClasses(response)
-        const payload = {
-          isalreadyLoaded: true,
-          classes: response,
-        }
-        dispatch(setClassRoomList(payload))
-      }
-    } catch (error: any) {
-      toast.error(error.message || 'something went wrong')
-    }
-  }
   const clientSocketHandler = (
     session_id: string,
     auth_token: string,
@@ -130,7 +98,6 @@ export const useTeacherDashbord = () => {
     })
 
     newSocket.on('ongoing_session_data', async (message) => {
-      //todo: create the handler for this
       const { data } = message.data
       onGoingSessionDataHandler(data)
 
@@ -192,16 +159,6 @@ export const useTeacherDashbord = () => {
     })
   }
 
-  const stopSoundFrequency = () => {
-    if (oscillator) {
-      oscillator.stop()
-      oscillator.disconnect()
-      gainNode.disconnect()
-      setOscillator(null)
-      setGainNode(null)
-    }
-  }
-
   const startSessionHandler = async (
     session_id: string,
     lecture_slug: string,
@@ -213,12 +170,7 @@ export const useTeacherDashbord = () => {
     ) as HTMLSelectElement
     try {
       //check the microphone permission
-      const { mic_object, error, message } = await checkAndReturnMicPermission()
-      if (error) {
-        toast.error(message)
-        return
-      }
-
+      const mic = await checkAndReturnMicPermission()
       const formData = new FormData()
       formData.append('lecture_slug', lecture_slug)
       formData.append('classroom_slug', selectedClassRoom.value)
@@ -262,14 +214,11 @@ export const useTeacherDashbord = () => {
         setLectureDetails(updatedLectureDetails)
 
         if (data.active === 'ongoing') {
-          const { oscillator, gainNode } =
-            playSoundFrequency(selected_frequency)
-          setOscillator(oscillator)
-          setGainNode(gainNode)
+          playSoundFrequency(selected_frequency)
           clientSocketHandler(
             session_id,
             StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-            mic_object,
+            mic,
           )
         }
       } else {
@@ -572,256 +521,47 @@ export const useTeacherDashbord = () => {
     }
   }
 
+  const handleSheet = async () => {
+    setIsSheetOpen(false)
+    socket?.disconnect()
+    setSocket(null)
+    stopSoundFrequency()
+    if (stopStreamFunction) {
+      await stopStreamFunction()
+      setStopStreamFunction(null)
+    }
+  }
+
   return {
-    getLectureDetails,
-    startSessionHandler,
     students,
     lectureDetails,
     sessionData,
     isSheetOpen,
-    setIsSheetOpen,
-    socket,
-    onGoingSessionData,
-    manualAttendance,
-    removeStudentAttendanceRequest,
-    markManualStudentsAttendance,
-    finalAttendanceData,
-    isSessionEnded,
-    handleOnSessionEnd,
-    handleClassroom,
-    classRooms,
-    setOpen,
-    open,
-    setClassRoomData,
-    classRoomData,
-    changeClassRoomAPI,
-    handleOnClickForDownloadExcelForAttendance,
-    dayList,
-    currentDay,
-    setCurrentDay,
     date,
     classesList,
     stopStreamFunction,
+    socket,
+    onGoingSessionData,
+    manualAttendance,
+    finalAttendanceData,
+    isSessionEnded,
+    classRooms,
+    open,
+    classRoomData,
+    setOpen,
+    setClassRoomData,
+    handleOnSessionEnd,
+    handleClassroom,
+    changeClassRoomAPI,
+    handleOnClickForDownloadExcelForAttendance,
+    setIsSheetOpen,
+    removeStudentAttendanceRequest,
+    markManualStudentsAttendance,
     setStopStreamFunction,
     setSocket,
     stopSoundFrequency,
-  }
-}
-function extractLectureStatusData(data: any) {
-  const lectureStatusMap: Record<string, string> = {}
-
-  data.forEach((lecture: any) => {
-    lecture.lectures.forEach((l: any) => {
-      if (l.slug && l.session && l.session.active) {
-        lectureStatusMap[l.session.session_id] = l.session.active
-      }
-    })
-  })
-  return lectureStatusMap
-}
-
-function getWeekDates() {
-  const today = new Date()
-  const currentDay = today.getDay()
-  const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay
-
-  const monday = new Date(today)
-  monday.setDate(today.getDate() + mondayOffset)
-
-  const result = []
-
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(monday)
-    d.setDate(monday.getDate() + i)
-
-    const longDay = d
-      .toLocaleString('en-US', { weekday: 'long' })
-      .toLocaleLowerCase()
-    const shortDay = d
-      .toLocaleString('en-US', { weekday: 'short' })
-      .toUpperCase()
-    const day = String(d.getDate()).padStart(2, '0')
-    const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase()
-
-    result.push({ longDay, shortDay, day, month, isActive: false })
-  }
-
-  return result
-}
-
-const startTeacherStreaming = async (
-  socket: any,
-  session_id: string,
-  auth_token: string,
-  mic: any,
-) => {
-  let audioContext: any | null = null
-
-  if (audioContext) {
-    audioContext.close()
-    audioContext = null
-  }
-  audioContext = new (window.AudioContext || window.webkitAudioContext)()
-  const chunkDuration = 1000 // 1 second
-  const startTime = Date.now() // Record start time
-  let chunkIndex = 0
-
-  await audioContext.audioWorklet.addModule('recorder-processor.js')
-
-  const source = audioContext.createMediaStreamSource(mic)
-
-  const recorderNode = new AudioWorkletNode(
-    audioContext,
-    'recorder-processor',
-    {
-      processorOptions: {
-        duration: chunkDuration / 1000,
-      },
-    },
-  )
-
-  source.connect(recorderNode)
-  recorderNode.connect(audioContext.destination)
-
-  let stopStream = false
-
-  recorderNode.port.onmessage = (event) => {
-    const chunk = event.data[0] // Float32Array
-    const wavBlob = createPCMBlob(chunk)
-    const timestamp = startTime + chunkIndex * chunkDuration
-    chunkIndex++
-
-    if (!stopStream) {
-      if (socket) {
-        socket.emit('incoming_audio_chunks', {
-          client: 'FE',
-          session_id,
-          auth_token,
-          blob: wavBlob,
-          timestamp,
-        })
-      } else {
-        stopStream = true
-        // Call stopFunction to fully clean up resources when socket is gone
-        stopFunction().catch((err) =>
-          console.error('Error stopping stream:', err),
-        )
-      }
-    }
-  }
-
-  // Clean up function to stop all streaming resources
-  const stopFunction = async () => {
-    socket.disconnect()
-    stopStream = true
-
-    // Disconnect audio nodes
-    if (recorderNode) {
-      recorderNode.disconnect()
-    }
-    if (source) {
-      source.disconnect()
-    }
-
-    // Stop all microphone tracks
-    if (mic && mic.getTracks) {
-      mic.getTracks().forEach((track: any) => track.stop())
-    }
-
-    // Close audio context
-    if (audioContext && audioContext.state === 'running') {
-      try {
-        await audioContext.close()
-      } catch (err) {
-        console.error('Error closing audio context:', err)
-      }
-    }
-  }
-
-  // Handle page unload (reload/close/navigate away)
-  const handlePageUnload = () => {
-    stopFunction()
-  }
-
-  // Add event listeners for page unload
-  window.addEventListener('beforeunload', handlePageUnload)
-
-  // Add event listener for popstate (browser back/forward navigation)
-  window.addEventListener('popstate', handlePageUnload)
-
-  // Monitor socket status and stop streaming if socket disconnects
-  const checkSocketInterval = setInterval(() => {
-    if (!socket || (socket && !socket.connected)) {
-      clearInterval(checkSocketInterval)
-      stopFunction().catch((err) =>
-        console.error('Error stopping stream on socket check:', err),
-      )
-    }
-  }, 2000) // Check every 2 seconds
-
-  // Return the cleanup function that also removes event listeners
-  return async () => {
-    // Remove event listeners
-    window.removeEventListener('beforeunload', handlePageUnload)
-    window.removeEventListener('popstate', handlePageUnload)
-
-    // Clear socket status check interval
-    clearInterval(checkSocketInterval)
-
-    // Stop the stream and clean up resources
-    await stopFunction()
-  }
-}
-
-const playSoundFrequency = (frequency: number) => {
-  let audioCtx: any
-  let oscillator: any
-  let gainNode: any
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-  }
-
-  oscillator = audioCtx.createOscillator()
-  gainNode = audioCtx.createGain()
-
-  oscillator.type = 'sine'
-  oscillator.frequency.value = frequency // 19.5kHz
-  gainNode.gain.value = 1 // Volume (you can adjust)
-
-  oscillator.connect(gainNode)
-  gainNode.connect(audioCtx.destination)
-
-  oscillator.start()
-  return { oscillator, gainNode }
-}
-
-const checkAndReturnMicPermission = async (): Promise<{
-  mic_object: MediaStream | null
-  error: boolean
-  message: string
-}> => {
-  let mic = null,
-    errorFlag = false,
-    message
-  try {
-    mic = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        echoCancellation: false,
-        noiseSuppression: false,
-        autoGainControl: false,
-      },
-    })
-    errorFlag = false
-    message = 'audio permission granted successfully'
-  } catch (error: any) {
-    errorFlag = true
-    message = error.message
-    mic = null
-  } finally {
-    return {
-      mic_object: mic,
-      error: errorFlag,
-      message,
-    }
+    handleSheet,
+    getLectureDetails,
+    startSessionHandler,
   }
 }
