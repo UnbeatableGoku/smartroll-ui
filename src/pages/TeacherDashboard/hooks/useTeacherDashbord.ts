@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
 import { RootState } from '@data/redux/Store'
@@ -38,7 +38,9 @@ export const useTeacherDashbord = () => {
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
   const [date, setDate] = useState<any>(getWeekDates())
-  const [stopStreamFunction, setStopStreamFunction] = useState<any>(null) // To hold the stop function
+  const [stopStreamFunction, setStopStreamFunction] = useState<any>(null)
+  const calendarContainerRef = useRef<HTMLDivElement>(null)
+  const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
 
   const dispatch = useDispatch()
 
@@ -563,5 +565,7 @@ export const useTeacherDashbord = () => {
     handleSheet,
     getLectureDetails,
     startSessionHandler,
+    calendarContainerRef,
+    activeDateRef,
   }
 }

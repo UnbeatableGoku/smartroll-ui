@@ -63,11 +63,24 @@ const TeacherDashboard = () => {
     changeClassRoomAPI,
     handleOnClickForDownloadExcelForAttendance,
     handleSheet,
+    calendarContainerRef,
+    activeDateRef,
   } = useTeacherDashbord()
 
   useEffect(() => {
     getLectureDetails()
   }, [])
+
+  useEffect(() => {
+    // Scroll to active date when component mounts
+    if (activeDateRef.current) {
+      activeDateRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      })
+    }
+  }, [date])
 
   // const handleSheet = async () => {
   //   setIsSheetOpen(false)
@@ -84,9 +97,13 @@ const TeacherDashboard = () => {
       {/* Main Content */}
       <main className="flex flex-col gap-6 pb-20">
         {/* Calendar-style Date Selector */}
-        <div className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 pt-8 md:justify-center">
+        <div
+          className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 pt-8 md:justify-center"
+          ref={calendarContainerRef}
+        >
           {date.map((day: any) => (
             <div
+              ref={day.isActive ? activeDateRef : null}
               key={`${day.day_name}-${day.day}`}
               onClick={() => getLectureDetails(day.longDay)}
               className={cn(
