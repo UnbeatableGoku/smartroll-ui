@@ -48,50 +48,52 @@ const TeacherDashboard = () => {
     lectureDetails,
     sessionData,
     isSheetOpen,
-    setIsSheetOpen,
-    socket,
     onGoingSessionData,
     students,
     manualAttendance,
+    open,
+    classRoomData,
+    date,
+    classesList,
     removeStudentAttendanceRequest,
     markManualStudentsAttendance,
     handleOnSessionEnd,
     handleClassroom,
-    open,
     setOpen,
-    classRoomData,
     changeClassRoomAPI,
     handleOnClickForDownloadExcelForAttendance,
-    date,
-    classesList,
-    stopStreamFunction,
-    setStopStreamFunction,
-    setSocket,
-    stopSoundFrequency,
+    handleSheet,
+    calendarContainerRef,
+    activeDateRef,
   } = useTeacherDashbord()
 
   useEffect(() => {
     getLectureDetails()
   }, [])
 
-  const handleSheet = async () => {
-    setIsSheetOpen(false)
-    socket?.disconnect()
-    setSocket(null)
-    stopSoundFrequency()
-    if (stopStreamFunction) {
-      await stopStreamFunction()
-      setStopStreamFunction(null)
+  useEffect(() => {
+    // Scroll to active date when component mounts
+    if (activeDateRef.current) {
+      activeDateRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      })
     }
-  }
+  }, [date])
+
   return (
     <div className="h-auto">
       {/* Main Content */}
       <main className="flex flex-col gap-6 pb-20">
         {/* Calendar-style Date Selector */}
-        <div className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 pt-8 md:justify-center">
+        <div
+          className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 pt-8 md:justify-center"
+          ref={calendarContainerRef}
+        >
           {date.map((day: any) => (
             <div
+              ref={day.isActive ? activeDateRef : null}
               key={`${day.day_name}-${day.day}`}
               onClick={() => getLectureDetails(day.longDay)}
               className={cn(
@@ -441,7 +443,10 @@ const TeacherDashboard = () => {
                                     Distance
                                   </TableHead>
                                   <TableHead className="text-center">
-                                    Amplitude
+                                    NCC
+                                  </TableHead>
+                                  <TableHead className="text-center">
+                                    Magnitude
                                   </TableHead>
                                 </TableRow>
                               )}
@@ -478,7 +483,10 @@ const TeacherDashboard = () => {
                                       '-'}
                                   </TableCell>
                                   <TableCell className="text-center">
-                                    {student?.amplitude?.toFixed(2) || '-'}
+                                    {student?.ncc?.toFixed(2) || '-'}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {student?.magnitude?.toFixed(2) || '-'}
                                   </TableCell>
                                 </TableRow>
                               ))}
