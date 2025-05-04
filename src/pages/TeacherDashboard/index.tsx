@@ -82,16 +82,6 @@ const TeacherDashboard = () => {
     }
   }, [date])
 
-  // const handleSheet = async () => {
-  //   setIsSheetOpen(false)
-  //   socket?.disconnect()
-  //   setSocket(null)
-  //   stopSoundFrequency()
-  //   if (stopStreamFunction) {
-  //     await stopStreamFunction()
-  //     setStopStreamFunction(null)
-  //   }
-  // }
   return (
     <div className="h-auto">
       {/* Main Content */}
@@ -453,7 +443,10 @@ const TeacherDashboard = () => {
                                     Distance
                                   </TableHead>
                                   <TableHead className="text-center">
-                                    Amplitude
+                                    NCC
+                                  </TableHead>
+                                  <TableHead className="text-center">
+                                    Magnitude
                                   </TableHead>
                                 </TableRow>
                               )}
@@ -490,7 +483,10 @@ const TeacherDashboard = () => {
                                       '-'}
                                   </TableCell>
                                   <TableCell className="text-center">
-                                    {student?.amplitude?.toFixed(2) || '-'}
+                                    {student?.ncc?.toFixed(2) || '-'}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {student?.magnitude?.toFixed(2) || '-'}
                                   </TableCell>
                                 </TableRow>
                               ))}

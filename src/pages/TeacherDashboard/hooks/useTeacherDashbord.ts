@@ -18,12 +18,12 @@ export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const {
     loadClassRooms,
-    playSoundFrequency,
     stopSoundFrequency,
     extractLectureStatusData,
     getWeekDates,
     checkAndReturnMicPermission,
     startTeacherStreaming,
+    playWaveSoundFrequency,
   } = TeacherDashboardUtilites()
   const [socket, setSocket] = useState<Socket | null>(null)
   const [students, setStudents] = useState<any>([])
@@ -39,6 +39,9 @@ export const useTeacherDashbord = () => {
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
   const [date, setDate] = useState<any>(getWeekDates())
   const [stopStreamFunction, setStopStreamFunction] = useState<any>(null)
+  const [stopWaveFrequency, setStopWaveFrequency] = useState<
+    (() => void) | null
+  >(null)
   const calendarContainerRef = useRef<HTMLDivElement>(null)
   const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
 
@@ -97,6 +100,9 @@ export const useTeacherDashbord = () => {
     newSocket?.on('disconnect', () => {
       setSocket(null)
       stopSoundFrequency()
+      if (stopWaveFrequency) {
+        stopWaveFrequency()
+      }
     })
 
     newSocket.on('ongoing_session_data', async (message) => {
@@ -195,7 +201,7 @@ export const useTeacherDashbord = () => {
 
       if (response_obj.error === false) {
         const { data } = response_obj?.response?.data
-        const { selected_frequency } = data
+        const { audio_url } = data
 
         setSessionData((prevData: any) => ({
           ...prevData,
@@ -216,7 +222,8 @@ export const useTeacherDashbord = () => {
         setLectureDetails(updatedLectureDetails)
 
         if (data.active === 'ongoing') {
-          playSoundFrequency(selected_frequency)
+          const stopWaveFrequency = await playWaveSoundFrequency(audio_url)
+          setStopWaveFrequency(() => stopWaveFrequency)
           clientSocketHandler(
             session_id,
             StoredTokens?.accessToken?.replace('Bearer ', '') as string,
@@ -511,10 +518,6 @@ export const useTeacherDashbord = () => {
         document.body.appendChild(a)
         a.click()
         a.remove()
-        // downloadExcelFile(
-        //   response_obj.response?.data?.data?.file_content,
-        //   response_obj.response?.data?.data?.file_name,
-        // )
       } else {
         toast.error(response_obj.errorMessage?.message)
       }
@@ -528,6 +531,9 @@ export const useTeacherDashbord = () => {
     socket?.disconnect()
     setSocket(null)
     stopSoundFrequency()
+    if (stopWaveFrequency) {
+      stopWaveFrequency()
+    }
     if (stopStreamFunction) {
       await stopStreamFunction()
       setStopStreamFunction(null)
@@ -561,7 +567,6 @@ export const useTeacherDashbord = () => {
     markManualStudentsAttendance,
     setStopStreamFunction,
     setSocket,
-    stopSoundFrequency,
     handleSheet,
     getLectureDetails,
     startSessionHandler,

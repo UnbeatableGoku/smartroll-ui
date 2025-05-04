@@ -11,7 +11,7 @@ import { createPCMBlob } from '@utils/helpers/recorder_process'
 import {
   BranchLectures,
   LectureStatusMap,
-  LoadClassroomRespomse,
+  LoadClassroomResponse,
   micPermission,
 } from './teacherDashboard.types'
 
@@ -24,7 +24,7 @@ const TeacherDashboardUtilites = () => {
    * @link /manage/get_classrooms_for_teacher
    * @returns list of the classes
    */
-  const loadClassRooms = async (): Promise<LoadClassroomRespomse> => {
+  const loadClassRooms = async (): Promise<LoadClassroomResponse> => {
     try {
       const header = {
         'ngrok-skip-browser-warning': true,
@@ -86,9 +86,30 @@ const TeacherDashboardUtilites = () => {
     setOscillator(oscillator)
     setGainNode(gainNode)
   }
-  /**
-   * description stpo ultra sonic sound wave
-   */
+
+  const playWaveSoundFrequency = async (url: any) => {
+    let audioCtx: any
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+    }
+    const response = await fetch(`${window.base_url}/media/${url}`)
+    const arrayBuffer = await response.arrayBuffer()
+    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer)
+    let source = audioCtx.createBufferSource()
+    source.buffer = audioBuffer
+    source.connect(audioCtx.destination)
+    source.loop = true
+    source.start()
+
+    return () => {
+      if (source) {
+        source.stop()
+        source.disconnect()
+        source = null
+      }
+    }
+  }
+
   const stopSoundFrequency = () => {
     if (oscillator) {
       oscillator.stop()
@@ -348,6 +369,7 @@ const TeacherDashboardUtilites = () => {
     buildTeacherLectureListResponse,
     checkAndReturnMicPermission,
     startTeacherStreaming,
+    playWaveSoundFrequency,
   }
 }
 
