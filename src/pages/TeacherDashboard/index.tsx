@@ -33,9 +33,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DialogBox from '@pages/TeacherDashboard/components/DialogBox'
 import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
-import { BadgeCheck, Ban, Clock, FileDown, Users } from 'lucide-react'
+import { Clock, FileDown, Users } from 'lucide-react'
 
 import { cn } from '@utils'
+
+import { Checkbox } from '@components/ui/checkbox'
 
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
 
@@ -65,6 +67,7 @@ const TeacherDashboard = () => {
     handleSheet,
     calendarContainerRef,
     activeDateRef,
+    updateStudentAttendance,
   } = useTeacherDashbord()
 
   useEffect(() => {
@@ -462,17 +465,18 @@ const TeacherDashboard = () => {
                                   </TableCell>
 
                                   <TableCell className="inline-flex w-full items-center justify-center capitalize text-white">
-                                    {student?.is_present === false ? (
-                                      <span className="flex items-center gap-2 text-[10px] text-red-600 md:text-[12px]">
-                                        <Ban className="size-4 md:size-6" />
-                                        Absent
-                                      </span>
-                                    ) : (
-                                      <span className="flex items-center gap-2 text-[10px] text-green-500 md:text-[12px]">
-                                        <BadgeCheck className="size-4 md:size-6" />
-                                        Present
-                                      </span>
-                                    )}
+                                    <span className="flex items-center gap-2 text-[10px] text-green-500 md:text-[12px]">
+                                      <Checkbox
+                                        checked={student.is_present}
+                                        onCheckedChange={() =>
+                                          updateStudentAttendance(
+                                            student.slug,
+                                            !student.is_present,
+                                          )
+                                        }
+                                        className="border border-black"
+                                      />
+                                    </span>
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {`${Number(Math.floor(student?.similarity))} %` ||

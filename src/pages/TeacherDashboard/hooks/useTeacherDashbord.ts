@@ -126,6 +126,24 @@ export const useTeacherDashbord = () => {
       }
     })
 
+    newSocket?.on('update_attendance', (data: any) => {
+      // const {data, message, status} = message?.data?.data'
+      const { status_code, attendance_slug, message } = data
+
+      if (status_code === 200) {
+        setStudents((prev: any) =>
+          prev.map((student: any) =>
+            student.slug === attendance_slug
+              ? { ...student, is_present: !student.is_present }
+              : student,
+          ),
+        )
+        toast.success(message)
+      } else {
+        toast.error(message)
+      }
+    })
+
     newSocket.on('regulization_request', (manualAttendanceData: any) => {
       setManualAttendance((prev: any) => [
         manualAttendanceData.data.data.data.attendance_data,
@@ -135,7 +153,7 @@ export const useTeacherDashbord = () => {
 
     newSocket.on('regulization_approved', (message) => {
       toast.success('Attendance Marked Successfully')
-      setStudents((prev: any) => [...prev, ...message.data.data.data])
+      setStudents((prev: any) => [...prev, ...message?.data?.data?.data])
       setManualAttendance([])
     })
 
@@ -540,6 +558,18 @@ export const useTeacherDashbord = () => {
     }
   }
 
+  const updateStudentAttendance = (student_slug: string, checked: boolean) => {
+    const payload = {
+      client: 'FE',
+      attendance_slug: student_slug,
+      session_id: onGoingSessionData?.session_id,
+      auth_token: StoredTokens.accessToken,
+      action: checked,
+    }
+
+    socket?.emit('update_attendance', payload)
+  }
+
   return {
     students,
     lectureDetails,
@@ -572,5 +602,6 @@ export const useTeacherDashbord = () => {
     startSessionHandler,
     calendarContainerRef,
     activeDateRef,
+    updateStudentAttendance,
   }
 }
