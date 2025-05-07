@@ -42,6 +42,8 @@ export const useTeacherDashbord = () => {
   const [stopWaveFrequency, setStopWaveFrequency] = useState<
     (() => void) | null
   >(null)
+  const [isHistorySheetOpen, setIsHistorySheetOpen] = useState(false)
+  const [sessionId, setSessionId] = useState<string | null>(null)
   const calendarContainerRef = useRef<HTMLDivElement>(null)
   const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
 
@@ -178,6 +180,10 @@ export const useTeacherDashbord = () => {
         ...prevData,
         [message.data.data.data.session_id]: message.data.data.data.active,
       }))
+
+      if (stopSoundFrequency) {
+        stopSoundFrequency()
+      }
       if (stopStreamFunction) {
         await stopStreamFunction() // Call the function to stop streaming
         setStopStreamFunction(null)
@@ -343,6 +349,9 @@ export const useTeacherDashbord = () => {
         client: 'FE',
         session_id: onGoingSessionData.session_id,
         auth_token: StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+      }
+      if (stopWaveFrequency) {
+        stopWaveFrequency()
       }
       socket?.emit('session_ended', requestObject)
     } catch (error: any) {
@@ -570,6 +579,40 @@ export const useTeacherDashbord = () => {
     socket?.emit('update_attendance', payload)
   }
 
+  const handleAttendaceHistoryData = async (session_id: string) => {
+    try {
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/session/get_session_data/${session_id}`
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
+      if (response_obj.error === true) {
+        return toast.error(response_obj.errorMessage?.message)
+      }
+      const response = get(response_obj, 'response.data.data', [])
+      setIsHistorySheetOpen(true)
+      setStudents(response.marked_attendances)
+      setSessionId(session_id)
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong')
+    }
+  }
+
+  const handleHistorySheetOpen = () => {
+    setIsHistorySheetOpen(!isHistorySheetOpen)
+    setSessionId(null)
+    setStudents([])
+  }
+
   return {
     students,
     lectureDetails,
@@ -603,5 +646,9 @@ export const useTeacherDashbord = () => {
     calendarContainerRef,
     activeDateRef,
     updateStudentAttendance,
+    isHistorySheetOpen,
+    handleHistorySheetOpen,
+    sessionId,
+    handleAttendaceHistoryData,
   }
 }

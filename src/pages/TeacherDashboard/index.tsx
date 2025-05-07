@@ -39,6 +39,7 @@ import { cn } from '@utils'
 
 import { Checkbox } from '@components/ui/checkbox'
 
+import AttendanceHistorySheet from './components/AttendanceHistorySheet'
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
 
 // No need for unused type imports
@@ -63,11 +64,14 @@ const TeacherDashboard = () => {
     handleClassroom,
     setOpen,
     changeClassRoomAPI,
-    handleOnClickForDownloadExcelForAttendance,
+    handleAttendaceHistoryData,
     handleSheet,
     calendarContainerRef,
     activeDateRef,
     updateStudentAttendance,
+    isHistorySheetOpen,
+    handleHistorySheetOpen,
+    sessionId,
   } = useTeacherDashbord()
 
   useEffect(() => {
@@ -325,13 +329,13 @@ const TeacherDashboard = () => {
                               variant="outline"
                               className="w-full rounded-[4px] border-none bg-[#0261BE] p-[20px] text-white hover:bg-blue-700"
                               onClick={() => {
-                                handleOnClickForDownloadExcelForAttendance(
-                                  lecture?.session?.session_id,
+                                handleAttendaceHistoryData(
+                                  lecture.session.session_id,
                                 )
                               }}
                             >
                               <FileDown className="mr-2 h-4 w-4" />
-                              Export Attendance
+                              Attendance History
                             </Button>
                           )}
                         </CardFooter>
@@ -396,17 +400,6 @@ const TeacherDashboard = () => {
                 <div className="mx-2 h-[1px] max-w-full bg-gray-300"></div>
 
                 <div className="flex h-[75vh] w-full flex-col gap-y-3 overflow-y-auto p-4">
-                  {/* <TimerButton
-                    autoStart={true}
-                    initialText="End Session"
-                    runningTextPrefix="Session Ended In ..."
-                    initialDurationSeconds={30}
-                    fillColor="#be0205"
-                    OnSessionEnd={() => {
-                      console.log('session End')
-                    }}
-                  ></TimerButton> */}
-
                   <Tabs defaultValue="Default" className="w-full">
                     <TabsList className="mb-4 flex w-full gap-4 bg-[#F7F7F7]">
                       <TabsTrigger
@@ -534,6 +527,14 @@ const TeacherDashboard = () => {
             </div>
           </SheetContent>
         </Sheet>
+      )}
+      {sessionId && students.length > 0 && (
+        <AttendanceHistorySheet
+          isHistorySheetOpen={isHistorySheetOpen}
+          handelHistorySheetOpen={handleHistorySheetOpen}
+          students={students}
+          sessionId={sessionId}
+        />
       )}
     </div>
   )
