@@ -33,10 +33,13 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DialogBox from '@pages/TeacherDashboard/components/DialogBox'
 import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
-import { BadgeCheck, Ban, Clock, FileDown, Users } from 'lucide-react'
+import { Clock, FileDown, Users } from 'lucide-react'
 
 import { cn } from '@utils'
 
+import { Checkbox } from '@components/ui/checkbox'
+
+import AttendanceHistorySheet from './components/AttendanceHistorySheet'
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
 
 // No need for unused type imports
@@ -61,32 +64,43 @@ const TeacherDashboard = () => {
     handleClassroom,
     setOpen,
     changeClassRoomAPI,
-    handleOnClickForDownloadExcelForAttendance,
+    handleAttendaceHistoryData,
     handleSheet,
+    calendarContainerRef,
+    activeDateRef,
+    updateStudentAttendance,
+    isHistorySheetOpen,
+    handleHistorySheetOpen,
+    sessionId,
   } = useTeacherDashbord()
 
   useEffect(() => {
     getLectureDetails()
   }, [])
 
-  // const handleSheet = async () => {
-  //   setIsSheetOpen(false)
-  //   socket?.disconnect()
-  //   setSocket(null)
-  //   stopSoundFrequency()
-  //   if (stopStreamFunction) {
-  //     await stopStreamFunction()
-  //     setStopStreamFunction(null)
-  //   }
-  // }
+  useEffect(() => {
+    // Scroll to active date when component mounts
+    if (activeDateRef.current) {
+      activeDateRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      })
+    }
+  }, [date])
+
   return (
     <div className="h-auto">
       {/* Main Content */}
       <main className="flex flex-col gap-6 pb-20">
         {/* Calendar-style Date Selector */}
-        <div className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 pt-8 md:justify-center">
+        <div
+          className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 pt-8 md:justify-center"
+          ref={calendarContainerRef}
+        >
           {date.map((day: any) => (
             <div
+              ref={day.isActive ? activeDateRef : null}
               key={`${day.day_name}-${day.day}`}
               onClick={() => getLectureDetails(day.longDay)}
               className={cn(
@@ -315,13 +329,13 @@ const TeacherDashboard = () => {
                               variant="outline"
                               className="w-full rounded-[4px] border-none bg-[#0261BE] p-[20px] text-white hover:bg-blue-700"
                               onClick={() => {
-                                handleOnClickForDownloadExcelForAttendance(
-                                  lecture?.session?.session_id,
+                                handleAttendaceHistoryData(
+                                  lecture.session.session_id,
                                 )
                               }}
                             >
                               <FileDown className="mr-2 h-4 w-4" />
-                              Export Attendance
+                              Attendance History
                             </Button>
                           )}
                         </CardFooter>
@@ -386,17 +400,6 @@ const TeacherDashboard = () => {
                 <div className="mx-2 h-[1px] max-w-full bg-gray-300"></div>
 
                 <div className="flex h-[75vh] w-full flex-col gap-y-3 overflow-y-auto p-4">
-                  {/* <TimerButton
-                    autoStart={true}
-                    initialText="End Session"
-                    runningTextPrefix="Session Ended In ..."
-                    initialDurationSeconds={30}
-                    fillColor="#be0205"
-                    OnSessionEnd={() => {
-                      console.log('session End')
-                    }}
-                  ></TimerButton> */}
-
                   <Tabs defaultValue="Default" className="w-full">
                     <TabsList className="mb-4 flex w-full gap-4 bg-[#F7F7F7]">
                       <TabsTrigger
@@ -436,7 +439,10 @@ const TeacherDashboard = () => {
                                     Distance
                                   </TableHead>
                                   <TableHead className="text-center">
-                                    Amplitude
+                                    NCC
+                                  </TableHead>
+                                  <TableHead className="text-center">
+                                    Magnitude
                                   </TableHead>
                                 </TableRow>
                               )}
@@ -452,17 +458,18 @@ const TeacherDashboard = () => {
                                   </TableCell>
 
                                   <TableCell className="inline-flex w-full items-center justify-center capitalize text-white">
-                                    {student?.is_present === false ? (
-                                      <span className="flex items-center gap-2 text-[10px] text-red-600 md:text-[12px]">
-                                        <Ban className="size-4 md:size-6" />
-                                        Absent
-                                      </span>
-                                    ) : (
-                                      <span className="flex items-center gap-2 text-[10px] text-green-500 md:text-[12px]">
-                                        <BadgeCheck className="size-4 md:size-6" />
-                                        Present
-                                      </span>
-                                    )}
+                                    <span className="flex items-center gap-2 text-[10px] text-green-500 md:text-[12px]">
+                                      <Checkbox
+                                        checked={student.is_present}
+                                        onCheckedChange={() =>
+                                          updateStudentAttendance(
+                                            student.slug,
+                                            !student.is_present,
+                                          )
+                                        }
+                                        className="border border-black"
+                                      />
+                                    </span>
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {`${Number(Math.floor(student?.similarity))} %` ||
@@ -473,7 +480,10 @@ const TeacherDashboard = () => {
                                       '-'}
                                   </TableCell>
                                   <TableCell className="text-center">
-                                    {student?.amplitude?.toFixed(2) || '-'}
+                                    {student?.ncc?.toFixed(2) || '-'}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {student?.magnitude?.toFixed(2) || '-'}
                                   </TableCell>
                                 </TableRow>
                               ))}
@@ -517,6 +527,14 @@ const TeacherDashboard = () => {
             </div>
           </SheetContent>
         </Sheet>
+      )}
+      {sessionId && students.length > 0 && (
+        <AttendanceHistorySheet
+          isHistorySheetOpen={isHistorySheetOpen}
+          handelHistorySheetOpen={handleHistorySheetOpen}
+          students={students}
+          sessionId={sessionId}
+        />
       )}
     </div>
   )

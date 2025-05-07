@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
 import { RootState } from '@data/redux/Store'
@@ -18,12 +18,12 @@ export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const {
     loadClassRooms,
-    playSoundFrequency,
     stopSoundFrequency,
     extractLectureStatusData,
     getWeekDates,
     checkAndReturnMicPermission,
     startTeacherStreaming,
+    playWaveSoundFrequency,
   } = TeacherDashboardUtilites()
   const [socket, setSocket] = useState<Socket | null>(null)
   const [students, setStudents] = useState<any>([])
@@ -38,7 +38,14 @@ export const useTeacherDashbord = () => {
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
   const [date, setDate] = useState<any>(getWeekDates())
-  const [stopStreamFunction, setStopStreamFunction] = useState<any>(null) // To hold the stop function
+  const [stopStreamFunction, setStopStreamFunction] = useState<any>(null)
+  const [stopWaveFrequency, setStopWaveFrequency] = useState<
+    (() => void) | null
+  >(null)
+  const [isHistorySheetOpen, setIsHistorySheetOpen] = useState(false)
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const calendarContainerRef = useRef<HTMLDivElement>(null)
+  const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
 
   const dispatch = useDispatch()
 
@@ -95,6 +102,9 @@ export const useTeacherDashbord = () => {
     newSocket?.on('disconnect', () => {
       setSocket(null)
       stopSoundFrequency()
+      if (stopWaveFrequency) {
+        stopWaveFrequency()
+      }
     })
 
     newSocket.on('ongoing_session_data', async (message) => {
@@ -118,6 +128,24 @@ export const useTeacherDashbord = () => {
       }
     })
 
+    newSocket?.on('update_attendance', (data: any) => {
+      // const {data, message, status} = message?.data?.data'
+      const { status_code, attendance_slug, message } = data
+
+      if (status_code === 200) {
+        setStudents((prev: any) =>
+          prev.map((student: any) =>
+            student.slug === attendance_slug
+              ? { ...student, is_present: !student.is_present }
+              : student,
+          ),
+        )
+        toast.success(message)
+      } else {
+        toast.error(message)
+      }
+    })
+
     newSocket.on('regulization_request', (manualAttendanceData: any) => {
       setManualAttendance((prev: any) => [
         manualAttendanceData.data.data.data.attendance_data,
@@ -127,7 +155,7 @@ export const useTeacherDashbord = () => {
 
     newSocket.on('regulization_approved', (message) => {
       toast.success('Attendance Marked Successfully')
-      setStudents((prev: any) => [...prev, ...message.data.data.data])
+      setStudents((prev: any) => [...prev, ...message?.data?.data?.data])
       setManualAttendance([])
     })
 
@@ -152,6 +180,10 @@ export const useTeacherDashbord = () => {
         ...prevData,
         [message.data.data.data.session_id]: message.data.data.data.active,
       }))
+
+      if (stopSoundFrequency) {
+        stopSoundFrequency()
+      }
       if (stopStreamFunction) {
         await stopStreamFunction() // Call the function to stop streaming
         setStopStreamFunction(null)
@@ -193,7 +225,7 @@ export const useTeacherDashbord = () => {
 
       if (response_obj.error === false) {
         const { data } = response_obj?.response?.data
-        const { selected_frequency } = data
+        const { audio_url } = data
 
         setSessionData((prevData: any) => ({
           ...prevData,
@@ -214,7 +246,8 @@ export const useTeacherDashbord = () => {
         setLectureDetails(updatedLectureDetails)
 
         if (data.active === 'ongoing') {
-          playSoundFrequency(selected_frequency)
+          const stopWaveFrequency = await playWaveSoundFrequency(audio_url)
+          setStopWaveFrequency(() => stopWaveFrequency)
           clientSocketHandler(
             session_id,
             StoredTokens?.accessToken?.replace('Bearer ', '') as string,
@@ -316,6 +349,9 @@ export const useTeacherDashbord = () => {
         client: 'FE',
         session_id: onGoingSessionData.session_id,
         auth_token: StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+      }
+      if (stopWaveFrequency) {
+        stopWaveFrequency()
       }
       socket?.emit('session_ended', requestObject)
     } catch (error: any) {
@@ -509,10 +545,6 @@ export const useTeacherDashbord = () => {
         document.body.appendChild(a)
         a.click()
         a.remove()
-        // downloadExcelFile(
-        //   response_obj.response?.data?.data?.file_content,
-        //   response_obj.response?.data?.data?.file_name,
-        // )
       } else {
         toast.error(response_obj.errorMessage?.message)
       }
@@ -526,10 +558,59 @@ export const useTeacherDashbord = () => {
     socket?.disconnect()
     setSocket(null)
     stopSoundFrequency()
+    if (stopWaveFrequency) {
+      stopWaveFrequency()
+    }
     if (stopStreamFunction) {
       await stopStreamFunction()
       setStopStreamFunction(null)
     }
+  }
+
+  const updateStudentAttendance = (student_slug: string, checked: boolean) => {
+    const payload = {
+      client: 'FE',
+      attendance_slug: student_slug,
+      session_id: onGoingSessionData?.session_id,
+      auth_token: StoredTokens.accessToken,
+      action: checked,
+    }
+
+    socket?.emit('update_attendance', payload)
+  }
+
+  const handleAttendaceHistoryData = async (session_id: string) => {
+    try {
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/session/get_session_data/${session_id}`
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
+      if (response_obj.error === true) {
+        return toast.error(response_obj.errorMessage?.message)
+      }
+      const response = get(response_obj, 'response.data.data', [])
+      setIsHistorySheetOpen(true)
+      setStudents(response.marked_attendances)
+      setSessionId(session_id)
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong')
+    }
+  }
+
+  const handleHistorySheetOpen = () => {
+    setIsHistorySheetOpen(!isHistorySheetOpen)
+    setSessionId(null)
+    setStudents([])
   }
 
   return {
@@ -559,9 +640,15 @@ export const useTeacherDashbord = () => {
     markManualStudentsAttendance,
     setStopStreamFunction,
     setSocket,
-    stopSoundFrequency,
     handleSheet,
     getLectureDetails,
     startSessionHandler,
+    calendarContainerRef,
+    activeDateRef,
+    updateStudentAttendance,
+    isHistorySheetOpen,
+    handleHistorySheetOpen,
+    sessionId,
+    handleAttendaceHistoryData,
   }
 }

@@ -3,7 +3,7 @@ export interface IClassrooms {
   classroom_name: string
 }
 
-export interface LoadClassroomRespomse {
+export interface LoadClassroomResponse {
   isalreadyLoaded: boolean
   classes: IClassrooms[]
 }
