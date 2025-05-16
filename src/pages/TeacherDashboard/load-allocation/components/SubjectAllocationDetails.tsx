@@ -1,76 +1,114 @@
 import { useState } from 'react'
-import { Button } from "@/components/ui/button"
 
+import { Button } from '@/components/ui/button'
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-   
-} from "@/components/ui/sheet"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@components/ui/table'
-import TeacherList from './TeacherList'
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { Eye } from 'lucide-react'
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@components/ui/table'
 
-
+import TeacherList from './TeacherList'
 
 const SubjectAllocationDetails = ({ Allocationdata }: any) => {
-    const [selectedSubject, setSelectedSubject] = useState<any | null>(null)
+  const [selectedSubject, setSelectedSubject] = useState<any | null>(null)
 
-    return (
-        <>
-            <Table className='border-collapse border border-zinc-500'>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className='border border-zinc-500 font-bold'>Subject Name</TableHead>
-                        <TableHead className='border border-zinc-500 text-center font-semibold'>Theory</TableHead>
-                        <TableHead className='border border-zinc-500 text-center font-semibold'>Practical</TableHead>
-                        <TableHead className='border border-zinc-500 text-center font-semibold'>Tutorial</TableHead>
-                        <TableHead className='border border-zinc-500 text-center font-semibold'>Total hours</TableHead>
-                        <TableHead className='border border-zinc-500 text-center font-semibold'>Other Facutlies</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {
-                        Allocationdata.length > 0 ? (
-                            Allocationdata.map((data:any)=>{
-                                return (
-                                    <TableRow key={data.subject.slug}>
-                                        <TableCell className='font-semibold'>{data.subject.subject_name}</TableCell>
-                                        <TableCell className='border border-zinc-500 text-center font-semibold'>{data.theory}</TableCell>
-                                        <TableCell className='border border-zinc-500 text-center font-semibold'>{data.practical}</TableCell>
-                                        <TableCell className='border border-zinc-500 text-center font-semibold'>{data.tutorial}</TableCell>
-                                        <TableCell className='border border-zinc-500 text-center font-semibold'>{data.theory + data.practical + data.tutorial}</TableCell>
-                                        <TableCell className='border border-zinc-500 text-center font-semibold'>
-                                            <Button variant={'default'} size={'icon'}
-                                                onClick={(e)=>{e.preventDefault(); setSelectedSubject(data)}}
-                                            ><Eye></Eye></Button>
-                                        </TableCell> 
-                                    </TableRow>
-                                )
-                            })
-                        ) : (
-                            null
-                        )
-                    }
-                </TableBody>
-            </Table>
-            <Sheet open={!!selectedSubject} onOpenChange={() => {setSelectedSubject(null)}}>
-                <SheetContent className='w-full sm:max-w-xl pb-10'>
-                    <SheetHeader>
-                    <SheetTitle className='mt-2'>{selectedSubject?.subject.subject_name}</SheetTitle>
-                    </SheetHeader>
-                    {selectedSubject && (
-                        <>
-                          <TeacherList selectedSubject={selectedSubject}></TeacherList> 
-                           
-                        </>
-                    )}
-                </SheetContent>
-            </Sheet>
-        </>
-    )
+  return (
+    <>
+      <Table className="overflow-hidden rounded-[6px] border-none bg-[#F7F7F7] shadow-soft">
+        <TableHeader>
+          <TableRow className="border-b border-gray-200 bg-white">
+            <TableHead className="font-bold text-black">Subject Name</TableHead>
+            <TableHead className="text-center font-semibold text-black">
+              Theory
+            </TableHead>
+            <TableHead className="text-center font-semibold text-black">
+              Practical
+            </TableHead>
+            <TableHead className="text-center font-semibold text-black">
+              Tutorial
+            </TableHead>
+            <TableHead className="text-center font-semibold text-black">
+              Total hours
+            </TableHead>
+            <TableHead className="text-center font-semibold text-black">
+              Other Faculties
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Allocationdata.length > 0
+            ? Allocationdata.map((data: any) => {
+                return (
+                  <TableRow
+                    key={data.subject.slug}
+                    className="border-b border-gray-200 bg-white hover:bg-gray-50"
+                  >
+                    <TableCell className="font-semibold text-black">
+                      {data.subject.subject_name}
+                    </TableCell>
+                    <TableCell className="text-center font-semibold text-black">
+                      {data.theory}
+                    </TableCell>
+                    <TableCell className="text-center font-semibold text-black">
+                      {data.practical}
+                    </TableCell>
+                    <TableCell className="text-center font-semibold text-black">
+                      {data.tutorial}
+                    </TableCell>
+                    <TableCell className="text-center font-semibold text-black">
+                      {data.theory + data.practical + data.tutorial}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Button
+                        variant={'outline'}
+                        size={'icon'}
+                        className="border-[#0261BE] bg-white text-[#0261BE] hover:bg-[#0261BE] hover:text-white"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setSelectedSubject(data)
+                        }}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            : null}
+        </TableBody>
+      </Table>
+      <Sheet
+        open={!!selectedSubject}
+        onOpenChange={() => {
+          setSelectedSubject(null)
+        }}
+      >
+        <SheetContent className="w-full bg-white pb-10 sm:max-w-xl">
+          <SheetHeader>
+            <SheetTitle className="mt-2 text-black">
+              {selectedSubject?.subject.subject_name}
+            </SheetTitle>
+          </SheetHeader>
+          {selectedSubject && (
+            <>
+              <TeacherList selectedSubject={selectedSubject}></TeacherList>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
+    </>
+  )
 }
 
 export default SubjectAllocationDetails

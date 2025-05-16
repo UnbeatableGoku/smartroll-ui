@@ -77,11 +77,19 @@ const TeacherAllocation = () => {
   //   setExpandedTeacher((prev) => (prev === teacherId ? null : teacherId))
   // }
   return (
-    <div className="dark p-4">
+    <div className="bg-white p-4">
       <Tabs defaultValue="allocated" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="allocated">Allocated Subjects</TabsTrigger>
-          <TabsTrigger value="non-allocated">
+        <TabsList className="grid w-full grid-cols-2 bg-[#F7F7F7]">
+          <TabsTrigger
+            value="allocated"
+            className="data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
+          >
+            Allocated Subjects
+          </TabsTrigger>
+          <TabsTrigger
+            value="non-allocated"
+            className="data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
+          >
             Non-Allocated Subjects
           </TabsTrigger>
         </TabsList>
