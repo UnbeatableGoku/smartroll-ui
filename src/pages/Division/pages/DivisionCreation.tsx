@@ -45,7 +45,7 @@ const DivisionCreation = () => {
     updateAvailableCounts,
     setRenderStudentList,
     studentBatchList,
-    handleOnClickForDownloadExcel
+    handleOnClickForDownloadExcel,
   } = useDivisionCreation()
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const DivisionCreation = () => {
   }, [divisions])
 
   return (
-    <div className="mx-auto p-4">
+    <div className="mx-auto bg-white p-4">
       <div className="flex w-full flex-col gap-4">
         <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
           {stream && (
@@ -72,8 +72,8 @@ const DivisionCreation = () => {
                 optionTitle={null}
               />
 
-              <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-gray-400 md:block lg:right-[-3rem] lg:w-12" />
-              <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-gray-400 md:hidden" />
+              <div className="absolute right-[-2rem] top-1/2 hidden h-[3px] w-8 bg-[#0261BE]/20 md:block lg:right-[-3rem] lg:w-12" />
+              <div className="absolute bottom-[-1em] left-1/2 h-4 w-[3px] -translate-x-1/2 transform bg-[#0261BE]/20 md:hidden" />
             </div>
           )}
           <div className="relative w-full md:w-[240px] lg:w-[320px]">
@@ -92,8 +92,7 @@ const DivisionCreation = () => {
         {renderStudentList && !divisionsAlreadyCreated && (
           <div className="flex w-full gap-x-4">
             <Button
-              className="mt-4 w-full"
-              variant={'destructive'}
+              className="mt-4 w-full bg-red-500 text-white hover:bg-red-600"
               onClick={() => {
                 setRenderStudentList(!renderStudentList)
               }}
@@ -101,8 +100,7 @@ const DivisionCreation = () => {
               Change division size
             </Button>
             <Button
-              className="mt-4 w-full"
-              variant={'default'}
+              className="mt-4 w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
               onClick={() => handelOnClickForSaveDivisions()}
             >
               Confirm Divisions
@@ -114,7 +112,7 @@ const DivisionCreation = () => {
             <div className="flex flex-col gap-4">
               {!renderStudentList && totalStudentsCount > 0 && (
                 <div>
-                  <h2 className="mb-2 text-xl font-semibold">
+                  <h2 className="mb-2 text-xl font-semibold text-black">
                     Subject Choice Groups
                   </h2>
                   <Droppable droppableId="groups">
@@ -137,13 +135,15 @@ const DivisionCreation = () => {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="flex items-center justify-between rounded p-2 shadow dark:bg-black"
+                                  className="flex items-center justify-between rounded bg-white p-2 shadow-soft"
                                 >
                                   <div className="flex items-center">
-                                    <GripVertical className="mr-2" />
-                                    <span>{group.subjects}</span>
+                                    <GripVertical className="mr-2 text-[#0261BE]" />
+                                    <span className="text-black">
+                                      {group.subjects}
+                                    </span>
                                   </div>
-                                  <span className="font-semibold">
+                                  <span className="font-semibold text-black">
                                     {group.totalCount}
                                   </span>
                                 </li>
@@ -155,64 +155,68 @@ const DivisionCreation = () => {
                     )}
                   </Droppable>
                   <Separator className="mt-4" />
-                  {totalStudentsCount > 0 && <div className="mt-3 flex justify-between">
-                    <span className="px-4 text-xl font-bold">
-                      Total Students
-                    </span>
-                    <span className="px-3 text-xl font-bold">
-                      {totalStudentsCount}
-                    </span>
-                  </div>}
+                  {totalStudentsCount > 0 && (
+                    <div className="mt-3 flex justify-between">
+                      <span className="px-4 text-xl font-bold text-black">
+                        Total Students
+                      </span>
+                      <span className="px-3 text-xl font-bold text-black">
+                        {totalStudentsCount}
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
-
             </div>
           </DragDropContext>
         )}
 
-        {selectedSemester && !divisionsAlreadyCreated && !renderStudentList && isDeadllineReached && (
-          <div ref={setCapacityDivision}>
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  <h2 className="text-xl font-semibold">
-                    Set Division Capacity Range
-                  </h2>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form className="w-full">
-                  <div className="mb-3 flex w-full flex-col justify-center gap-3 lg:flex-row lg:space-x-4">
-                    <div className={`w-full`}>
-                      <span className="dark:text-white">
-                        Maximum Division Count
-                      </span>
-                      <Input
-                        id="maxCount"
-                        type="number"
-                        value={maxDivisionCapacity}
-                        className='border-white'
-                        onChange={(e) => {
-                          setMaxDivisionCapacity(e.target.value)
-                        }}
-                      />
+        {selectedSemester &&
+          !divisionsAlreadyCreated &&
+          !renderStudentList &&
+          isDeadllineReached && (
+            <div ref={setCapacityDivision}>
+              <Card className="bg-white shadow-soft">
+                <CardHeader>
+                  <CardTitle>
+                    <h2 className="text-xl font-semibold text-black">
+                      Set Division Capacity Range
+                    </h2>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form className="w-full">
+                    <div className="mb-3 flex w-full flex-col justify-center gap-3 lg:flex-row lg:space-x-4">
+                      <div className={`w-full`}>
+                        <span className="text-black">
+                          Maximum Division Count
+                        </span>
+                        <Input
+                          id="maxCount"
+                          type="number"
+                          value={maxDivisionCapacity}
+                          className="border-[#0261BE] bg-white text-black"
+                          onChange={(e) => {
+                            setMaxDivisionCapacity(e.target.value)
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <Button
-                    type="button"
-                    className="w-full"
-                    onClick={(e:any) => {
+                    <Button
+                      type="button"
+                      className="w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
+                      onClick={(e: any) => {
                         e.preventDefault()
-                      handleOnClickForDisplaySuggestion()
-                    }}
-                  >
-                    Set Division Capacity
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+                        handleOnClickForDisplaySuggestion()
+                      }}
+                    >
+                      Set Division Capacity
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
         {divisionsData && renderStudentList && (
           <StudentListForDivision

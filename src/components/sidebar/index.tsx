@@ -1,14 +1,19 @@
 // import { useMemo } from 'react'
 // import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { useMemo } from 'react'
+
 import { setAuth } from '@data/redux/slices/authSlice'
 import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
-// import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
-import { Home, LogOut, UserPen } from 'lucide-react'
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
+import { Home, LogOut, Menu, UserPen } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-// import { generateSidebarLinks } from '@utils/helpers'
+import { generateSidebarLinks } from '@utils/helpers'
+
+import TabLink from '@components/sidebar/tabLink'
 import StackholderProfile from '@components/stackholder/StackholderProfile'
+import { Dialog, DialogContent, DialogTrigger } from '@components/ui/dialog'
 
 import NotificationDrawer from './NotificationDrawer'
 import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
@@ -36,12 +41,12 @@ const Sidebar = () => {
 
   const {
     activeIndex,
-    // collapsed,
-    // open,
+    collapsed,
+    open,
     isProfileModalOpen,
     setActiveIndex,
-    // setOpen,
-    // setSidebarLinks,
+    setOpen,
+    setSidebarLinks,
     setIsProfileModalOpen,
   } = useSidebarLinkSelector()
 
@@ -61,17 +66,17 @@ const Sidebar = () => {
     { icon: LogOut, label: 'Logout', event: handelLogout, alert: false },
   ]
 
-  // const validLinks = useMemo(
-  //   () => generateSidebarLinks(setSidebarLinks()),
-  //   [setSidebarLinks()],
-  // )
+  const validLinks = useMemo(
+    () => generateSidebarLinks(setSidebarLinks()),
+    [setSidebarLinks()],
+  )
 
   // will get the index of first parent with children for defalut open
-  // const firstParentWithChild = useMemo(
-  //   () =>
-  //     validLinks.findIndex((link) => link.children && link.children.length > 0),
-  //   [validLinks],
-  // )
+  const firstParentWithChild = useMemo(
+    () =>
+      validLinks.findIndex((link) => link.children && link.children.length > 0),
+    [validLinks],
+  )
 
   return (
     <div className="menu fixed bottom-4 left-0 right-0 flex justify-center">
@@ -96,7 +101,7 @@ const Sidebar = () => {
           </button>
         ))}
         <NotificationDrawer></NotificationDrawer>
-        {/* <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <button
               className="group relative flex h-12 w-12 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
@@ -127,7 +132,7 @@ const Sidebar = () => {
               </div>
             </DialogContent>
           </VisuallyHidden.Root>
-        </Dialog> */}
+        </Dialog>
       </div>
       <StackholderProfile
         isOpen={isProfileModalOpen}

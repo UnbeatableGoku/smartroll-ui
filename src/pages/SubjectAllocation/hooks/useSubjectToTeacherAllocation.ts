@@ -34,6 +34,7 @@ const useSubjectToTeacherAllocation = () => {
     TeacherToSubjectAllocation,
     isDataLoaded,
   } = useSelector((state: RootState) => state.subjectAllocation)
+  console.log(isDataLoaded)
   const [subjectAllocation, setSubjectAllocation] =
     useState<SubjectToTeacherMap | null>(SubjectToTeacherAllocation)
   const [teacherAllocation, setTeacherAllocation] = useState<

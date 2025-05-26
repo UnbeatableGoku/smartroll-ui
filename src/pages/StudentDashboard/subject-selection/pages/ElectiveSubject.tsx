@@ -74,15 +74,15 @@ const ElectiveSubject = () => {
       <Helmet>
         <title>Smart Roll | Elective Subject</title>
       </Helmet>
-      <div className="py-13 bg-gradient-to-b px-4">
+      <div className="py-13 bg-white px-4">
         <div className="mx-auto max-w-full">
-          <div className="mb-8 text-center">
-            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-2xl md:text-4xl lg:text-5xl">
+          <div className="my-10 text-center">
+            <h1 className="p-4 text-2xl font-bold tracking-tight text-black sm:text-2xl md:text-4xl lg:text-5xl">
               {isSubjectSave && finalizedChoice
                 ? 'Your Finalized Elective Subjects'
                 : 'Elective Subject Selection'}
             </h1>
-            <p className="mt-2 text-xs text-gray-400 sm:text-sm md:text-lg lg:text-xl">
+            <p className="mt-2 text-xs text-black/60 sm:text-sm md:text-lg lg:text-xl">
               {isSubjectSave && finalizedChoice
                 ? 'These are your selected elective subjects'
                 : 'Choose your preferred subjects for each elective category'}
@@ -90,20 +90,20 @@ const ElectiveSubject = () => {
             {!isSubjectSave && selectedSubjects.length > 0 && (
               <Button
                 onClick={togglePanel}
-                className="mt-6 w-full bg-white p-2 shadow-md lg:w-auto"
+                className="mt-6 w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80 lg:w-auto"
               >
                 <BookOpen className="mr-2 h-4 w-4" />
                 View Choices
-                <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-900">
+                <span className="ml-2 rounded-full bg-white px-2 py-1 text-xs font-bold text-[#0261BE]">
                   {selectedSubjects.length}
                 </span>
               </Button>
             )}
             {deadline && !FinalChoiceLock && (
-              <Alert className="mt-5 w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
+              <Alert className="mt-5 w-full border-[#F99704] bg-white text-black shadow-soft">
                 <div className="">
-                  <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
-                    <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
+                  <AlertTitle className="flex items-center space-x-4">
+                    <AlertTriangle className="h-4 w-4 text-[#F99704]" />
                     <span>Decision Deadline : {deadline} </span>
                   </AlertTitle>
                 </div>
@@ -111,7 +111,7 @@ const ElectiveSubject = () => {
             )}
             {isSubjectSave && !FinalChoiceLock && (
               <Button
-                className="mt-5 w-full bg-white p-2 shadow-md lg:w-auto"
+                className="mt-5 w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80 lg:w-auto"
                 onClick={handleOnClickForUnsaveDraft}
               >
                 <BookOpen className="mr-2 h-4 w-4" />
@@ -124,24 +124,24 @@ const ElectiveSubject = () => {
             className="group hidden h-96 w-full items-center"
             ref={noElectiveSubjectCard}
           >
-            <Card className="w-full border-white">
+            <Card className="w-full border-none bg-[#F7F7F7] shadow-soft">
               <CardHeader className="pb-2"></CardHeader>
-              <CardContent className="text-center font-bold">
+              <CardContent className="text-center font-bold text-black">
                 You'll get your elective subject choices soon ....
               </CardContent>
             </Card>
           </div>
           <div className="space-y-10 py-4">
             {isSubjectSave && finalizedChoice ? (
-              <div className="rounded-2xl border border-zinc-600 p-6 shadow-inner shadow-zinc-700 dark:bg-black lg:p-8">
+              <div className="rounded-[6px] border-none bg-white p-6 shadow-soft lg:p-8">
                 <div className="mb-6">
                   <div className="flex items-center gap-3">
-                    <GraduationCap className="h-6 w-6 text-primary" />
-                    <h2 className="text-2xl font-bold text-white">
+                    <GraduationCap className="h-6 w-6 text-[#0261BE]" />
+                    <h2 className="text-2xl font-bold text-black">
                       Selected Electives
                     </h2>
                   </div>
-                  <p className="mt-2 text-gray-400">
+                  <p className="mt-2 text-black/60">
                     Your finalized subject selections
                   </p>
                 </div>
@@ -162,8 +162,8 @@ const ElectiveSubject = () => {
                     ))
                   ) : (
                     <div className="col-span-full">
-                      <Card>
-                        <CardContent className="pt-6 text-center">
+                      <Card className="border-none bg-[#F7F7F7] shadow-soft">
+                        <CardContent className="pt-6 text-center text-black">
                           No Elective Subjects are available.
                         </CardContent>
                       </Card>
@@ -175,15 +175,15 @@ const ElectiveSubject = () => {
               electiveSubject.map((group: SubjectGroup) => {
                 const category = group?.subjects[0]?.category
                 return (
-                  <div className="rounded-2xl border border-zinc-600 p-6 dark:bg-black lg:p-8">
+                  <div className="rounded-[6px] border-none bg-[#F7F7F7] p-6 shadow-soft lg:p-8">
                     <div className="mb-4">
                       <div className="flex items-center gap-3">
-                        <GraduationCap className="h-5 w-5 text-primary lg:h-6 lg:w-6" />
-                        <h2 className="text-xl font-bold text-white lg:text-2xl">
+                        <GraduationCap className="h-5 w-5 text-[#0261BE] lg:h-6 lg:w-6" />
+                        <h2 className="text-xl font-bold text-black lg:text-2xl">
                           {category}
                         </h2>
                       </div>
-                      <p className="mt-2 text-xs text-gray-400 lg:text-sm">
+                      <p className="mt-2 text-xs text-black/60 lg:text-sm">
                         Select one subject from this category
                       </p>
                     </div>
@@ -222,8 +222,8 @@ const ElectiveSubject = () => {
             ) : (
               selectedSubjects?.length > 0 && (
                 <div className="col-span-full">
-                  <Card>
-                    <CardContent className="pt-6 text-center">
+                  <Card className="border-none bg-[#F7F7F7] shadow-soft">
+                    <CardContent className="pt-6 text-center text-black">
                       No Elective Subjects are available are there for this
                       semester.
                     </CardContent>
