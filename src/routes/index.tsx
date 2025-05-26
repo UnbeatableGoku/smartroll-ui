@@ -14,7 +14,7 @@ import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/Ele
 // import StudentDashboard from '@pages/StudentDashboard'
 import SubjectSelection from '@pages/Subject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
-import TeacherAllocation from '@pages/Subject/TeacherAllocation/TeacherAllocation'
+import TeacherAllocation from '@pages/SubjectAllocation/pages/TeacherAllocation'
 import TeacherDashboard from '@pages/TeacherDashboard'
 import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAllocation'
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
