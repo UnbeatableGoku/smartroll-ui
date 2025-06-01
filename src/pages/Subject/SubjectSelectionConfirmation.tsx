@@ -186,7 +186,7 @@ const SubjectSelectionConfirmation = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-[#0261BE] hover:bg-[#0261BE]/10"
+                    className="text-[#0261BE] hover:bg-[#0261BE]"
                     onClick={() =>
                       setSelectedPerson(
                         selectedPerson?.slug === student.slug ? null : student,

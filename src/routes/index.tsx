@@ -3,7 +3,6 @@ import App from '@App'
 import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
-import Dashboard from '@pages/Dashboard'
 import DivisionCreation from '@pages/Division/pages/DivisionCreation'
 import ForgotPassword from '@pages/Login/ForgotPassword'
 import Login from '@pages/Login/Login'
@@ -20,7 +19,7 @@ import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAl
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
-import { createBrowserRouter } from 'react-router-dom'
+import { Navigate, createBrowserRouter } from 'react-router-dom'
 
 import {
   DIVISION_CREATION,
@@ -75,11 +74,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              <ProtectedRoute roleRequired="admin">
-                <Dashboard />
-              </ProtectedRoute>
-            ),
+            element: <Navigate to={PAGE_DASHBOARD.path} />,
+            // element: (
+            //   <ProtectedRoute roleRequired="admin">
+            //     <Dashboard />
+            //   </ProtectedRoute>
+            // ),
           },
         ],
       },
