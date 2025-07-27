@@ -35,7 +35,7 @@ const SbujectDetailCard = ({
         selectedSubjects.some((d: any) => d.slug === subject?.slug)
           ? isSubjectLock
             ? `bg-[#F7F7F7]`
-            : `border border-[#0261BE] bg-[#F7F7F7]`
+            : `border-bg-blue-600/20 border bg-blue-600/20`
           : `bg-[#F7F7F7]`
       } `}
       onClick={() => {

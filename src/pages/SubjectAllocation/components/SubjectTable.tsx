@@ -64,64 +64,63 @@ const SubjectTable = ({
   const [teacher, setTeacher] = useState<string>('')
   const [hours, setHours] = useState<number>(0)
   const [category, setCategory] = useState<ClassType | ''>('')
-  console.log(SubjectToTeacherAllocation)
 
   return (
     <>
-      <Table className="border-collapse border border-zinc-500 bg-black">
-        <TableHeader>
+      <Table className="bg-white shadow-soft">
+        <TableHeader className="bg-[#F7F7F7]">
           <TableRow>
-            <TableHead rowSpan={2} className="border border-zinc-500">
+            <TableHead rowSpan={2} className="font-semibold text-black">
               Subject Name
             </TableHead>
             <TableHead
               colSpan={5}
-              className="border border-zinc-500 text-center"
+              className="text-center font-semibold text-black"
             >
               Before Allocation
             </TableHead>
             <TableHead
               colSpan={5}
-              className="border border-zinc-500 text-center"
+              className="text-center font-semibold text-black"
             >
               After Allocation
             </TableHead>
             <TableHead
               rowSpan={2}
-              className="border border-zinc-500 text-center"
+              className="text-center font-semibold text-black"
             >
               Remaining Hours
             </TableHead>
           </TableRow>
           <TableRow>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Theory
             </TableHead>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Lab
             </TableHead>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Practical
             </TableHead>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Tutorial
             </TableHead>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Total
             </TableHead>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Theory
             </TableHead>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Lab
             </TableHead>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Practical
             </TableHead>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Tutorial
             </TableHead>
-            <TableHead className="border border-zinc-500 text-center">
+            <TableHead className="text-center font-semibold text-black">
               Total
             </TableHead>
           </TableRow>
@@ -132,48 +131,48 @@ const SubjectTable = ({
               <TableRow
                 key={index}
                 onClick={() => setSelectedSubject(allocation)}
-                className="cursor-pointer hover:bg-zinc-600/45"
+                className="cursor-pointer hover:bg-[#F7F7F7]"
               >
-                <TableCell className="border border-zinc-500 font-semibold">
+                <TableCell className="font-semibold text-black">
                   {allocation?.subject?.subject_map?.subject_name}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation.theory?.total_hours}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation.lab?.total_hours}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation.practical?.total_hours}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation.tutorial?.total_hours}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation.theory?.total_hours +
                     allocation?.teacher_allocation.lab?.total_hours +
                     allocation?.teacher_allocation.practical?.total_hours +
                     allocation?.teacher_allocation.tutorial?.total_hours}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation.teacher_allocation.theory?.allocation_done}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation.teacher_allocation.lab?.allocation_done}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation.teacher_allocation.practical?.allocation_done}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation.teacher_allocation.tutorial?.allocation_done}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation.theory?.allocation_done +
                     allocation.teacher_allocation.lab?.allocation_done +
                     allocation.teacher_allocation.tutorial?.allocation_done +
                     allocation.teacher_allocation.practical.allocation_done}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation.teacher_allocation.tutorial.remaining_hours +
                     allocation?.teacher_allocation.theory.remaining_hours +
                     allocation.teacher_allocation.lab.remaining_hours +
@@ -187,42 +186,42 @@ const SubjectTable = ({
               <TableRow
                 key={index}
                 onClick={() => setSelectedSubject(allocation)}
-                className="cursor-pointer hover:bg-zinc-600/45"
+                className="cursor-pointer hover:bg-[#F7F7F7]"
               >
-                <TableCell className="border border-zinc-500 font-semibold">
+                <TableCell className="font-semibold text-black">
                   {allocation?.subject?.subject_map?.subject_name}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   0
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   0
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation?.practical?.total_hours}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   0
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation?.practical?.total_hours}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   0
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   0
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation?.practical?.allocation_done}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   0
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation?.practical?.allocation_done}
                 </TableCell>
-                <TableCell className="border border-zinc-500 text-center font-semibold">
+                <TableCell className="text-center font-semibold text-black">
                   {allocation?.teacher_allocation?.practical?.remaining_hours}
                 </TableCell>
               </TableRow>
@@ -238,15 +237,17 @@ const SubjectTable = ({
           setSaveStateButton(false)
         }}
       >
-        <SheetContent className="w-full pb-10 sm:max-w-xl">
+        <SheetContent className="w-full bg-white pb-10 sm:max-w-xl">
           <SheetHeader>
-            <SheetTitle>{selectedSubject?.subject.subject_name}</SheetTitle>
+            <SheetTitle className="text-black">
+              {selectedSubject?.subject.subject_name}
+            </SheetTitle>
           </SheetHeader>
           {selectedSubject && (
             <>
               {!saveSatateButon && (
                 <Button
-                  className="mt-4 w-full"
+                  className="mt-4 w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
                   onClick={() => {
                     setSaveStateButton(!saveSatateButon)
                   }}
@@ -256,7 +257,7 @@ const SubjectTable = ({
               )}
               {saveSatateButon && (
                 <Button
-                  className="my-4 w-full"
+                  className="my-4 w-full bg-red-500 text-white hover:bg-red-600"
                   variant={'destructive'}
                   onClick={() => {
                     setSaveStateButton(!saveSatateButon)
@@ -267,7 +268,7 @@ const SubjectTable = ({
               )}
               {!saveSatateButon && (
                 <SubjectDetails
-                  key={selectedSubject.id} // Add this line to ensure re-render on subject change
+                  key={selectedSubject.id}
                   allocation={selectedSubject}
                   handleOnChangeManageHoursForSubjectToTeacher={
                     handleOnChangeManageHoursForSubjectToTeacher
@@ -279,51 +280,51 @@ const SubjectTable = ({
               )}
 
               <div className="flex w-full flex-col space-y-9">
-                <Table>
-                  <TableHeader>
+                <Table className="shadow-soft">
+                  <TableHeader className="bg-[#F7F7F7]">
                     <TableRow>
                       <TableHead
                         colSpan={4}
-                        className="border border-zinc-500 text-center"
+                        className="text-center font-semibold text-black"
                       >
                         Remaining Allocation
                       </TableHead>
                     </TableRow>
                     <TableRow>
-                      <TableHead className="border border-zinc-500 text-center">
+                      <TableHead className="text-center font-semibold text-black">
                         Theory
                       </TableHead>
-                      <TableHead className="border border-zinc-500 text-center">
+                      <TableHead className="text-center font-semibold text-black">
                         Lab
                       </TableHead>
-                      <TableHead className="border border-zinc-500 text-center">
+                      <TableHead className="text-center font-semibold text-black">
                         Practical
                       </TableHead>
-                      <TableHead className="border border-zinc-500 text-center">
+                      <TableHead className="text-center font-semibold text-black">
                         Tutorial
                       </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell className="border border-zinc-500 text-center text-white">
+                      <TableCell className="text-center text-black">
                         {selectedSubject?.teacher_allocation.theory
                           ?.total_hours -
                           selectedSubject.teacher_allocation.theory
                             ?.allocation_done}{' '}
                       </TableCell>
-                      <TableCell className="border border-zinc-500 text-center text-white">
+                      <TableCell className="text-center text-black">
                         {selectedSubject?.teacher_allocation.lab?.total_hours -
                           selectedSubject.teacher_allocation.lab
                             ?.allocation_done}{' '}
                       </TableCell>
-                      <TableCell className="border border-zinc-500 text-center text-white">
+                      <TableCell className="text-center text-black">
                         {selectedSubject?.teacher_allocation.practical
                           ?.total_hours -
                           selectedSubject.teacher_allocation.practical
                             ?.allocation_done}{' '}
                       </TableCell>
-                      <TableCell className="border border-zinc-500 text-center text-white">
+                      <TableCell className="text-center text-black">
                         {selectedSubject?.teacher_allocation.tutorial
                           ?.total_hours -
                           selectedSubject.teacher_allocation.tutorial
@@ -334,7 +335,7 @@ const SubjectTable = ({
                 </Table>
                 <div className="flex flex-col space-y-5">
                   <div className="space-y-2">
-                    <Label htmlFor="class-type" className="text-white">
+                    <Label htmlFor="class-type" className="text-black">
                       Class Type
                     </Label>
                     <Select
@@ -344,12 +345,16 @@ const SubjectTable = ({
                         getTeacherList(value)
                       }}
                     >
-                      <SelectTrigger id="class-type" className="text-white">
+                      <SelectTrigger id="class-type" className="bg-white">
                         <SelectValue placeholder="Select class type" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white text-black">
                         {classTypes.map((type) => (
-                          <SelectItem key={type} value={type}>
+                          <SelectItem
+                            key={type}
+                            value={type}
+                            className="hover:bg-blue-600/20"
+                          >
                             {type}
                           </SelectItem>
                         ))}
@@ -358,14 +363,17 @@ const SubjectTable = ({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="teacher" className="text-white">
+                    <Label htmlFor="teacher" className="text-black">
                       Teacher
                     </Label>
                     <Select
                       value={teacher}
                       onValueChange={(value) => setTeacher(value)}
                     >
-                      <SelectTrigger id="teacher" className="text-white">
+                      <SelectTrigger
+                        id="teacher"
+                        className="bg-white text-black"
+                      >
                         <SelectValue placeholder="Select teacher" />
                       </SelectTrigger>
                       <SelectContent>
@@ -381,7 +389,7 @@ const SubjectTable = ({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="hours" className="text-white">
+                    <Label htmlFor="hours" className="text-black">
                       Hours
                     </Label>
                     <Input
@@ -393,7 +401,7 @@ const SubjectTable = ({
                         category == 'Lab' || category == 'Practical' ? 2 : 1
                       }
                       onChange={(e) => setHours(parseInt(e.target.value) || 1)}
-                      className="text-white"
+                      className="bg-white text-black"
                     />
                   </div>
 
@@ -404,7 +412,7 @@ const SubjectTable = ({
                         teacher,
                         selectedSubject?.subject.slug,
                         hours,
-                        selectedSubject?.subject.is_practical
+                        selectedSubject?.subject?.subject_map?.is_practical
                           ? 'practical'
                           : 'theory',
                         category,
@@ -413,7 +421,7 @@ const SubjectTable = ({
                       setCategory('')
                       setTeacher('')
                     }}
-                    className="w-full"
+                    className="w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
                   >
                     Save Allocation
                   </Button>

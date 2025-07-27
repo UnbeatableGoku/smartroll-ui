@@ -2,11 +2,13 @@
 // import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { useMemo } from 'react'
 
+import { RootState } from '@data/redux/Store'
 import { setAuth } from '@data/redux/slices/authSlice'
 import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { Home, LogOut, Menu, UserPen } from 'lucide-react'
 import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { generateSidebarLinks } from '@utils/helpers'
@@ -23,7 +25,7 @@ import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
 const Sidebar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  const auth = useSelector((state: RootState) => state.auth.userProfile)
   const handelLogout = () => {
     //clear local storage
     localStorage.removeItem('accessToken')
@@ -54,7 +56,17 @@ const Sidebar = () => {
     {
       icon: Home,
       label: 'Home',
-      event: () => navigate('/'),
+      event: () => {
+        const userRole = auth?.obj.profile.role
+        switch (userRole) {
+          case 'teacher':
+            return navigate('/teacher-dashboard')
+          case 'student':
+            return navigate('/student-dashboard')
+          default:
+            navigate('/')
+        }
+      },
     },
     {
       icon: UserPen,

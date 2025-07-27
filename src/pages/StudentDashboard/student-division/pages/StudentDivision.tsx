@@ -82,7 +82,7 @@ const StudentDivision = () => {
                 You've been allocated to{' '}
                 <Badge
                   variant={'secondary'}
-                  className="bg-[#0261BE] text-lg font-semibold text-white"
+                  className="bg-[#0261BE] text-lg font-semibold text-white hover:bg-[#0261BE]"
                 >
                   Division -{' '}
                   {studentDivision.divisionDetails.division_name || 'Unnamed'}
@@ -101,7 +101,7 @@ const StudentDivision = () => {
                 </div>
                 <Badge
                   variant={'secondary'}
-                  className="bg-[#0261BE] text-right text-sm font-semibold text-white lg:text-xl"
+                  className="bg-[#0261BE] text-right text-sm font-semibold text-white hover:bg-[#0261BE] lg:text-xl"
                 >
                   Total Students: {studentDivision?.studentDetails?.length || 0}
                 </Badge>

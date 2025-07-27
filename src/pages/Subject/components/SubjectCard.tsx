@@ -23,7 +23,7 @@ const SubjectCard = ({
   return (
     <Card
       key={subject.slug}
-      className={`relative cursor-pointer overflow-hidden transition-all duration-300 ${
+      className={`relative cursor-pointer overflow-hidden border-none shadow-soft transition-all duration-300 ${
         selectedSubjects.some((d: any) => d.slug === subject?.slug)
           ? isSubjectLock
             ? `bg-white shadow-soft`
