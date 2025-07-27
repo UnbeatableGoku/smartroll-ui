@@ -67,7 +67,7 @@ const TeacherDashboardUtilites = () => {
     let audioCtx: any
     let oscillator: any
     let gainNode: any
-    console.log(frequency)
+
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)()
     }

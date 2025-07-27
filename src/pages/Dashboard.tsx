@@ -13,9 +13,7 @@ const Dashboard = () => {
 
       <div className="container mx-auto space-y-6 p-4">
         <CountCards />
-
         <AcademicCard />
-
         <AnalysisCard />
       </div>
     </>

@@ -39,6 +39,7 @@ import { cn } from '@utils'
 
 import { Checkbox } from '@components/ui/checkbox'
 
+import AttendanceHistorySheet from './components/AttendanceHistorySheet'
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
 
 // No need for unused type imports
@@ -63,11 +64,14 @@ const TeacherDashboard = () => {
     handleClassroom,
     setOpen,
     changeClassRoomAPI,
-    handleOnClickForDownloadExcelForAttendance,
+    handleAttendaceHistoryData,
     handleSheet,
     calendarContainerRef,
     activeDateRef,
     updateStudentAttendance,
+    isHistorySheetOpen,
+    handleHistorySheetOpen,
+    sessionId,
   } = useTeacherDashbord()
 
   useEffect(() => {
@@ -84,7 +88,6 @@ const TeacherDashboard = () => {
       })
     }
   }, [date])
-
   return (
     <div className="h-auto">
       {/* Main Content */}
@@ -119,7 +122,7 @@ const TeacherDashboard = () => {
             lectureDetails?.map((l: any) => (
               <div
                 key={l?.id || Math.random()}
-                className="w-full gap-6 rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft"
+                className={`w-full gap-6 rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft`}
               >
                 <div className="text-md flex w-full items-center rounded-sm bg-white/10 p-2 font-medium text-black md:text-[20px]">
                   {l.branch_name}
@@ -196,7 +199,7 @@ const TeacherDashboard = () => {
                             </div>
                             <div className="flex items-center gap-2 text-sm text-black md:text-lg">
                               <Clock className="size-5 text-[#00000080]" />
-                              {/* <span className="text-sm   text-black">Time: </span> */}
+                              {/* <span className="text-sm text-black">Time: </span> */}
                               <span className="font-semibold text-black">
                                 {lecture?.start_time} • {lecture?.end_time}
                               </span>
@@ -325,13 +328,13 @@ const TeacherDashboard = () => {
                               variant="outline"
                               className="w-full rounded-[4px] border-none bg-[#0261BE] p-[20px] text-white hover:bg-blue-700"
                               onClick={() => {
-                                handleOnClickForDownloadExcelForAttendance(
-                                  lecture?.session?.session_id,
+                                handleAttendaceHistoryData(
+                                  lecture.session.session_id,
                                 )
                               }}
                             >
                               <FileDown className="mr-2 h-4 w-4" />
-                              Export Attendance
+                              Attendance History
                             </Button>
                           )}
                         </CardFooter>
@@ -377,36 +380,17 @@ const TeacherDashboard = () => {
             className="h-[100dvh] overflow-y-auto border-border bg-[#F7F7F7] sm:max-w-full"
           >
             <SheetHeader className="mb-6 flex flex-row items-center justify-between">
-              <SheetTitle className="text-md text-black md:text-2xl">
-                Attendance Details
+              <SheetTitle className="text-sm text-black md:text-2xl">
+                Attendance Details (Active Students : {students?.length})
               </SheetTitle>
             </SheetHeader>
 
             <div className="space-y-4 md:space-y-6">
               {/* Attendance Table */}
               <div className="rounded-[6px] bg-[#F7F7F7] shadow-soft">
-                <div className="flex items-center justify-between p-3 md:p-4">
-                  <h3 className="text-md font-semibold text-black sm:text-lg">
-                    Attendance
-                  </h3>
-                  <p className="text-sm text-black">
-                    Students: {students?.length}
-                  </p>
-                </div>
                 <div className="mx-2 h-[1px] max-w-full bg-gray-300"></div>
 
                 <div className="flex h-[75vh] w-full flex-col gap-y-3 overflow-y-auto p-4">
-                  {/* <TimerButton
-                    autoStart={true}
-                    initialText="End Session"
-                    runningTextPrefix="Session Ended In ..."
-                    initialDurationSeconds={30}
-                    fillColor="#be0205"
-                    OnSessionEnd={() => {
-                      console.log('session End')
-                    }}
-                  ></TimerButton> */}
-
                   <Tabs defaultValue="Default" className="w-full">
                     <TabsList className="mb-4 flex w-full gap-4 bg-[#F7F7F7]">
                       <TabsTrigger
@@ -439,9 +423,9 @@ const TeacherDashboard = () => {
                                     {' '}
                                     P/A
                                   </TableHead>
-                                  <TableHead className="text-center">
+                                  {/* <TableHead className="text-center">
                                     Prob(%)
-                                  </TableHead>
+                                  </TableHead> */}
                                   <TableHead className="text-center">
                                     Distance
                                   </TableHead>
@@ -478,13 +462,12 @@ const TeacherDashboard = () => {
                                       />
                                     </span>
                                   </TableCell>
-                                  <TableCell className="text-center">
+                                  {/* <TableCell className="text-center">
                                     {`${Number(Math.floor(student?.similarity))} %` ||
                                       '-'}
-                                  </TableCell>
+                                  </TableCell> */}
                                   <TableCell className="text-center">
-                                    {student?.euclidean_distance?.toFixed(3) ||
-                                      '-'}
+                                    {student?.gps_distance?.toFixed(3) || '-'}
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {student?.ncc?.toFixed(2) || '-'}
@@ -534,6 +517,14 @@ const TeacherDashboard = () => {
             </div>
           </SheetContent>
         </Sheet>
+      )}
+      {sessionId && students.length > 0 && (
+        <AttendanceHistorySheet
+          isHistorySheetOpen={isHistorySheetOpen}
+          handelHistorySheetOpen={handleHistorySheetOpen}
+          students={students}
+          sessionId={sessionId}
+        />
       )}
     </div>
   )
