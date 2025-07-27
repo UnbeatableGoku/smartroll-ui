@@ -132,7 +132,7 @@ const TeacherToSubjectMapPanel = ({
                         <TableCell colSpan={4} className="p-0">
                           <div className="bg-[#F7F7F7] p-4">
                             <Button
-                              className="flex w-full items-center bg-red-500 text-white hover:bg-red-600"
+                              className="items-centerbg-yellow-500 flex w-full bg-yellow-500 text-black hover:bg-yellow-600"
                               size="sm"
                               title="Unclock subject choice"
                               onClick={() => {
@@ -146,8 +146,8 @@ const TeacherToSubjectMapPanel = ({
                                   : null
                               }}
                             >
-                              <span>Unlock choice</span>{' '}
                               <Unlock className="ml-2 h-4 w-4" />
+                              <span>Unlock choice</span>{' '}
                             </Button>
                             <ScrollArea className="flex h-auto flex-col">
                               {teacher.selected_subjects ? (

@@ -55,12 +55,6 @@ const AttendanceHistorySheet = ({
           </Button>
           {/* Attendance Table */}
           <div className="rounded-[6px] bg-[#F7F7F7] shadow-soft">
-            <div className="flex items-center justify-between p-3 md:p-4">
-              <h3 className="text-md font-semibold text-black sm:text-lg">
-                Attendance
-              </h3>
-              <p className="text-sm text-black">Students: {students?.length}</p>
-            </div>
             <div className="mx-2 h-[1px] max-w-full bg-gray-300"></div>
 
             <div className="flex h-[75vh] w-full flex-col gap-y-3 overflow-y-auto p-4">

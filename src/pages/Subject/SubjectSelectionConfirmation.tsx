@@ -288,9 +288,9 @@ const SubjectSelectionConfirmation = () => {
               </TabsTrigger>
             </TabsList>
             {activeTab == 'teacher' && (
-              <div className="my-4 flex w-full flex-col justify-center gap-y-4 lg:gap-x-3">
+              <div className="my-4 flex w-full flex-col justify-end gap-y-4 lg:flex-row lg:gap-x-3">
                 <Button
-                  className="w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
+                  className="border-customBlue rounded-none border bg-transparent font-medium text-[#0261BE] shadow-lg hover:bg-transparent"
                   onClick={() => {
                     handleOnClickForLoadTeacherToSubjectMap()
                   }}
@@ -301,7 +301,7 @@ const SubjectSelectionConfirmation = () => {
                   onClick={() => {
                     handleOnClickForDownloadExcelForSubjectToTeacherMap()
                   }}
-                  className="w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
+                  className="border-customBlue rounded-none border bg-transparent font-medium text-[#0261BE] shadow-lg hover:bg-transparent"
                 >
                   Subject to teacher map
                 </Button>

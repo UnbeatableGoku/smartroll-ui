@@ -251,7 +251,7 @@ const ConfirmSubjectSelection = ({
                       !date && 'text-black/60',
                     )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    <CalendarIcon className="mr-2 h-4 w-4 text-black" />
                     {date ? (
                       format(date, 'PPP')
                     ) : (

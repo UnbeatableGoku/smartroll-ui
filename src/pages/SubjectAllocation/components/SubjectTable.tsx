@@ -64,7 +64,6 @@ const SubjectTable = ({
   const [teacher, setTeacher] = useState<string>('')
   const [hours, setHours] = useState<number>(0)
   const [category, setCategory] = useState<ClassType | ''>('')
-  console.log(SubjectToTeacherAllocation)
 
   return (
     <>
@@ -346,15 +345,16 @@ const SubjectTable = ({
                         getTeacherList(value)
                       }}
                     >
-                      <SelectTrigger
-                        id="class-type"
-                        className="bg-white text-black"
-                      >
+                      <SelectTrigger id="class-type" className="bg-white">
                         <SelectValue placeholder="Select class type" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white text-black">
                         {classTypes.map((type) => (
-                          <SelectItem key={type} value={type}>
+                          <SelectItem
+                            key={type}
+                            value={type}
+                            className="hover:bg-blue-600/20"
+                          >
                             {type}
                           </SelectItem>
                         ))}
@@ -412,7 +412,7 @@ const SubjectTable = ({
                         teacher,
                         selectedSubject?.subject.slug,
                         hours,
-                        selectedSubject?.subject.is_practical
+                        selectedSubject?.subject?.subject_map?.is_practical
                           ? 'practical'
                           : 'theory',
                         category,
