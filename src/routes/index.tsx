@@ -3,6 +3,7 @@ import App from '@App'
 import ProtectedRoute from '@auth/ProtectedRoute'
 import LogoLayout from '@layout/logoLayout'
 import MainLayout from '@layout/mainLayout'
+import Dashboard from '@pages/Dashboard'
 import DivisionCreation from '@pages/Division/pages/DivisionCreation'
 import ForgotPassword from '@pages/Login/ForgotPassword'
 import Login from '@pages/Login/Login'
@@ -74,12 +75,11 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Navigate to={PAGE_DASHBOARD.path} />,
-            // element: (
-            //   <ProtectedRoute roleRequired="admin">
-            //     <Dashboard />
-            //   </ProtectedRoute>
-            // ),
+            element: (
+              <ProtectedRoute roleRequired="admin">
+                <Dashboard />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
@@ -107,6 +107,7 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
+            // element: <Navigate to="/teacher-dashboard" replace />,
             element: (
               <ProtectedRoute roleRequired="teacher">
                 <TeacherDashboard />
@@ -123,6 +124,7 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
+            // element: <Navigate to="/student-dashboard" replace />,
             element: (
               <ProtectedRoute roleRequired="student">
                 <StudentDashboard />
