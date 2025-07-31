@@ -388,8 +388,6 @@ const TeacherDashboard = () => {
             <div className="space-y-4 md:space-y-6">
               {/* Attendance Table */}
               <div className="rounded-[6px] bg-[#F7F7F7] shadow-soft">
-                <div className="mx-2 h-[1px] max-w-full bg-gray-300"></div>
-
                 <div className="flex h-[75vh] w-full flex-col gap-y-3 overflow-y-auto p-4">
                   <Tabs defaultValue="Default" className="w-full">
                     <TabsList className="mb-4 flex w-full gap-4 bg-[#F7F7F7]">
@@ -442,23 +440,37 @@ const TeacherDashboard = () => {
                               {students?.map((student: any) => (
                                 <TableRow
                                   key={student?.slug}
-                                  className={`'border-border' text-[12px] text-black`}
+                                  style={{
+                                    borderWidth: '2px',
+                                    borderStyle: 'solid',
+                                    borderTopWidth: student.chirp_detected
+                                      ? '2px'
+                                      : '2px',
+                                    borderBottomWidth: student.chirp_detected
+                                      ? '2px'
+                                      : '2px',
+                                    borderColor: student.chirp_detected
+                                      ? '#d1d5db' /* border-border */
+                                      : '#dc2626' /* red-600 */,
+                                    fontSize: '12px',
+                                    color: 'black',
+                                  }}
                                 >
                                   <TableCell>
                                     {student?.student?.profile?.name}
                                   </TableCell>
 
                                   <TableCell className="inline-flex w-full items-center justify-center capitalize text-white">
-                                    <span className="flex items-center gap-2 text-[10px] text-green-500 md:text-[12px]">
+                                    <span className="flex items-center gap-2 bg-blue-500 text-[10px] text-green-500 md:text-[12px]">
                                       <Checkbox
                                         checked={student.is_present}
                                         onCheckedChange={() =>
                                           updateStudentAttendance(
                                             student.slug,
-                                            !student.is_present,
+                                            false,
                                           )
                                         }
-                                        className="border border-black"
+                                        className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:hover:bg-blue-600"
                                       />
                                     </span>
                                   </TableCell>

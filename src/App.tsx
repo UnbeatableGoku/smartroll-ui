@@ -11,7 +11,7 @@ function App() {
   )
 
   return (
-    <div className="min-h-[100dvh] overflow-hidden text-gray-100 dark:bg-black">
+    <div className="min-h-[100dvh] overflow-hidden text-gray-100">
       <Outlet />
       <Toaster richColors position="top-right" />
       {LOADER_STATE && <Loader message={message} />}
