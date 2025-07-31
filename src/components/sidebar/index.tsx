@@ -91,7 +91,7 @@ const Sidebar = () => {
   )
 
   return (
-    <div className="menu fixed bottom-4 left-0 right-0 flex justify-center">
+    <div className="fixed bottom-[1rem] left-[50%] -translate-x-1/2 transform">
       <div className="flex items-center gap-1 rounded-[12px] border border-zinc-700 bg-[#F7F7F7] p-1 shadow-soft backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105">
         {menuItems.map((item, index) => (
           <button

@@ -88,7 +88,9 @@ export const useTeacherDashbord = () => {
     stopWaveFrq: any,
   ) => {
     try {
-      const newSocket = io(`${window.socket_url}/client`)
+      const newSocket = io(`${window.socket_url}/client`, {
+        transports: ['websocket'],
+      })
       newSocket.on('connect', () => {
         setSocket(newSocket)
         newSocket.emit('socket_connection', {
@@ -127,15 +129,11 @@ export const useTeacherDashbord = () => {
       newSocket?.on('update_attendance', (data: any) => {
         // const {data, message, status} = message?.data?.data'
         const { status_code, attendance_slug, message } = data
-
         if (status_code === 200) {
           setStudents((prev: any) =>
-            prev.map((student: any) =>
-              student.slug === attendance_slug
-                ? { ...student, is_present: !student.is_present }
-                : student,
-            ),
+            prev.filter((student: any) => student.slug !== attendance_slug),
           )
+          dispatch(setLoader({ state: false, message: null }))
           toast.success(message)
         } else {
           toast.error(message)
@@ -278,7 +276,7 @@ export const useTeacherDashbord = () => {
           dispatch(
             setLoader({
               state: true,
-              message: 'Please wait till seesion begin create',
+              message: 'Please wait while the seesion starts ...',
             }),
           )
           const stopWaveFrequency1 = await playWaveSoundFrequency(audio_url)
@@ -592,6 +590,9 @@ export const useTeacherDashbord = () => {
   }
 
   const updateStudentAttendance = (student_slug: string, checked: boolean) => {
+    const flg = confirm('Are you sure to continue ?')
+    if (!flg) return
+    dispatch(setLoader({ state: true, message: 'Please wait ..' }))
     const payload = {
       client: 'FE',
       attendance_slug: student_slug,

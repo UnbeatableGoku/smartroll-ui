@@ -4,10 +4,7 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import {
-  createPCMBlob,
-  float32ToInt16BlobAsync,
-} from '@utils/helpers/recorder_process'
+import { float32ToInt16BlobAsync } from '@utils/helpers/recorder_process'
 
 import {
   BranchLectures,
