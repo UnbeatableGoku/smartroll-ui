@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
 import { RootState } from '@data/redux/Store'
 import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
+import { setLoader } from '@data/redux/slices/loaderSlice'
 import axios from 'axios'
 import { get } from 'lodash'
 import { useSelector } from 'react-redux'
@@ -18,7 +19,6 @@ export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const {
     loadClassRooms,
-    stopSoundFrequency,
     extractLectureStatusData,
     getWeekDates,
     checkAndReturnMicPermission,
@@ -40,8 +40,9 @@ export const useTeacherDashbord = () => {
   const [date, setDate] = useState<any>(getWeekDates())
   const [stopStreamFunction, setStopStreamFunction] = useState<any>(null)
   const [stopWaveFrequency, setStopWaveFrequency] = useState<
-    (() => void) | null
+    (() => Promise<void>) | null
   >(null)
+
   const [isHistorySheetOpen, setIsHistorySheetOpen] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const calendarContainerRef = useRef<HTMLDivElement>(null)
@@ -80,115 +81,143 @@ export const useTeacherDashbord = () => {
     loadData() // call the inner async function
   }, [isalreadyLoaded, dispatch])
 
-  const clientSocketHandler = (
+  const clientSocketHandler = async (
     session_id: string,
     auth_token: string,
     mic: any,
+    stopWaveFrq: any,
   ) => {
-    const newSocket = io(`${window.socket_url}/client`, {
-      withCredentials: true,
-      transports: ['websocket'],
-    })
-    setSocket(newSocket)
-    newSocket.on('connect', () => {
-      setIsSheetOpen(true)
-      newSocket.emit('socket_connection', {
-        client: 'FE',
-        session_id: session_id,
-        auth_token: auth_token,
+    try {
+      const newSocket = io(`${window.socket_url}/client`)
+      newSocket.on('connect', () => {
+        setSocket(newSocket)
+        newSocket.emit('socket_connection', {
+          client: 'FE',
+          session_id: session_id,
+          auth_token: auth_token,
+        })
       })
-    })
 
-    newSocket?.on('disconnect', () => {
-      setSocket(null)
-      stopSoundFrequency()
-      if (stopWaveFrequency) {
-        stopWaveFrequency()
-      }
-    })
+      newSocket.on('ongoing_session_data', async (message) => {
+        const { data } = message.data
+        if (!data) {
+          throw new Error('Session data is missing')
+        }
+        onGoingSessionDataHandler(data)
+        setIsSheetOpen(true)
+        dispatch(setLoader({ state: false, message: null }))
 
-    newSocket.on('ongoing_session_data', async (message) => {
-      const { data } = message.data
-      onGoingSessionDataHandler(data)
-
-      const stopFunction = await startTeacherStreaming(
-        newSocket,
-        session_id,
-        StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-        mic,
-      )
-      setStopStreamFunction(() => stopFunction) // Store the stop function
-    })
-
-    newSocket.on('mark_attendance', (attendanceData: any) => {
-      const { attendance_data } = attendanceData.data.data
-
-      if (attendance_data) {
-        setStudents((prev: any) => [attendance_data, ...prev])
-      }
-    })
-
-    newSocket?.on('update_attendance', (data: any) => {
-      // const {data, message, status} = message?.data?.data'
-      const { status_code, attendance_slug, message } = data
-
-      if (status_code === 200) {
-        setStudents((prev: any) =>
-          prev.map((student: any) =>
-            student.slug === attendance_slug
-              ? { ...student, is_present: !student.is_present }
-              : student,
-          ),
+        const stopFunction = await startTeacherStreaming(
+          newSocket,
+          session_id,
+          StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+          mic,
         )
-        toast.success(message)
-      } else {
-        toast.error(message)
+        setStopStreamFunction(() => stopFunction) // Store the stop function
+      })
+
+      newSocket.on('mark_attendance', (attendanceData: any) => {
+        const { attendance_data } = attendanceData.data.data
+
+        if (attendance_data) {
+          setStudents((prev: any) => [attendance_data, ...prev])
+        }
+      })
+
+      newSocket?.on('update_attendance', (data: any) => {
+        // const {data, message, status} = message?.data?.data'
+        const { status_code, attendance_slug, message } = data
+
+        if (status_code === 200) {
+          setStudents((prev: any) =>
+            prev.map((student: any) =>
+              student.slug === attendance_slug
+                ? { ...student, is_present: !student.is_present }
+                : student,
+            ),
+          )
+          toast.success(message)
+        } else {
+          toast.error(message)
+        }
+      })
+
+      newSocket.on('regulization_request', (manualAttendanceData: any) => {
+        setManualAttendance((prev: any) => [
+          manualAttendanceData.data.data.data.attendance_data,
+          ...prev,
+        ])
+      })
+
+      newSocket.on('regulization_approved', (message) => {
+        toast.success('Attendance Marked Successfully')
+        setStudents((prev: any) => [...prev, ...message?.data?.data?.data])
+        setManualAttendance([])
+      })
+
+      newSocket.on('client_error', async (message) => {
+        await stopWaveFrq()
+        mic.getTracks().forEach((track: any) => track.stop())
+        socketErrorHandler(message)
+      })
+
+      newSocket.on('error', () => {
+        console.log('error')
+      })
+
+      newSocket.on('disconnect', async () => {
+        dispatch(
+          setLoader({
+            state: true,
+            message: 'Please wait till the session is clear',
+          }),
+        )
+        if (stopStreamFunction) {
+          await stopStreamFunction() // Call the function to stop streaming
+          setStopStreamFunction(null)
+        }
+        await stopWaveFrq()
+        mic.getTracks().forEach((track: any) => track.stop())
+        dispatch(
+          setLoader({
+            state: false,
+            message: null,
+          }),
+        )
+        setSocket(null)
+        setIsSheetOpen(false)
+      })
+
+      newSocket.on('session_ended', async (message: any) => {
+        setIsSessionEnded(true)
+        const { data } = message
+        setFinalAttendanceData(data.data.data.marked_attendances)
+        setSessionData((prevData: any) => ({
+          ...prevData,
+          [message.data.data.data.session_id]: message.data.data.data.active,
+        }))
+
+        if (stopStreamFunction) {
+          await stopStreamFunction() // Call the function to stop streaming
+          setStopStreamFunction(null)
+        }
+      })
+
+      newSocket.on('connect_error', (error) => {
+        console.error('❌ Connection error:', error.message)
+      })
+    } catch (error: any) {
+      // handle cleaer socket logic
+      toast.error(error.message || 'Something went worng')
+      if (socket) {
+        socket.disconnect()
       }
-    })
-
-    newSocket.on('regulization_request', (manualAttendanceData: any) => {
-      setManualAttendance((prev: any) => [
-        manualAttendanceData.data.data.data.attendance_data,
-        ...prev,
-      ])
-    })
-
-    newSocket.on('regulization_approved', (message) => {
-      toast.success('Attendance Marked Successfully')
-      setStudents((prev: any) => [...prev, ...message?.data?.data?.data])
-      setManualAttendance([])
-    })
-
-    newSocket.on('client_error', (message) => {
-      socketErrorHandler(message)
-    })
-
-    newSocket.on('disconnect', async () => {
+      if (stopWaveFrequency) {
+        await stopWaveFrequency()
+      }
+      setOngoingSessionData(null)
       setSocket(null)
-      setIsSheetOpen(false)
-      if (stopStreamFunction) {
-        await stopStreamFunction() // Call the function to stop streaming
-        setStopStreamFunction(null)
-      }
-    })
-
-    newSocket.on('session_ended', async (message: any) => {
-      setIsSessionEnded(true)
-      const { data } = message
-      setFinalAttendanceData(data.data.data.marked_attendances)
-      setSessionData((prevData: any) => ({
-        ...prevData,
-        [message.data.data.data.session_id]: message.data.data.data.active,
-      }))
-
-      if (stopSoundFrequency) {
-        stopSoundFrequency()
-      }
-      if (stopStreamFunction) {
-        await stopStreamFunction() // Call the function to stop streaming
-        setStopStreamFunction(null)
-      }
-    })
+    }
   }
 
   const startSessionHandler = async (
@@ -246,12 +275,19 @@ export const useTeacherDashbord = () => {
         setLectureDetails(updatedLectureDetails)
 
         if (data.active === 'ongoing') {
-          const stopWaveFrequency = await playWaveSoundFrequency(audio_url)
-          setStopWaveFrequency(() => stopWaveFrequency)
+          dispatch(
+            setLoader({
+              state: true,
+              message: 'Please wait till seesion begin create',
+            }),
+          )
+          const stopWaveFrequency1 = await playWaveSoundFrequency(audio_url)
+          setStopWaveFrequency(() => stopWaveFrequency1)
           clientSocketHandler(
             session_id,
             StoredTokens?.accessToken?.replace('Bearer ', '') as string,
             mic,
+            stopWaveFrequency1,
           )
         }
       } else {
@@ -270,11 +306,9 @@ export const useTeacherDashbord = () => {
     setStudents(marked_attendances)
   }
 
-  const socketErrorHandler = (message: any) => {
+  const socketErrorHandler = async (message: any) => {
     const { status_code, data } = message
     toast.error(`${status_code} - ${data}`)
-    socket?.disconnect()
-    setIsSheetOpen(false)
   }
   const getLectureDetails = async (day: string = 'current') => {
     try {
@@ -340,7 +374,7 @@ export const useTeacherDashbord = () => {
     }
   }
 
-  const handleOnSessionEnd = () => {
+  const handleOnSessionEnd = async () => {
     try {
       if (!confirm('Are you sure you want to end this session.. ?')) {
         return
@@ -351,7 +385,7 @@ export const useTeacherDashbord = () => {
         auth_token: StoredTokens?.accessToken?.replace('Bearer ', '') as string,
       }
       if (stopWaveFrequency) {
-        stopWaveFrequency()
+        await stopWaveFrequency()
       }
       socket?.emit('session_ended', requestObject)
     } catch (error: any) {
@@ -554,17 +588,7 @@ export const useTeacherDashbord = () => {
   }
 
   const handleSheet = async () => {
-    setIsSheetOpen(false)
-    socket?.disconnect()
-    setSocket(null)
-    stopSoundFrequency()
-    if (stopWaveFrequency) {
-      stopWaveFrequency()
-    }
-    if (stopStreamFunction) {
-      await stopStreamFunction()
-      setStopStreamFunction(null)
-    }
+    handleSessionCleanUp()
   }
 
   const updateStudentAttendance = (student_slug: string, checked: boolean) => {
@@ -611,6 +635,30 @@ export const useTeacherDashbord = () => {
     setIsHistorySheetOpen(!isHistorySheetOpen)
     setSessionId(null)
     setStudents([])
+  }
+
+  const handleSessionCleanUp = async () => {
+    try {
+      setSocket(null)
+      if (stopWaveFrequency) {
+        await stopWaveFrequency()
+        setStopWaveFrequency(null)
+      }
+      if (stopStreamFunction) {
+        await stopStreamFunction()
+        setStopStreamFunction(null)
+      }
+      dispatch(
+        setLoader({
+          state: false,
+          message: null,
+        }),
+      )
+      socket?.disconnect()
+      setIsSheetOpen(false)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
   }
 
   return {
