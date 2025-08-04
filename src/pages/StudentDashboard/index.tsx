@@ -11,10 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import NoDataIllustration from '@assets/images/NoData.svg'
+// Ensure this path is correct
 // Ensure this path is correct
 import useStudentDashboard from '@pages/StudentDashboard/hooks/useStudentDashboard'
 import { BadgeCheck, Calendar, Clock, Users } from 'lucide-react'
 
+// Ensure this path is correct
 // Added BadgeCheck for Present status
 import { cn } from '@utils'
 
@@ -447,23 +450,27 @@ const StudentDashboard = () => {
                 </div>
               ))}
             {lectureDetails?.length === 0 && (
-              <div className="absolute left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 transform bg-gray-50 p-4">
-                <Card className="w-80 border border-blue-100 shadow-2xl">
-                  <CardContent className="space-y-4 px-6 py-16 text-center">
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
-                      <Calendar className="h-8 w-8 text-blue-600" size={52} />
-                    </div>
+              <div className="flex min-h-[70vh] items-center justify-center rounded-lg p-6">
+                <div className="max-w-md text-center">
+                  {/* Simple Illustration */}
+                  <div className="mb-8 h-40 w-40 sm:h-80 sm:w-80">
+                    <img
+                      src={NoDataIllustration}
+                      alt="No lectures today"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
 
-                    <div>
-                      <h2 className="mb-2 text-xl font-semibold text-gray-800">
-                        No Lecture Today
-                      </h2>
-                      <p className="text-sm text-gray-600">
-                        Enjoy your free time!
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
+                  {/* Simple Text */}
+                  <div className="space-y-3">
+                    <h2 className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-3xl font-semibold text-transparent">
+                      No Lectures Today!
+                    </h2>
+                    <p className="leading-relaxed text-gray-600">
+                      Enjoy your free time and make the most of your day!
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
