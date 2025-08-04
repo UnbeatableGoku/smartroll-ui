@@ -25,8 +25,14 @@ const useSidebarLinkSelector = () => {
       'DIVISION_CREATION',
       'TEACHER_ALLOCATION',
     ],
-    teacher: ['SUBJECT-CHOICE','LOAD_ALLOCATION_FOR_TEACHER_END'],
-    student: ['ELECTIVE_SUBJECT', 'STUDENT_DIVISION'],
+    teacher: [
+      'SUBJECT-CHOICE',
+      // 'LOAD_ALLOCATION_FOR_TEACHER_END'
+    ],
+    student: [
+      // 'ELECTIVE_SUBJECT',
+      'STUDENT_DIVISION',
+    ],
   }
 
   // Compute the sidebar links based on the user's role

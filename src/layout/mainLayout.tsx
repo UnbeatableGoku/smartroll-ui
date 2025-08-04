@@ -18,7 +18,7 @@ const MainLayout = () => {
   if (access && accessTokenValid) {
     return (
       <div className="relative h-screen">
-        <div className="wrapper flex h-full overflow-hidden">
+        <div className="flex h-full overflow-hidden">
           {/* Left Section - Sidebar */}
 
           {/* Right Section - Header and Main Content */}

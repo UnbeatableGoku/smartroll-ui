@@ -33,7 +33,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DialogBox from '@pages/TeacherDashboard/components/DialogBox'
 import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
-import { Clock, FileDown, Users } from 'lucide-react'
+import { Calendar, Clock, FileDown, Users } from 'lucide-react'
 
 import { cn } from '@utils'
 
@@ -91,7 +91,7 @@ const TeacherDashboard = () => {
   return (
     <div className="h-auto">
       {/* Main Content */}
-      <main className="flex flex-col gap-6 pb-20">
+      <main className="flex flex-col gap-6">
         {/* Calendar-style Date Selector */}
         <div
           className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 pt-8 md:justify-center"
@@ -117,7 +117,7 @@ const TeacherDashboard = () => {
         </div>
 
         {/* Session List */}
-        <div className="flex flex-col gap-8 border-none p-1 md:p-2">
+        <div className="flex flex-col gap-8 border-none p-1 md:p-4">
           {lectureDetails.length > 0 ? (
             lectureDetails?.map((l: any) => (
               <div
@@ -353,11 +353,22 @@ const TeacherDashboard = () => {
               </div>
             ))
           ) : (
-            <div className="px-1 pt-4 md:px-8">
-              <Card className="w-full overflow-hidden border-border bg-zinc-600/10 text-center">
-                <CardHeader className="p-4 text-sm text-black">
-                  No lectures scheduled for today.
-                </CardHeader>
+            <div className="absolute left-[50%] top-[50%] w-full -translate-x-1/2 -translate-y-1/3 transform p-4 md:p-8">
+              <Card className="w-full border border-blue-100 p-4 shadow-lg">
+                <CardContent className="space-y-4 px-6 py-16 text-center">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
+                    <Calendar className="h-8 w-8 text-blue-600" size={52} />
+                  </div>
+
+                  <div>
+                    <h2 className="mb-2 text-xl font-semibold text-gray-800">
+                      No Lecture Today
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                      Enjoy your free time!
+                    </p>
+                  </div>
+                </CardContent>
               </Card>
             </div>
           )}
@@ -441,13 +452,15 @@ const TeacherDashboard = () => {
                                 <TableRow
                                   key={student?.slug}
                                   style={{
-                                    borderWidth: '2px',
+                                    borderWidth: student.chirp_detected
+                                      ? '0px'
+                                      : '2px',
                                     borderStyle: 'solid',
                                     borderTopWidth: student.chirp_detected
-                                      ? '2px'
+                                      ? '0px'
                                       : '2px',
                                     borderBottomWidth: student.chirp_detected
-                                      ? '2px'
+                                      ? '0px'
                                       : '2px',
                                     borderColor: student.chirp_detected
                                       ? '#d1d5db' /* border-border */
@@ -460,19 +473,17 @@ const TeacherDashboard = () => {
                                     {student?.student?.profile?.name}
                                   </TableCell>
 
-                                  <TableCell className="inline-flex w-full items-center justify-center capitalize text-white">
-                                    <span className="flex items-center gap-2 bg-blue-500 text-[10px] text-green-500 md:text-[12px]">
-                                      <Checkbox
-                                        checked={student.is_present}
-                                        onCheckedChange={() =>
-                                          updateStudentAttendance(
-                                            student.slug,
-                                            false,
-                                          )
-                                        }
-                                        className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:hover:bg-blue-600"
-                                      />
-                                    </span>
+                                  <TableCell className="text-center">
+                                    <Checkbox
+                                      checked={student.is_present}
+                                      onCheckedChange={() =>
+                                        updateStudentAttendance(
+                                          student.slug,
+                                          false,
+                                        )
+                                      }
+                                      className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:hover:bg-blue-600"
+                                    />
                                   </TableCell>
                                   {/* <TableCell className="text-center">
                                     {`${Number(Math.floor(student?.similarity))} %` ||

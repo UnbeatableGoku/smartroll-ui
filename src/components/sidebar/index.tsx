@@ -6,7 +6,7 @@ import { RootState } from '@data/redux/Store'
 import { setAuth } from '@data/redux/slices/authSlice'
 import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
-import { Home, LogOut, Menu, UserPen } from 'lucide-react'
+import { Home, LogOut, Menu } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -68,13 +68,13 @@ const Sidebar = () => {
         }
       },
     },
-    {
-      icon: UserPen,
-      label: 'Profile',
-      event: () => {
-        setIsProfileModalOpen(true)
-      },
-    },
+    // {
+    //   icon: UserPen,
+    //   label: 'Profile',
+    //   event: () => {
+    //     setIsProfileModalOpen(true)
+    //   },
+    // },
     { icon: LogOut, label: 'Logout', event: handelLogout, alert: false },
   ]
 
