@@ -34,6 +34,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DialogBox from '@pages/TeacherDashboard/components/DialogBox'
 import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
 import { Calendar, Clock, FileDown, Users } from 'lucide-react'
+import { MdGroups2 } from 'react-icons/md'
 
 import { cn } from '@utils'
 
@@ -421,8 +422,8 @@ const TeacherDashboard = () => {
                       </TabsTrigger>
                     </TabsList>
                     <TabsContent value="Default">
-                      <div className="overflow-x-auto">
-                        {students.length > 0 ? (
+                      {students.length > 0 ? (
+                        <div className="overflow-x-auto">
                           <Table className="text-black">
                             <TableHeader>
                               {students?.length > 0 && (
@@ -502,12 +503,19 @@ const TeacherDashboard = () => {
                               ))}
                             </TableBody>
                           </Table>
-                        ) : (
-                          <div className="flex items-center justify-center pt-3 text-black">
+                        </div>
+                      ) : (
+                        <div className="flex h-[50vh] flex-col items-center justify-center space-y-6 pt-3 text-black">
+                          <MdGroups2 size={124} color="#0261BE"></MdGroups2>
+                          <span className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
                             No Students Present
-                          </div>
-                        )}
-                      </div>
+                          </span>
+                          <span className="leading-relaxed text-gray-600">
+                            As students mark their attendance, they will appear
+                            here in real-time.
+                          </span>
+                        </div>
+                      )}
                     </TabsContent>
                     <TabsContent value="manual" className="space-y-4">
                       {manualAttendance.length > 0 && (

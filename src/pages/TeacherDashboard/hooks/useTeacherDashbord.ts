@@ -277,7 +277,7 @@ export const useTeacherDashbord = () => {
           dispatch(
             setLoader({
               state: true,
-              message: 'Please wait while the seesion starts ...',
+              message: 'Please wait while the session starts ...',
             }),
           )
           const stopWaveFrequency1 = await playWaveSoundFrequency(audio_url)
