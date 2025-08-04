@@ -453,7 +453,7 @@ const StudentDashboard = () => {
               <div className="flex min-h-[70vh] items-center justify-center rounded-lg p-6">
                 <div className="max-w-md text-center">
                   {/* Simple Illustration */}
-                  <div className="mb-8 h-40 w-40 sm:h-80 sm:w-80">
+                  <div className="relative left-[50%] mb-8 h-40 w-40 -translate-x-1/2 transform sm:h-80 sm:w-80">
                     <img
                       src={NoDataIllustration}
                       alt="No lectures today"
@@ -463,7 +463,7 @@ const StudentDashboard = () => {
 
                   {/* Simple Text */}
                   <div className="space-y-3">
-                    <h2 className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-3xl font-semibold text-transparent">
+                    <h2 className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
                       No Lectures Today!
                     </h2>
                     <p className="leading-relaxed text-gray-600">
