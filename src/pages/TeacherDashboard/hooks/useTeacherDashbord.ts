@@ -89,6 +89,7 @@ export const useTeacherDashbord = () => {
   ) => {
     try {
       const newSocket = io(`${window.socket_url}/client`, {
+        withCredentials: true,
         transports: ['websocket'],
       })
       newSocket.on('connect', () => {
