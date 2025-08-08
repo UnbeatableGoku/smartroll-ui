@@ -185,3 +185,29 @@ export const downloadBlob = (blob: any, filename: any) => {
   a.click()
   window.URL.revokeObjectURL(url)
 }
+
+export function float32ToInt16BlobAsync(float32Array: any) {
+  return new Promise((resolve) => {
+    const buffer = new ArrayBuffer(float32Array.length * 2)
+    const view = new DataView(buffer)
+
+    let i = 0
+
+    function processChunk() {
+      const end = float32Array.length
+      for (; i < end; i++) {
+        let sample = Math.max(-1, Math.min(1, float32Array[i]))
+        sample = sample < 0 ? sample * 0x8000 : sample * 0x7fff
+        view.setInt16(i * 2, sample, true)
+      }
+
+      if (i < float32Array.length) {
+        setTimeout(processChunk, 0) // Yield control
+      } else {
+        resolve(new Blob([view], { type: 'application/octet-stream' }))
+      }
+    }
+
+    processChunk()
+  })
+}

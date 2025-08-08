@@ -21,10 +21,10 @@ const Selection = ({
   optionTitle, // to display the static text in all options
 }: SelectionProps) => {
   return (
-    <Card className="h-auto w-full dark:bg-black">
+    <Card className="h-auto w-full border-none bg-[#F7F7F7] shadow-soft">
       <CardHeader className="space-y-0 pb-2 pt-2">
         <div className="flex items-center justify-center">
-          <CardTitle className="text-center text-base sm:text-lg">
+          <CardTitle className="text-center text-base text-black sm:text-lg">
             {/* pass through props  */}
             {title}
           </CardTitle>
@@ -38,15 +38,15 @@ const Selection = ({
               onValueChange(value)
             }}
           >
-            <SelectTrigger className="w-full text-wrap">
+            <SelectTrigger className="w-full border-[#0261BE] bg-white text-black">
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white text-black">
               {data?.map((item) => (
                 <SelectItem
                   key={item.slug}
                   value={item.slug}
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:bg-[#0261BE]/10"
                 >
                   {optionTitle ? `${optionTitle} - ` : null} {item.name}
                 </SelectItem>
@@ -55,7 +55,7 @@ const Selection = ({
           </Select>
         ) : (
           <div className="space-y-2 sm:space-y-3">
-            <Skeleton className="h-10 w-full sm:h-9" />
+            <Skeleton className="h-10 w-full bg-[#F7F7F7] sm:h-9" />
           </div>
         )}
       </CardContent>

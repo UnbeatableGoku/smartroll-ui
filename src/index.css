@@ -7,66 +7,54 @@
     @apply sticky top-0 z-10 h-16 w-full flex-shrink-0 border-b-2 border-gray-200 bg-white;
   }
 
-
   .title {
     @apply py-3 text-xl font-bold;
   }
 
-  
   :root {
-    
     --background: 0 0% 100%;
-
     --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
-
     --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-
     --popover-foreground: 240 10% 3.9%;
 
     --primary: 240 5.9% 10%;
-
     --primary-foreground: 0 0% 98%;
+    --primary-hover: 240 5.9% 20%; /* lighter on hover */
 
     --secondary: 240 4.8% 95.9%;
-
     --secondary-foreground: 240 5.9% 10%;
+    --secondary-hover: 240 4.8% 90%; /* darker for hover */
 
     --muted: 240 4.8% 95.9%;
-
     --muted-foreground: 240 3.8% 46.1%;
+    --muted-hover: 240 4.8% 90%; /* same logic as secondary */
 
     --accent: 240 4.8% 95.9%;
-
     --accent-foreground: 240 5.9% 10%;
+    --accent-hover: 240 4.8% 90%;
 
     --destructive: 0 84.2% 60.2%;
-
     --destructive-foreground: 0 0% 98%;
+    --destructive-hover: 0 84.2% 50%; /* slightly darker red */
 
     --border: 240 5.9% 90%;
-
     --input: 240 5.9% 90%;
-
     --ring: 240 10% 3.9%;
 
     --chart-1: 12 76% 61%;
-
     --chart-2: 173 58% 39%;
-
     --chart-3: 197 37% 24%;
-
     --chart-4: 43 74% 66%;
-
     --chart-5: 27 87% 67%;
 
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
-  .dark {
 
+  .dark {
     --background: 240 10% 3.9%;
 
     --foreground: 0 0% 98%;
@@ -113,10 +101,8 @@
 
     --chart-4: 280 65% 60%;
 
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
-
-  
 }
 
 @layer utilities {
@@ -149,14 +135,13 @@
 
 /* Applying variables */
 html {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);  /* This inverts the colors, turning dark icons to light */
+input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* This inverts the colors, turning dark icons to light */
 }
-

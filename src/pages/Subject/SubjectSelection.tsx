@@ -5,15 +5,15 @@ import { Helmet } from 'react-helmet'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
+import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'
 import { Card, CardContent, CardHeader } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
 
 import ConfirmSubjectSelection from './components/ConfirmSubjectSelection'
 import SubjectCard from './components/SubjectCard'
-import useSubjectSelection from './hooks/useSubjectSelection'
 import UpdateDeadlineDialog from './components/UpdateDeadlineDialog'
-import { Alert, AlertTitle } from '@components/ui/alert'
+import useSubjectSelection from './hooks/useSubjectSelection'
 
 const SubjectSelection = () => {
   const {
@@ -39,7 +39,7 @@ const SubjectSelection = () => {
     UnlockSubjectAfterDeadline,
     handleOnCheckForNonTechSubject,
     setDeadLine,
-    handleOnClickToUpdateDeadline
+    handleOnClickToUpdateDeadline,
   } = useSubjectSelection()
   const { stream, handleStream } = useStream()
   const [isPanelOpen, setIsPanelOpen] = useState(false)
@@ -57,7 +57,7 @@ const SubjectSelection = () => {
       </Helmet>
       <div className="flex w-full flex-col space-y-4">
         {/* time table selection */}
-        <div className="flex flex-col flex-wrap items-center justify-evenly">
+        <div className="flex flex-col flex-wrap items-center justify-evenly p-6">
           <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
             {/* Stream Selection Card */}
             {stream && (
@@ -120,19 +120,21 @@ const SubjectSelection = () => {
               />
             </div>
           </div>
-          {deadLine && <Alert className="mt-5 w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
-                <div className="">
-                  <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
-                    <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
-                    <span>Decision Deadline : {deadLine} </span>
-                  </AlertTitle>
-                </div>
-              </Alert>}
+          {deadLine && (
+            <Alert className="mt-5 w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
+              <div className="">
+                <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
+                  <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
+                  <span>Decision Deadline : {deadLine} </span>
+                </AlertTitle>
+              </div>
+            </Alert>
+          )}
           {isSubjectLock == false && selectedSubjects.length > 0 && (
             <div className={`${isSubjectLock ? 'hidden' : 'block'} w-full`}>
               <Button
                 onClick={togglePanel}
-                className={`z-10 mt-3 w-full`}
+                className="z-10 mt-3 w-full bg-white text-black hover:bg-blue-600/20"
               >
                 <BookOpen className="mr-2 h-4 w-4" />
                 Lock Subjects
@@ -142,30 +144,28 @@ const SubjectSelection = () => {
               </Button>
             </div>
           )}
-          <div className='flex flex-col  w-full items-center gap-x-8 justify-center'>
-          
-
-          {unlockSubjectAfterDeadline == true && isSubjectLock == true && (
-            <div className='w-full'>
-              <Button
-                onClick={UnlockSubjectAfterDeadline}
-                className={`z-10 mt-3 w-full`}
-              >
-                <BookOpen className="mr-2 h-4 w-4" />
-                Unlock Subject Selection
-              </Button>
-            </div>
-          )}
-          {
-            selectedSemester &&
-            <UpdateDeadlineDialog semesterSlug={selectedSemester} deadline={deadLine} setDeadLine={setDeadLine} handleOnClickToUpdateDeadline={handleOnClickToUpdateDeadline} openDeadlineDailog={openDeadlineDailog} setOpenDeadlineDailog={setOpenDeadlineDailog}></UpdateDeadlineDialog> 
-          }
+          <div className="flex w-full flex-col items-center justify-center gap-x-8">
+            {unlockSubjectAfterDeadline == true && isSubjectLock == true && (
+              <div className="w-full">
+                <Button
+                  onClick={UnlockSubjectAfterDeadline}
+                  className={`z-10 mt-3 w-full bg-yellow-500 text-black hover:bg-yellow-600`}
+                >
+                  Unlock Subject Selection
+                </Button>
+              </div>
+            )}
+            {selectedSemester && (
+              <UpdateDeadlineDialog
+                semesterSlug={selectedSemester}
+                deadline={deadLine}
+                setDeadLine={setDeadLine}
+                handleOnClickToUpdateDeadline={handleOnClickToUpdateDeadline}
+                openDeadlineDailog={openDeadlineDailog}
+                setOpenDeadlineDailog={setOpenDeadlineDailog}
+              ></UpdateDeadlineDialog>
+            )}
           </div>
-          
-
-
-            
-            
         </div>
 
         <div className="p-4">

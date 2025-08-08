@@ -1,12 +1,16 @@
-import SubjectAllocationDetails from "../components/SubjectAllocationDetails"
-import useLoadAllocation from "../hooks/useLoadAllocation"
+import SubjectAllocationDetails from '../components/SubjectAllocationDetails'
+import useLoadAllocation from '../hooks/useLoadAllocation'
 
 const LoadAllocation = () => {
-    const {AllocationData} = useLoadAllocation()
+  const { AllocationData } = useLoadAllocation()
   return (
     <div className="mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">Assigned Subjects</h1>
-        { AllocationData && <SubjectAllocationDetails Allocationdata={AllocationData}/>}
+      <h1 className="mb-6 text-center text-3xl font-bold text-black">
+        Assigned Subjects
+      </h1>
+      {AllocationData && (
+        <SubjectAllocationDetails Allocationdata={AllocationData} />
+      )}
     </div>
   )
 }

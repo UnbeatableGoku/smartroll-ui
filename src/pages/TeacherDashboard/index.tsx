@@ -33,12 +33,13 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DialogBox from '@pages/TeacherDashboard/components/DialogBox'
 import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
-import { Clock, FileDown, Users } from 'lucide-react'
+import { Calendar, Clock, FileDown, Users } from 'lucide-react'
 
 import { cn } from '@utils'
 
 import { Checkbox } from '@components/ui/checkbox'
 
+import AttendanceHistorySheet from './components/AttendanceHistorySheet'
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
 
 // No need for unused type imports
@@ -63,11 +64,14 @@ const TeacherDashboard = () => {
     handleClassroom,
     setOpen,
     changeClassRoomAPI,
-    handleOnClickForDownloadExcelForAttendance,
+    handleAttendaceHistoryData,
     handleSheet,
     calendarContainerRef,
     activeDateRef,
     updateStudentAttendance,
+    isHistorySheetOpen,
+    handleHistorySheetOpen,
+    sessionId,
   } = useTeacherDashbord()
 
   useEffect(() => {
@@ -84,11 +88,10 @@ const TeacherDashboard = () => {
       })
     }
   }, [date])
-
   return (
     <div className="h-auto">
       {/* Main Content */}
-      <main className="flex flex-col gap-6 pb-20">
+      <main className="flex flex-col gap-6">
         {/* Calendar-style Date Selector */}
         <div
           className="flex overflow-x-auto border-b border-white/20 px-2 pb-4 pt-8 md:justify-center"
@@ -114,12 +117,12 @@ const TeacherDashboard = () => {
         </div>
 
         {/* Session List */}
-        <div className="flex flex-col gap-8 border-none p-1 md:p-2">
+        <div className="flex flex-col gap-8 border-none p-1 md:p-4">
           {lectureDetails.length > 0 ? (
             lectureDetails?.map((l: any) => (
               <div
                 key={l?.id || Math.random()}
-                className="w-full gap-6 rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft"
+                className={`w-full gap-6 rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft`}
               >
                 <div className="text-md flex w-full items-center rounded-sm bg-white/10 p-2 font-medium text-black md:text-[20px]">
                   {l.branch_name}
@@ -196,7 +199,7 @@ const TeacherDashboard = () => {
                             </div>
                             <div className="flex items-center gap-2 text-sm text-black md:text-lg">
                               <Clock className="size-5 text-[#00000080]" />
-                              {/* <span className="text-sm   text-black">Time: </span> */}
+                              {/* <span className="text-sm text-black">Time: </span> */}
                               <span className="font-semibold text-black">
                                 {lecture?.start_time} • {lecture?.end_time}
                               </span>
@@ -325,13 +328,13 @@ const TeacherDashboard = () => {
                               variant="outline"
                               className="w-full rounded-[4px] border-none bg-[#0261BE] p-[20px] text-white hover:bg-blue-700"
                               onClick={() => {
-                                handleOnClickForDownloadExcelForAttendance(
-                                  lecture?.session?.session_id,
+                                handleAttendaceHistoryData(
+                                  lecture.session.session_id,
                                 )
                               }}
                             >
                               <FileDown className="mr-2 h-4 w-4" />
-                              Export Attendance
+                              Attendance History
                             </Button>
                           )}
                         </CardFooter>
@@ -350,11 +353,22 @@ const TeacherDashboard = () => {
               </div>
             ))
           ) : (
-            <div className="px-1 pt-4 md:px-8">
-              <Card className="w-full overflow-hidden border-border bg-zinc-600/10 text-center">
-                <CardHeader className="p-4 text-sm text-black">
-                  No lectures scheduled for today.
-                </CardHeader>
+            <div className="absolute left-[50%] top-[50%] w-full -translate-x-1/2 -translate-y-1/3 transform p-4 md:p-8">
+              <Card className="w-full border border-blue-100 p-4 shadow-lg">
+                <CardContent className="space-y-4 px-6 py-16 text-center">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
+                    <Calendar className="h-8 w-8 text-blue-600" size={52} />
+                  </div>
+
+                  <div>
+                    <h2 className="mb-2 text-xl font-semibold text-gray-800">
+                      No Lecture Today
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                      Enjoy your free time!
+                    </p>
+                  </div>
+                </CardContent>
               </Card>
             </div>
           )}
@@ -377,36 +391,15 @@ const TeacherDashboard = () => {
             className="h-[100dvh] overflow-y-auto border-border bg-[#F7F7F7] sm:max-w-full"
           >
             <SheetHeader className="mb-6 flex flex-row items-center justify-between">
-              <SheetTitle className="text-md text-black md:text-2xl">
-                Attendance Details
+              <SheetTitle className="text-sm text-black md:text-2xl">
+                Attendance Details (Active Students : {students?.length})
               </SheetTitle>
             </SheetHeader>
 
             <div className="space-y-4 md:space-y-6">
               {/* Attendance Table */}
               <div className="rounded-[6px] bg-[#F7F7F7] shadow-soft">
-                <div className="flex items-center justify-between p-3 md:p-4">
-                  <h3 className="text-md font-semibold text-black sm:text-lg">
-                    Attendance
-                  </h3>
-                  <p className="text-sm text-black">
-                    Students: {students?.length}
-                  </p>
-                </div>
-                <div className="mx-2 h-[1px] max-w-full bg-gray-300"></div>
-
                 <div className="flex h-[75vh] w-full flex-col gap-y-3 overflow-y-auto p-4">
-                  {/* <TimerButton
-                    autoStart={true}
-                    initialText="End Session"
-                    runningTextPrefix="Session Ended In ..."
-                    initialDurationSeconds={30}
-                    fillColor="#be0205"
-                    OnSessionEnd={() => {
-                      console.log('session End')
-                    }}
-                  ></TimerButton> */}
-
                   <Tabs defaultValue="Default" className="w-full">
                     <TabsList className="mb-4 flex w-full gap-4 bg-[#F7F7F7]">
                       <TabsTrigger
@@ -439,9 +432,9 @@ const TeacherDashboard = () => {
                                     {' '}
                                     P/A
                                   </TableHead>
-                                  <TableHead className="text-center">
+                                  {/* <TableHead className="text-center">
                                     Prob(%)
-                                  </TableHead>
+                                  </TableHead> */}
                                   <TableHead className="text-center">
                                     Distance
                                   </TableHead>
@@ -458,33 +451,46 @@ const TeacherDashboard = () => {
                               {students?.map((student: any) => (
                                 <TableRow
                                   key={student?.slug}
-                                  className={`'border-border' text-[12px] text-black`}
+                                  style={{
+                                    borderWidth: student.chirp_detected
+                                      ? '0px'
+                                      : '2px',
+                                    borderStyle: 'solid',
+                                    borderTopWidth: student.chirp_detected
+                                      ? '0px'
+                                      : '2px',
+                                    borderBottomWidth: student.chirp_detected
+                                      ? '0px'
+                                      : '2px',
+                                    borderColor: student.chirp_detected
+                                      ? '#d1d5db' /* border-border */
+                                      : '#dc2626' /* red-600 */,
+                                    fontSize: '12px',
+                                    color: 'black',
+                                  }}
                                 >
                                   <TableCell>
                                     {student?.student?.profile?.name}
                                   </TableCell>
 
-                                  <TableCell className="inline-flex w-full items-center justify-center capitalize text-white">
-                                    <span className="flex items-center gap-2 text-[10px] text-green-500 md:text-[12px]">
-                                      <Checkbox
-                                        checked={student.is_present}
-                                        onCheckedChange={() =>
-                                          updateStudentAttendance(
-                                            student.slug,
-                                            !student.is_present,
-                                          )
-                                        }
-                                        className="border border-black"
-                                      />
-                                    </span>
-                                  </TableCell>
                                   <TableCell className="text-center">
+                                    <Checkbox
+                                      checked={student.is_present}
+                                      onCheckedChange={() =>
+                                        updateStudentAttendance(
+                                          student.slug,
+                                          false,
+                                        )
+                                      }
+                                      className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:hover:bg-blue-600"
+                                    />
+                                  </TableCell>
+                                  {/* <TableCell className="text-center">
                                     {`${Number(Math.floor(student?.similarity))} %` ||
                                       '-'}
-                                  </TableCell>
+                                  </TableCell> */}
                                   <TableCell className="text-center">
-                                    {student?.euclidean_distance?.toFixed(3) ||
-                                      '-'}
+                                    {student?.gps_distance?.toFixed(3) || '-'}
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {student?.ncc?.toFixed(2) || '-'}
@@ -534,6 +540,14 @@ const TeacherDashboard = () => {
             </div>
           </SheetContent>
         </Sheet>
+      )}
+      {sessionId && students.length > 0 && (
+        <AttendanceHistorySheet
+          isHistorySheetOpen={isHistorySheetOpen}
+          handelHistorySheetOpen={handleHistorySheetOpen}
+          students={students}
+          sessionId={sessionId}
+        />
       )}
     </div>
   )
