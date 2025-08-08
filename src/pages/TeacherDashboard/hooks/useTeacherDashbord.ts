@@ -3,7 +3,10 @@ import { useEffect, useRef, useState } from 'react'
 import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
 import { RootState } from '@data/redux/Store'
 import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
-import { setLoader } from '@data/redux/slices/loaderSlice'
+import {
+  setLoader,
+  setReconnectionLoader,
+} from '@data/redux/slices/loaderSlice'
 import axios from 'axios'
 import { get } from 'lodash'
 import { useSelector } from 'react-redux'
@@ -53,6 +56,7 @@ export const useTeacherDashbord = () => {
   const { isalreadyLoaded, classes } = useSelector(
     (state: RootState) => state.classRoomSlice,
   )
+
   const [classesList, setClasses] = useState<any>(classes)
 
   useEffect(() => {
@@ -87,10 +91,14 @@ export const useTeacherDashbord = () => {
     mic: any,
     stopWaveFrq: any,
   ) => {
+    let mic1 = mic
     try {
       const newSocket = io(`${window.socket_url}/client`, {
         withCredentials: true,
         transports: ['websocket'],
+        reconnectionAttempts: Infinity, // unlimited attempts
+        reconnectionDelay: 1000, // delay between attempts (ms)
+        reconnectionDelayMax: 5000,
       })
       newSocket.on('connect', () => {
         setSocket(newSocket)
@@ -101,6 +109,14 @@ export const useTeacherDashbord = () => {
         })
       })
 
+      newSocket.io.on('reconnect_attempt', () => {
+        dispatch(setReconnectionLoader({ state: true }))
+      })
+
+      newSocket.io.on('reconnect', () => {
+        console.log('Reconnected!')
+      })
+
       newSocket.on('ongoing_session_data', async (message) => {
         const { data } = message.data
         if (!data) {
@@ -108,15 +124,15 @@ export const useTeacherDashbord = () => {
         }
         onGoingSessionDataHandler(data)
         setIsSheetOpen(true)
-        dispatch(setLoader({ state: false, message: null }))
-
+        mic1 = await checkAndReturnMicPermission()
         const stopFunction = await startTeacherStreaming(
           newSocket,
           session_id,
           StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-          mic,
+          mic1,
         )
         setStopStreamFunction(() => stopFunction) // Store the stop function
+        dispatch(setReconnectionLoader({ state: false }))
       })
 
       newSocket.on('mark_attendance', (attendanceData: any) => {
@@ -164,26 +180,20 @@ export const useTeacherDashbord = () => {
         console.log('error')
       })
 
-      newSocket.on('disconnect', async () => {
-        dispatch(
-          setLoader({
-            state: true,
-            message: 'Please wait till the session is clear',
-          }),
-        )
+      newSocket.on('disconnect', async (reason) => {
         if (stopStreamFunction) {
           await stopStreamFunction() // Call the function to stop streaming
-          setStopStreamFunction(null)
         }
+        setStopStreamFunction(null)
         await stopWaveFrq()
         mic.getTracks().forEach((track: any) => track.stop())
-        dispatch(
-          setLoader({
-            state: false,
-            message: null,
-          }),
-        )
+
         setSocket(null)
+        if (reason === 'transport close') {
+          // You can show a loader or attempt reconnection UI here
+          dispatch(setReconnectionLoader({ state: true }))
+          return
+        }
         setIsSheetOpen(false)
       })
 
@@ -306,8 +316,12 @@ export const useTeacherDashbord = () => {
   }
 
   const socketErrorHandler = async (message: any) => {
-    const { status_code, data } = message
+    const { status_code, data } = JSON.parse(message)
     toast.error(`${status_code} - ${data}`)
+    if (status_code === 409) {
+      socket?.disconnect()
+      dispatch(setLoader({ state: false, message: null }))
+    }
   }
   const getLectureDetails = async (day: string = 'current') => {
     try {

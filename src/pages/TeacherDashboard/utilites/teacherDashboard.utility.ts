@@ -218,7 +218,6 @@ const TeacherDashboardUtilites = () => {
 
     // Clean up function to stop all streaming resources
     const stopFunction = async () => {
-      socket.disconnect()
       stopStream = true
 
       // Disconnect audio nodes
