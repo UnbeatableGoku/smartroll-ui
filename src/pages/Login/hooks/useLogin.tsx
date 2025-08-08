@@ -112,7 +112,7 @@ const useLogin = () => {
           return navigate('/student-dashboard') //:: CHANGE TO '/student-dashboard'
         } else {
           window.history.replaceState(null, '', window.location.pathname)
-          const callbackUrlParse: string = `${callbackUrl}?access_token=${token.access}&refresh_token=${token.access}`
+          const callbackUrlParse: string = `${callbackUrl}?access_token=${token.access}&refresh_token=${token.access}&role=${decode.obj.profile.role}`
           return (window.location.href = callbackUrlParse)
         }
       } else {

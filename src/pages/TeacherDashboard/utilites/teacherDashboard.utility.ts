@@ -172,6 +172,7 @@ const TeacherDashboardUtilites = () => {
     let mic: MediaStream | null = null
     mic = await navigator.mediaDevices.getUserMedia({
       audio: {
+        channelCount:1,
         echoCancellation: false,
         noiseSuppression: false,
         autoGainControl: false,

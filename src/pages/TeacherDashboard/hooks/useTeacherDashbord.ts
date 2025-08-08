@@ -9,13 +9,16 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { Socket, io } from 'socket.io-client'
 import { toast } from 'sonner'
+import { setLoader } from '@data/redux/slices/loaderSlice'
 
 import useAPI from '@hooks/useApi'
+import { getNetworkSpeedMbps } from '@utils/helpers/networkCheck'
 
 import { LectureDetails } from 'types/common'
 
 export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
+  const dispatch = useDispatch()
   const {
     loadClassRooms,
     stopSoundFrequency,
@@ -42,10 +45,9 @@ export const useTeacherDashbord = () => {
   const [stopWaveFrequency, setStopWaveFrequency] = useState<
     (() => void) | null
   >(null)
+  const [isNetworkTooSlow, setIsNetworkTooSlow] = useState(false)
   const calendarContainerRef = useRef<HTMLDivElement>(null)
   const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
-
-  const dispatch = useDispatch()
 
   const { isalreadyLoaded, classes } = useSelector(
     (state: RootState) => state.classRoomSlice,
@@ -109,13 +111,15 @@ export const useTeacherDashbord = () => {
       const { data } = message.data
       onGoingSessionDataHandler(data)
 
-      const stopFunction = await startTeacherStreaming(
-        newSocket,
-        session_id,
-        StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-        mic,
-      )
-      setStopStreamFunction(() => stopFunction) // Store the stop function
+      if (!isNetworkTooSlow) {
+        const stopFunction = await startTeacherStreaming(
+          newSocket,
+          session_id,
+          StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+          mic,
+        )
+        setStopStreamFunction(() => stopFunction) // Store the stop function
+      }
     })
 
     newSocket.on('mark_attendance', (attendanceData: any) => {
@@ -195,11 +199,23 @@ export const useTeacherDashbord = () => {
       `select-${lecture_slug}${classroomSlug}`,
     ) as HTMLSelectElement
     try {
+      // Show loader while checking network speed
+      dispatch(setLoader({ state: true, message: 'Starting the session...' }))
       //check the microphone permission
       const mic = await checkAndReturnMicPermission()
+      // Measure network speed before session creation
+      const networkSpeed = await getNetworkSpeedMbps()
+      dispatch(setLoader({ state: false, message: null }))
+      console.log(networkSpeed)
+      if (networkSpeed !== null && networkSpeed < 0.5) {
+        setIsNetworkTooSlow(true)
+      } else {
+        setIsNetworkTooSlow(false)
+      }
       const formData = new FormData()
       formData.append('lecture_slug', lecture_slug)
       formData.append('classroom_slug', selectedClassRoom.value)
+      formData.append('network_speed', networkSpeed !== null ? networkSpeed.toString() : '0')
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -265,6 +281,7 @@ export const useTeacherDashbord = () => {
   }
 
   const socketErrorHandler = (message: any) => {
+    console.log(message)
     const { status_code, data } = message
     toast.error(`${status_code} - ${data}`)
     socket?.disconnect()
