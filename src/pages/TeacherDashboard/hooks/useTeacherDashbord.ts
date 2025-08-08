@@ -15,7 +15,6 @@ import { Socket, io } from 'socket.io-client'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-import { getNetworkSpeedMbps } from '@utils/helpers/networkCheck'
 
 import { LectureDetails } from 'types/common'
 
@@ -124,14 +123,16 @@ export const useTeacherDashbord = () => {
         }
         onGoingSessionDataHandler(data)
         setIsSheetOpen(true)
-        mic1 = await checkAndReturnMicPermission()
-        const stopFunction = await startTeacherStreaming(
-          newSocket,
-          session_id,
-          StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-          mic1,
-        )
-        setStopStreamFunction(() => stopFunction) // Store the stop function
+        if (!isNetworkTooSlow){
+          mic1 = await checkAndReturnMicPermission()        
+          const stopFunction = await startTeacherStreaming(
+            newSocket,
+            session_id,
+            StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+            mic1,
+          )
+          setStopStreamFunction(() => stopFunction) // Store the stop function
+        }
         dispatch(setReconnectionLoader({ state: false }))
       })
 
@@ -243,19 +244,10 @@ export const useTeacherDashbord = () => {
       dispatch(setLoader({ state: true, message: 'Starting the session...' }))
       //check the microphone permission
       const mic = await checkAndReturnMicPermission()
-      // Measure network speed before session creation
-      const networkSpeed = await getNetworkSpeedMbps()
-      dispatch(setLoader({ state: false, message: null }))
-      console.log(networkSpeed)
-      if (networkSpeed !== null && networkSpeed < 0.5) {
-        setIsNetworkTooSlow(true)
-      } else {
-        setIsNetworkTooSlow(false)
-      }
       const formData = new FormData()
       formData.append('lecture_slug', lecture_slug)
       formData.append('classroom_slug', selectedClassRoom.value)
-      formData.append('network_speed', networkSpeed !== null ? networkSpeed.toString() : '0')
+      // No network_speed here, unless you want to use speedMbps from playWaveSoundFrequency later
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -302,8 +294,15 @@ export const useTeacherDashbord = () => {
               message: 'Please wait while the session starts ...',
             }),
           )
-          const stopWaveFrequency1 = await playWaveSoundFrequency(audio_url)
+          // Use playWaveSoundFrequency to get stop function and network speed
+          const { stop: stopWaveFrequency1, speedMbps } = await playWaveSoundFrequency(audio_url)
           setStopWaveFrequency(() => stopWaveFrequency1)
+          // Set network speed state based on measured speed
+          if (speedMbps !== null && speedMbps < 0.3) {
+            setIsNetworkTooSlow(true)
+          } else {
+            setIsNetworkTooSlow(false)
+          }
           clientSocketHandler(
             session_id,
             StoredTokens?.accessToken?.replace('Bearer ', '') as string,
