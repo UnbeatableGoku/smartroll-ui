@@ -58,9 +58,19 @@ const TeacherDashboardUtilites = () => {
     // Create AudioContext
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
 
-    // Fetch and decode audio
+    // Measure network speed while fetching audio
+    const startTime = performance.now()
     const response = await fetch(`${window.base_url}/media/${url}`)
     const arrayBuffer = await response.arrayBuffer()
+    const endTime = performance.now()
+    const durationSeconds = (endTime - startTime) / 1000
+    const fileSizeBytes = arrayBuffer.byteLength    
+    // Mbps = (bytes * 8) / (seconds * 1_000_000)
+    const speedMbps =
+      durationSeconds > 0
+        ? (fileSizeBytes * 8) / (durationSeconds * 1_000_000)
+        : 0
+
     const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer)
 
     // Create and configure buffer source
@@ -70,22 +80,20 @@ const TeacherDashboardUtilites = () => {
     source.loop = true
     source.start()
 
-    // Return stop function with full cleanup
-    return async () => {
+    // Return stop function with full cleanup and the measured speed
+    const stop = async () => {
       try {
         source.stop()
         source.disconnect()
-
-        // Wait for a tiny delay to ensure complete stop (optional but safe)
         await new Promise((resolve) => setTimeout(resolve, 50))
-
         if (audioCtx.state !== 'closed') {
-          await audioCtx.close() // Fully release audio resources
+          await audioCtx.close()
         }
       } catch (err) {
         console.error('Error stopping audio:', err)
       }
     }
+    return { stop, speedMbps }
   }
 
   /**
@@ -140,6 +148,7 @@ const TeacherDashboardUtilites = () => {
     let mic: MediaStream | null = null
     mic = await navigator.mediaDevices.getUserMedia({
       audio: {
+        channelCount:1,
         echoCancellation: false,
         noiseSuppression: false,
         autoGainControl: false,

@@ -100,7 +100,6 @@ const useStudentDashboard = () => {
     btn.disabled = true
     if (!navigator.geolocation) {
       toast.error('Geolocation is not supported by this browser.')
-
       return
     }
     try {
@@ -131,7 +130,18 @@ const useStudentDashboard = () => {
             'ngrok-skip-browser-warning': true,
           }
           const axiosInstance = axios.create()
-          const response_obj = await CallAPI(
+
+          // Timeout logic for 20 seconds
+          let timeoutId: NodeJS.Timeout | null = null
+          let didTimeout = false
+          const timeoutPromise = new Promise((resolve) => {
+            timeoutId = setTimeout(() => {
+              didTimeout = true
+              resolve('timeout')
+            }, 20000)
+          })
+
+          const apiPromise = CallAPI(
             StoredTokens,
             axiosInstance,
             '/manage/session/mark_attendance_for_student/',
@@ -140,6 +150,18 @@ const useStudentDashboard = () => {
             formData,
             null,
           )
+
+          const result = await Promise.race([apiPromise, timeoutPromise])
+          if (timeoutId) clearTimeout(timeoutId)
+
+          if (didTimeout || (result && result === 'timeout')) {
+            // Mark for regulization automatically
+            await handleManualMarking(btn, lecture_slug, session_id, 'Slow Internet')
+            dispatch(setLoader({ state: false, message: null }))
+            return
+          }
+
+          const response_obj = result as any
           if (response_obj.error === false) {
             const response = get(response_obj, 'response.data.data', [])
             const code = get(response_obj, 'response.data.code', [])
@@ -196,13 +218,15 @@ const useStudentDashboard = () => {
     }
   }
 
+  // Modified handleManualMarking to accept a default comment
   const handleManualMarking = async (
     btn: any,
     lecture_slug: string,
     session_id: string,
+    defaultComment?: string,
   ) => {
     try {
-      const regulization_commet: string | null = prompt('Enter the comment')
+      let regulization_commet: string | null = defaultComment || prompt('Enter the comment')
       if (!regulization_commet) {
         return
       }
