@@ -1,3 +1,4 @@
+import ReconnectionLoader from '../src/components/loader/reconnection-loader'
 import { RootState } from '@data/redux/Store'
 import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
@@ -6,7 +7,7 @@ import { Toaster } from 'sonner'
 import { Loader } from '@components/common/loader/Loader'
 
 function App() {
-  const { LOADER_STATE, message } = useSelector(
+  const { LOADER_STATE, message, RECONNECTION_LOADER_STAT } = useSelector(
     (state: RootState) => state.loader,
   )
 
@@ -15,6 +16,7 @@ function App() {
       <Outlet />
       <Toaster richColors position="top-right" />
       {LOADER_STATE && <Loader message={message} />}
+      {RECONNECTION_LOADER_STAT && <ReconnectionLoader></ReconnectionLoader>}
     </div>
   )
 }
