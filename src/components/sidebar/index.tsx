@@ -1,14 +1,21 @@
 // import { useMemo } from 'react'
 // import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { useMemo } from 'react'
+
+import { RootState } from '@data/redux/Store'
 import { setAuth } from '@data/redux/slices/authSlice'
 import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
-// import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
-import { Home, LogOut, UserPen } from 'lucide-react'
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
+import { Home, LogOut, Menu } from 'lucide-react'
 import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-// import { generateSidebarLinks } from '@utils/helpers'
+import { generateSidebarLinks } from '@utils/helpers'
+
+import TabLink from '@components/sidebar/tabLink'
 import StackholderProfile from '@components/stackholder/StackholderProfile'
+import { Dialog, DialogContent, DialogTrigger } from '@components/ui/dialog'
 
 import NotificationDrawer from './NotificationDrawer'
 import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
@@ -18,7 +25,7 @@ import useSidebarLinkSelector from './hooks/useSidebarLinkSelector'
 const Sidebar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  const auth = useSelector((state: RootState) => state.auth.userProfile)
   const handelLogout = () => {
     //clear local storage
     localStorage.removeItem('accessToken')
@@ -36,12 +43,12 @@ const Sidebar = () => {
 
   const {
     activeIndex,
-    // collapsed,
-    // open,
+    collapsed,
+    open,
     isProfileModalOpen,
     setActiveIndex,
-    // setOpen,
-    // setSidebarLinks,
+    setOpen,
+    setSidebarLinks,
     setIsProfileModalOpen,
   } = useSidebarLinkSelector()
 
@@ -49,32 +56,42 @@ const Sidebar = () => {
     {
       icon: Home,
       label: 'Home',
-      event: () => navigate('/'),
-    },
-    {
-      icon: UserPen,
-      label: 'Profile',
       event: () => {
-        setIsProfileModalOpen(true)
+        const userRole = auth?.obj.profile.role
+        switch (userRole) {
+          case 'teacher':
+            return navigate('/teacher-dashboard')
+          case 'student':
+            return navigate('/student-dashboard')
+          default:
+            navigate('/')
+        }
       },
     },
+    // {
+    //   icon: UserPen,
+    //   label: 'Profile',
+    //   event: () => {
+    //     setIsProfileModalOpen(true)
+    //   },
+    // },
     { icon: LogOut, label: 'Logout', event: handelLogout, alert: false },
   ]
 
-  // const validLinks = useMemo(
-  //   () => generateSidebarLinks(setSidebarLinks()),
-  //   [setSidebarLinks()],
-  // )
+  const validLinks = useMemo(
+    () => generateSidebarLinks(setSidebarLinks()),
+    [setSidebarLinks()],
+  )
 
   // will get the index of first parent with children for defalut open
-  // const firstParentWithChild = useMemo(
-  //   () =>
-  //     validLinks.findIndex((link) => link.children && link.children.length > 0),
-  //   [validLinks],
-  // )
+  const firstParentWithChild = useMemo(
+    () =>
+      validLinks.findIndex((link) => link.children && link.children.length > 0),
+    [validLinks],
+  )
 
   return (
-    <div className="menu fixed bottom-4 left-0 right-0 flex justify-center">
+    <div className="fixed bottom-[1rem] left-[50%] -translate-x-1/2 transform">
       <div className="flex items-center gap-1 rounded-[12px] border border-zinc-700 bg-[#F7F7F7] p-1 shadow-soft backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105">
         {menuItems.map((item, index) => (
           <button
@@ -96,7 +113,7 @@ const Sidebar = () => {
           </button>
         ))}
         <NotificationDrawer></NotificationDrawer>
-        {/* <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <button
               className="group relative flex h-12 w-12 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
@@ -127,7 +144,7 @@ const Sidebar = () => {
               </div>
             </DialogContent>
           </VisuallyHidden.Root>
-        </Dialog> */}
+        </Dialog>
       </div>
       <StackholderProfile
         isOpen={isProfileModalOpen}

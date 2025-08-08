@@ -9,10 +9,7 @@ import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import {
-  createWavBlob,  
-  flattenChunks,
-} from '@utils/helpers/recorder_process'
+import { createWavBlob, flattenChunks } from '@utils/helpers/recorder_process'
 
 const useStudentDashboard = () => {
   const [permission_state, set_permission_state] = useState(false)
@@ -194,7 +191,15 @@ const useStudentDashboard = () => {
           }
         },
         (error) => {
-          toast.error(error.message)
+          let message = error.message
+          if (error.code === 2) {
+            message =
+              error.message ||
+              'GPS is unavailable, please try marking attandance manually'
+          }
+          toast.error(message)
+          dispatch(setLoader({ state: false, message: null }))
+          btn.disabled = false
           return
         },
         { enableHighAccuracy: true, maximumAge: 0 },
@@ -375,7 +380,7 @@ const startStudentRecording = async (duration = 5000) => {
 
           // Create audio blob from recorded data
           const audioBuffer = flattenChunks(recordedData)
-          const wavBlob = createWavBlob(audioBuffer, sampleRate)          
+          const wavBlob = createWavBlob(audioBuffer, sampleRate)
           resolve({
             error: false,
             message: 'Recording successful.',

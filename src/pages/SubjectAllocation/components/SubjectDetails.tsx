@@ -34,7 +34,7 @@ const SubjectDetails = ({
   const [activeTab, setActiveTab] = useState('theory')
 
   const renderTeacherTable = (data: AllocationTypeDetails) => (
-    <Table className="dark:text-white">
+    <Table className="dark:text-black">
       <TableHeader>
         <TableRow>
           <TableHead>Teacher Name</TableHead>
@@ -100,16 +100,16 @@ const SubjectDetails = ({
     <Tabs
       value={activeTab}
       onValueChange={setActiveTab}
-      className="mt-10 w-full pb-10"
+      className="mt-10 w-full bg-white pb-10"
     >
-      <TabsList className="flex">
+      <TabsList className="flex bg-white">
         {Object.entries(allocation.teacher_allocation).map(([key]) => (
           <TabsTrigger value={key} className="w-full">
             {key}
           </TabsTrigger>
         ))}
       </TabsList>
-      <TabsContent value="theory" className="text-white">
+      <TabsContent value="theory" className="text-white active:bg-white">
         <h3 className="mb-2 text-lg font-semibold">Theory Teachers</h3>
         <ScrollArea className="h-[100dvh]">
           {allocation.teacher_allocation.theory.teachers.length > 0 ? (

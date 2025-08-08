@@ -105,11 +105,14 @@ const useLogin = () => {
       //? return success message and the token
       if (decode.obj.profile.role === 'admin') {
         return navigate('/subject/subject-select') //:: CHANGE TO '/'
-      } else if (decode.obj.profile.role === 'teacher') {
-        return navigate('/teacher-dashboard') //:: CHANGE TO '/teacher-dashboard'
-      } else if (decode.obj.profile.role === 'student') {
+      } else if (
+        decode.obj.profile.role === 'student' ||
+        decode.obj.profile.role === 'teacher'
+      ) {
         if (!callbackUrl || !fromApp || !deviceId) {
-          return navigate('/student-dashboard') //:: CHANGE TO '/student-dashboard'
+          return decode.obj.profile.role === 'student'
+            ? navigate('/student-dashboard')
+            : navigate('/teacher-dashboard') //:: CHANGE TO '/student-dashboard'
         } else {
           window.history.replaceState(null, '', window.location.pathname)
           const callbackUrlParse: string = `${callbackUrl}?access_token=${token.access}&refresh_token=${token.access}&role=${decode.obj.profile.role}`

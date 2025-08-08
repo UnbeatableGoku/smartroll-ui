@@ -1,12 +1,10 @@
-import { useState } from 'react'
-
 import axios from 'axios'
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { createPCMBlob } from '@utils/helpers/recorder_process'
+import { float32ToInt16BlobAsync } from '@utils/helpers/recorder_process'
 
 import {
   BranchLectures,
@@ -17,8 +15,6 @@ import {
 
 const TeacherDashboardUtilites = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
-  const [oscillator, setOscillator] = useState<any>(null)
-  const [gainNode, setGainNode] = useState<any>(null)
 
   /**
    * @link /manage/get_classrooms_for_teacher
@@ -58,65 +54,37 @@ const TeacherDashboardUtilites = () => {
     }
   }
 
-  /**
-   *@description play the ultra wave sound
-   * @param frequency
-   * @returns retrun the
-   */
-  const playSoundFrequency = (frequency: number) => {
-    let audioCtx: any
-    let oscillator: any
-    let gainNode: any
-    console.log(frequency)
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-    }
-
-    oscillator = audioCtx.createOscillator()
-    gainNode = audioCtx.createGain()
-
-    oscillator.type = 'sine'
-    oscillator.frequency.value = frequency // 19.5kHz
-    gainNode.gain.value = 1 // Volume (you can adjust)
-
-    oscillator.connect(gainNode)
-    gainNode.connect(audioCtx.destination)
-
-    oscillator.start()
-    setOscillator(oscillator)
-    setGainNode(gainNode)
-  }
-
   const playWaveSoundFrequency = async (url: any) => {
-    let audioCtx: any
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-    }
+    // Create AudioContext
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // Fetch and decode audio
     const response = await fetch(`${window.base_url}/media/${url}`)
     const arrayBuffer = await response.arrayBuffer()
     const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer)
-    let source = audioCtx.createBufferSource()
+
+    // Create and configure buffer source
+    const source = audioCtx.createBufferSource()
     source.buffer = audioBuffer
     source.connect(audioCtx.destination)
     source.loop = true
     source.start()
 
-    return () => {
-      if (source) {
+    // Return stop function with full cleanup
+    return async () => {
+      try {
         source.stop()
         source.disconnect()
-        source = null
-      }
-    }
-  }
 
-  const stopSoundFrequency = () => {
-    if (oscillator) {
-      oscillator.stop()
-      oscillator.disconnect()
-      gainNode.disconnect()
-      setOscillator(null)
-      setGainNode(null)
+        // Wait for a tiny delay to ensure complete stop (optional but safe)
+        await new Promise((resolve) => setTimeout(resolve, 50))
+
+        if (audioCtx.state !== 'closed') {
+          await audioCtx.close() // Fully release audio resources
+        }
+      } catch (err) {
+        console.error('Error stopping audio:', err)
+      }
     }
   }
 
@@ -196,7 +164,6 @@ const TeacherDashboardUtilites = () => {
     mic: any,
   ) => {
     let audioContext: any | null = null
-
     if (audioContext) {
       audioContext.close()
       audioContext = null
@@ -225,9 +192,9 @@ const TeacherDashboardUtilites = () => {
 
     let stopStream = false
 
-    recorderNode.port.onmessage = (event) => {
+    recorderNode.port.onmessage = async (event) => {
       const chunk = event.data[0] // Float32Array
-      const wavBlob = createPCMBlob(chunk)
+      const wavBlob = await float32ToInt16BlobAsync(chunk)
       const timestamp = startTime + chunkIndex * chunkDuration
       chunkIndex++
 
@@ -252,7 +219,6 @@ const TeacherDashboardUtilites = () => {
 
     // Clean up function to stop all streaming resources
     const stopFunction = async () => {
-      socket.disconnect()
       stopStream = true
 
       // Disconnect audio nodes
@@ -363,8 +329,6 @@ const TeacherDashboardUtilites = () => {
 
   return {
     loadClassRooms,
-    playSoundFrequency,
-    stopSoundFrequency,
     extractLectureStatusData,
     getWeekDates,
     buildTeacherLectureListResponse,
