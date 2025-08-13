@@ -51,6 +51,7 @@ export const useTeacherDashbord = () => {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const calendarContainerRef = useRef<HTMLDivElement>(null)
   const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
+  const isNetworkTooSlowRef = useRef(false)
 
   const { isalreadyLoaded, classes } = useSelector(
     (state: RootState) => state.classRoomSlice,
@@ -61,13 +62,14 @@ export const useTeacherDashbord = () => {
   useEffect(() => {
     return () => {
       if (stopStreamFunction) {
-        ;(async () => {
+        ; (async () => {
           await stopStreamFunction()
           setStopStreamFunction(null)
         })()
       }
     }
   }, [stopStreamFunction])
+  
 
   useEffect(() => {
     setSocket(null)
@@ -123,8 +125,8 @@ export const useTeacherDashbord = () => {
         }
         onGoingSessionDataHandler(data)
         setIsSheetOpen(true)
-        if (!isNetworkTooSlow){
-          mic1 = await checkAndReturnMicPermission()        
+        if (!isNetworkTooSlowRef.current) {
+          mic1 = await checkAndReturnMicPermission()
           const stopFunction = await startTeacherStreaming(
             newSocket,
             session_id,
@@ -299,10 +301,13 @@ export const useTeacherDashbord = () => {
           setStopWaveFrequency(() => stopWaveFrequency1)
           // Set network speed state based on measured speed
           if (speedMbps !== null && speedMbps < 0.3) {
+            isNetworkTooSlowRef.current = true
             setIsNetworkTooSlow(true)
           } else {
+            isNetworkTooSlowRef.current = false
             setIsNetworkTooSlow(false)
           }
+
           clientSocketHandler(
             session_id,
             StoredTokens?.accessToken?.replace('Bearer ', '') as string,

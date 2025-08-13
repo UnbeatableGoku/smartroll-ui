@@ -169,7 +169,7 @@ const TeacherDashboardUtilites = () => {
     socket: any,
     session_id: string,
     auth_token: string,
-    mic: any,
+    mic: any
   ) => {
     let audioContext: any | null = null
     if (audioContext) {
