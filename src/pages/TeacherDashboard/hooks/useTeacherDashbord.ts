@@ -20,6 +20,7 @@ import { LectureDetails } from 'types/common'
 
 export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
+  const dispatch = useDispatch()
   const {
     loadClassRooms,
     extractLectureStatusData,
@@ -45,13 +46,12 @@ export const useTeacherDashbord = () => {
   const [stopWaveFrequency, setStopWaveFrequency] = useState<
     (() => Promise<void>) | null
   >(null)
-
+  const [isNetworkTooSlow, setIsNetworkTooSlow] = useState(false)
   const [isHistorySheetOpen, setIsHistorySheetOpen] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const calendarContainerRef = useRef<HTMLDivElement>(null)
   const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
-
-  const dispatch = useDispatch()
+  const isNetworkTooSlowRef = useRef(false)
 
   const { isalreadyLoaded, classes } = useSelector(
     (state: RootState) => state.classRoomSlice,
@@ -125,15 +125,16 @@ export const useTeacherDashbord = () => {
         }
         onGoingSessionDataHandler(data)
         setIsSheetOpen(true)
-
-        mic1 = await checkAndReturnMicPermission()
-        const stopFunction = await startTeacherStreaming(
-          newSocket,
-          session_id,
-          StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-          mic1,
-        )
-        setStopStreamFunction(() => stopFunction) // Store the stop function
+        if (!isNetworkTooSlowRef.current) {
+          mic1 = await checkAndReturnMicPermission()
+          const stopFunction = await startTeacherStreaming(
+            newSocket,
+            session_id,
+            StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+            mic1,
+          )
+          setStopStreamFunction(() => stopFunction) // Store the stop function
+        }
         dispatch(setReconnectionLoader({ state: false }))
       })
 
@@ -242,12 +243,15 @@ export const useTeacherDashbord = () => {
       `select-${lecture_slug}${classroomSlug}`,
     ) as HTMLSelectElement
     try {
+      // Show loader while checking network speed
+      dispatch(setLoader({ state: true, message: 'Starting the session...' }))
       //check the microphone permission
       const mic = await checkAndReturnMicPermission()
       const formData = new FormData()
       formData.append('lecture_slug', lecture_slug)
       formData.append('classroom_slug', selectedClassRoom.value)
       formData.append('day', sessionDay)
+      // No network_speed here, unless you want to use speedMbps from playWaveSoundFrequency later
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -294,8 +298,19 @@ export const useTeacherDashbord = () => {
               message: 'Please wait while the session starts ...',
             }),
           )
-          const stopWaveFrequency1 = await playWaveSoundFrequency(audio_url)
+          // Use playWaveSoundFrequency to get stop function and network speed
+          const { stop: stopWaveFrequency1, speedMbps } =
+            await playWaveSoundFrequency(audio_url)
           setStopWaveFrequency(() => stopWaveFrequency1)
+          // Set network speed state based on measured speed
+          if (speedMbps !== null && speedMbps < 0.3) {
+            isNetworkTooSlowRef.current = true
+            setIsNetworkTooSlow(true)
+          } else {
+            isNetworkTooSlowRef.current = false
+            setIsNetworkTooSlow(false)
+          }
+
           clientSocketHandler(
             session_id,
             StoredTokens?.accessToken?.replace('Bearer ', '') as string,
