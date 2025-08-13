@@ -46,7 +46,7 @@ export const useTeacherDashbord = () => {
   const [stopWaveFrequency, setStopWaveFrequency] = useState<
     (() => Promise<void>) | null
   >(null)
-  const [isNetworkTooSlow, setIsNetworkTooSlow] = useState(false)
+  const [_, setIsNetworkTooSlow] = useState(false)
   const [isHistorySheetOpen, setIsHistorySheetOpen] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const calendarContainerRef = useRef<HTMLDivElement>(null)
@@ -136,6 +136,13 @@ export const useTeacherDashbord = () => {
           setStopStreamFunction(() => stopFunction) // Store the stop function
         }
         dispatch(setReconnectionLoader({ state: false }))
+        const networkResponse = {
+          session_id,
+          auth_token,
+          is_network_too_slow: isNetworkTooSlowRef.current,
+        }
+        console.log(networkResponse)
+        newSocket?.emit('network_too_slow', networkResponse)
       })
 
       newSocket.on('mark_attendance', (attendanceData: any) => {
