@@ -154,7 +154,11 @@ const useLogin = () => {
           localStorage.clear()
           return
         } else if (decode?.obj?.profile?.role === 'teacher') {
-          navigate('/teacher-dashboard')
+          if (!callbackUrl || !fromApp || !deviceId) {
+            return navigate('/teacher-dashboard')
+          }
+          localStorage.clear()
+          return
         } else {
           navigate('/login')
         }

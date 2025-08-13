@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
-import { RootState } from '@data/redux/Store'
+import Store, { RootState } from '@data/redux/Store'
 import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
 import {
   setLoader,
@@ -106,6 +106,7 @@ export const useTeacherDashbord = () => {
           client: 'FE',
           session_id: session_id,
           auth_token: auth_token,
+          isReConnect: Store.getState().loader.RECONNECTION_LOADER_STAT,
         })
       })
 
@@ -124,6 +125,7 @@ export const useTeacherDashbord = () => {
         }
         onGoingSessionDataHandler(data)
         setIsSheetOpen(true)
+
         mic1 = await checkAndReturnMicPermission()
         const stopFunction = await startTeacherStreaming(
           newSocket,
@@ -233,6 +235,7 @@ export const useTeacherDashbord = () => {
     session_id: string,
     lecture_slug: string,
     classroomSlug: string,
+    sessionDay: string,
     // session_status: string,
   ) => {
     const selectedClassRoom = document.getElementById(
@@ -244,6 +247,7 @@ export const useTeacherDashbord = () => {
       const formData = new FormData()
       formData.append('lecture_slug', lecture_slug)
       formData.append('classroom_slug', selectedClassRoom.value)
+      formData.append('day', sessionDay)
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -317,11 +321,12 @@ export const useTeacherDashbord = () => {
 
   const socketErrorHandler = async (message: any) => {
     const { status_code, data } = JSON.parse(message)
+    console.log(message)
     toast.error(`${status_code} - ${data}`)
     if (status_code === 409) {
       socket?.disconnect()
-      dispatch(setLoader({ state: false, message: null }))
     }
+    dispatch(setLoader({ state: false, message: null }))
   }
   const getLectureDetails = async (day: string = 'current') => {
     try {
