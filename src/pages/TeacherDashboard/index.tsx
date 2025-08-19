@@ -305,7 +305,7 @@ const TeacherDashboard = () => {
                                   lecture?.session.session_id,
                                   lecture?.slug,
                                   lecture?.session?.classroom_final?.slug,
-                                  // sessionData[lecture.session.session_id],
+                                  lecture?.session?.day,
                                 )
                               }}
                               disabled={
