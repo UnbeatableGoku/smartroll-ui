@@ -566,15 +566,15 @@ const TeacherDashboard = () => {
       <CustomLoader
         isVisible={showCustomLoader}
         onEarlyComplete={() => {
-          // This will be called when 2 seconds are left
-          // Trigger early sheet opening for better UX
+          // This will be called when 2 seconds are remaining in countdown
+          // Trigger socket setup to ensure sheet opens quickly
           handleEarlySheetOpen()
         }}
         onComplete={() => {
           setShowCustomLoader(false)
           // Ensure smooth transition by removing any potential delays
         }}
-        delay={5000}
+        delay={3000}
       />
     </div>
   )

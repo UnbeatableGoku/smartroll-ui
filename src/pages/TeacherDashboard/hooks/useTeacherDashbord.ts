@@ -153,7 +153,6 @@ export const useTeacherDashbord = () => {
           auth_token,
           is_network_too_slow: isNetworkTooSlowRef.current,
         }
-        console.log(networkResponse)
         newSocket?.emit('network_too_slow', networkResponse)
       })
 
@@ -193,7 +192,9 @@ export const useTeacherDashbord = () => {
       })
 
       newSocket.on('client_error', async (message) => {
-        await stopWaveFrq()
+        if (stopWaveFrq && typeof stopWaveFrq === 'function') {
+          await stopWaveFrq()
+        }
         mic.getTracks().forEach((track: any) => track.stop())
         socketErrorHandler(message)
       })
@@ -207,7 +208,9 @@ export const useTeacherDashbord = () => {
           await stopStreamFunction() // Call the function to stop streaming
         }
         setStopStreamFunction(null)
-        await stopWaveFrq()
+        if (stopWaveFrq && typeof stopWaveFrq === 'function') {
+          await stopWaveFrq()
+        }
         mic.getTracks().forEach((track: any) => track.stop())
 
         setSocket(null)
@@ -311,8 +314,10 @@ export const useTeacherDashbord = () => {
         setLectureDetails(updatedLectureDetails)
 
         if (data.active === 'ongoing') {
-          // Reset session setup state
+          // Clean up any previous states first (synchronously)
+          setShowCustomLoader(false)
           setSessionSetupStarted(false)
+          pendingSessionDataRef.current = null
 
           // Store session data for early completion
           pendingSessionDataRef.current = {
@@ -325,11 +330,27 @@ export const useTeacherDashbord = () => {
             ) as string,
           }
 
-          // Show custom loader with volume instructions and delay
+          // Show custom loader immediately
           setShowCustomLoader(true)
 
-          // Wait for 5 seconds (loader will handle early completion)
-          await new Promise((resolve) => setTimeout(resolve, 5000))
+          // Wait for either early completion or 3 seconds with faster polling
+          await new Promise((resolve) => {
+            const checkInterval = setInterval(() => {
+              // If session setup has started, exit early
+              if (sessionSetupStarted) {
+                console.log('🚀 Exiting early due to session setup completion')
+                clearInterval(checkInterval)
+                resolve(undefined)
+              }
+            }, 50) // Reduced from 100ms to 50ms for faster response
+
+            // Fallback timeout after 3 seconds
+            setTimeout(() => {
+              console.log('⏰ Fallback timeout reached - proceeding normally')
+              clearInterval(checkInterval)
+              resolve(undefined)
+            }, 3000)
+          })
 
           // Hide custom loader
           setShowCustomLoader(false)
@@ -640,6 +661,11 @@ export const useTeacherDashbord = () => {
   }
 
   const handleSheet = async () => {
+    // Reset custom loader states when sheet closes
+    setShowCustomLoader(false)
+    setSessionSetupStarted(false)
+    pendingSessionDataRef.current = null
+
     handleSessionCleanUp()
   }
 
@@ -694,22 +720,38 @@ export const useTeacherDashbord = () => {
 
   const handleSessionCleanUp = async () => {
     try {
-      setSocket(null)
+      // Disconnect socket first
+      if (socket) {
+        socket.disconnect()
+        setSocket(null)
+      }
+
+      // Stop audio frequency
       if (stopWaveFrequency) {
         await stopWaveFrequency()
         setStopWaveFrequency(null)
       }
+
+      // Stop streaming
       if (stopStreamFunction) {
         await stopStreamFunction()
         setStopStreamFunction(null)
       }
+
+      // Reset all loader states
       dispatch(
         setLoader({
           state: false,
           message: null,
         }),
       )
-      socket?.disconnect()
+
+      // Reset custom loader states
+      setShowCustomLoader(false)
+      setSessionSetupStarted(false)
+      pendingSessionDataRef.current = null
+
+      // Close sheet
       setIsSheetOpen(false)
     } catch (error: any) {
       toast.error(error.message)
@@ -717,36 +759,51 @@ export const useTeacherDashbord = () => {
   }
 
   const handleEarlySheetOpen = async () => {
-    // Prevent double execution
-    if (sessionSetupStarted || !pendingSessionDataRef.current) {
+    // Prevent double execution and conflicts
+    if (sessionSetupStarted || !pendingSessionDataRef.current || socket) {
       return
     }
 
+    // Set state immediately to prevent race conditions
     setSessionSetupStarted(true)
 
     try {
       const { session_id, audio_url, mic, accessToken } =
         pendingSessionDataRef.current
 
-      // Use playWaveSoundFrequency to get stop function and network speed
-      const { stop: stopWaveFrequency1, speedMbps } =
-        await playWaveSoundFrequency(audio_url)
-      setStopWaveFrequency(() => stopWaveFrequency1)
+      // Start audio and socket setup in parallel for faster response
+      const audioPromise = playWaveSoundFrequency(audio_url)
 
-      // Set network speed state based on measured speed
-      if (speedMbps !== null && speedMbps < 0.3) {
-        isNetworkTooSlowRef.current = true
-        setIsNetworkTooSlow(true)
-      } else {
-        isNetworkTooSlowRef.current = false
-        setIsNetworkTooSlow(false)
+      // Don't await here - let it run in background
+      audioPromise
+        .then(({ stop: stopWaveFrequency1, speedMbps }) => {
+          setStopWaveFrequency(() => stopWaveFrequency1)
+
+          // Set network speed state based on measured speed
+          if (speedMbps !== null && speedMbps < 0.3) {
+            isNetworkTooSlowRef.current = true
+            setIsNetworkTooSlow(true)
+          } else {
+            isNetworkTooSlowRef.current = false
+            setIsNetworkTooSlow(false)
+          }
+        })
+        .catch((error) => {
+          console.error('Error in audio setup:', error)
+        })
+
+      // Create a temporary stop function until audio loads
+      const tempStopWaveFunction = async () => {
+        // This will be replaced when audio loads
+        console.log('Temporary stop function called')
       }
 
-      // Call clientSocketHandler
-      clientSocketHandler(session_id, accessToken, mic, stopWaveFrequency1)
+      // Start socket connection with temporary function
+      clientSocketHandler(session_id, accessToken, mic, tempStopWaveFunction)
     } catch (error) {
       console.error('Error in early session setup:', error)
-      toast.error('Error setting up session')
+      // Reset state on error
+      setSessionSetupStarted(false)
     }
   }
 

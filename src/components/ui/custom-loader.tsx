@@ -22,19 +22,22 @@ const CustomLoader = ({
 
   useEffect(() => {
     if (!isVisible) {
+      // Reset state when not visible
       setTimeLeft(delay / 1000)
       earlyCompleteCalledRef.current = false
       return
     }
 
+    // Reset state when becoming visible
     setTimeLeft(delay / 1000)
     earlyCompleteCalledRef.current = false
 
     const countdown = setInterval(() => {
       setTimeLeft((prev) => {
-        // Call early complete when 2 seconds left
+        // Call early complete when 2 seconds are remaining (at 1 second into countdown)
         if (prev <= 2 && !earlyCompleteCalledRef.current && onEarlyComplete) {
           earlyCompleteCalledRef.current = true
+          // Call onEarlyComplete immediately without any delays
           onEarlyComplete()
         }
 
@@ -50,7 +53,7 @@ const CustomLoader = ({
     return () => {
       clearInterval(countdown)
     }
-  }, [isVisible, delay, onComplete, onEarlyComplete])
+  }, [isVisible, delay])
 
   if (!isVisible) return null
 
