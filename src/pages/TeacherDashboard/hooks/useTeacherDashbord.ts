@@ -31,6 +31,7 @@ export const useTeacherDashbord = () => {
   } = TeacherDashboardUtilites()
   const [socket, setSocket] = useState<Socket | null>(null)
   const [students, setStudents] = useState<any>([])
+  const [redStudents, setRedStudents] = useState<any>([])
   const [sessionData, setSessionData] = useState<any>()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [onGoingSessionData, setOngoingSessionData] = useState<any>(null)
@@ -141,7 +142,6 @@ export const useTeacherDashbord = () => {
           auth_token,
           is_network_too_slow: isNetworkTooSlowRef.current,
         }
-        console.log(networkResponse)
         newSocket?.emit('network_too_slow', networkResponse)
       })
 
@@ -149,7 +149,11 @@ export const useTeacherDashbord = () => {
         const { attendance_data } = attendanceData.data.data
 
         if (attendance_data) {
-          setStudents((prev: any) => [attendance_data, ...prev])
+          if (attendance_data.chirp_detected) {
+            setStudents((prev: any) => [attendance_data, ...prev])
+          } else {
+            setRedStudents((prev: any) => [attendance_data, ...prev])
+          }
         }
       })
 
@@ -158,6 +162,9 @@ export const useTeacherDashbord = () => {
         const { status_code, attendance_slug, message } = data
         if (status_code === 200) {
           setStudents((prev: any) =>
+            prev.filter((student: any) => student.slug !== attendance_slug),
+          )
+          setRedStudents((prev: any) =>
             prev.filter((student: any) => student.slug !== attendance_slug),
           )
           dispatch(setLoader({ state: false, message: null }))
@@ -195,7 +202,9 @@ export const useTeacherDashbord = () => {
           await stopStreamFunction() // Call the function to stop streaming
         }
         setStopStreamFunction(null)
-        await stopWaveFrq()
+        if (reason !== 'transport close') {
+          await stopWaveFrq()
+        }
         mic.getTracks().forEach((track: any) => track.stop())
 
         setSocket(null)
@@ -249,11 +258,11 @@ export const useTeacherDashbord = () => {
     const selectedClassRoom = document.getElementById(
       `select-${lecture_slug}${classroomSlug}`,
     ) as HTMLSelectElement
+    const mic = await checkAndReturnMicPermission()
     try {
       // Show loader while checking network speed
       dispatch(setLoader({ state: true, message: 'Starting the session...' }))
       //check the microphone permission
-      const mic = await checkAndReturnMicPermission()
       const formData = new FormData()
       formData.append('lecture_slug', lecture_slug)
       formData.append('classroom_slug', selectedClassRoom.value)
@@ -327,9 +336,14 @@ export const useTeacherDashbord = () => {
         }
       } else {
         toast.error(response_obj.errorMessage?.message)
+        mic?.getTracks().forEach((track: any) => track.stop())
       }
     } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
+      mic?.getTracks().forEach((track: any) => track.stop())
+      if (stopWaveFrequency) {
+        await stopWaveFrequency()
+      }
     }
   }
   const onGoingSessionDataHandler = (message: any) => {
@@ -338,7 +352,16 @@ export const useTeacherDashbord = () => {
     setOngoingSessionData(data)
     const { marked_attendances, pending_regulization_requests } = data
     setManualAttendance(pending_regulization_requests)
-    setStudents(marked_attendances)
+    const valid_attendance = marked_attendances.filter(
+      (attendance: any) => attendance.chirp_detected,
+    )
+
+    const red_students = marked_attendances.filter(
+      (attendance: any) => !attendance.chirp_detected,
+    )
+
+    setStudents(valid_attendance)
+    setRedStudents(red_students)
   }
 
   const socketErrorHandler = async (message: any) => {
@@ -678,6 +701,7 @@ export const useTeacherDashbord = () => {
     setIsHistorySheetOpen(!isHistorySheetOpen)
     setSessionId(null)
     setStudents([])
+    setRedStudents([])
   }
 
   const handleSessionCleanUp = async () => {
@@ -741,5 +765,6 @@ export const useTeacherDashbord = () => {
     handleHistorySheetOpen,
     sessionId,
     handleAttendaceHistoryData,
+    redStudents,
   }
 }

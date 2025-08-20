@@ -73,6 +73,7 @@ const TeacherDashboard = () => {
     isHistorySheetOpen,
     handleHistorySheetOpen,
     sessionId,
+    redStudents,
   } = useTeacherDashbord()
 
   useEffect(() => {
@@ -393,7 +394,8 @@ const TeacherDashboard = () => {
           >
             <SheetHeader className="mb-6 flex flex-row items-center justify-between">
               <SheetTitle className="text-sm text-black md:text-2xl">
-                Attendance Details (Active Students : {students?.length})
+                Attendance Details (Active Students :{' '}
+                {students?.length + redStudents?.length})
               </SheetTitle>
             </SheetHeader>
 
@@ -422,34 +424,32 @@ const TeacherDashboard = () => {
                       </TabsTrigger>
                     </TabsList>
                     <TabsContent value="Default">
-                      {students.length > 0 ? (
+                      {students.length > 0 || redStudents.length > 0 ? (
                         <div className="overflow-x-auto">
                           <Table className="text-black">
                             <TableHeader>
-                              {students?.length > 0 && (
-                                <TableRow className="md:text-md border-border text-[12px]">
-                                  <TableHead>Student Name</TableHead>
-                                  <TableHead className="text-center">
-                                    {' '}
-                                    P/A
-                                  </TableHead>
-                                  {/* <TableHead className="text-center">
+                              <TableRow className="md:text-md border-border text-[12px]">
+                                <TableHead>Student Name</TableHead>
+                                <TableHead className="text-center">
+                                  {' '}
+                                  P/A
+                                </TableHead>
+                                {/* <TableHead className="text-center">
                                     Prob(%)
                                   </TableHead> */}
-                                  <TableHead className="text-center">
-                                    Distance
-                                  </TableHead>
-                                  <TableHead className="text-center">
-                                    NCC
-                                  </TableHead>
-                                  <TableHead className="text-center">
-                                    Magnitude
-                                  </TableHead>
-                                </TableRow>
-                              )}
+                                <TableHead className="text-center">
+                                  Distance
+                                </TableHead>
+                                <TableHead className="text-center">
+                                  NCC
+                                </TableHead>
+                                <TableHead className="text-center">
+                                  Magnitude
+                                </TableHead>
+                              </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {students?.map((student: any) => (
+                              {redStudents?.map((student: any) => (
                                 <TableRow
                                   key={student?.slug}
                                   style={{
@@ -470,6 +470,39 @@ const TeacherDashboard = () => {
                                     color: 'black',
                                   }}
                                 >
+                                  <TableCell>
+                                    {student?.student?.profile?.name}
+                                  </TableCell>
+
+                                  <TableCell className="text-center">
+                                    <Checkbox
+                                      checked={student.is_present}
+                                      onCheckedChange={() =>
+                                        updateStudentAttendance(
+                                          student.slug,
+                                          false,
+                                        )
+                                      }
+                                      className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:hover:bg-blue-600"
+                                    />
+                                  </TableCell>
+                                  {/* <TableCell className="text-center">
+                                    {`${Number(Math.floor(student?.similarity))} %` ||
+                                      '-'}
+                                  </TableCell> */}
+                                  <TableCell className="text-center">
+                                    {student?.gps_distance?.toFixed(3) || '-'}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {student?.ncc?.toFixed(2) || '-'}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {student?.magnitude?.toFixed(2) || '-'}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                              {students?.map((student: any) => (
+                                <TableRow key={student?.slug}>
                                   <TableCell>
                                     {student?.student?.profile?.name}
                                   </TableCell>
