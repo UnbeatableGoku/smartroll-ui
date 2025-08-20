@@ -39,6 +39,7 @@ import { MdGroups2 } from 'react-icons/md'
 import { cn } from '@utils'
 
 import { Checkbox } from '@components/ui/checkbox'
+import CustomLoader from '@components/ui/custom-loader'
 
 import AttendanceHistorySheet from './components/AttendanceHistorySheet'
 import { useTeacherDashbord } from './hooks/useTeacherDashbord'
@@ -74,6 +75,9 @@ const TeacherDashboard = () => {
     handleHistorySheetOpen,
     sessionId,
     redStudents,
+    showCustomLoader,
+    setShowCustomLoader,
+    handleEarlySheetOpen,
   } = useTeacherDashbord()
 
   useEffect(() => {
@@ -590,6 +594,21 @@ const TeacherDashboard = () => {
           sessionId={sessionId}
         />
       )}
+
+      {/* Custom Loader for Session Start */}
+      <CustomLoader
+        isVisible={showCustomLoader}
+        onEarlyComplete={() => {
+          // This will be called when 2 seconds are remaining in countdown
+          // Trigger socket setup to ensure sheet opens quickly
+          handleEarlySheetOpen()
+        }}
+        onComplete={() => {
+          setShowCustomLoader(false)
+          // Ensure smooth transition by removing any potential delays
+        }}
+        delay={3000}
+      />
     </div>
   )
 }
