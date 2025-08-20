@@ -49,6 +49,9 @@ export const useTeacherDashbord = () => {
   const [_, setIsNetworkTooSlow] = useState(false)
   const [isHistorySheetOpen, setIsHistorySheetOpen] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [showCustomLoader, setShowCustomLoader] = useState(false)
+  const [sessionSetupStarted, setSessionSetupStarted] = useState(false)
+  const pendingSessionDataRef = useRef<any>(null)
   const calendarContainerRef = useRef<HTMLDivElement>(null)
   const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
   const isNetworkTooSlowRef = useRef(false)
@@ -123,18 +126,27 @@ export const useTeacherDashbord = () => {
         if (!data) {
           throw new Error('Session data is missing')
         }
+
+        // Open the panel immediately for better UX
         onGoingSessionDataHandler(data)
         setIsSheetOpen(true)
+
+        // Handle async operations in the background
         if (!isNetworkTooSlowRef.current) {
-          mic1 = await checkAndReturnMicPermission()
-          const stopFunction = await startTeacherStreaming(
-            newSocket,
-            session_id,
-            StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-            mic1,
-          )
-          setStopStreamFunction(() => stopFunction) // Store the stop function
+          try {
+            mic1 = await checkAndReturnMicPermission()
+            const stopFunction = await startTeacherStreaming(
+              newSocket,
+              session_id,
+              StoredTokens?.accessToken?.replace('Bearer ', '') as string,
+              mic1,
+            )
+            setStopStreamFunction(() => stopFunction) // Store the stop function
+          } catch (error) {
+            console.error('Error in background operations:', error)
+          }
         }
+
         dispatch(setReconnectionLoader({ state: false }))
         const networkResponse = {
           session_id,
@@ -299,31 +311,31 @@ export const useTeacherDashbord = () => {
         setLectureDetails(updatedLectureDetails)
 
         if (data.active === 'ongoing') {
-          dispatch(
-            setLoader({
-              state: true,
-              message: 'Please wait while the session starts ...',
-            }),
-          )
-          // Use playWaveSoundFrequency to get stop function and network speed
-          const { stop: stopWaveFrequency1, speedMbps } =
-            await playWaveSoundFrequency(audio_url)
-          setStopWaveFrequency(() => stopWaveFrequency1)
-          // Set network speed state based on measured speed
-          if (speedMbps !== null && speedMbps < 0.3) {
-            isNetworkTooSlowRef.current = true
-            setIsNetworkTooSlow(true)
-          } else {
-            isNetworkTooSlowRef.current = false
-            setIsNetworkTooSlow(false)
+          // Reset session setup state
+          setSessionSetupStarted(false)
+
+          // Store session data for early completion
+          pendingSessionDataRef.current = {
+            session_id,
+            audio_url,
+            mic,
+            accessToken: StoredTokens?.accessToken?.replace(
+              'Bearer ',
+              '',
+            ) as string,
           }
 
-          clientSocketHandler(
-            session_id,
-            StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-            mic,
-            stopWaveFrequency1,
-          )
+          // Show custom loader with volume instructions and delay
+          setShowCustomLoader(true)
+
+          // Wait for 5 seconds (loader will handle early completion)
+          await new Promise((resolve) => setTimeout(resolve, 5000))
+
+          // Hide custom loader
+          setShowCustomLoader(false)
+
+          // Clean up pending data
+          pendingSessionDataRef.current = null
         }
       } else {
         toast.error(response_obj.errorMessage?.message)
@@ -704,6 +716,40 @@ export const useTeacherDashbord = () => {
     }
   }
 
+  const handleEarlySheetOpen = async () => {
+    // Prevent double execution
+    if (sessionSetupStarted || !pendingSessionDataRef.current) {
+      return
+    }
+
+    setSessionSetupStarted(true)
+
+    try {
+      const { session_id, audio_url, mic, accessToken } =
+        pendingSessionDataRef.current
+
+      // Use playWaveSoundFrequency to get stop function and network speed
+      const { stop: stopWaveFrequency1, speedMbps } =
+        await playWaveSoundFrequency(audio_url)
+      setStopWaveFrequency(() => stopWaveFrequency1)
+
+      // Set network speed state based on measured speed
+      if (speedMbps !== null && speedMbps < 0.3) {
+        isNetworkTooSlowRef.current = true
+        setIsNetworkTooSlow(true)
+      } else {
+        isNetworkTooSlowRef.current = false
+        setIsNetworkTooSlow(false)
+      }
+
+      // Call clientSocketHandler
+      clientSocketHandler(session_id, accessToken, mic, stopWaveFrequency1)
+    } catch (error) {
+      console.error('Error in early session setup:', error)
+      toast.error('Error setting up session')
+    }
+  }
+
   return {
     students,
     lectureDetails,
@@ -741,5 +787,8 @@ export const useTeacherDashbord = () => {
     handleHistorySheetOpen,
     sessionId,
     handleAttendaceHistoryData,
+    showCustomLoader,
+    setShowCustomLoader,
+    handleEarlySheetOpen,
   }
 }
