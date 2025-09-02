@@ -156,7 +156,12 @@ const useStudentDashboard = () => {
 
           if (didTimeout || (result && result === 'timeout')) {
             // Mark for regulization automatically
-            await handleManualMarking(btn, lecture_slug, session_id, 'Slow Internet')
+            await handleManualMarking(
+              btn,
+              lecture_slug,
+              session_id,
+              'Slow Internet',
+            )
             dispatch(setLoader({ state: false, message: null }))
             return
           }
@@ -226,7 +231,8 @@ const useStudentDashboard = () => {
     defaultComment?: string,
   ) => {
     try {
-      let regulization_commet: string | null = defaultComment || prompt('Enter the comment')
+      let regulization_commet: string | null =
+        defaultComment || prompt('Enter the comment')
       if (!regulization_commet) {
         return
       }
@@ -389,11 +395,11 @@ const startStudentRecording = async (duration = 5000) => {
           })
         }, 100)
       }, duration)
-    } catch (err) {
+    } catch (err: any) {
       await cleanup()
       resolve({
         error: true,
-        message: `Failed to record audio: ${err}`,
+        message: `Error at micro-phone: ${err.message}`,
         blob: null,
       })
     }
