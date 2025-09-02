@@ -64,7 +64,7 @@ const TeacherDashboardUtilites = () => {
     const arrayBuffer = await response.arrayBuffer()
     const endTime = performance.now()
     const durationSeconds = (endTime - startTime) / 1000
-    const fileSizeBytes = arrayBuffer.byteLength    
+    const fileSizeBytes = arrayBuffer.byteLength
     // Mbps = (bytes * 8) / (seconds * 1_000_000)
     const speedMbps =
       durationSeconds > 0
@@ -148,7 +148,7 @@ const TeacherDashboardUtilites = () => {
     let mic: MediaStream | null = null
     mic = await navigator.mediaDevices.getUserMedia({
       audio: {
-        channelCount:1,
+        channelCount: 1,
         echoCancellation: false,
         noiseSuppression: false,
         autoGainControl: false,
@@ -169,7 +169,7 @@ const TeacherDashboardUtilites = () => {
     socket: any,
     session_id: string,
     auth_token: string,
-    mic: any
+    mic: any,
   ) => {
     let audioContext: any | null = null
     if (audioContext) {
