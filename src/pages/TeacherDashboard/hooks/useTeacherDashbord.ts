@@ -29,6 +29,7 @@ export const useTeacherDashbord = () => {
     startTeacherStreaming,
     playWaveSoundFrequency,
   } = TeacherDashboardUtilites()
+
   const [socket, setSocket] = useState<Socket | null>(null)
   const [students, setStudents] = useState<any>([])
   const [redStudents, setRedStudents] = useState<any>([])
@@ -276,7 +277,14 @@ export const useTeacherDashbord = () => {
     const selectedClassRoom = document.getElementById(
       `select-${lecture_slug}${classroomSlug}`,
     ) as HTMLSelectElement
-    const mic = await checkAndReturnMicPermission()
+
+    let mic = null
+    try {
+      mic = await checkAndReturnMicPermission()
+    } catch (error: any) {
+      return toast.error(`Error at: ${error.message}`)
+    }
+
     try {
       // Show loader while checking network speed
       dispatch(setLoader({ state: true, message: 'Starting the session...' }))
@@ -350,7 +358,6 @@ export const useTeacherDashbord = () => {
             const checkInterval = setInterval(() => {
               // If session setup has started, exit early
               if (sessionSetupStarted) {
-                console.log('🚀 Exiting early due to session setup completion')
                 clearInterval(checkInterval)
                 resolve(undefined)
               }
@@ -358,7 +365,6 @@ export const useTeacherDashbord = () => {
 
             // Fallback timeout after 3 seconds
             setTimeout(() => {
-              console.log('⏰ Fallback timeout reached - proceeding normally')
               clearInterval(checkInterval)
               resolve(undefined)
             }, 3000)
