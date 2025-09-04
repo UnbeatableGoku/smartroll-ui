@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 
 import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
 import Store, { RootState } from '@data/redux/Store'
-import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
 import {
   setLoader,
   setReconnectionLoader,
@@ -22,7 +21,6 @@ export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const dispatch = useDispatch()
   const {
-    loadClassRooms,
     extractLectureStatusData,
     getWeekDates,
     checkAndReturnMicPermission,
@@ -58,11 +56,9 @@ export const useTeacherDashbord = () => {
   const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
   const isNetworkTooSlowRef = useRef(false)
 
-  const { isalreadyLoaded, classes } = useSelector(
-    (state: RootState) => state.classRoomSlice,
-  )
+  const { classes } = useSelector((state: RootState) => state.classRoomSlice)
 
-  const [classesList, setClasses] = useState<any>(classes)
+  const [classesList] = useState<any>(classes)
 
   useEffect(() => {
     return () => {
@@ -74,21 +70,6 @@ export const useTeacherDashbord = () => {
       }
     }
   }, [stopStreamFunction])
-
-  useEffect(() => {
-    setSocket(null)
-
-    const loadData = async () => {
-      if (!isalreadyLoaded) {
-        const payload = await loadClassRooms()
-        setClasses(payload.classes)
-        dispatch(setClassRoomList(payload))
-        // you can now use payload if needed
-      }
-    }
-
-    loadData() // call the inner async function
-  }, [isalreadyLoaded, dispatch])
 
   const clientSocketHandler = async (
     session_id: string,

@@ -1,13 +1,3 @@
-export interface IClassrooms {
-  slug: string
-  classroom_name: string
-}
-
-export interface LoadClassroomResponse {
-  isalreadyLoaded: boolean
-  classes: IClassrooms[]
-}
-
 type Lecture = {
   semester_no: number
   division_name: string

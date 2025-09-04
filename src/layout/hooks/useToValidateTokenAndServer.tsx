@@ -2,11 +2,16 @@ import { useState } from 'react'
 
 import { RootState } from '@data/redux/Store'
 import { setAuth, setUserProfile } from '@data/redux/slices/authSlice'
+import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
 import { setLoader } from '@data/redux/slices/loaderSlice'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
+import { get } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+
+import useAPI from '@hooks/useApi'
 
 import { DecodedToken } from 'types/common'
 
@@ -19,6 +24,7 @@ const useToValidateTokenAndServer = () => {
   const refresh = useSelector((state: RootState) => state.auth.refreshToken)
   const [serverAvailiblity, setServerAvailability] = useState(false)
   const [accessTokenValid, setAccessTokenValid] = useState(false)
+  const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
 
   const { handleOnClickForNotifications } = useNotification()
 
@@ -62,6 +68,7 @@ const useToValidateTokenAndServer = () => {
         { headers: headers },
       )
       if (response.data.data.isAuthenticated === true) {
+        await loadClassRooms()
         const decode: DecodedToken = jwtDecode<DecodedToken>(access)
         dispatch(setUserProfile(decode))
         dispatch(setLoader({ state: false, message: null }))
@@ -118,6 +125,41 @@ const useToValidateTokenAndServer = () => {
       navigate('/login')
     }
   }
+
+  /**
+   * @link /manage/get_classrooms_for_teacher
+   * @returns list of the classes
+   */
+  const loadClassRooms = async () => {
+    try {
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_classrooms_for_teacher`
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
+      if (response_obj.error !== false) {
+        toast.error(response_obj.errorMessage?.message)
+      }
+      const response = get(response_obj, 'response.data.data', [])
+      console.log(response)
+      dispatch(setClassRoomList(response))
+    } catch (error: any) {
+      toast.error(error.message || 'something went wrong')
+      return {
+        classes: [],
+      }
+    }
+  }
+
   return {
     accessTokenValid,
     access,
