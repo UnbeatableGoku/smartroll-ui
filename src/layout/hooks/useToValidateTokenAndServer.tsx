@@ -150,13 +150,9 @@ const useToValidateTokenAndServer = () => {
         toast.error(response_obj.errorMessage?.message)
       }
       const response = get(response_obj, 'response.data.data', [])
-      console.log(response)
       dispatch(setClassRoomList(response))
     } catch (error: any) {
       toast.error(error.message || 'something went wrong')
-      return {
-        classes: [],
-      }
     }
   }
 
