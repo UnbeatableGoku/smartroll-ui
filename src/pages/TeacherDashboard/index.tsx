@@ -94,6 +94,7 @@ const TeacherDashboard = () => {
       })
     }
   }, [date])
+
   return (
     <div className="h-auto">
       {/* Main Content */}

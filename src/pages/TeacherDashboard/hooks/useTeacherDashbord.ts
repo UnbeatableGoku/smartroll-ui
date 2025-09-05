@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 
 import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
-import Store, { RootState } from '@data/redux/Store'
+import Store from '@data/redux/Store'
 import {
   setLoader,
   setReconnectionLoader,
 } from '@data/redux/slices/loaderSlice'
 import axios from 'axios'
 import { get } from 'lodash'
-import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { Socket, io } from 'socket.io-client'
 import { toast } from 'sonner'
@@ -26,6 +25,7 @@ export const useTeacherDashbord = () => {
     checkAndReturnMicPermission,
     startTeacherStreaming,
     playWaveSoundFrequency,
+    loadClassRooms,
   } = TeacherDashboardUtilites()
 
   const [socket, setSocket] = useState<Socket | null>(null)
@@ -56,9 +56,14 @@ export const useTeacherDashbord = () => {
   const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
   const isNetworkTooSlowRef = useRef(false)
 
-  const { classes } = useSelector((state: RootState) => state.classRoomSlice)
+  const [classesList, setCLassesList] = useState<any>([])
+  const [isClassLoaded] = useState<boolean>(false)
 
-  const [classesList] = useState<any>(classes)
+  useEffect(() => {
+    if (!isClassLoaded) {
+      loadClassRooms(setCLassesList)
+    }
+  }, [isClassLoaded])
 
   useEffect(() => {
     return () => {
@@ -187,10 +192,6 @@ export const useTeacherDashbord = () => {
         }
         mic.getTracks().forEach((track: any) => track.stop())
         socketErrorHandler(message)
-      })
-
-      newSocket.on('error', () => {
-        console.log('error')
       })
 
       newSocket.on('disconnect', async (reason) => {

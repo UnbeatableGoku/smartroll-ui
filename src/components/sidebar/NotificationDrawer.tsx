@@ -34,7 +34,7 @@ const NotificationDrawer = () => {
       <SheetTrigger asChild>
         <Button
           variant="ghost"
-          className="group relative flex h-11 w-11 items-center justify-center rounded-md text-black transition-transform duration-300 ease-in-out hover:scale-105 hover:scale-110 hover:bg-white/10 hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          className="group relative flex h-11 w-11 items-center justify-center rounded-md text-black transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-white/10 hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           onClick={() => {
             handleOnClickForNotifications()
           }}

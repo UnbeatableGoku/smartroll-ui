@@ -1,3 +1,11 @@
+import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
+import axios from 'axios'
+import { get } from 'lodash'
+import { useDispatch } from 'react-redux'
+import { toast } from 'sonner'
+
+import useAPI from '@hooks/useApi'
+
 import { float32ToInt16BlobAsync } from '@utils/helpers/recorder_process'
 
 import {
@@ -7,6 +15,8 @@ import {
 } from './teacherDashboard.types'
 
 const TeacherDashboardUtilites = () => {
+  const dispatch = useDispatch()
+  const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const playWaveSoundFrequency = async (url: any) => {
     // Create AudioContext
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
@@ -288,6 +298,36 @@ const TeacherDashboardUtilites = () => {
     }
   }
 
+  /**
+   * @link /manage/get_classrooms_for_teacher
+   * @returns list of the classes
+   */
+  const loadClassRooms = async (stateRef: any) => {
+    try {
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_classrooms_for_teacher`
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
+      if (response_obj.error !== false) {
+        toast.error(response_obj.errorMessage?.message)
+      }
+      const response = get(response_obj, 'response.data.data', [])
+      dispatch(setClassRoomList(response))
+      stateRef(response)
+    } catch (error: any) {
+      toast.error(error.message || 'something went wrong')
+    }
+  }
   return {
     extractLectureStatusData,
     getWeekDates,
@@ -295,6 +335,7 @@ const TeacherDashboardUtilites = () => {
     checkAndReturnMicPermission,
     startTeacherStreaming,
     playWaveSoundFrequency,
+    loadClassRooms,
   }
 }
 
