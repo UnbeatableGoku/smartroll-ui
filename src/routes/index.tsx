@@ -17,6 +17,7 @@ import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirm
 import TeacherAllocation from '@pages/SubjectAllocation/pages/TeacherAllocation'
 import TeacherDashboard from '@pages/TeacherDashboard'
 import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAllocation'
+import LectureSessionHistoryPage from '@pages/TeacherDashboard/session-history/pages'
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
@@ -25,6 +26,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import {
   DIVISION_CREATION,
   FORGOT_PASSWORD,
+  LECTURE_SESSIONS_HISTORY,
   LOAD_ALLOCATION_FOR_TEACHER_END,
   PAGE_502,
   PAGE_DASHBOARD,
@@ -270,6 +272,22 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute roleRequired="teacher">
                 <LoadAllocation />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      //Lecture session history page (teacher view)
+      {
+        path: LECTURE_SESSIONS_HISTORY.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="teacher">
+                <LectureSessionHistoryPage />
               </ProtectedRoute>
             ),
           },

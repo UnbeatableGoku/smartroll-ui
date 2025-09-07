@@ -2,6 +2,7 @@ import { DashboardIcon, UserIcon } from '@icons'
 import {
   BadgePlus,
   BookCheck,
+  ClipboardClock,
   Eye,
   FileSpreadsheet,
   SquareCheck,
@@ -151,6 +152,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
       />
     ),
     path: '/teacher-dashboard/load-allocation',
+  },
+  {
+    id: 'LECTURE_SESSIONS_HISTORY',
+    name: 'lecture session history',
+    icon: (
+      <ClipboardClock
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-dashboard/lecture-history',
   },
 
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
