@@ -14,7 +14,12 @@ function App() {
   return (
     <div className="min-h-[100dvh] overflow-hidden text-gray-100">
       <Outlet />
-      <Toaster richColors position="top-right" />
+      <Toaster
+        richColors
+        position="top-right"
+        closeButton={true}
+        duration={5000}
+      />
       {LOADER_STATE && <Loader message={message} />}
       {RECONNECTION_LOADER_STAT && <ReconnectionLoader></ReconnectionLoader>}
     </div>
