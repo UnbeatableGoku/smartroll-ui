@@ -1,6 +1,7 @@
 import { AppDispatch, RootState } from '@data/redux/Store'
 import { setAuth } from '@data/redux/slices/authSlice'
 import { setLoader, setPaginationLoader } from '@data/redux/slices/loaderSlice'
+import { setSheetLoader } from '@data/slices/loaderSlice'
 import { loader } from '@types'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
@@ -206,6 +207,9 @@ const loaderHandler = (
   switch (loaderType) {
     case 'PAGINATION':
       dispatch(setPaginationLoader(state.state))
+      break
+    case 'SHEET':
+      dispatch(setSheetLoader(state.state))
       break
     default:
       dispatch(setLoader(state))

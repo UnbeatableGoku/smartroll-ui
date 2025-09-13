@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 
-import useDivisionCreation from '../hooks/useDivisionCreation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { GripVertical } from 'lucide-react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+
+import useDivisionCreation from '@hooks/useDivisionCreation'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'

@@ -1,12 +1,13 @@
 import { useEffect } from 'react'
 
 import SbujectDetailCard from '../../componets/SbujectDetailCard'
-import useSelectionForTeacher from '../../hooks/useSelectionForTeacher'
-import useUnifiedSubjectChoiceForTeacher from '../../hooks/useUnifiedSubjectChoiceForTeacher'
 import ConfirmSubjectSelection from '@pages/Subject/components/ConfirmSubjectSelection'
-import useSubjectSelection from '@pages/Subject/hooks/useSubjectSelection'
 import { AlertTriangle, BookOpen } from 'lucide-react'
 import { Helmet } from 'react-helmet'
+
+import useSelectionForTeacher from '@hooks/useSelectionForTeacher'
+import useSubjectSelection from '@hooks/useSubjectSelection'
+import useUnifiedSubjectChoiceForTeacher from '@hooks/useUnifiedSubjectChoiceForTeacher'
 
 import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'

@@ -144,7 +144,7 @@ const TeacherDashboardUtilites = () => {
     const startTime = Date.now() // Record start time
     let chunkIndex = 0
 
-    await audioContext.audioWorklet.addModule('recorder-processor.js')
+    await audioContext.audioWorklet.addModule('/recorder-processor.js')
 
     const source = audioContext.createMediaStreamSource(mic)
 

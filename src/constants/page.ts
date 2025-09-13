@@ -105,6 +105,12 @@ export const LECTURE_SESSIONS_HISTORY: Page = {
   path: '/teacher-dashboard/lecture-history',
   name: 'lecture session history',
 }
+
+export const INSTANT_LECTURE: Page = {
+  id: 'INSTANT_LECTURE',
+  path: '/teacher-dashboard/instant-lecture',
+  name: 'instant lecture',
+}
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES

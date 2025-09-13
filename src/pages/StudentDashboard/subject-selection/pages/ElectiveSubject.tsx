@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 
 import ConfirmPanel from '../component/ConfirmPanel'
 import SubjectShowCard from '../component/SubjectShowCard'
-import useElectiveSubject from '../hooks/useElectiveSubject'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { AlertTriangle, BookOpen, GraduationCap } from 'lucide-react'
 import { Helmet } from 'react-helmet'
+
+import useElectiveSubject from '@hooks/useElectiveSubject'
 
 import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'

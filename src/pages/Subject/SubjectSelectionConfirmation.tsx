@@ -14,12 +14,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ChevronRight, Trash, X } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 
+import useSubjectSelectionConfirmation from '@hooks/useSubjectSelectionConfirmation'
+
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
 import { Skeleton } from '@components/ui/skeleton'
 
 import TeacherToSubjectMapPanel from './components/TeacherToSubjectMapPanel'
-import useSubjectSelectionConfirmation from './hooks/useSubjectSelectionConfirmation'
 
 interface tableHeader {
   title: string
@@ -290,7 +291,7 @@ const SubjectSelectionConfirmation = () => {
             {activeTab == 'teacher' && (
               <div className="my-4 flex w-full flex-col justify-end gap-y-4 lg:flex-row lg:gap-x-3">
                 <Button
-                  className="border-customBlue rounded-none border bg-transparent font-medium text-[#0261BE] shadow-lg hover:bg-transparent"
+                  className="rounded-none border border-customBlue bg-transparent font-medium text-[#0261BE] shadow-lg hover:bg-transparent"
                   onClick={() => {
                     handleOnClickForLoadTeacherToSubjectMap()
                   }}
@@ -301,7 +302,7 @@ const SubjectSelectionConfirmation = () => {
                   onClick={() => {
                     handleOnClickForDownloadExcelForSubjectToTeacherMap()
                   }}
-                  className="border-customBlue rounded-none border bg-transparent font-medium text-[#0261BE] shadow-lg hover:bg-transparent"
+                  className="rounded-none border border-customBlue bg-transparent font-medium text-[#0261BE] shadow-lg hover:bg-transparent"
                 >
                   Subject to teacher map
                 </Button>

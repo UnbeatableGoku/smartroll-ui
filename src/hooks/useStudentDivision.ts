@@ -1,8 +1,7 @@
 import { useState } from 'react'
 
-import { RootState } from '@data/redux/Store'
+import { RootState } from '@data/Store'
 import axios from 'axios'
-
 import { get } from 'lodash'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'

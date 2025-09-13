@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 
 import FilterPannel from '../components/FilterPannel'
-import useLectureSessions from '../hooks/useLectureSessions'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -16,6 +15,8 @@ import {
 import { RootState } from '@data/redux/Store'
 import { Filter } from 'lucide-react'
 import { useSelector } from 'react-redux'
+
+import useLectureSessions from '@hooks/useLectureSessions'
 
 const LectureSessionHistoryPage = () => {
   const {

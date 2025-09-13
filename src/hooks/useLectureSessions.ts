@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { filterOption } from '../types'
+import { filterOption } from '@pages/TeacherDashboard/session-history/types'
 import { loader } from '@types'
 import axios from 'axios'
 import { get } from 'lodash'

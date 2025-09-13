@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
-import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
-import Store from '@data/redux/Store'
-import {
-  setLoader,
-  setReconnectionLoader,
-} from '@data/redux/slices/loaderSlice'
+import TeacherDashboardUtilites from '../pages/TeacherDashboard/utilites/teacherDashboard.utility'
+import Store from '@data/Store'
+import { setLoader, setReconnectionLoader } from '@data/slices/loaderSlice'
 import axios from 'axios'
 import { get } from 'lodash'
 import { useDispatch } from 'react-redux'

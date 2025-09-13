@@ -11,11 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import NoDataIllustration from '@assets/images/NoData.svg'
-// Ensure this path is correct
-// Ensure this path is correct
-import useStudentDashboard from '@pages/StudentDashboard/hooks/useStudentDashboard'
 import { BadgeCheck, Calendar, Clock, Users } from 'lucide-react'
+
+// Ensure this path is correct
+// Ensure this path is correct
+import useStudentDashboard from '@hooks/useStudentDashboard'
 
 // Ensure this path is correct
 // Added BadgeCheck for Present status
@@ -31,6 +33,10 @@ const StudentDashboard = () => {
     lectureDetails,
     mark_attendance,
     handleManualMarking,
+    fetchInstantLecturesAPI,
+    currentTab,
+    setCurrentTab,
+    instantSessions,
   } = useStudentDashboard()
 
   useEffect(() => {
@@ -42,6 +48,13 @@ const StudentDashboard = () => {
       getLectureDetails()
     }
   }, [permission_state]) // Fetch lectures when permission is granted
+
+  useEffect(() => {
+    if (currentTab === 'instant_session') {
+      fetchInstantLecturesAPI()
+    }
+  }, [currentTab])
+
   return (
     <div className="">
       {' '}
@@ -250,181 +263,218 @@ const StudentDashboard = () => {
       ) : (
         // Main content area - matches Teacher's structure
         <main className="py-6 pb-16">
-          {/* Session List */}
-          <div className="space-y-6 p-1 md:p-2">
-            {' '}
-            {/* Use space-y for vertical spacing */}
-            {lectureDetails?.length > 0 &&
-              lectureDetails.map((l: any) => (
-                <div
-                  key={l?.id || Math.random()}
-                  className="w-full rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft" // Branch container style
-                >
-                  {/* Branch Name */}
-                  <div className="text-md mb-4 flex w-full items-center rounded-sm p-2 font-medium text-black md:text-[20px]">
-                    {l.stream?.branch?.branch_name || 'Branch Name Missing'}
-                  </div>
+          <Tabs
+            className="w-full"
+            defaultValue="todays_session"
+            value={currentTab}
+            onValueChange={(value) => {
+              console.log(value)
+              setCurrentTab(value)
+            }}
+          >
+            <TabsList className="w-full">
+              <TabsTrigger
+                value="todays_session"
+                className="w-1/2 text-black data-[state=active]:bg-submit data-[state=active]:text-white"
+              >
+                Today's schedule
+              </TabsTrigger>
+              <TabsTrigger
+                value="instant_session"
+                className="w-1/2 text-black data-[state=active]:bg-submit data-[state=active]:text-white"
+              >
+                Instant lecture
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="todays_session">
+              {/* Session List */}
+              <div className="space-y-6 p-1 md:p-2">
+                {' '}
+                {/* Use space-y for vertical spacing */}
+                {lectureDetails?.length > 0 &&
+                  lectureDetails.map((l: any) => (
+                    <div
+                      key={l?.id || Math.random()}
+                      className="w-full rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft" // Branch container style
+                    >
+                      {/* Branch Name */}
+                      <div className="text-md mb-4 flex w-full items-center rounded-sm p-2 font-medium text-black md:text-[20px]">
+                        {l.stream?.branch?.branch_name || 'Branch Name Missing'}
+                      </div>
 
-                  {/* Lectures Grid */}
-                  <div className="grid grid-cols-1 gap-6 px-1 pt-0 md:grid-cols-2 md:px-4 lg:grid-cols-3">
-                    {' '}
-                    {/* Grid for cards */}
-                    {l?.timetables?.length > 0 ? (
-                      l.timetables.map((timetable: any) =>
-                        timetable?.lectures?.length > 0 ? (
-                          timetable.lectures.map(
-                            (lecture: any, index: number) => (
-                              <Card
-                                key={lecture?.id || index}
-                                className="w-full overflow-hidden border-zinc-200 bg-[#f7f7f7c0] shadow-soft"
-                              >
-                                <CardHeader className="p-4 pb-2">
-                                  <div className="flex items-start justify-between gap-2">
-                                    <CardTitle className="text-[16px] font-semibold text-[#000000] md:text-xl">
-                                      <span className="block break-words">
-                                        {
-                                          lecture?.subject?.subject_map
-                                            ?.subject_name
-                                        }{' '}
-                                        (
-                                        {
-                                          lecture?.subject?.subject_map
-                                            ?.subject_code
-                                        }
-                                        )
-                                      </span>
-                                      <Badge
-                                        variant="secondary"
-                                        className="mt-1 flex h-[22px] w-fit items-center justify-center rounded-[4px] bg-[#F99704] p-0 px-2 text-[10px] capitalize text-white hover:bg-[#e6a63f] md:text-[12px]"
-                                      >
-                                        {lecture?.type}
-                                      </Badge>
-                                    </CardTitle>
-                                    <Badge
-                                      className={cn(
-                                        'flex h-[26px] w-auto items-center justify-center rounded-[4px] border-none bg-[#4CB151] p-0 px-3 text-[10px] text-white hover:bg-[#4CB151] md:text-[12px]',
-                                        !lecture?.attendance_marked && 'hidden',
-                                      )}
-                                      id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}
-                                    >
-                                      <BadgeCheck className="mr-1 h-3 w-3 md:h-4 md:w-4" />
-                                      Present
-                                    </Badge>
-                                  </div>
-                                </CardHeader>
+                      {/* Lectures Grid */}
+                      <div className="grid grid-cols-1 gap-6 px-1 pt-0 md:grid-cols-2 md:px-4 lg:grid-cols-3">
+                        {' '}
+                        {/* Grid for cards */}
+                        {l?.timetables?.length > 0 ? (
+                          l.timetables.map((timetable: any) =>
+                            timetable?.lectures?.length > 0 ? (
+                              timetable.lectures.map(
+                                (lecture: any, index: number) => (
+                                  <Card
+                                    key={lecture?.id || index}
+                                    className="w-full overflow-hidden border-zinc-200 bg-[#f7f7f7c0] shadow-soft"
+                                  >
+                                    <CardHeader className="p-4 pb-2">
+                                      <div className="flex items-start justify-between gap-2">
+                                        <CardTitle className="text-[16px] font-semibold text-[#000000] md:text-xl">
+                                          <span className="block break-words">
+                                            {
+                                              lecture?.subject?.subject_map
+                                                ?.subject_name
+                                            }{' '}
+                                            (
+                                            {
+                                              lecture?.subject?.subject_map
+                                                ?.subject_code
+                                            }
+                                            )
+                                          </span>
+                                          <Badge
+                                            variant="secondary"
+                                            className="mt-1 flex h-[22px] w-fit items-center justify-center rounded-[4px] bg-[#F99704] p-0 px-2 text-[10px] capitalize text-white hover:bg-[#e6a63f] md:text-[12px]"
+                                          >
+                                            {lecture?.type}
+                                          </Badge>
+                                        </CardTitle>
+                                        <Badge
+                                          className={cn(
+                                            'flex h-[26px] w-auto items-center justify-center rounded-[4px] border-none bg-[#4CB151] p-0 px-3 text-[10px] text-white hover:bg-[#4CB151] md:text-[12px]',
+                                            !lecture?.attendance_marked &&
+                                              'hidden',
+                                          )}
+                                          id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}
+                                        >
+                                          <BadgeCheck className="mr-1 h-3 w-3 md:h-4 md:w-4" />
+                                          Present
+                                        </Badge>
+                                      </div>
+                                    </CardHeader>
 
-                                <CardContent className="px-4 pt-2">
-                                  <div className="grid gap-3">
-                                    <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
-                                      <span className="text-black">
-                                        Teacher:
-                                      </span>
-                                      <span className="font-semibold text-black">
-                                        {lecture?.teacher ?? 'N/A'}
-                                      </span>
-                                    </div>
-
-                                    <div className="flex flex-col gap-1 text-sm text-foreground md:text-base">
-                                      <div className="flex items-center gap-[6px] text-lg">
-                                        <div className="flex gap-4 text-sm md:text-lg">
+                                    <CardContent className="px-4 pt-2">
+                                      <div className="grid gap-3">
+                                        <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
                                           <span className="text-black">
-                                            Semester:
+                                            Teacher:
                                           </span>
                                           <span className="font-semibold text-black">
-                                            {lecture?.subject?.semester?.no}
+                                            {lecture?.teacher ?? 'N/A'}
                                           </span>
                                         </div>
-                                        <span className="text-[#000000]">
-                                          -
-                                        </span>
-                                        <div className="flex gap-[23px] text-sm text-black md:text-lg">
-                                          {lecture?.type === 'theory' ? (
-                                            <span className="font-semibold">
-                                              {
-                                                lecture?.batches[0]?.division
-                                                  ?.division_name
-                                              }
+
+                                        <div className="flex flex-col gap-1 text-sm text-foreground md:text-base">
+                                          <div className="flex items-center gap-[6px] text-lg">
+                                            <div className="flex gap-4 text-sm md:text-lg">
+                                              <span className="text-black">
+                                                Semester:
+                                              </span>
+                                              <span className="font-semibold text-black">
+                                                {lecture?.subject?.semester?.no}
+                                              </span>
+                                            </div>
+                                            <span className="text-[#000000]">
+                                              -
                                             </span>
-                                          ) : (
-                                            <span className="font-semibold">
-                                              {lecture?.batches
-                                                ?.map((d: any) => d?.batch_name)
-                                                .join(', ')}
-                                            </span>
-                                          )}
+                                            <div className="flex gap-[23px] text-sm text-black md:text-lg">
+                                              {lecture?.type === 'theory' ? (
+                                                <span className="font-semibold">
+                                                  {
+                                                    lecture?.batches[0]
+                                                      ?.division?.division_name
+                                                  }
+                                                </span>
+                                              ) : (
+                                                <span className="font-semibold">
+                                                  {lecture?.batches
+                                                    ?.map(
+                                                      (d: any) => d?.batch_name,
+                                                    )
+                                                    .join(', ')}
+                                                </span>
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                          <Users className="size-5 text-[#00000080]" />
+                                          <span className="text-black">
+                                            Classroom:
+                                          </span>
+                                          <span className="font-semibold text-black">
+                                            {lecture?.classroom?.class_name ??
+                                              'N/A'}
+                                          </span>
+                                        </div>
+
+                                        <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                          <Clock className="size-5 text-[#00000080]" />
+                                          <span className="font-semibold text-black">
+                                            {lecture?.start_time} •{' '}
+                                            {lecture?.end_time}
+                                          </span>
+                                        </div>
+
+                                        <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                          <Calendar className="size-5 text-[#00000080]" />
+                                          <span className="font-semibold text-black">
+                                            {lecture?.session?.day
+                                              ? new Date(
+                                                  lecture.session.day,
+                                                ).toLocaleDateString('en-US', {
+                                                  year: 'numeric',
+                                                  month: 'short',
+                                                  day: 'numeric',
+                                                })
+                                              : 'N/A'}
+                                          </span>
                                         </div>
                                       </div>
-                                    </div>
+                                    </CardContent>
 
-                                    <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
-                                      <Users className="size-5 text-[#00000080]" />
-                                      <span className="text-black">
-                                        Classroom:
-                                      </span>
-                                      <span className="font-semibold text-black">
-                                        {lecture?.classroom?.class_name ??
-                                          'N/A'}
-                                      </span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
-                                      <Clock className="size-5 text-[#00000080]" />
-                                      <span className="font-semibold text-black">
-                                        {lecture?.start_time} •{' '}
-                                        {lecture?.end_time}
-                                      </span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
-                                      <Calendar className="size-5 text-[#00000080]" />
-                                      <span className="font-semibold text-black">
-                                        {lecture?.session?.day
-                                          ? new Date(
-                                              lecture.session.day,
-                                            ).toLocaleDateString('en-US', {
-                                              year: 'numeric',
-                                              month: 'short',
-                                              day: 'numeric',
-                                            })
-                                          : 'N/A'}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </CardContent>
-
-                                <CardFooter className="flex flex-col gap-2 p-4 md:flex-row">
-                                  {!lecture?.attendance_marked && (
-                                    <>
-                                      <Button
-                                        className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
-                                        id={`attendance_${lecture?.slug}${lecture?.session?.session_id}`}
-                                        onClick={(e) =>
-                                          mark_attendance(
-                                            e.target,
-                                            lecture?.slug,
-                                            lecture?.session?.session_id,
-                                          )
-                                        }
-                                      >
-                                        Mark Attendance
-                                      </Button>
-                                      <Button
-                                        className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
-                                        id={`${lecture?.slug}${lecture?.session?.session_id}`}
-                                        onClick={(e) =>
-                                          handleManualMarking(
-                                            e.target,
-                                            lecture?.slug,
-                                            lecture?.session?.session_id,
-                                          )
-                                        }
-                                      >
-                                        Manual Marking Request
-                                      </Button>
-                                    </>
-                                  )}
-                                </CardFooter>
-                              </Card>
+                                    <CardFooter className="flex flex-col gap-2 p-4 md:flex-row">
+                                      {!lecture?.attendance_marked && (
+                                        <>
+                                          <Button
+                                            className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
+                                            id={`attendance_${lecture?.slug}${lecture?.session?.session_id}`}
+                                            onClick={(e) =>
+                                              mark_attendance(
+                                                e.target,
+                                                lecture?.slug,
+                                                lecture?.session?.session_id,
+                                              )
+                                            }
+                                          >
+                                            Mark Attendance
+                                          </Button>
+                                          <Button
+                                            className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
+                                            id={`${lecture?.slug}${lecture?.session?.session_id}`}
+                                            onClick={(e) =>
+                                              handleManualMarking(
+                                                e.target,
+                                                lecture?.slug,
+                                                lecture?.session?.session_id,
+                                              )
+                                            }
+                                          >
+                                            Manual Marking Request
+                                          </Button>
+                                        </>
+                                      )}
+                                    </CardFooter>
+                                  </Card>
+                                ),
+                              )
+                            ) : (
+                              <div className="col-span-full px-1 pt-4 md:px-4">
+                                <Card className="w-full overflow-hidden border-none bg-[#F7F7F7] text-center shadow-soft">
+                                  <CardHeader className="p-4 text-black">
+                                    No lectures scheduled in this timetable.
+                                  </CardHeader>
+                                </Card>
+                              </div>
                             ),
                           )
                         ) : (
@@ -435,45 +485,183 @@ const StudentDashboard = () => {
                               </CardHeader>
                             </Card>
                           </div>
-                        ),
-                      )
-                    ) : (
-                      <div className="col-span-full px-1 pt-4 md:px-4">
-                        <Card className="w-full overflow-hidden border-none bg-[#F7F7F7] text-center shadow-soft">
-                          <CardHeader className="p-4 text-black">
-                            No lectures scheduled in this timetable.
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                {lectureDetails?.length === 0 && (
+                  <div className="flex min-h-[70vh] items-center justify-center rounded-lg p-6">
+                    <div className="max-w-md text-center">
+                      {/* Simple Illustration */}
+                      <div className="relative left-[50%] mb-8 h-40 w-40 -translate-x-1/2 transform sm:h-80 sm:w-80">
+                        <img
+                          src={NoDataIllustration}
+                          alt="No lectures today"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+
+                      {/* Simple Text */}
+                      <div className="space-y-3">
+                        <h2 className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
+                          No Lectures Today!
+                        </h2>
+                        <p className="leading-relaxed text-gray-600">
+                          Enjoy your free time and make the most of your day!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+            <TabsContent value="instant_session">
+              {/* instant sessions */}
+              <div className="space-y-6 p-1 md:p-2">
+                {' '}
+                {/* Use space-y for vertical spacing */}
+                {instantSessions?.length > 0 &&
+                  instantSessions.map((lecture: any) => (
+                    <div
+                      key={lecture?.id || Math.random()}
+                      className="w-full rounded-[20px] border-none bg-[#FFFFFF] p-[16px] shadow-soft" // Branch container style
+                    >
+                      {/* Lectures Grid */}
+                      <div className="grid grid-cols-1 gap-6 px-1 pt-0 md:grid-cols-2 md:px-4 lg:grid-cols-3">
+                        {' '}
+                        {/* Grid for cards */}
+                        <Card
+                          key={lecture?.slug}
+                          className="w-full overflow-hidden border-zinc-200 bg-[#f7f7f7c0] shadow-soft"
+                        >
+                          <CardHeader className="p-4 pb-2">
+                            <div className="flex items-start justify-between gap-2">
+                              <CardTitle className="text-[16px] font-semibold text-[#000000] md:text-xl">
+                                <span className="block break-words">
+                                  {lecture?.subject?.subject_map
+                                    ?.subject_name || lecture?.title}{' '}
+                                </span>
+                              </CardTitle>
+                              <Badge
+                                className={cn(
+                                  'flex h-[26px] w-auto items-center justify-center rounded-[4px] border-none bg-[#4CB151] p-0 px-3 text-[10px] text-white hover:bg-[#4CB151] md:text-[12px]',
+                                  !lecture?.attendance_marked && 'hidden',
+                                )}
+                                id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}
+                              >
+                                <BadgeCheck className="mr-1 h-3 w-3 md:h-4 md:w-4" />
+                                Present
+                              </Badge>
+                            </div>
                           </CardHeader>
+
+                          <CardContent className="px-4 pt-2">
+                            <div className="grid gap-3">
+                              <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                <span className="text-black">Teacher:</span>
+                                <span className="font-semibold text-black">
+                                  {lecture?.teacher ?? 'N/A'}
+                                </span>
+                              </div>
+
+                              <div className="flex flex-col gap-1 text-sm text-foreground md:text-base">
+                                <div className="flex items-center gap-[6px] text-lg">
+                                  <div className="flex gap-4 text-sm md:text-lg">
+                                    <span className="text-black">
+                                      Semester:
+                                    </span>
+                                    <span className="font-semibold text-black">
+                                      {lecture?.semester}
+                                    </span>
+                                  </div>
+                                  <span className="text-[#000000]">-</span>
+                                  <div className="flex gap-[23px] text-sm text-black md:text-lg">
+                                    <span className="font-semibold">
+                                      {lecture?.divisions.join(', ')}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                <span className="text-black">Batches:</span>
+                                <span className="font-semibold text-black">
+                                  {lecture?.batches.join(', ') ?? 'N/A'}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-foreground md:text-base">
+                                <span className="text-black">Branch:</span>
+                                <span className="font-semibold text-black">
+                                  {lecture?.branch ?? 'N/A'}
+                                </span>
+                              </div>
+                            </div>
+                          </CardContent>
+
+                          <CardFooter className="flex flex-col gap-2 p-4 md:flex-row">
+                            {!lecture?.attendance_marked && (
+                              <>
+                                <Button
+                                  className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
+                                  id={`attendance_${lecture?.slug}${lecture?.session?.session_id}`}
+                                  onClick={(e) =>
+                                    mark_attendance(
+                                      e.target,
+                                      lecture?.slug,
+                                      lecture?.session?.session_id,
+                                      true,
+                                    )
+                                  }
+                                >
+                                  Mark Attendance
+                                </Button>
+                                <Button
+                                  className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
+                                  id={`${lecture?.slug}${lecture?.session?.session_id}`}
+                                  onClick={(e) =>
+                                    handleManualMarking(
+                                      e.target,
+                                      lecture?.slug,
+                                      lecture?.session?.session_id,
+                                    )
+                                  }
+                                >
+                                  Manual Marking Request
+                                </Button>
+                              </>
+                            )}
+                          </CardFooter>
                         </Card>
                       </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            {lectureDetails?.length === 0 && (
-              <div className="flex min-h-[70vh] items-center justify-center rounded-lg p-6">
-                <div className="max-w-md text-center">
-                  {/* Simple Illustration */}
-                  <div className="relative left-[50%] mb-8 h-40 w-40 -translate-x-1/2 transform sm:h-80 sm:w-80">
-                    <img
-                      src={NoDataIllustration}
-                      alt="No lectures today"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
+                    </div>
+                  ))}
+                {lectureDetails?.length === 0 && (
+                  <div className="flex min-h-[70vh] items-center justify-center rounded-lg p-6">
+                    <div className="max-w-md text-center">
+                      {/* Simple Illustration */}
+                      <div className="relative left-[50%] mb-8 h-40 w-40 -translate-x-1/2 transform sm:h-80 sm:w-80">
+                        <img
+                          src={NoDataIllustration}
+                          alt="No lectures today"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
 
-                  {/* Simple Text */}
-                  <div className="space-y-3">
-                    <h2 className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
-                      No Lectures Today!
-                    </h2>
-                    <p className="leading-relaxed text-gray-600">
-                      Enjoy your free time and make the most of your day!
-                    </p>
+                      {/* Simple Text */}
+                      <div className="space-y-3">
+                        <h2 className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
+                          No Lectures Today!
+                        </h2>
+                        <p className="leading-relaxed text-gray-600">
+                          Enjoy your free time and make the most of your day!
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
-            )}
-          </div>
+            </TabsContent>
+          </Tabs>
         </main>
       )}
     </div>

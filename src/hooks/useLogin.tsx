@@ -1,8 +1,8 @@
 //?slices
 import { useState } from 'react'
 
-import { RootState } from '@data/redux/Store'
-import { setAuth, setUserProfile } from '@data/redux/slices/authSlice'
+import { RootState } from '@data/Store'
+import { setAuth, setUserProfile } from '@data/slices/authSlice'
 //? axios
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
@@ -26,6 +26,7 @@ type LoginFormData = {
 //? HOOK
 const useLogin = () => {
   const location = useLocation()
+
   const queryParams = new URLSearchParams(location.search)
 
   const [isLoading, setIsLoading] = useState<boolean>(false)

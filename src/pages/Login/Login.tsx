@@ -5,11 +5,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from 'lucide-react'
 import { Helmet } from 'react-helmet'
+import { useLocation } from 'react-router-dom'
+
+import useLogin from '@hooks/useLogin'
 
 import NewPassword from '@components/NewPassword/NewPassword'
 import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
-
-import useLogin from './hooks/useLogin'
 
 type LoginFormData = {
   email: string
@@ -42,6 +43,22 @@ const Login = () => {
   useEffect(() => {
     redirectLogin()
   }, [])
+
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+
+  useEffect(() => {
+    if (queryParams.toString()) {
+      const userEmail = queryParams.get('email')
+      const userPassword = queryParams.get('tempPassword')
+
+      if (userEmail && userPassword) {
+        handleLogin({ email: userEmail, password: userPassword })
+      }
+    } else {
+      console.log('No query params found')
+    }
+  }, [location.search])
 
   return (
     <>
