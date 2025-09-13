@@ -438,6 +438,12 @@ const StudentDashboard = () => {
                                           <Button
                                             className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
                                             id={`attendance_${lecture?.slug}${lecture?.session?.session_id}`}
+                                            disabled={
+                                              lecture?.session?.attendances
+                                                ?.manual ||
+                                              lecture?.session?.attendances
+                                                ?.is_present
+                                            }
                                             onClick={(e) =>
                                               mark_attendance(
                                                 e.target,
@@ -451,6 +457,12 @@ const StudentDashboard = () => {
                                           <Button
                                             className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
                                             id={`${lecture?.slug}${lecture?.session?.session_id}`}
+                                            disabled={
+                                              lecture?.session?.attendances
+                                                ?.manual ||
+                                              lecture?.session?.attendances
+                                                ?.is_present
+                                            }
                                             onClick={(e) =>
                                               handleManualMarking(
                                                 e.target,
@@ -604,6 +616,10 @@ const StudentDashboard = () => {
                                 <Button
                                   className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
                                   id={`attendance_${lecture?.slug}${lecture?.session?.session_id}`}
+                                  disabled={
+                                    lecture?.session?.attendances?.manual ||
+                                    lecture?.session?.attendances?.is_present
+                                  }
                                   onClick={(e) =>
                                     mark_attendance(
                                       e.target,
@@ -618,6 +634,10 @@ const StudentDashboard = () => {
                                 <Button
                                   className="w-full rounded-[4px] border-none bg-[#0261BE] p-[10px] text-sm text-white hover:bg-blue-700 md:p-[12px]"
                                   id={`${lecture?.slug}${lecture?.session?.session_id}`}
+                                  disabled={
+                                    lecture?.session?.attendances?.manual ||
+                                    lecture?.session?.attendances?.is_present
+                                  }
                                   onClick={(e) =>
                                     handleManualMarking(
                                       e.target,
