@@ -353,7 +353,7 @@ const startStudentRecording = async (duration = 5000) => {
       let hasReceivedAudioData = false
 
       // Load audio worklet
-      await audioContext.audioWorklet.addModule('recorder-processor.js')
+      await audioContext.audioWorklet.addModule('/recorder-processor.js')
 
       // Ensure audio context is running
       if (audioContext.state !== 'running') {

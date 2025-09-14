@@ -1,4 +1,3 @@
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Table,
   TableBody,
@@ -7,6 +6,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { X } from 'lucide-react'
+
+import { Button } from '@components/ui/button'
 
 export const ManualMarkedAttendance = ({
   manualAttendance,
@@ -38,14 +40,17 @@ export const ManualMarkedAttendance = ({
                   <TableCell>{student?.student?.profile?.name}</TableCell>
                   <TableCell>{student?.regulization_comment}</TableCell>
                   <TableCell className="capitalize text-black">
-                    <Checkbox
-                      checked={true}
-                      onCheckedChange={() => {
+                    <Button
+                      variant={'outline'}
+                      className="border border-red-600"
+                      onClick={() => {
                         removeStudentAttendanceRequest(
                           student?.student?.enrollment,
                         )
                       }}
-                    />
+                    >
+                      <X></X>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
