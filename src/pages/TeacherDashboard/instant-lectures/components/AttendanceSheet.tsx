@@ -7,9 +7,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import { RootState } from '@data/Store'
 import { ManualMarkedAttendance } from '@pages/TeacherDashboard/SessionManagement/components/ManualMarkedAttendance'
 import { MdGroups2 } from 'react-icons/md'
+import { useSelector } from 'react-redux'
 
+import { SheetLoader } from '@components/common/loader/Loader'
 import { Checkbox } from '@components/ui/checkbox'
 import {
   Table,
@@ -35,6 +38,9 @@ const AttendanceSheet = ({
   markRegulizattionRequestEntryAPI,
   updateStudentAttendaceAPI,
 }: props) => {
+  const sheetLoader = useSelector(
+    (state: RootState) => state.loader.SHEET_LOADER_STATE,
+  )
   return (
     <Sheet open={isSheetOpen} onOpenChange={handleSheet}>
       <SheetContent
@@ -178,6 +184,7 @@ const AttendanceSheet = ({
             </Button>
           </div>
         </div>
+        {sheetLoader && <SheetLoader></SheetLoader>}
       </SheetContent>
     </Sheet>
   )

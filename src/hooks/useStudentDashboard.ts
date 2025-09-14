@@ -92,7 +92,6 @@ const useStudentDashboard = () => {
     btn: any,
     lecture_slug: string,
     session_id: string,
-    isInstantLecture: boolean = false,
   ) => {
     dispatch(
       setLoader({
@@ -126,10 +125,9 @@ const useStudentDashboard = () => {
 
           formData.append('latitude', latitude)
           formData.append('longitude', longitude)
-          formData.append('lecture_slug', lecture_slug)
+          formData.append('session_id', session_id)
           formData.append('audio', blob, 'recording.wav')
           formData.append('start_time', startTimestamp)
-          formData.append('instant_lecture', String(isInstantLecture))
           const headers = {
             'ngrok-skip-browser-warning': true,
           }
@@ -255,7 +253,7 @@ const useStudentDashboard = () => {
         method,
         header,
         {
-          lecture_slug,
+          session_id,
           regulization_commet,
         },
       )
