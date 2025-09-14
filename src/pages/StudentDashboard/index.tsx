@@ -60,18 +60,18 @@ const StudentDashboard = () => {
       {' '}
       {/* Light background like Teacher's */}
       {!permission_state ? (
-        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center rounded-lg bg-white p-6 pb-20 text-center shadow-md">
+        <div className="flex flex-col items-center justify-center max-w-4xl p-6 pb-20 mx-auto text-center bg-white rounded-lg shadow-md">
           <h2 className="mb-4 text-2xl font-bold text-black">
             Location Permission Required
           </h2>
-          <p className="mb-6 max-w-2xl text-black">
+          <p className="max-w-2xl mb-6 text-black">
             To mark your attendance, we need access to your location. Please
             enable location services using the instructions below.
           </p>
 
           {/* Location Services Instructions */}
           <div className="mb-6 w-full max-w-4xl rounded-lg bg-[#F0F7FF] p-4 px-3 shadow-md sm:p-6">
-            <h3 className="mb-3 flex items-center text-lg font-semibold text-black sm:mb-4 sm:text-xl">
+            <h3 className="flex items-center mb-3 text-lg font-semibold text-black sm:mb-4 sm:text-xl">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="mr-2 h-5 w-5 text-[#0261BE]"
@@ -91,8 +91,8 @@ const StudentDashboard = () => {
 
             <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
               {/* Android Location Services */}
-              <div className="rounded-lg bg-white p-3 shadow-md sm:p-4">
-                <h4 className="mb-2 flex items-center text-base font-semibold text-black sm:mb-3 sm:text-lg">
+              <div className="p-3 bg-white rounded-lg shadow-md sm:p-4">
+                <h4 className="flex items-center mb-2 text-base font-semibold text-black sm:mb-3 sm:text-lg">
                   <div className="mr-2 rounded-full bg-[#a4c639] p-1 sm:mr-3 sm:p-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +111,7 @@ const StudentDashboard = () => {
                   </div>
                   Android Location Services
                 </h4>
-                <ol className="space-y-2 text-left text-sm text-black sm:space-y-3 sm:text-base">
+                <ol className="space-y-2 text-sm text-left text-black sm:space-y-3 sm:text-base">
                   <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
                     <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
                       1
@@ -161,9 +161,9 @@ const StudentDashboard = () => {
               </div>
 
               {/* iOS Location Services */}
-              <div className="rounded-lg bg-white p-3 shadow-md sm:p-4">
-                <h4 className="mb-2 flex items-center text-base font-semibold text-black sm:mb-3 sm:text-lg">
-                  <div className="mr-2 rounded-full bg-black p-1 sm:mr-3 sm:p-2">
+              <div className="p-3 bg-white rounded-lg shadow-md sm:p-4">
+                <h4 className="flex items-center mb-2 text-base font-semibold text-black sm:mb-3 sm:text-lg">
+                  <div className="p-1 mr-2 bg-black rounded-full sm:mr-3 sm:p-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="14"
@@ -181,7 +181,7 @@ const StudentDashboard = () => {
                   </div>
                   iOS Location Services
                 </h4>
-                <ol className="space-y-2 text-left text-sm text-black sm:space-y-3 sm:text-base">
+                <ol className="space-y-2 text-sm text-left text-black sm:space-y-3 sm:text-base">
                   <li className="flex items-start rounded-md border-l-4 border-[#0261BE] bg-[#E3F2FD] p-2">
                     <span className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0261BE] text-xs font-medium text-white sm:mr-3 sm:h-6 sm:w-6 sm:text-sm">
                       1
@@ -238,7 +238,7 @@ const StudentDashboard = () => {
             </div>
           </div>
 
-          <div className="mt-4 max-w-2xl">
+          <div className="max-w-2xl mt-4">
             <h3 className="mb-2 text-lg font-semibold text-black">
               Still having trouble?
             </h3>
@@ -250,7 +250,7 @@ const StudentDashboard = () => {
               style={{ paddingTop: '56.25%' }}
             >
               <iframe
-                className="absolute left-0 top-0 h-full w-full"
+                className="absolute top-0 left-0 w-full h-full"
                 src="https://www.youtube.com/embed/ERhEIsEXG50?si=i9ez0hxneFCuAe6E"
                 title="YouTube video player"
                 frameBorder="0"
@@ -268,7 +268,6 @@ const StudentDashboard = () => {
             defaultValue="todays_session"
             value={currentTab}
             onValueChange={(value) => {
-              console.log(value)
               setCurrentTab(value)
             }}
           >
@@ -288,7 +287,7 @@ const StudentDashboard = () => {
             </TabsList>
             <TabsContent value="todays_session">
               {/* Session List */}
-              <div className="space-y-6 p-1 md:p-2">
+              <div className="p-1 space-y-6 md:p-2">
                 {' '}
                 {/* Use space-y for vertical spacing */}
                 {lectureDetails?.length > 0 &&
@@ -345,7 +344,7 @@ const StudentDashboard = () => {
                                           )}
                                           id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}
                                         >
-                                          <BadgeCheck className="mr-1 h-3 w-3 md:h-4 md:w-4" />
+                                          <BadgeCheck className="w-3 h-3 mr-1 md:h-4 md:w-4" />
                                           Present
                                         </Badge>
                                       </div>
@@ -480,7 +479,7 @@ const StudentDashboard = () => {
                                 ),
                               )
                             ) : (
-                              <div className="col-span-full px-1 pt-4 md:px-4">
+                              <div className="px-1 pt-4 col-span-full md:px-4">
                                 <Card className="w-full overflow-hidden border-none bg-[#F7F7F7] text-center shadow-soft">
                                   <CardHeader className="p-4 text-black">
                                     No lectures scheduled in this timetable.
@@ -490,7 +489,7 @@ const StudentDashboard = () => {
                             ),
                           )
                         ) : (
-                          <div className="col-span-full px-1 pt-4 md:px-4">
+                          <div className="px-1 pt-4 col-span-full md:px-4">
                             <Card className="w-full overflow-hidden border-none bg-[#F7F7F7] text-center shadow-soft">
                               <CardHeader className="p-4 text-black">
                                 No lectures scheduled in this timetable.
@@ -509,13 +508,13 @@ const StudentDashboard = () => {
                         <img
                           src={NoDataIllustration}
                           alt="No lectures today"
-                          className="h-full w-full object-cover"
+                          className="object-cover w-full h-full"
                         />
                       </div>
 
                       {/* Simple Text */}
                       <div className="space-y-3">
-                        <h2 className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
+                        <h2 className="text-xl font-semibold text-transparent bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text md:text-3xl">
                           No Lectures Today!
                         </h2>
                         <p className="leading-relaxed text-gray-600">
@@ -529,7 +528,7 @@ const StudentDashboard = () => {
             </TabsContent>
             <TabsContent value="instant_session">
               {/* instant sessions */}
-              <div className="space-y-6 p-1 md:p-2">
+              <div className="p-1 space-y-6 md:p-2">
                 {' '}
                 {/* Use space-y for vertical spacing */}
                 {instantSessions?.length > 0 &&
@@ -561,7 +560,7 @@ const StudentDashboard = () => {
                                 )}
                                 id={`badge_${lecture?.slug}${lecture?.session?.session_id}`}
                               >
-                                <BadgeCheck className="mr-1 h-3 w-3 md:h-4 md:w-4" />
+                                <BadgeCheck className="w-3 h-3 mr-1 md:h-4 md:w-4" />
                                 Present
                               </Badge>
                             </div>
@@ -655,7 +654,7 @@ const StudentDashboard = () => {
                       </div>
                     </div>
                   ))}
-                {lectureDetails?.length === 0 && (
+                {instantSessions?.length === 0 && (
                   <div className="flex min-h-[70vh] items-center justify-center rounded-lg p-6">
                     <div className="max-w-md text-center">
                       {/* Simple Illustration */}
@@ -663,13 +662,13 @@ const StudentDashboard = () => {
                         <img
                           src={NoDataIllustration}
                           alt="No lectures today"
-                          className="h-full w-full object-cover"
+                          className="object-cover w-full h-full"
                         />
                       </div>
 
                       {/* Simple Text */}
                       <div className="space-y-3">
-                        <h2 className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
+                        <h2 className="text-xl font-semibold text-transparent bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text md:text-3xl">
                           No Lectures Today!
                         </h2>
                         <p className="leading-relaxed text-gray-600">

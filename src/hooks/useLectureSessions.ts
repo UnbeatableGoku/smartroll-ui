@@ -214,7 +214,6 @@ const useLectureSessions = () => {
       body['subjects'] = filters.subjects
     }
     if (filters.startDate) {
-      console.log(filters.startDate)
       body['start_date'] = filters.startDate
     }
     if (filters.endDate) {

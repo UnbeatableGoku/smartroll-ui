@@ -29,6 +29,7 @@ const useLogin = () => {
 
   const queryParams = new URLSearchParams(location.search)
 
+  const [isLoadPage, setIsLoadPage] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { register, handleSubmit, reset } = useForm<LoginFormData>()
   const [showPassword, setShowPassword] = useState(false)
@@ -48,7 +49,10 @@ const useLogin = () => {
 
   //? LOGIN FUNCTIONALITY
 
-  const handleLogin = async (userdata: UserData) => {
+  const handleLogin = async (
+    userdata: UserData,
+    isDirectLogin: boolean = false,
+  ) => {
     setIsLoading(true)
     const headers = {
       'Content-Type': 'application/json', // Assuming JSON for login
@@ -66,6 +70,9 @@ const useLogin = () => {
       if (response?.data?.profile_slug) {
         setStudentSlug(response?.data?.profile_slug)
         setIsTempPassword(true)
+        if (isDirectLogin) {
+          setIsLoadPage(true)
+        }
         toast.warning('Temporary password. Please set a new password.')
         setIsLoading(false)
         return
@@ -137,6 +144,7 @@ const useLogin = () => {
             error.response?.data?.detail || error.message || 'An error occurred'
       }
       setIsLoading(false)
+      setIsLoadPage(true)
       reset()
       return toast.error(errorMessage)
     }
@@ -215,6 +223,8 @@ const useLogin = () => {
     redirectLogin,
     setShowPassword,
     handleOnClickForForgotPassoword,
+    isLoadPage,
+    setIsLoadPage,
   }
 }
 
