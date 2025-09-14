@@ -13,7 +13,7 @@ import subjectAllocationSlice from './slices/subjectAllocation'
 const persistConfig = {
   key: 'root', // Key for localStorage
   storage, // Storage engine (e.g., localStorage)
-  blacklist: ['auth', 'loader', 'notification'], // <-- not persisted
+  blacklist: ['auth', 'loader', 'notification', 'classRoomSlice'], // <-- not persisted
 }
 
 // Combine all reducers into a single root reducer

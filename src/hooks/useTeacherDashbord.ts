@@ -1,15 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 
-import TeacherDashboardUtilites from '../utilites/teacherDashboard.utility'
-import Store, { RootState } from '@data/redux/Store'
-import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
-import {
-  setLoader,
-  setReconnectionLoader,
-} from '@data/redux/slices/loaderSlice'
+import TeacherDashboardUtilites from '../pages/TeacherDashboard/utilites/teacherDashboard.utility'
+import Store from '@data/Store'
+import { setLoader, setReconnectionLoader } from '@data/slices/loaderSlice'
 import axios from 'axios'
 import { get } from 'lodash'
-import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { Socket, io } from 'socket.io-client'
 import { toast } from 'sonner'
@@ -22,12 +17,12 @@ export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const dispatch = useDispatch()
   const {
-    loadClassRooms,
     extractLectureStatusData,
     getWeekDates,
     checkAndReturnMicPermission,
     startTeacherStreaming,
     playWaveSoundFrequency,
+    loadClassRooms,
   } = TeacherDashboardUtilites()
 
   const [socket, setSocket] = useState<Socket | null>(null)
@@ -58,11 +53,14 @@ export const useTeacherDashbord = () => {
   const activeDateRef = useRef<HTMLDivElement>(null) // To hold the stop function
   const isNetworkTooSlowRef = useRef(false)
 
-  const { isalreadyLoaded, classes } = useSelector(
-    (state: RootState) => state.classRoomSlice,
-  )
+  const [classesList, setCLassesList] = useState<any>([])
+  const [isClassLoaded] = useState<boolean>(false)
 
-  const [classesList, setClasses] = useState<any>(classes)
+  useEffect(() => {
+    if (!isClassLoaded) {
+      loadClassRooms(setCLassesList)
+    }
+  }, [isClassLoaded])
 
   useEffect(() => {
     return () => {
@@ -74,21 +72,6 @@ export const useTeacherDashbord = () => {
       }
     }
   }, [stopStreamFunction])
-
-  useEffect(() => {
-    setSocket(null)
-
-    const loadData = async () => {
-      if (!isalreadyLoaded) {
-        const payload = await loadClassRooms()
-        setClasses(payload.classes)
-        dispatch(setClassRoomList(payload))
-        // you can now use payload if needed
-      }
-    }
-
-    loadData() // call the inner async function
-  }, [isalreadyLoaded, dispatch])
 
   const clientSocketHandler = async (
     session_id: string,
@@ -206,10 +189,6 @@ export const useTeacherDashbord = () => {
         }
         mic.getTracks().forEach((track: any) => track.stop())
         socketErrorHandler(message)
-      })
-
-      newSocket.on('error', () => {
-        console.log('error')
       })
 
       newSocket.on('disconnect', async (reason) => {

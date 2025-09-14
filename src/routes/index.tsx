@@ -15,8 +15,10 @@ import ElectiveSubject from '@pages/StudentDashboard/subject-selection/pages/Ele
 import SubjectSelection from '@pages/Subject/SubjectSelection'
 import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirmation'
 import TeacherAllocation from '@pages/SubjectAllocation/pages/TeacherAllocation'
-import TeacherDashboard from '@pages/TeacherDashboard'
+import TeacherDashboard from '@pages/TeacherDashboard/SessionManagement'
+import InstantLecture from '@pages/TeacherDashboard/instant-lectures/pages'
 import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAllocation'
+import LectureSessionHistoryPage from '@pages/TeacherDashboard/session-history/pages'
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
 import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
 import ErrorPage from '@pages/errorPage'
@@ -25,6 +27,8 @@ import { createBrowserRouter } from 'react-router-dom'
 import {
   DIVISION_CREATION,
   FORGOT_PASSWORD,
+  INSTANT_LECTURE,
+  LECTURE_SESSIONS_HISTORY,
   LOAD_ALLOCATION_FOR_TEACHER_END,
   PAGE_502,
   PAGE_DASHBOARD,
@@ -270,6 +274,38 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute roleRequired="teacher">
                 <LoadAllocation />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      //Lecture session history page (teacher view)
+      {
+        path: LECTURE_SESSIONS_HISTORY.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="teacher">
+                <LectureSessionHistoryPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      //instant lecture (teacher view)
+      {
+        path: INSTANT_LECTURE.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="teacher">
+                <InstantLecture />
               </ProtectedRoute>
             ),
           },

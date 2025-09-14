@@ -12,7 +12,6 @@ export const PAGE_502: Page = {
   name: 'Error502',
 }
 
-
 export const PAGE_DASHBOARD: Page = {
   id: 'DASHBOARD',
   path: '/',
@@ -90,15 +89,27 @@ export const FORGOT_PASSWORD: Page = {
   name: 'forgot-password',
 }
 
-export const SUBJECT_ALLOCATION:Page = {
+export const SUBJECT_ALLOCATION: Page = {
   id: 'SUBJECT_ALLOCATION',
   path: '/admin/subject-allocation',
-  name: 'Subject Allocation'
+  name: 'Subject Allocation',
 }
-export const LOAD_ALLOCATION_FOR_TEACHER_END:Page = {
+export const LOAD_ALLOCATION_FOR_TEACHER_END: Page = {
   id: 'LOAD_LOAD_ALLOCATION_FOR_TEACHER_END',
   path: '/teacher-dashboard/load-allocation',
-  name: 'Load allocation'
+  name: 'Load allocation',
+}
+
+export const LECTURE_SESSIONS_HISTORY: Page = {
+  id: 'LECTURE_SESSIONS_HISTORY',
+  path: '/teacher-dashboard/lecture-history',
+  name: 'lecture session history',
+}
+
+export const INSTANT_LECTURE: Page = {
+  id: 'INSTANT_LECTURE',
+  path: '/teacher-dashboard/instant-lecture',
+  name: 'instant lecture',
 }
 /**
  * --------------------------------------------------------------------------

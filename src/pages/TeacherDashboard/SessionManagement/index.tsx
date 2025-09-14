@@ -31,10 +31,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import DialogBox from '@pages/TeacherDashboard/components/DialogBox'
-import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
 import { Calendar, Clock, FileDown, Users } from 'lucide-react'
 import { MdGroups2 } from 'react-icons/md'
+
+import { useTeacherDashbord } from '@hooks/useTeacherDashbord'
 
 import { cn } from '@utils'
 
@@ -42,9 +42,8 @@ import { Checkbox } from '@components/ui/checkbox'
 import CustomLoader from '@components/ui/custom-loader'
 
 import AttendanceHistorySheet from './components/AttendanceHistorySheet'
-import { useTeacherDashbord } from './hooks/useTeacherDashbord'
-
-// No need for unused type imports
+import DialogBox from './components/DialogBox'
+import { ManualMarkedAttendance } from './components/ManualMarkedAttendance'
 
 const TeacherDashboard = () => {
   const {
@@ -94,6 +93,7 @@ const TeacherDashboard = () => {
       })
     }
   }, [date])
+
   return (
     <div className="h-auto">
       {/* Main Content */}
@@ -632,7 +632,7 @@ function SessionStatusBadge({ status }: { status: string }) {
       variant={variant}
       className={cn(
         classname,
-        'flex h-[26px] w-[88px] items-center justify-center rounded-[4px] border-none text-[10px] text-white hover:bg-zinc-800 md:text-[12px]',
+        'flex h-[26px] w-[88px] items-center justify-center rounded-[4px] border-none text-[10px] text-white md:text-[12px]',
       )}
     >
       {status}

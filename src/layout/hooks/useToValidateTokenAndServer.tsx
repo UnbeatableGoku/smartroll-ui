@@ -118,6 +118,7 @@ const useToValidateTokenAndServer = () => {
       navigate('/login')
     }
   }
+
   return {
     accessTokenValid,
     access,

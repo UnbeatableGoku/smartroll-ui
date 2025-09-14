@@ -70,7 +70,7 @@ const useStackHolderProfile = () => {
     localStorage.removeItem('persist:root')
     localStorage.clear()
     // clear redux state
-    dispatch(setClassRoomList({ isalreadyLoaded: false, classes: [] }))
+    dispatch(setClassRoomList([]))
     dispatch(setAuth({ access: '', refresh: '', isAuth: false }))
     // redirect to login page
     navigate('/login')

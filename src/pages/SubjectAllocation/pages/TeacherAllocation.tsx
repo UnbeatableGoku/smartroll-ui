@@ -1,8 +1,9 @@
 import StaticsCard from '../components/StaticsCard'
 import SubjectTable from '../components/SubjectTable'
 import TeacherSubjectTable from '../components/TeacherSubjectTable'
-import useSubjectToTeacherAllocation from '../hooks/useSubjectToTeacherAllocation'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
+import useSubjectToTeacherAllocation from '@hooks/useSubjectToTeacherAllocation'
 
 import { Button } from '@components/ui/button'
 

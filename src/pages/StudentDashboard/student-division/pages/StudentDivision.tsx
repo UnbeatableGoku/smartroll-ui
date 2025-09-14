@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 
-import useStudentDivision from '../hooks/useStudentDivision'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
   Table,
@@ -11,6 +10,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Check, Minus, Users } from 'lucide-react'
+
+import useStudentDivision from '@hooks/useStudentDivision'
 
 import { Badge } from '@components/ui/badge'
 

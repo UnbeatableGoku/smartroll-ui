@@ -8,6 +8,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Upload } from 'lucide-react'
 
+import useUploadTimeTable from '@hooks/useUploadTimeTable'
+
 import ButtonLoader from '@components/common/form/buttonLoader/ButtonLoader'
 import Selection from '@components/common/form/selectiom/Selection'
 import useDivision from '@components/common/uploadTimeTable/useDivision'
@@ -15,7 +17,6 @@ import useShowTimeTable from '@components/common/uploadTimeTable/useShowTimeTabl
 import useStream from '@components/common/uploadTimeTable/useStream'
 
 import EventCard from './EventCard'
-import useUploadTimeTable from './useUploadTimeTable'
 
 export default function UploadTimeTable() {
   const { stream, handleStream } = useStream()

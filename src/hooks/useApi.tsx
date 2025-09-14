@@ -1,6 +1,8 @@
-import { RootState } from '@data/redux/Store'
+import { AppDispatch, RootState } from '@data/redux/Store'
 import { setAuth } from '@data/redux/slices/authSlice'
-import { setLoader } from '@data/redux/slices/loaderSlice'
+import { setLoader, setPaginationLoader } from '@data/redux/slices/loaderSlice'
+import { setSheetLoader } from '@data/slices/loaderSlice'
+import { loader } from '@types'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +12,8 @@ interface Tokens {
   accessToken: string | null
   refreshToken: string | null
 }
+
+type loaderType = loader
 
 interface CallAPIResponse {
   error: boolean
@@ -48,8 +52,10 @@ const useAPI = () => {
     headers: any,
     body: any = null,
     params: any = null,
+    loaderType: loaderType = loader.API,
   ): Promise<CallAPIResponse> => {
-    dispatch(setLoader({ state: true, message: null }))
+    loaderHandler({ state: true, message: null }, loaderType, dispatch)
+
     headers['Authorization'] = `Bearer ${tokens.accessToken}`
 
     try {
@@ -61,7 +67,8 @@ const useAPI = () => {
         body,
         params,
       )
-      dispatch(setLoader({ state: false, message: null }))
+      loaderHandler({ state: false, message: null }, loaderType, dispatch)
+
       return { error: false, response }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -104,7 +111,7 @@ const useAPI = () => {
           }
           dispatch(setAuth(token))
           navigate('/login')
-          dispatch(setLoader({ state: false, message: null }))
+          loaderHandler({ state: false, message: null }, loaderType, dispatch)
           return {
             error: true,
             errorMessage: {
@@ -117,7 +124,7 @@ const useAPI = () => {
         }
       } else {
         // Handle other errors
-        dispatch(setLoader({ state: false, message: null }))
+        loaderHandler({ state: false, message: null }, loaderType, dispatch)
         const errorResponse = {
           ...error.response?.data,
           statusCode: error.response.status,
@@ -131,7 +138,7 @@ const useAPI = () => {
     }
 
     // In case of an unexpected issue, return a default response
-    dispatch(setLoader({ state: false, message: null }))
+    loaderHandler({ state: false, message: null }, loaderType, dispatch)
     return {
       error: true,
       errorMessage: {
@@ -189,6 +196,23 @@ const expireToken = async (
       return { action: 'tokenExpired', status: error.response.status }
     }
     throw error
+  }
+}
+
+const loaderHandler = (
+  state: any,
+  loaderType: loaderType,
+  dispatch: AppDispatch,
+) => {
+  switch (loaderType) {
+    case 'PAGINATION':
+      dispatch(setPaginationLoader(state.state))
+      break
+    case 'SHEET':
+      dispatch(setSheetLoader(state.state))
+      break
+    default:
+      dispatch(setLoader(state))
   }
 }
 
