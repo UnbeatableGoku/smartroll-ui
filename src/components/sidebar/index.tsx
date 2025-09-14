@@ -35,7 +35,7 @@ const Sidebar = () => {
     localStorage.removeItem('persist:root')
     localStorage.clear()
     // clear redux state
-    dispatch(setClassRoomList({ isalreadyLoaded: false, classes: [] }))
+    dispatch(setClassRoomList([]))
     dispatch(setAuth({ access: '', refresh: '', isAuth: false }))
     // redirect to login page
     navigate('/login')
@@ -92,7 +92,7 @@ const Sidebar = () => {
 
   return (
     <div className="fixed bottom-[1rem] left-[50%] -translate-x-1/2 transform">
-      <div className="flex items-center gap-1 rounded-[12px] border border-zinc-700 bg-[#F7F7F7] p-1 shadow-soft backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105">
+      <div className="shadow-soft flex items-center gap-1 rounded-[12px] border border-zinc-700 bg-[#F7F7F7] p-1 backdrop-blur-lg transition-transform duration-300 ease-in-out hover:scale-105">
         {menuItems.map((item, index) => (
           <button
             key={item.label}
@@ -123,10 +123,10 @@ const Sidebar = () => {
             </button>
           </DialogTrigger>
           <VisuallyHidden.Root>
-            <DialogContent className="max-w-[380px] rounded-md bg-[#F7F7F7] shadow-soft">
+            <DialogContent className="shadow-soft max-w-[380px] rounded-md bg-[#F7F7F7]">
               <div className="grid gap-4 bg-[#F7F7F7] py-4 text-black">
                 <ul className="text-black">
-                  {[...validLinks].map((page, index) => (
+                  {validLinks.map((page, index) => (
                     <TabLink
                       name={page.name}
                       icon={page.icon}

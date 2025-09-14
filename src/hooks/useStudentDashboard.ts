@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { setLoader } from '@data/redux/slices/loaderSlice'
+import { setLoader } from '@data/slices/loaderSlice'
 import axios from 'axios'
 import { get } from 'lodash'
 // import { startRecording } from '@utils/helpers/recorder_process'
@@ -15,6 +15,8 @@ const useStudentDashboard = () => {
   const [permission_state, set_permission_state] = useState(false)
   const [lectureDetails, setLectureDetails] = useState<any>([])
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
+  const [instantSessions, setInstantSessions] = useState<Array<any>>([])
+  const [currentTab, setCurrentTab] = useState<string>('todays_session')
   const dispatch = useDispatch()
   const get_location_permission = () => {
     // if(!permission_state){
@@ -123,7 +125,7 @@ const useStudentDashboard = () => {
 
           formData.append('latitude', latitude)
           formData.append('longitude', longitude)
-          formData.append('lecture_slug', lecture_slug)
+          formData.append('session_id', session_id)
           formData.append('audio', blob, 'recording.wav')
           formData.append('start_time', startTimestamp)
           const headers = {
@@ -251,7 +253,7 @@ const useStudentDashboard = () => {
         method,
         header,
         {
-          lecture_slug,
+          session_id,
           regulization_commet,
         },
       )
@@ -274,6 +276,32 @@ const useStudentDashboard = () => {
       toast.error(error.message || 'Something went wrong')
     }
   }
+
+  const fetchInstantLecturesAPI = async () => {
+    try {
+      const headers = {
+        'ngrok-skip-browser-warning': true,
+      }
+      const axiosInstance = axios.create()
+
+      const apiPromise = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        '/manage/get_instant_lectures_for_student',
+        'get',
+        headers,
+      )
+
+      if (apiPromise.error) {
+        toast.error(apiPromise.errorMessage?.message || 'Somthing went worng')
+      }
+
+      const data = get(apiPromise, 'response.data.data', [])
+      setInstantSessions(data)
+    } catch (error: any) {
+      toast.error(error.message || 'Something went worngg')
+    }
+  }
   return {
     get_location_permission,
     permission_state,
@@ -281,6 +309,10 @@ const useStudentDashboard = () => {
     lectureDetails,
     mark_attendance,
     handleManualMarking,
+    currentTab,
+    setCurrentTab,
+    fetchInstantLecturesAPI,
+    instantSessions,
   }
 }
 export default useStudentDashboard

@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import { AlertTriangle, BookOpen } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 
+import useSubjectSelection from '@hooks/useSubjectSelection'
+
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
 import { Alert, AlertTitle } from '@components/ui/alert'
@@ -13,7 +15,6 @@ import { Skeleton } from '@components/ui/skeleton'
 import ConfirmSubjectSelection from './components/ConfirmSubjectSelection'
 import SubjectCard from './components/SubjectCard'
 import UpdateDeadlineDialog from './components/UpdateDeadlineDialog'
-import useSubjectSelection from './hooks/useSubjectSelection'
 
 const SubjectSelection = () => {
   const {

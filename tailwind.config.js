@@ -10,6 +10,11 @@ export default {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
+        submit: {
+          DEFAULT: 'hsl(var(--submit))',
+          foreground: 'hsl(var(--submit-foreground))',
+          hover: 'hsl(var(--submit-hover))',
+        },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',

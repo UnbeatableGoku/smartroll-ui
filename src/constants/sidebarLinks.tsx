@@ -2,8 +2,10 @@ import { DashboardIcon, UserIcon } from '@icons'
 import {
   BadgePlus,
   BookCheck,
+  ClipboardClock,
   Eye,
   FileSpreadsheet,
+  PlusIcon,
   SquareCheck,
   UsersRound,
 } from 'lucide-react'
@@ -151,6 +153,30 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
       />
     ),
     path: '/teacher-dashboard/load-allocation',
+  },
+  {
+    id: 'LECTURE_SESSIONS_HISTORY',
+    name: 'lecture session history',
+    icon: (
+      <ClipboardClock
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-dashboard/lecture-history',
+  },
+  {
+    id: 'INSTANT_LECTURE',
+    name: 'instant lecture',
+    icon: (
+      <PlusIcon
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-dashboard/instant-lecture',
   },
 
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },

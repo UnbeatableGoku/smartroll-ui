@@ -29,6 +29,10 @@
     --secondary-foreground: 240 5.9% 10%;
     --secondary-hover: 240 4.8% 90%; /* darker for hover */
 
+    --submit: 210 98% 38%;
+    --submit-foreground: 0 0% 98%;
+    --submit-hover: 221 83% 48%; /* lighter on hover */
+
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
     --muted-hover: 240 4.8% 90%; /* same logic as secondary */

@@ -1,5 +1,6 @@
 import SubjectAllocationDetails from '../components/SubjectAllocationDetails'
-import useLoadAllocation from '../hooks/useLoadAllocation'
+
+import useLoadAllocation from '@hooks/useLoadAllocation'
 
 const LoadAllocation = () => {
   const { AllocationData } = useLoadAllocation()
