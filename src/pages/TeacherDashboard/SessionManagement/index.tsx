@@ -76,7 +76,6 @@ const TeacherDashboard = () => {
     isHistorySheetOpen,
     handleHistorySheetOpen,
     sessionId,
-    redStudents,
     showCustomLoader,
     setShowCustomLoader,
     handleEarlySheetOpen,
@@ -409,8 +408,7 @@ const TeacherDashboard = () => {
           >
             <SheetHeader className="mb-6 flex flex-row items-center justify-between">
               <SheetTitle className="text-sm text-black md:text-2xl">
-                Attendance Details (Active Students :{' '}
-                {students?.length + redStudents?.length})
+                Attendance Details (Active Students : {students?.length})
               </SheetTitle>
             </SheetHeader>
             <div className="space-y-4 md:space-y-6">
@@ -438,7 +436,7 @@ const TeacherDashboard = () => {
                       </TabsTrigger>
                     </TabsList>
                     <TabsContent value="Default">
-                      {students.length > 0 || redStudents.length > 0 ? (
+                      {students.length ? (
                         <div className="overflow-x-auto">
                           <Table className="text-black">
                             <TableHeader>
@@ -463,62 +461,6 @@ const TeacherDashboard = () => {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {redStudents?.map((student: any) => (
-                                <TableRow
-                                  key={student?.slug}
-                                  style={{
-                                    borderWidth: student.chirp_detected
-                                      ? '0px'
-                                      : '2px',
-                                    borderStyle: 'solid',
-                                    borderTopWidth: student.chirp_detected
-                                      ? '0px'
-                                      : '2px',
-                                    borderBottomWidth: student.chirp_detected
-                                      ? '0px'
-                                      : '2px',
-                                    borderColor: student.chirp_detected
-                                      ? '#d1d5db' /* border-border */
-                                      : '#dc2626' /* red-600 */,
-                                    fontSize: '12px',
-                                    color: 'black',
-                                  }}
-                                >
-                                  <TableCell>
-                                    {student?.student?.profile?.name}
-                                  </TableCell>
-
-                                  <TableCell className="text-center">
-                                    <Checkbox
-                                      checked={student.is_present}
-                                      onCheckedChange={() =>
-                                        !isSlowNetwork
-                                          ? updateStudentAttendance(
-                                              student.slug,
-                                              false,
-                                            )
-                                          : updateStudentAttendaceAPI(
-                                              student.slug,
-                                            )
-                                      }
-                                      className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:hover:bg-blue-600"
-                                    />
-                                  </TableCell>
-                                  {/* <TableCell className="text-center">
-                                    {`${Number(Math.floor(student?.similarity))} %` ||
-                                      '-'}
-                                  </TableCell> */}
-                                  <TableCell className="text-center">
-                                    {student?.gps_distance?.toFixed(3) || '-'}
-                                  </TableCell>
-                                  <TableCell className="text-center">
-                                    {student?.ncc?.toFixed(2) || '-'}
-                                  </TableCell>
-                                  <TableCell className="text-center">
-                                    {student?.magnitude?.toFixed(2) || '-'}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
                               {students?.map((student: any) => (
                                 <TableRow key={student?.slug}>
                                   <TableCell>
