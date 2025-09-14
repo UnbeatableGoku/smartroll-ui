@@ -30,6 +30,10 @@ const AttendanceSheet = ({
   removeStudentAttendanceRequest,
   handleOnSessionEnd,
   markManualStudentsAttendance,
+  endSessionhandlerAPI,
+  isSlowNetwork,
+  markRegulizattionRequestEntryAPI,
+  updateStudentAttendaceAPI,
 }: props) => {
   return (
     <Sheet open={isSheetOpen} onOpenChange={handleSheet}>
@@ -98,7 +102,12 @@ const AttendanceSheet = ({
                                 <Checkbox
                                   checked={true}
                                   onCheckedChange={() =>
-                                    updateStudentAttendance(student.slug, false)
+                                    !isSlowNetwork
+                                      ? updateStudentAttendance(
+                                          student.slug,
+                                          false,
+                                        )
+                                      : updateStudentAttendaceAPI(student.slug)
                                   }
                                   className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:hover:bg-blue-600"
                                 />
@@ -138,7 +147,11 @@ const AttendanceSheet = ({
                   {manualAttendance.length > 0 && (
                     <Button
                       className="w-full rounded-[4px] bg-[#0261BE] text-white hover:bg-[#0261BE]/60"
-                      onClick={() => markManualStudentsAttendance()}
+                      onClick={() =>
+                        !isSlowNetwork
+                          ? markManualStudentsAttendance()
+                          : markRegulizattionRequestEntryAPI()
+                      }
                     >
                       Mark All Students
                     </Button>
@@ -157,7 +170,9 @@ const AttendanceSheet = ({
           <div className="flex flex-col gap-2 sm:flex-row">
             <Button
               className="flex-1 rounded-[6px] bg-[#be0205] text-white hover:bg-red-500"
-              onClick={() => handleOnSessionEnd()}
+              onClick={() =>
+                !isSlowNetwork ? handleOnSessionEnd() : endSessionhandlerAPI()
+              }
             >
               End Session
             </Button>
@@ -178,5 +193,9 @@ interface props {
   removeStudentAttendanceRequest: any
   handleOnSessionEnd: any
   markManualStudentsAttendance: any
+  endSessionhandlerAPI: any
+  isSlowNetwork: boolean
+  markRegulizattionRequestEntryAPI: any
+  updateStudentAttendaceAPI: any
 }
 export default AttendanceSheet

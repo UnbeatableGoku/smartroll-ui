@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import TeacherDashboardUtilites from '../pages/TeacherDashboard/utilites/teacherDashboard.utility'
 import Store from '@data/Store'
 import { setLoader, setReconnectionLoader } from '@data/slices/loaderSlice'
+import { loader } from '@types'
 import axios from 'axios'
 import { get } from 'lodash'
 import { useDispatch } from 'react-redux'
@@ -23,9 +24,11 @@ export const useTeacherDashbord = () => {
     startTeacherStreaming,
     playWaveSoundFrequency,
     loadClassRooms,
+    serverSideEventHandler,
   } = TeacherDashboardUtilites()
 
   const [socket, setSocket] = useState<Socket | null>(null)
+  const [sse, setSse] = useState<EventSource | null>(null)
   const [students, setStudents] = useState<any>([])
   const [redStudents, setRedStudents] = useState<any>([])
   const [sessionData, setSessionData] = useState<any>()
@@ -43,7 +46,7 @@ export const useTeacherDashbord = () => {
   const [stopWaveFrequency, setStopWaveFrequency] = useState<
     (() => Promise<void>) | null
   >(null)
-  const [_, setIsNetworkTooSlow] = useState(false)
+  const [isSlowNetwork, setIsNetworkTooSlow] = useState(false)
   const [isHistorySheetOpen, setIsHistorySheetOpen] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [showCustomLoader, setShowCustomLoader] = useState(false)
@@ -738,6 +741,10 @@ export const useTeacherDashbord = () => {
         setSocket(null)
       }
 
+      // close sse
+      if (sse) {
+        sse.close()
+      }
       // Stop audio frequency
       if (stopWaveFrequency) {
         await stopWaveFrequency()
@@ -784,38 +791,230 @@ export const useTeacherDashbord = () => {
         pendingSessionDataRef.current
 
       // Start audio and socket setup in parallel for faster response
-      const audioPromise = playWaveSoundFrequency(audio_url)
+      const { stop: stopWaveFrequency1, speedMbps } =
+        await playWaveSoundFrequency(audio_url)
+      setStopWaveFrequency(() => stopWaveFrequency1)
 
-      // Don't await here - let it run in background
-      audioPromise
-        .then(({ stop: stopWaveFrequency1, speedMbps }) => {
-          setStopWaveFrequency(() => stopWaveFrequency1)
-
-          // Set network speed state based on measured speed
-          if (speedMbps !== null && speedMbps < 0.3) {
-            isNetworkTooSlowRef.current = true
-            setIsNetworkTooSlow(true)
-          } else {
-            isNetworkTooSlowRef.current = false
-            setIsNetworkTooSlow(false)
-          }
-        })
-        .catch((error) => {
-          console.error('Error in audio setup:', error)
-        })
-
-      // Create a temporary stop function until audio loads
       const tempStopWaveFunction = async () => {
         // This will be replaced when audio loads
         console.log('Temporary stop function called')
       }
 
+      if (speedMbps !== null && speedMbps < 0.3) {
+        isNetworkTooSlowRef.current = true
+        setIsNetworkTooSlow(true)
+        mic?.getTracks().forEach((track: any) => track.stop())
+        handleServerSideEventConnection(session_id)
+      } else {
+        isNetworkTooSlowRef.current = false
+        setIsNetworkTooSlow(false)
+        clientSocketHandler(session_id, accessToken, mic, tempStopWaveFunction)
+      }
+
+      // Create a temporary stop function until audio loads
+
       // Start socket connection with temporary function
-      clientSocketHandler(session_id, accessToken, mic, tempStopWaveFunction)
     } catch (error) {
       console.error('Error in early session setup:', error)
       // Reset state on error
       setSessionSetupStarted(false)
+    }
+  }
+
+  const handleServerSideEventConnection = (sessionId: string) => {
+    try {
+      const sse = serverSideEventHandler(sessionId)
+      setSse(sse)
+      setIsSheetOpen(true)
+      sse.onmessage = (event) => {
+        const data = JSON.parse(event.data)
+        console.log(data?.type)
+        if (data?.status_code != 200) {
+          throw new Error('something went worng, please contact support team')
+        }
+        switch (data?.type) {
+          case 'ongoing_session_data':
+            handleOngoingSessionDataEvent(data?.data)
+            break
+          case 'attendance_marked':
+            handleMarkAttendanceEvent(data?.data)
+            break
+          case 'update_attendace':
+            handleUpdateAttendaceEvent(data?.data)
+            break
+          case 'regulization_request':
+            handleRegulizationRequestEvent(data?.data)
+            break
+          case 'handleRegulizationApprovedEvent':
+            handleRegulizationApprovedEvent(data?.data)
+            break
+        }
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'something went worng')
+      setIsSheetOpen(false)
+      if (sse) {
+        sse.close()
+      }
+    }
+  }
+
+  const handleOngoingSessionDataEvent = (data: any) => {
+    setOngoingSessionData(data)
+    const { marked_attendances, pending_regulization_requests } = data
+    setManualAttendance(pending_regulization_requests)
+    const valid_attendance = marked_attendances.filter(
+      (attendance: any) => attendance.chirp_detected,
+    )
+
+    const red_students = marked_attendances.filter(
+      (attendance: any) => !attendance.chirp_detected,
+    )
+
+    setStudents(valid_attendance)
+    setRedStudents(red_students)
+  }
+
+  const handleMarkAttendanceEvent = (data: any) => {
+    console.log(data)
+    if (data) {
+      setRedStudents((prev: any) => [data?.attendance_data, ...prev])
+    }
+  }
+
+  const handleUpdateAttendaceEvent = (attendance_slug: string) => {
+    setStudents((prev: any) =>
+      prev.filter((student: any) => student.slug !== attendance_slug),
+    )
+    setRedStudents((prev: any) =>
+      prev.filter((student: any) => student.slug !== attendance_slug),
+    )
+    dispatch(setLoader({ state: false, message: null }))
+    toast.success('Attendace updated successfully..!')
+  }
+
+  const handleRegulizationRequestEvent = (data: any) => {
+    setManualAttendance((prev: any) => [data?.attendance_data, ...prev])
+  }
+
+  const handleRegulizationApprovedEvent = (data: any) => {
+    toast.success('Attendance Marked Successfully')
+
+    setStudents((prev: any) => [...prev, ...data])
+    setManualAttendance([])
+  }
+
+  const markRegulizattionRequestEntryAPI = async () => {
+    try {
+      const attendance_slug = manualAttendance.map((item: any) => item.slug)
+      // No network_speed here, unless you want to use speedMbps from playWaveSoundFrequency later
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+
+      const body = {
+        session_id: onGoingSessionData.session_id,
+        data: attendance_slug,
+      }
+
+      const axiosInstance = axios.create()
+      const method = 'post'
+      const endpoint = `/manage/session/regulization_request_entry/`
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+        body,
+        null,
+        loader.SHEET,
+      )
+
+      if (response_obj.error) {
+        throw new Error(response_obj.errorMessage?.message)
+      }
+      const data = get(response_obj, 'response.data.data', [])
+      if (!data.length) {
+        throw new Error('No Studnets Founds to mark Attendance')
+      }
+      handleRegulizationApprovedEvent(data)
+    } catch (error: any) {
+      toast.error(error.message || 'something went worng')
+    }
+  }
+
+  const updateStudentAttendaceAPI = async (attendance_slug: string) => {
+    try {
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+
+      const body = {
+        session_id: onGoingSessionData.session_id,
+        attendance_slug,
+        action: false,
+      }
+
+      const axiosInstance = axios.create()
+      const method = 'post'
+      const endpoint = `/manage/session/update_attendance/`
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+        body,
+        null,
+        loader.SHEET,
+      )
+
+      if (response_obj.error) {
+        throw new Error(response_obj.errorMessage?.message)
+      }
+      handleUpdateAttendaceEvent(attendance_slug)
+    } catch (error: any) {
+      toast.error(error.message || 'something went worng')
+    }
+  }
+
+  const endSessionhandlerAPI = async () => {
+    try {
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+
+      const body = {
+        session_id: onGoingSessionData.session_id,
+      }
+
+      const axiosInstance = axios.create()
+      const method = 'post'
+      const endpoint = `/manage/session/end_session/`
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+        body,
+        null,
+        loader.SHEET,
+      )
+
+      if (response_obj.error) {
+        throw new Error(response_obj.errorMessage?.message)
+      }
+      setStudents([])
+      setManualAttendance([])
+      setIsSheetOpen(false)
+      handleSessionCleanUp()
+    } catch (error: any) {
+      toast.error(error.message || 'something went worng')
     }
   }
 
@@ -860,5 +1059,9 @@ export const useTeacherDashbord = () => {
     setShowCustomLoader,
     handleEarlySheetOpen,
     redStudents,
+    markRegulizattionRequestEntryAPI,
+    isSlowNetwork,
+    updateStudentAttendaceAPI,
+    endSessionhandlerAPI,
   }
 }
