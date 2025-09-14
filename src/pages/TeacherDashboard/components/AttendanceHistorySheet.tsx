@@ -1,4 +1,3 @@
-import { useTeacherDashbord } from '../hooks/useTeacherDashbord'
 import {
   Sheet,
   SheetContent,
@@ -14,6 +13,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { FileDown } from 'lucide-react'
+
+import { useTeacherDashbord } from '@hooks/useTeacherDashbord'
 
 import { Button } from '@components/ui/button'
 import { Checkbox } from '@components/ui/checkbox'

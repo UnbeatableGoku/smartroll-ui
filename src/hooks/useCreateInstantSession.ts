@@ -293,7 +293,12 @@ const useCreateInstantSession = () => {
           setShowCustomLoader(false)
           setSessionSetupStarted(false)
           pendingSessionDataRef.current = null
-
+          dispatch(
+            setLoader({
+              state: true,
+              message: 'Please wait until session start',
+            }),
+          )
           // Store session data for early completion
           pendingSessionDataRef.current = {
             session_id,
@@ -703,13 +708,11 @@ const useCreateInstantSession = () => {
         setIsNetworkTooSlow(false)
         clientSocketHandler(session_id, accessToken, mic, tempStopWaveFunction)
       }
-
-      // Start socket connection with temporary function
-      clientSocketHandler(session_id, accessToken, mic, tempStopWaveFunction)
     } catch (error) {
       console.error('Error in early session setup:', error)
       // Reset state on error
       setSessionSetupStarted(false)
+      dispatch(setLoader({ state: false, message: null }))
     }
   }
 
@@ -761,7 +764,7 @@ const useCreateInstantSession = () => {
     try {
       const sse = serverSideEventHandler(sessionId)
       setSse(sse)
-      setIsSheetOpen(true)
+      setAttendanceSheetOpen(true)
       sse.onmessage = (event) => {
         const data = JSON.parse(event.data)
         console.log(data?.type)
@@ -788,7 +791,7 @@ const useCreateInstantSession = () => {
       }
     } catch (error: any) {
       toast.error(error.message || 'something went worng')
-      setIsSheetOpen(false)
+      setAttendanceSheetOpen(false)
       if (sse) {
         sse.close()
       }
@@ -796,6 +799,7 @@ const useCreateInstantSession = () => {
   }
 
   const handleOngoingSessionDataEvent = (data: any) => {
+    dispatch(setLoader({ state: false, message: null }))
     setOngoingSessionData(data)
     const { marked_attendances, pending_regulization_requests } = data
     setManualAttendance(pending_regulization_requests)
@@ -938,9 +942,16 @@ const useCreateInstantSession = () => {
       if (response_obj.error) {
         throw new Error(response_obj.errorMessage?.message)
       }
+
+      const data = get(response_obj, 'response.data.data', {})
+      setFinalAttendanceData(data.marked_attendances)
+      setSessionStates((prevData: any) => ({
+        ...prevData,
+        [data.session_id]: data.active,
+      }))
       setStudents([])
       setManualAttendance([])
-      setIsSheetOpen(false)
+      setAttendanceSheetOpen(false)
       handleSessionCleanUp()
     } catch (error: any) {
       toast.error(error.message || 'something went worng')

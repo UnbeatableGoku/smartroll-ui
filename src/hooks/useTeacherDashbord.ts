@@ -320,7 +320,12 @@ export const useTeacherDashbord = () => {
           setShowCustomLoader(false)
           setSessionSetupStarted(false)
           pendingSessionDataRef.current = null
-
+          dispatch(
+            setLoader({
+              state: true,
+              message: 'Please wait until session start',
+            }),
+          )
           // Store session data for early completion
           pendingSessionDataRef.current = {
             session_id,
@@ -816,6 +821,7 @@ export const useTeacherDashbord = () => {
       // Start socket connection with temporary function
     } catch (error) {
       console.error('Error in early session setup:', error)
+      dispatch(setLoader({ state: false, message: null }))
       // Reset state on error
       setSessionSetupStarted(false)
     }
@@ -860,6 +866,7 @@ export const useTeacherDashbord = () => {
   }
 
   const handleOngoingSessionDataEvent = (data: any) => {
+    dispatch(setLoader({ state: false, message: null }))
     setOngoingSessionData(data)
     const { marked_attendances, pending_regulization_requests } = data
     setManualAttendance(pending_regulization_requests)
@@ -1009,6 +1016,13 @@ export const useTeacherDashbord = () => {
       if (response_obj.error) {
         throw new Error(response_obj.errorMessage?.message)
       }
+
+      const data = get(response_obj, 'response.data.data', {})
+      setFinalAttendanceData(data.marked_attendances)
+      setSessionData((prevData: any) => ({
+        ...prevData,
+        [data.session_id]: data.active,
+      }))
       setStudents([])
       setManualAttendance([])
       setIsSheetOpen(false)
