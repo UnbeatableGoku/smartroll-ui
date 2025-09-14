@@ -328,6 +328,12 @@ const TeacherDashboardUtilites = () => {
       toast.error(error.message || 'something went wrong')
     }
   }
+  const serverSideEventHandler = (sessionId: string) => {
+    const url = `${window.base_url}/manage/session/session_sse_view?session_id=${sessionId}&access_token=${StoredTokens.accessToken}`
+    console.log(url)
+    const eventSource = new EventSource(url)
+    return eventSource
+  }
   return {
     extractLectureStatusData,
     getWeekDates,
@@ -336,6 +342,7 @@ const TeacherDashboardUtilites = () => {
     startTeacherStreaming,
     playWaveSoundFrequency,
     loadClassRooms,
+    serverSideEventHandler,
   }
 }
 

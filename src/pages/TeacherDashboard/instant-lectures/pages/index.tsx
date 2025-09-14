@@ -48,6 +48,10 @@ const InstantLecture = () => {
     handleEarlySheetOpen,
     setShowCustomLoader,
     onGoingSessionData,
+    endSessionhandlerAPI,
+    isSlowNetwork,
+    markRegulizattionRequestEntryAPI,
+    updateStudentAttendaceAPI,
   } = useCreateInstantSession()
 
   useEffect(() => {
@@ -220,6 +224,10 @@ const InstantLecture = () => {
           markManualStudentsAttendance={markManualStudentsAttendance}
           removeStudentAttendanceRequest={removeStudentAttendanceRequest}
           updateStudentAttendance={updateStudentAttendance}
+          endSessionhandlerAPI={endSessionhandlerAPI}
+          isSlowNetwork={isSlowNetwork}
+          markRegulizattionRequestEntryAPI={markRegulizattionRequestEntryAPI}
+          updateStudentAttendaceAPI={updateStudentAttendaceAPI}
         />
       )}
 

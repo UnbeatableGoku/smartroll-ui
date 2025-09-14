@@ -31,13 +31,16 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { RootState } from '@data/Store'
 import { Calendar, Clock, FileDown, Users } from 'lucide-react'
 import { MdGroups2 } from 'react-icons/md'
+import { useSelector } from 'react-redux'
 
 import { useTeacherDashbord } from '@hooks/useTeacherDashbord'
 
 import { cn } from '@utils'
 
+import { SheetLoader } from '@components/common/loader/Loader'
 import { Checkbox } from '@components/ui/checkbox'
 import CustomLoader from '@components/ui/custom-loader'
 
@@ -77,6 +80,10 @@ const TeacherDashboard = () => {
     showCustomLoader,
     setShowCustomLoader,
     handleEarlySheetOpen,
+    isSlowNetwork,
+    endSessionhandlerAPI,
+    markRegulizattionRequestEntryAPI,
+    updateStudentAttendaceAPI,
   } = useTeacherDashbord()
 
   useEffect(() => {
@@ -93,6 +100,10 @@ const TeacherDashboard = () => {
       })
     }
   }, [date])
+
+  const sheetLoader = useSelector(
+    (state: RootState) => state.loader.SHEET_LOADER_STATE,
+  )
 
   return (
     <div className="h-auto">
@@ -402,7 +413,6 @@ const TeacherDashboard = () => {
                 {students?.length + redStudents?.length})
               </SheetTitle>
             </SheetHeader>
-
             <div className="space-y-4 md:space-y-6">
               {/* Attendance Table */}
               <div className="rounded-[6px] bg-[#F7F7F7] shadow-soft">
@@ -482,10 +492,14 @@ const TeacherDashboard = () => {
                                     <Checkbox
                                       checked={student.is_present}
                                       onCheckedChange={() =>
-                                        updateStudentAttendance(
-                                          student.slug,
-                                          false,
-                                        )
+                                        !isSlowNetwork
+                                          ? updateStudentAttendance(
+                                              student.slug,
+                                              false,
+                                            )
+                                          : updateStudentAttendaceAPI(
+                                              student.slug,
+                                            )
                                       }
                                       className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:hover:bg-blue-600"
                                     />
@@ -515,10 +529,14 @@ const TeacherDashboard = () => {
                                     <Checkbox
                                       checked={student.is_present}
                                       onCheckedChange={() =>
-                                        updateStudentAttendance(
-                                          student.slug,
-                                          false,
-                                        )
+                                        !isSlowNetwork
+                                          ? updateStudentAttendance(
+                                              student.slug,
+                                              false,
+                                            )
+                                          : updateStudentAttendaceAPI(
+                                              student.slug,
+                                            )
                                       }
                                       className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:hover:bg-blue-600"
                                     />
@@ -558,7 +576,11 @@ const TeacherDashboard = () => {
                       {manualAttendance.length > 0 && (
                         <Button
                           className="w-full rounded-[4px] bg-[#0261BE] text-white hover:bg-[#0261BE]/60"
-                          onClick={() => markManualStudentsAttendance()}
+                          onClick={() =>
+                            !isSlowNetwork
+                              ? markManualStudentsAttendance()
+                              : markRegulizattionRequestEntryAPI()
+                          }
                         >
                           Mark All Students
                         </Button>
@@ -577,12 +599,17 @@ const TeacherDashboard = () => {
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Button
                   className="flex-1 rounded-[6px] bg-[#be0205] text-white hover:bg-red-500"
-                  onClick={() => handleOnSessionEnd()}
+                  onClick={() =>
+                    !isSlowNetwork
+                      ? handleOnSessionEnd()
+                      : endSessionhandlerAPI()
+                  }
                 >
                   End Session
                 </Button>
               </div>
             </div>
+            {sheetLoader && <SheetLoader></SheetLoader>}
           </SheetContent>
         </Sheet>
       )}
