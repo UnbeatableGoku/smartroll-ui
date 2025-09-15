@@ -30,7 +30,7 @@ export const useTeacherDashbord = () => {
   const [socket, setSocket] = useState<Socket | null>(null)
   const [sse, setSse] = useState<EventSource | null>(null)
   const [students, setStudents] = useState<any>([])
-  const [redStudents, setRedStudents] = useState<any>([])
+
   const [sessionData, setSessionData] = useState<any>()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [onGoingSessionData, setOngoingSessionData] = useState<any>(null)
@@ -148,11 +148,7 @@ export const useTeacherDashbord = () => {
         const { attendance_data } = attendanceData.data.data
 
         if (attendance_data) {
-          if (attendance_data.chirp_detected) {
-            setStudents((prev: any) => [attendance_data, ...prev])
-          } else {
-            setRedStudents((prev: any) => [attendance_data, ...prev])
-          }
+          setStudents((prev: any) => [attendance_data, ...prev])
         }
       })
 
@@ -163,9 +159,7 @@ export const useTeacherDashbord = () => {
           setStudents((prev: any) =>
             prev.filter((student: any) => student.slug !== attendance_slug),
           )
-          setRedStudents((prev: any) =>
-            prev.filter((student: any) => student.slug !== attendance_slug),
-          )
+
           dispatch(setLoader({ state: false, message: null }))
           toast.success(message)
         } else {
@@ -381,16 +375,8 @@ export const useTeacherDashbord = () => {
     setOngoingSessionData(data)
     const { marked_attendances, pending_regulization_requests } = data
     setManualAttendance(pending_regulization_requests)
-    const valid_attendance = marked_attendances.filter(
-      (attendance: any) => attendance.chirp_detected,
-    )
 
-    const red_students = marked_attendances.filter(
-      (attendance: any) => !attendance.chirp_detected,
-    )
-
-    setStudents(valid_attendance)
-    setRedStudents(red_students)
+    setStudents(marked_attendances)
   }
 
   const socketErrorHandler = async (message: any) => {
@@ -735,7 +721,6 @@ export const useTeacherDashbord = () => {
     setIsHistorySheetOpen(!isHistorySheetOpen)
     setSessionId(null)
     setStudents([])
-    setRedStudents([])
   }
 
   const handleSessionCleanUp = async () => {
@@ -870,30 +855,18 @@ export const useTeacherDashbord = () => {
     setOngoingSessionData(data)
     const { marked_attendances, pending_regulization_requests } = data
     setManualAttendance(pending_regulization_requests)
-    const valid_attendance = marked_attendances.filter(
-      (attendance: any) => attendance.chirp_detected,
-    )
 
-    const red_students = marked_attendances.filter(
-      (attendance: any) => !attendance.chirp_detected,
-    )
-
-    setStudents(valid_attendance)
-    setRedStudents(red_students)
+    setStudents(marked_attendances)
   }
 
   const handleMarkAttendanceEvent = (data: any) => {
-    console.log(data)
     if (data) {
-      setRedStudents((prev: any) => [data?.attendance_data, ...prev])
+      setStudents((prev: any) => [data?.attendance_data, ...prev])
     }
   }
 
   const handleUpdateAttendaceEvent = (attendance_slug: string) => {
     setStudents((prev: any) =>
-      prev.filter((student: any) => student.slug !== attendance_slug),
-    )
-    setRedStudents((prev: any) =>
       prev.filter((student: any) => student.slug !== attendance_slug),
     )
     dispatch(setLoader({ state: false, message: null }))
@@ -1072,7 +1045,7 @@ export const useTeacherDashbord = () => {
     showCustomLoader,
     setShowCustomLoader,
     handleEarlySheetOpen,
-    redStudents,
+
     markRegulizattionRequestEntryAPI,
     isSlowNetwork,
     updateStudentAttendaceAPI,
