@@ -781,7 +781,7 @@ export const useTeacherDashbord = () => {
         pendingSessionDataRef.current
 
       // Start audio and socket setup in parallel for faster response
-      const { stop: stopWaveFrequency1, speedMbps } =
+      const { stop: stopWaveFrequency1 } =
         await playWaveSoundFrequency(audio_url)
       setStopWaveFrequency(() => stopWaveFrequency1)
 
@@ -790,7 +790,7 @@ export const useTeacherDashbord = () => {
         console.log('Temporary stop function called')
       }
 
-      if (speedMbps !== null && speedMbps < 0.3) {
+      if (true) {
         isNetworkTooSlowRef.current = true
         setIsNetworkTooSlow(true)
         mic?.getTracks().forEach((track: any) => track.stop())
