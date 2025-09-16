@@ -689,7 +689,7 @@ const useCreateInstantSession = () => {
       const { session_id, audio_url, mic, accessToken } =
         pendingSessionDataRef.current
 
-      const { stop: stopWaveFrequency1, speedMbps } =
+      const { stop: stopWaveFrequency1 } =
         await playWaveSoundFrequency(audio_url)
       setStopWaveFrequency(() => stopWaveFrequency1)
 
@@ -698,7 +698,7 @@ const useCreateInstantSession = () => {
         console.log('Temporary stop function called')
       }
 
-      if (speedMbps !== null && speedMbps < 0.3) {
+      if (true) {
         isNetworkTooSlowRef.current = true
         setIsNetworkTooSlow(true)
         mic?.getTracks().forEach((track: any) => track.stop())
