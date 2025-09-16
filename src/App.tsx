@@ -1,5 +1,5 @@
 import ReconnectionLoader from '../src/components/loader/reconnection-loader'
-import { RootState } from '@data/redux/Store'
+import { RootState } from '@data/Store'
 import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import { Toaster } from 'sonner'

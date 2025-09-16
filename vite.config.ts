@@ -19,6 +19,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
+    allowedHosts: ['ch-operates-clark-networks.trycloudflare.com'],
   },
   build: {
     sourcemap: true,

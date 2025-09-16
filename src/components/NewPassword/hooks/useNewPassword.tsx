@@ -1,4 +1,4 @@
-import { setAuth, setUserProfile } from '@data/redux/slices/authSlice'
+import { setAuth, setUserProfile } from '@data/slices/authSlice'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useDispatch } from 'react-redux'

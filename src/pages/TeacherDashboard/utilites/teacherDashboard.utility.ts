@@ -1,4 +1,4 @@
-import { setClassRoomList } from '@data/redux/slices/classRoomsSlice'
+import { setClassRoomList } from '@data/slices/classRoomsSlice'
 import axios from 'axios'
 import { get } from 'lodash'
 import { useDispatch } from 'react-redux'
