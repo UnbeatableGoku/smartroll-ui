@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { RootState } from '@data/redux/Store'
+import { RootState } from '@data/Store'
 import { Filter } from 'lucide-react'
 import { useSelector } from 'react-redux'
 

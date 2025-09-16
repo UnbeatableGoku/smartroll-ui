@@ -55,7 +55,7 @@ const Header = () => {
                 ? profile?.obj.teacher_code?.substring(0, 2)?.toUpperCase()
                 : profile?.obj.profile.name
                     ?.split(' ')
-                    .map((word) => word[0]?.toUpperCase())
+                    .map((word: any) => word[0]?.toUpperCase())
                     .join('')}
             </div>
           </div>
@@ -70,7 +70,7 @@ const Header = () => {
                     ? profile?.obj.teacher_code?.substring(0, 2)?.toUpperCase()
                     : profile?.obj.profile.name
                         ?.split(' ')
-                        .map((word) => word[0]?.toUpperCase())
+                        .map((word: any) => word[0]?.toUpperCase())
                         .join('')}
                 </div>
               </div>

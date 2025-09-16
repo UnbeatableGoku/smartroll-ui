@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 
-import { RootState } from '@data/redux/Store'
+import { RootState } from '@data/Store'
 import {
   resetSubjectAllocationState,
   updateHoursForSubjectToTeacherMap,
   updateSubjectAllocationState,
-} from '@data/redux/slices/subjectAllocation'
+} from '@data/slices/subjectAllocation'
 import axios from 'axios'
 import _ from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'

@@ -76,7 +76,7 @@ const NotificationDrawer = () => {
           <TabsContent value="all">
             <ScrollArea className="mt-4 h-[calc(60vh-10rem)]">
               {seenNotifications.length > 0 ? (
-                seenNotifications.map((notification) => (
+                seenNotifications.map((notification: any) => (
                   <NotificationItem
                     key={notification.slug}
                     notification={notification}
@@ -105,7 +105,7 @@ const NotificationDrawer = () => {
             </div>
             <ScrollArea className="mt-4 h-[calc(60vh-10rem)]">
               {unSeenNotifications.length > 0 ? (
-                unSeenNotifications.map((notification) => (
+                unSeenNotifications.map((notification: any) => (
                   <>
                     <NotificationItem
                       key={notification.slug}
