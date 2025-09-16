@@ -1,5 +1,6 @@
 import { AppDispatch, RootState } from '@data/Store'
 import { setAuth } from '@data/slices/authSlice'
+import { setClassRoomList } from '@data/slices/classRoomsSlice'
 import { setLoader, setPaginationLoader } from '@data/slices/loaderSlice'
 import { setSheetLoader } from '@data/slices/loaderSlice'
 import { loader } from '@types'
@@ -73,6 +74,29 @@ const useAPI = () => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         // Token refresh logic
+        if (error?.response?.data?.code === 'user_not_found') {
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('refreshToken')
+          localStorage.removeItem('callbackUrl')
+          localStorage.removeItem('fromApp')
+          localStorage.removeItem('persist:root')
+          localStorage.clear()
+          // clear redux state
+          loaderHandler({ state: false, message: null }, loaderType, dispatch)
+          dispatch(setClassRoomList([]))
+          dispatch(setAuth({ access: '', refresh: '', isAuth: false }))
+          // redirect to login page
+          navigate('/login')
+          return {
+            error: true,
+            errorMessage: {
+              data: null,
+              error: true,
+              message: 'Token Expired',
+              statusCode: 401,
+            },
+          }
+        }
         const result = await expireToken(tokens.refreshToken)
         if (result.access && result.refresh) {
           const token_data: Tokens = {
