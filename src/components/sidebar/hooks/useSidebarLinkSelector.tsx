@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { RootState } from '@data/redux/Store'
+import { RootState } from '@data/Store'
 import { jwtDecode } from 'jwt-decode'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'

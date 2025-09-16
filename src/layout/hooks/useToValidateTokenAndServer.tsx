@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-import { RootState } from '@data/redux/Store'
-import { setAuth, setUserProfile } from '@data/redux/slices/authSlice'
-import { setLoader } from '@data/redux/slices/loaderSlice'
+import { RootState } from '@data/Store'
+import { setAuth, setUserProfile } from '@data/slices/authSlice'
+import { setLoader } from '@data/slices/loaderSlice'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useDispatch, useSelector } from 'react-redux'
