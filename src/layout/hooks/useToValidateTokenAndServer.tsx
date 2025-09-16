@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { RootState } from '@data/Store'
 import { setAuth, setUserProfile } from '@data/slices/authSlice'
+import { setClassRoomList } from '@data/slices/classRoomsSlice'
 import { setLoader } from '@data/slices/loaderSlice'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
@@ -70,6 +71,19 @@ const useToValidateTokenAndServer = () => {
       }
     } catch (error: any) {
       dispatch(setLoader({ state: false, message: null }))
+      if (error?.response?.data?.code === 'user_not_found') {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        localStorage.removeItem('callbackUrl')
+        localStorage.removeItem('fromApp')
+        localStorage.removeItem('persist:root')
+        localStorage.clear()
+        // clear redux state
+        dispatch(setClassRoomList([]))
+        dispatch(setAuth({ access: '', refresh: '', isAuth: false }))
+        // redirect to login page
+        return navigate('/login')
+      }
       if (refresh) {
         expireToken(refresh)
       } else {
