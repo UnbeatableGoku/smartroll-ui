@@ -789,8 +789,8 @@ export const useTeacherDashbord = () => {
         // This will be replaced when audio loads
         console.log('Temporary stop function called')
       }
-
-      if (speedMbps !== null && speedMbps < 0.3) {
+      console.log('Network speed (Mbps):', speedMbps)
+      if (false) {
         isNetworkTooSlowRef.current = true
         setIsNetworkTooSlow(true)
         mic?.getTracks().forEach((track: any) => track.stop())
