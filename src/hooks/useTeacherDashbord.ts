@@ -219,11 +219,11 @@ export const useTeacherDashbord = () => {
           ...prevData,
           [message.data.data.data.session_id]: message.data.data.data.active,
         }))
-
-        if (stopStreamFunction) {
-          await stopStreamFunction() // Call the function to stop streaming
-          setStopStreamFunction(null)
-        }
+        handleSessionCleanUp()
+        // if (stopStreamFunction) {
+        //   await handle() // Call the function to stop streaming
+        //   setStopStreamFunction(null)
+        // }
       })
 
       newSocket.on('connect_error', (error) => {
@@ -789,8 +789,7 @@ export const useTeacherDashbord = () => {
         // This will be replaced when audio loads
         console.log('Temporary stop function called')
       }
-      console.log('Network speed (Mbps):', speedMbps)
-      if (false) {
+      if (speedMbps !== null && speedMbps < 0.3) {
         isNetworkTooSlowRef.current = true
         setIsNetworkTooSlow(true)
         mic?.getTracks().forEach((track: any) => track.stop())
