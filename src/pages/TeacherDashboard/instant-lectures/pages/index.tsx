@@ -270,7 +270,7 @@ function getLectureStatus(state: string) {
     case 'ongoing':
       return { badge: 'Active', button: 'Join session' }
     case 'post':
-      return { badge: 'Ended', button: 'View attendance' }
+      return { badge: 'Ended', button: 'Attendance History' }
     default:
       return {}
   }
