@@ -111,6 +111,12 @@ export const INSTANT_LECTURE: Page = {
   path: '/teacher-dashboard/instant-lecture',
   name: 'instant lecture',
 }
+
+export const LECTRUE_ANALYTICS: Page = {
+  id: "LECTRUE_ANALYTICS",
+  path: "/teacher-dashboard/analytics",
+  name: "lecture analytics"
+}
 /**
  * --------------------------------------------------------------------------
  *                      PROTECTED PAGES

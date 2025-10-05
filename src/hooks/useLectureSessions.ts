@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { filterOption } from '@pages/TeacherDashboard/session-history/types'
 import { loader } from '@types'
@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import useAPI from '@hooks/useApi'
 
 import { Option } from '@components/common/multi-select'
+import { useSearchParams } from 'react-router-dom'
 
 interface FilterState {
   subjects: string[]
@@ -38,12 +39,30 @@ const useLectureSessions = () => {
     semesters: [],
     subjects: [],
   })
+  const [searchParams, setSearchParams] = useSearchParams()
 
+  // When page loads or URL changes, sync with query param
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id')
+    if (sessionId) {
+      try {
+        showStudentAttendanceHistory(sessionId)
+      }
+      catch (error) {
+        setSearchParams({})
+      }
+    }
+  }, [searchParams])
+
+
+  const [students, setStudents] = useState<Array<Record<string, any>>>([])
   const [displayedLectures, setDisplayedLectures] = useState<Array<any>>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [totalPage, setTotalPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
+  const [isHistorySheetOpen, setIsHistorySheetOpen] = useState(false)
+  const [sessionId, setSessionId] = useState<string | null>(null)
 
   /**fetch the filter meta-data options */
   const fetchFilterMetadata = async () => {
@@ -249,6 +268,44 @@ const useLectureSessions = () => {
     setFilters((prev: any) => ({ ...prev, [key]: value }))
   }
 
+  const closeHistroySheet = () => {
+    setIsHistorySheetOpen(false)
+    setSearchParams({})
+    setStudents([])
+  }
+
+  const showStudentAttendanceHistory = async (session_id: string) => {
+
+    const header = {
+      'ngrok-skip-browser-warning': true,
+      Authorization: `Bearer ${StoredTokens.accessToken}`,
+    }
+    const axiosInstance = axios.create()
+    const method = 'get'
+    const endpoint = `/manage/session/get_session_data/${session_id}`
+    const response_obj = await CallAPI(
+      StoredTokens,
+      axiosInstance,
+      endpoint,
+      method,
+      header,
+    )
+    if (response_obj.error === true) {
+      return toast.error(response_obj.errorMessage?.message)
+    }
+    const response = get(response_obj, 'response.data.data', [])
+    setIsHistorySheetOpen(true)
+    setStudents(response.marked_attendances)
+    setSessionId(session_id)
+
+
+  }
+
+  const showAttendancehistorySheet = (sessionId: string) => {
+    setSearchParams({ session_id: sessionId }) // Updates URL query param
+    showStudentAttendanceHistory(sessionId)
+  }
+
   return {
     fetchFilterMetadata,
     fetchLectureSessions,
@@ -263,6 +320,13 @@ const useLectureSessions = () => {
     checkFilters,
     handleFilterChange,
     setIsFilterOpen,
+    closeHistroySheet,
+    setSessionId,
+    showStudentAttendanceHistory,
+    showAttendancehistorySheet,
+    sessionId,
+    students,
+    isHistorySheetOpen,
     isFilterOpen,
     isLoading,
     hasMore,

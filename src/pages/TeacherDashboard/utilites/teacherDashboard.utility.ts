@@ -330,7 +330,6 @@ const TeacherDashboardUtilites = () => {
   }
   const serverSideEventHandler = (sessionId: string) => {
     const url = `${window.base_url}/manage/session/session_sse_view?session_id=${sessionId}&access_token=${StoredTokens.accessToken}`
-    console.log(url)
     const eventSource = new EventSource(url)
     return eventSource
   }

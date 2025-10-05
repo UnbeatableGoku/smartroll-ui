@@ -1,5 +1,8 @@
 import { useEffect } from 'react'
 
+import AttendanceHistorySheet from '../components/AttendanceHistorySheet'
+import DialogBox from '../components/DialogBox'
+import { ManualMarkedAttendance } from '../components/ManualMarkedAttendance'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -43,10 +46,6 @@ import { cn } from '@utils'
 import { SheetLoader } from '@components/common/loader/Loader'
 import { Checkbox } from '@components/ui/checkbox'
 import CustomLoader from '@components/ui/custom-loader'
-
-import AttendanceHistorySheet from './components/AttendanceHistorySheet'
-import DialogBox from './components/DialogBox'
-import { ManualMarkedAttendance } from './components/ManualMarkedAttendance'
 
 const TeacherDashboard = () => {
   const {
