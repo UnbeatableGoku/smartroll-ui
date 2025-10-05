@@ -642,11 +642,11 @@ const useCreateInstantSession = () => {
           ...prevData,
           [message.data.data.data.session_id]: message.data.data.data.active,
         }))
-
-        if (stopStreamFunction) {
-          await stopStreamFunction() // Call the function to stop streaming
-          setStopStreamFunction(null)
-        }
+        await handleSessionCleanUp()
+        // if (stopStreamFunction) {
+        //   await stopStreamFunction() // Call the function to stop streaming
+        //   setStopStreamFunction(null)
+        // }
       })
 
       newSocket.on('connect_error', (error) => {

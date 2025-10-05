@@ -178,6 +178,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     ),
     path: '/teacher-dashboard/instant-lecture',
   },
+  {
+    id: 'LECTRUE_ANALYTICS',
+    name: 'lecture analytics',
+    icon: (
+      <PlusIcon
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-dashboard/analytics',
+  },
 
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
 ]

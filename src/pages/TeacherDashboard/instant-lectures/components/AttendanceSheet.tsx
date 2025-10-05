@@ -8,7 +8,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { RootState } from '@data/Store'
-import { ManualMarkedAttendance } from '@pages/TeacherDashboard/SessionManagement/components/ManualMarkedAttendance'
+import { ManualMarkedAttendance } from '@pages/TeacherDashboard/components/ManualMarkedAttendance'
 import { MdGroups2 } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 

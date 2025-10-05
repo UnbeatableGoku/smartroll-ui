@@ -13,6 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { RootState } from '@data/Store'
+import AttendanceHistorySheet from '@pages/TeacherDashboard/components/AttendanceHistorySheet'
 import { Filter } from 'lucide-react'
 import { useSelector } from 'react-redux'
 
@@ -26,15 +27,20 @@ const LectureSessionHistoryPage = () => {
     displayedLectures,
     hasMore,
     isLoading,
+    filters,
+    isFilterOpen,
+    isHistorySheetOpen,
+    students,
+    sessionId,
+    showAttendancehistorySheet,
+    closeHistroySheet,
     loadMoreData,
     applyFilters,
     checkFilters,
     clearFilters,
     handleFilterChange,
-    filters,
     setFilters,
     setIsFilterOpen,
-    isFilterOpen,
   } = useLectureSessions()
 
   useEffect(() => {
@@ -67,6 +73,7 @@ const LectureSessionHistoryPage = () => {
   const paginationLoader = useSelector(
     (root: RootState) => root.loader.PAGINATION_LOADER_STATE,
   )
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -142,7 +149,10 @@ const LectureSessionHistoryPage = () => {
                     {displayedLectures.map((lecture) => (
                       <TableRow
                         key={lecture.id}
-                        className="h-10 hover:bg-muted/50"
+                        className="h-10 cursor-pointer hover:bg-muted/50"
+                        onClick={() => {
+                          showAttendancehistorySheet(lecture.session_id)
+                        }}
                       >
                         <TableCell className="font-medium">
                           {lecture.subject_name}
@@ -204,6 +214,15 @@ const LectureSessionHistoryPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      {isHistorySheetOpen && students.length && sessionId && (
+        <AttendanceHistorySheet
+          isHistorySheetOpen={isHistorySheetOpen}
+          handelHistorySheetOpen={closeHistroySheet}
+          students={students}
+          sessionId={sessionId}
+        ></AttendanceHistorySheet>
+      )}
     </div>
   )
 }

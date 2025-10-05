@@ -29,6 +29,7 @@ const useSidebarLinkSelector = () => {
       'SUBJECT-CHOICE',
       'INSTANT_LECTURE',
       'LECTURE_SESSIONS_HISTORY',
+      'LECTRUE_ANALYTICS',
       // 'LOAD_ALLOCATION_FOR_TEACHER_END'
     ],
     student: [
