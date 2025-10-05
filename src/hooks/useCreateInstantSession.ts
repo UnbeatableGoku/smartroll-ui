@@ -506,7 +506,6 @@ const useCreateInstantSession = () => {
     mic: any,
     stopWaveFrq: any,
   ) => {
-    let mic1 = mic
     try {
       const newSocket = io(`${window.socket_url}/client`, {
         withCredentials: true,
@@ -546,12 +545,12 @@ const useCreateInstantSession = () => {
         // Handle async operations in the background
         if (!isNetworkTooSlowRef.current) {
           try {
-            mic1 = await checkAndReturnMicPermission()
+
             const stopFunction = await startTeacherStreaming(
               newSocket,
               session_id,
               StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-              mic1,
+              mic,
             )
             setStopStreamFunction(() => stopFunction) // Store the stop function
           } catch (error) {
@@ -642,6 +641,10 @@ const useCreateInstantSession = () => {
           ...prevData,
           [message.data.data.data.session_id]: message.data.data.data.active,
         }))
+        mic.getTracks().forEach((track: any) => track.stop())
+        if (stopWaveFrq) {
+          await stopWaveFrq()
+        }
         await handleSessionCleanUp()
         // if (stopStreamFunction) {
         //   await stopStreamFunction() // Call the function to stop streaming
