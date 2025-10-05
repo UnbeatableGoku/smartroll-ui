@@ -785,10 +785,6 @@ export const useTeacherDashbord = () => {
         await playWaveSoundFrequency(audio_url)
       setStopWaveFrequency(() => stopWaveFrequency1)
 
-      const tempStopWaveFunction = async () => {
-        // This will be replaced when audio loads
-        console.log('Temporary stop function called')
-      }
       if (speedMbps !== null && speedMbps < 0.3) {
         isNetworkTooSlowRef.current = true
         setIsNetworkTooSlow(true)
