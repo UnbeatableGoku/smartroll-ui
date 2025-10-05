@@ -797,7 +797,7 @@ export const useTeacherDashbord = () => {
       } else {
         isNetworkTooSlowRef.current = false
         setIsNetworkTooSlow(false)
-        clientSocketHandler(session_id, accessToken, mic, tempStopWaveFunction)
+        clientSocketHandler(session_id, accessToken, mic, stopWaveFrequency1)
       }
 
       // Create a temporary stop function until audio loads
