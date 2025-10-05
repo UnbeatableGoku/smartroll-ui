@@ -17,6 +17,7 @@ import SubjectSelectionConfirmation from '@pages/Subject/SubjectSelectionConfirm
 import TeacherAllocation from '@pages/SubjectAllocation/pages/TeacherAllocation'
 import TeacherDashboard from '@pages/TeacherDashboard/SessionManagement'
 import InstantLecture from '@pages/TeacherDashboard/instant-lectures/pages'
+import LectureAnalytics from '@pages/TeacherDashboard/lecture-analytics'
 import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAllocation'
 import LectureSessionHistoryPage from '@pages/TeacherDashboard/session-history/pages'
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
@@ -28,6 +29,7 @@ import {
   DIVISION_CREATION,
   FORGOT_PASSWORD,
   INSTANT_LECTURE,
+  LECTRUE_ANALYTICS,
   LECTURE_SESSIONS_HISTORY,
   LOAD_ALLOCATION_FOR_TEACHER_END,
   PAGE_502,
@@ -306,6 +308,21 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute roleRequired="teacher">
                 <InstantLecture />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: LECTRUE_ANALYTICS.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="teacher">
+                <LectureAnalytics />
               </ProtectedRoute>
             ),
           },

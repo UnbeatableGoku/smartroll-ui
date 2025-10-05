@@ -642,11 +642,11 @@ const useCreateInstantSession = () => {
           ...prevData,
           [message.data.data.data.session_id]: message.data.data.data.active,
         }))
-
-        if (stopStreamFunction) {
-          await stopStreamFunction() // Call the function to stop streaming
-          setStopStreamFunction(null)
-        }
+        await handleSessionCleanUp()
+        // if (stopStreamFunction) {
+        //   await stopStreamFunction() // Call the function to stop streaming
+        //   setStopStreamFunction(null)
+        // }
       })
 
       newSocket.on('connect_error', (error) => {
@@ -689,7 +689,7 @@ const useCreateInstantSession = () => {
       const { session_id, audio_url, mic, accessToken } =
         pendingSessionDataRef.current
 
-      const { stop: stopWaveFrequency1 } =
+      const { stop: stopWaveFrequency1, speedMbps } =
         await playWaveSoundFrequency(audio_url)
       setStopWaveFrequency(() => stopWaveFrequency1)
 
@@ -698,7 +698,7 @@ const useCreateInstantSession = () => {
         console.log('Temporary stop function called')
       }
 
-      if (true) {
+      if (speedMbps !== null && speedMbps < 0.3) {
         isNetworkTooSlowRef.current = true
         setIsNetworkTooSlow(true)
         mic?.getTracks().forEach((track: any) => track.stop())
