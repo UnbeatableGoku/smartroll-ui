@@ -693,11 +693,6 @@ const useCreateInstantSession = () => {
         await playWaveSoundFrequency(audio_url)
       setStopWaveFrequency(() => stopWaveFrequency1)
 
-      const tempStopWaveFunction = async () => {
-        // This will be replaced when audio loads
-        console.log('Temporary stop function called')
-      }
-
       if (speedMbps !== null && speedMbps < 0.3) {
         isNetworkTooSlowRef.current = true
         setIsNetworkTooSlow(true)
@@ -706,7 +701,7 @@ const useCreateInstantSession = () => {
       } else {
         isNetworkTooSlowRef.current = false
         setIsNetworkTooSlow(false)
-        clientSocketHandler(session_id, accessToken, mic, tempStopWaveFunction)
+        clientSocketHandler(session_id, accessToken, mic, stopWaveFrequency1)
       }
     } catch (error) {
       console.error('Error in early session setup:', error)
