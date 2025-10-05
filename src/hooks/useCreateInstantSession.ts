@@ -506,7 +506,6 @@ const useCreateInstantSession = () => {
     mic: any,
     stopWaveFrq: any,
   ) => {
-    let mic1 = mic
     try {
       const newSocket = io(`${window.socket_url}/client`, {
         withCredentials: true,
@@ -546,12 +545,12 @@ const useCreateInstantSession = () => {
         // Handle async operations in the background
         if (!isNetworkTooSlowRef.current) {
           try {
-            mic1 = await checkAndReturnMicPermission()
+
             const stopFunction = await startTeacherStreaming(
               newSocket,
               session_id,
               StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-              mic1,
+              mic,
             )
             setStopStreamFunction(() => stopFunction) // Store the stop function
           } catch (error) {
@@ -642,6 +641,10 @@ const useCreateInstantSession = () => {
           ...prevData,
           [message.data.data.data.session_id]: message.data.data.data.active,
         }))
+        mic.getTracks().forEach((track: any) => track.stop())
+        if (stopWaveFrq) {
+          await stopWaveFrq()
+        }
         await handleSessionCleanUp()
         // if (stopStreamFunction) {
         //   await stopStreamFunction() // Call the function to stop streaming
@@ -693,11 +696,6 @@ const useCreateInstantSession = () => {
         await playWaveSoundFrequency(audio_url)
       setStopWaveFrequency(() => stopWaveFrequency1)
 
-      const tempStopWaveFunction = async () => {
-        // This will be replaced when audio loads
-        console.log('Temporary stop function called')
-      }
-
       if (speedMbps !== null && speedMbps < 0.3) {
         isNetworkTooSlowRef.current = true
         setIsNetworkTooSlow(true)
@@ -706,7 +704,7 @@ const useCreateInstantSession = () => {
       } else {
         isNetworkTooSlowRef.current = false
         setIsNetworkTooSlow(false)
-        clientSocketHandler(session_id, accessToken, mic, tempStopWaveFunction)
+        clientSocketHandler(session_id, accessToken, mic, stopWaveFrequency1)
       }
     } catch (error) {
       console.error('Error in early session setup:', error)

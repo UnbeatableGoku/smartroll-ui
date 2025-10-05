@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import TeacherDashboardUtilites from '../pages/TeacherDashboard/utilites/teacherDashboard.utility'
+
 import Store from '@data/Store'
 import { setLoader, setReconnectionLoader } from '@data/slices/loaderSlice'
 import { loader } from '@types'
@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 import useAPI from '@hooks/useApi'
 
 import { LectureDetails } from 'types/common'
+import TeacherDashboardUtilites from '@pages/TeacherDashboard/utilites/teacherDashboard.utility'
 
 export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
@@ -42,7 +43,7 @@ export const useTeacherDashbord = () => {
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
   const [date, setDate] = useState<any>(getWeekDates())
-  const [stopStreamFunction, setStopStreamFunction] = useState<any>(null)
+  const [stopStreamFunction, setStopStreamFunction] = useState<(() => Promise<void>) | null>(null)
   const [stopWaveFrequency, setStopWaveFrequency] = useState<
     (() => Promise<void>) | null
   >(null)
@@ -68,7 +69,7 @@ export const useTeacherDashbord = () => {
   useEffect(() => {
     return () => {
       if (stopStreamFunction) {
-        ;(async () => {
+        ; (async () => {
           await stopStreamFunction()
           setStopStreamFunction(null)
         })()
@@ -82,7 +83,6 @@ export const useTeacherDashbord = () => {
     mic: any,
     stopWaveFrq: any,
   ) => {
-    let mic1 = mic
     try {
       const newSocket = io(`${window.socket_url}/client`, {
         withCredentials: true,
@@ -122,12 +122,11 @@ export const useTeacherDashbord = () => {
         // Handle async operations in the background
         if (!isNetworkTooSlowRef.current) {
           try {
-            mic1 = await checkAndReturnMicPermission()
             const stopFunction = await startTeacherStreaming(
               newSocket,
               session_id,
               StoredTokens?.accessToken?.replace('Bearer ', '') as string,
-              mic1,
+              mic,
             )
             setStopStreamFunction(() => stopFunction) // Store the stop function
           } catch (error) {
@@ -219,11 +218,13 @@ export const useTeacherDashbord = () => {
           ...prevData,
           [message.data.data.data.session_id]: message.data.data.data.active,
         }))
+
+        mic.getTracks().forEach((track: any) => track.stop())
+        if (stopWaveFrq) {
+          await stopWaveFrq()
+        }
+
         handleSessionCleanUp()
-        // if (stopStreamFunction) {
-        //   await handle() // Call the function to stop streaming
-        //   setStopStreamFunction(null)
-        // }
       })
 
       newSocket.on('connect_error', (error) => {
@@ -462,9 +463,6 @@ export const useTeacherDashbord = () => {
         session_id: onGoingSessionData.session_id,
         auth_token: StoredTokens?.accessToken?.replace('Bearer ', '') as string,
       }
-      if (stopWaveFrequency) {
-        await stopWaveFrequency()
-      }
       socket?.emit('session_ended', requestObject)
     } catch (error: any) {
       toast.error(error.message)
@@ -649,11 +647,33 @@ export const useTeacherDashbord = () => {
         header,
       )
       if (response_obj.error === false) {
-        const response = get(response_obj, 'response.data', [])
-        const url = window.URL.createObjectURL(new Blob([response]))
+        const result = get(response_obj, 'response.data.data', {})
+
+        const fileName = result?.file_name
+
+        const base64 = result?.file_content
+
+        // Decode base64 string to binary data
+        const byteCharacters = atob(base64);
+
+        // Convert to byte array
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+
+        // Create a blob for Excel MIME type
+        const blob = new Blob([byteArray], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+
+
+
+        const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = 'session_data.csv'
+        a.download = fileName
         document.body.appendChild(a)
         a.click()
         a.remove()
@@ -725,11 +745,7 @@ export const useTeacherDashbord = () => {
 
   const handleSessionCleanUp = async () => {
     try {
-      // Disconnect socket first
-      if (socket) {
-        socket.disconnect()
-        setSocket(null)
-      }
+
 
       // close sse
       if (sse) {
@@ -746,7 +762,6 @@ export const useTeacherDashbord = () => {
         await stopStreamFunction()
         setStopStreamFunction(null)
       }
-
       // Reset all loader states
       dispatch(
         setLoader({
@@ -754,6 +769,12 @@ export const useTeacherDashbord = () => {
           message: null,
         }),
       )
+
+      // Disconnect socket first
+      if (socket) {
+        socket.disconnect()
+        setSocket(null)
+      }
 
       // Reset custom loader states
       setShowCustomLoader(false)
@@ -785,10 +806,6 @@ export const useTeacherDashbord = () => {
         await playWaveSoundFrequency(audio_url)
       setStopWaveFrequency(() => stopWaveFrequency1)
 
-      const tempStopWaveFunction = async () => {
-        // This will be replaced when audio loads
-        console.log('Temporary stop function called')
-      }
       if (speedMbps !== null && speedMbps < 0.3) {
         isNetworkTooSlowRef.current = true
         setIsNetworkTooSlow(true)
