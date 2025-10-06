@@ -68,6 +68,7 @@ export const useTeacherDashbord = () => {
 
   useEffect(() => {
     return () => {
+      console.log("un mount");
       if (stopStreamFunction) {
         ; (async () => {
           await stopStreamFunction()

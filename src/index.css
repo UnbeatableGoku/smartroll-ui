@@ -145,7 +145,4 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
-
-input[type='date']::-webkit-calendar-picker-indicator {
-  filter: invert(1); /* This inverts the colors, turning dark icons to light */
-}
+/* For light theme: make icon visible */
