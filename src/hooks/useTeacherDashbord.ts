@@ -68,7 +68,6 @@ export const useTeacherDashbord = () => {
 
   useEffect(() => {
     return () => {
-      console.log("un mount");
       if (stopStreamFunction) {
         ; (async () => {
           await stopStreamFunction()
@@ -836,7 +835,6 @@ export const useTeacherDashbord = () => {
       setIsSheetOpen(true)
       sse.onmessage = (event) => {
         const data = JSON.parse(event.data)
-        console.log(data?.type)
         if (data?.status_code != 200) {
           throw new Error('something went worng, please contact support team')
         }
