@@ -132,19 +132,34 @@ const useSubjectToTeacherAllocation = () => {
     try {
       const state = _.cloneDeep(subjectAllocation)
       const teacherState = _.cloneDeep(teacherAllocation)
+
+      // check is subjects are exist
+      if (!state) {
+        return
+      }
+
+      // check is theachers are exist
+      if (!teacherState) {
+        toast.error('no teacher data is found')
+        return
+      }
+
       // Determine the correct allocation array based on subject type
       const allocation_array =
         subject_type !== 'practical'
           ? state?.instant_allocations
           : state?.separate_allocations
 
-      if (!state) {
-        return
+      // if subject type is not found
+      if (!allocation_array.length) {
+        throw new Error('Invalid subject type.')
       }
+
       // Find the subject map
       const subject_map = allocation_array?.find(
         (d: any) => d.subject.slug === subject_slug,
       )
+
       if (!subject_map) {
         toast.error('subject not found')
         return
@@ -155,13 +170,11 @@ const useSubjectToTeacherAllocation = () => {
         subject_map.teacher_allocation[
           allocation_catgory as keyof TeacherAllocation
         ]
+
       const teacher_map = subject_allocation.teachers.find(
         (d: any) => d.teacher.slug === teacher_slug,
       )
-      if (!teacherState) {
-        toast.error('no teacher data is found')
-        return
-      }
+
       const teacher = teacherState[0][teacher_slug]
 
       // Validate teacher and teacher map

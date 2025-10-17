@@ -33,6 +33,9 @@
     --submit-foreground: 0 0% 98%;
     --submit-hover: 221 83% 48%; /* lighter on hover */
 
+    --cancel: 0 84% 60%;
+    --cancle-hover: 0, 72%, 51%;
+
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
     --muted-hover: 240 4.8% 90%; /* same logic as secondary */

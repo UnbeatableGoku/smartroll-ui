@@ -95,7 +95,7 @@ export const SUBJECT_ALLOCATION: Page = {
   name: 'Subject Allocation',
 }
 export const LOAD_ALLOCATION_FOR_TEACHER_END: Page = {
-  id: 'LOAD_LOAD_ALLOCATION_FOR_TEACHER_END',
+  id: 'LOAD_ALLOCATION_FOR_TEACHER_END',
   path: '/teacher-dashboard/load-allocation',
   name: 'Load allocation',
 }
@@ -113,9 +113,9 @@ export const INSTANT_LECTURE: Page = {
 }
 
 export const LECTRUE_ANALYTICS: Page = {
-  id: "LECTRUE_ANALYTICS",
-  path: "/teacher-dashboard/analytics",
-  name: "lecture analytics"
+  id: 'LECTRUE_ANALYTICS',
+  path: '/teacher-dashboard/analytics',
+  name: 'lecture analytics',
 }
 /**
  * --------------------------------------------------------------------------

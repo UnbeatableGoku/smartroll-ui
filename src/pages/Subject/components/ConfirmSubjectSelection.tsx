@@ -247,8 +247,7 @@ const ConfirmSubjectSelection = ({
                   <Button
                     variant="outline"
                     className={cn(
-                      'my-3 w-full justify-start bg-white text-left font-normal',
-                      !date && 'text-black/60',
+                      'my-3 w-full justify-start bg-white text-left font-normal text-black',
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4 text-black" />
