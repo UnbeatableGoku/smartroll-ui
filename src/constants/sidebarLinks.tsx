@@ -1,14 +1,15 @@
 import { DashboardIcon, UserIcon } from '@icons'
 import {
   BadgePlus,
+  BarChart2,
   BookCheck,
   ClipboardClock,
   Eye,
+  FileCheck2,
   FileSpreadsheet,
   PlusIcon,
   SquareCheck,
   UsersRound,
-  BarChart2
 } from 'lucide-react'
 
 import { SidebarLink } from 'types/common'
@@ -106,19 +107,18 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     ),
     path: '/student-dashboard/division',
   },
-
-  // {
-  //   id: 'SUBJECT-CHOICE',
-  //   name: 'Subject-Choice',
-  //   icon: (
-  //     <SquareCheck
-  //       className="h-24 w-24 dark:text-[#8a8686]"
-  //       strokeWidth={3}
-  //       absoluteStrokeWidth={false}
-  //     />
-  //   ),
-  //   path: '/teacher-dashboard/subject-choice',
-  // },
+  {
+    id: 'SUBJECT-CHOICE',
+    name: 'Subject-Choice',
+    icon: (
+      <FileCheck2
+        className="h-24 w-24 dark:text-[#8a8686]"
+        strokeWidth={3}
+        absoluteStrokeWidth={false}
+      />
+    ),
+    path: '/teacher-dashboard/subject-choice',
+  },
   {
     id: 'DIVISION_CREATION',
     name: 'division-creation',

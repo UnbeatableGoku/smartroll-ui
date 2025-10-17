@@ -32,7 +32,7 @@ const TeacherList = ({ selectedSubject }: any) => {
           {selectedSubject.other_teachers.length > 0 ? (
             selectedSubject.other_teachers.map((data: any) => {
               return (
-                <TableRow key={data.teacher.slug}>
+                <TableRow key={data.teacher.slug} className="text-black">
                   <TableCell className="border border-zinc-500">
                     {data.teacher.profile.name}
                   </TableCell>
