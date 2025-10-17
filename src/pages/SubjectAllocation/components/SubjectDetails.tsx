@@ -19,6 +19,7 @@ import {
   TeacherAllocationItem,
 } from 'types/common'
 
+import { NoSelectionFound } from '@components/404'
 import { ScrollArea } from '@components/ui/scroll-area'
 
 interface props {
@@ -44,7 +45,7 @@ const SubjectDetails = ({
       </TableHeader>
       <TableBody>
         {data.teachers.map((teacher: TeacherAllocationItem) => (
-          <TableRow key={teacher.teacher.slug}>
+          <TableRow key={teacher.teacher.slug} className="text-black">
             <TableCell>
               {teacher.teacher.profile.name}({teacher.teacher.teacher_code})
             </TableCell>
@@ -102,58 +103,61 @@ const SubjectDetails = ({
       onValueChange={setActiveTab}
       className="mt-10 w-full bg-white pb-10"
     >
-      <TabsList className="flex bg-white">
+      <TabsList className="flex">
         {Object.entries(allocation.teacher_allocation).map(([key]) => (
-          <TabsTrigger value={key} className="w-full">
+          <TabsTrigger
+            value={key}
+            className="!mr-1 w-auto border border-b-0 data-[state=active]:border-submit data-[state=active]:bg-submit/5 md:w-64"
+          >
             {key}
           </TabsTrigger>
         ))}
       </TabsList>
       <TabsContent value="theory" className="text-white active:bg-white">
-        <h3 className="mb-2 text-lg font-semibold">Theory Teachers</h3>
         <ScrollArea className="h-[100dvh]">
           {allocation.teacher_allocation.theory.teachers.length > 0 ? (
             renderTeacherTable(allocation.teacher_allocation.theory)
           ) : (
-            <div className="text-lx w-full text-center font-bold">
-              No selection
-            </div>
+            <NoSelectionFound
+              title="No Allocation Data Found"
+              description="Select a subject or teacher to view allocation details"
+            />
           )}
         </ScrollArea>
       </TabsContent>
       <TabsContent value="lab" className="text-white">
-        <h3 className="mb-2 text-lg font-semibold">Lab Teachers</h3>
         <ScrollArea className="h-[100dvh]">
           {allocation.teacher_allocation.lab.teachers.length > 0 ? (
             renderTeacherTable(allocation.teacher_allocation.lab)
           ) : (
-            <div className="text-lx w-full text-center font-bold">
-              No selection
-            </div>
+            <NoSelectionFound
+              title="No Allocation Data Found"
+              description="Select a subject or teacher to view allocation details"
+            />
           )}
         </ScrollArea>
       </TabsContent>
       <TabsContent value="practical" className="text-white">
-        <h3 className="mb-2 text-lg font-semibold">Practical Teachers</h3>
         <ScrollArea className="h-[100dvh]">
           {allocation.teacher_allocation.practical.teachers.length > 0 ? (
             renderTeacherTable(allocation.teacher_allocation.practical)
           ) : (
-            <div className="text-lx w-full text-center font-bold">
-              No selection
-            </div>
+            <NoSelectionFound
+              title="No Allocation Data Found"
+              description="Select a subject or teacher to view allocation details"
+            />
           )}
         </ScrollArea>
       </TabsContent>
       <TabsContent value="tutorial" className="text-white">
-        <h3 className="mb-2 text-lg font-semibold">Tutorial Teachers</h3>
         <ScrollArea className="h-[100dvh]">
           {allocation.teacher_allocation.tutorial.teachers.length > 0 ? (
             renderTeacherTable(allocation.teacher_allocation.tutorial)
           ) : (
-            <div className="text-lx w-full text-center font-bold">
-              No selection
-            </div>
+            <NoSelectionFound
+              title="No Allocation Data Found"
+              description="Select a subject or teacher to view allocation details"
+            />
           )}
         </ScrollArea>
       </TabsContent>

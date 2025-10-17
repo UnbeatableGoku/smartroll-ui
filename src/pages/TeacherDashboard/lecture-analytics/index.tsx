@@ -82,16 +82,22 @@ const LectureAnalytics = () => {
                             fetchAnalyticsData(subject.slug)
                           }}
                         >
-                          <TableCell className="font-medium">
+                          <TableCell className="font-normal">
                             {subject.subject_name}
                           </TableCell>
                           <TableCell className="text-center">
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge
+                              variant="secondary"
+                              className="text-xs font-normal"
+                            >
                               {subject.semester}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-center">
-                            <Badge variant="outline" className="text-xs">
+                            <Badge
+                              variant="outline"
+                              className="text-xs font-normal"
+                            >
                               {subject.branch}
                             </Badge>
                           </TableCell>

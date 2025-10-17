@@ -56,6 +56,11 @@ const StudentDetailsSheet = (props: IStudentDetailsPros) => {
     }
 
     if (less_than !== '') {
+      const percentage = Number(less_than)
+      if (percentage > 100) {
+        toast.error('Please enter threshold between 0 to 100% .')
+        return
+      }
       params['less_than'] = less_than
     }
     if (start_date !== '') {
@@ -151,6 +156,7 @@ const StudentDetailsSheet = (props: IStudentDetailsPros) => {
                   id="start-date"
                   type="date"
                   value={filter.start_date}
+                  className="block"
                   onChange={(e) => {
                     setFilter((prev) => ({
                       ...prev,
@@ -168,6 +174,7 @@ const StudentDetailsSheet = (props: IStudentDetailsPros) => {
                   id="end-date"
                   type="date"
                   value={filter.end_date}
+                  className="block"
                   onChange={(e) => {
                     setFilter((prev) => ({ ...prev, end_date: e.target.value }))
                   }}
@@ -183,6 +190,7 @@ const StudentDetailsSheet = (props: IStudentDetailsPros) => {
               <Button
                 variant="outline"
                 className="w-full rounded-[4px] border-none bg-[#0261BE] p-[20px] text-white hover:bg-blue-700"
+                disabled={!studentDetails?.details?.length}
                 onClick={() => {
                   exportAnalyticsData()
                 }}
@@ -190,8 +198,9 @@ const StudentDetailsSheet = (props: IStudentDetailsPros) => {
                 <FileDown className="mr-2 h-4 w-4" />
                 Export Attendance
               </Button>
+
               <div className="overflow-x-auto">
-                {studentDetails ? (
+                {studentDetails?.details.length ? (
                   <Table className="text-black">
                     <TableHeader>
                       {studentDetails?.columns.length > 0 && (
@@ -229,7 +238,7 @@ const StudentDetailsSheet = (props: IStudentDetailsPros) => {
                   </Table>
                 ) : (
                   <div className="flex items-center justify-center pt-3 text-black">
-                    No Students Present
+                    No students Details are found. !!
                   </div>
                 )}
               </div>
