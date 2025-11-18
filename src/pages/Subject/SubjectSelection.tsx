@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import { AlertTriangle, BookOpen } from 'lucide-react'
+import { showAdverticesment } from '@data/slices/adverticementBarSlice'
+import { BookOpen } from 'lucide-react'
 import { Helmet } from 'react-helmet'
+import { useDispatch } from 'react-redux'
 
 import useSubjectSelection from '@hooks/useSubjectSelection'
 
 import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
-import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'
 import { Card, CardContent, CardHeader } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
@@ -47,9 +48,23 @@ const SubjectSelection = () => {
 
   const togglePanel = () => setIsPanelOpen(!isPanelOpen)
 
+  const dispatch = useDispatch()
+
   useEffect(() => {
     handleStream()
   }, [])
+
+  useEffect(() => {
+    if (deadLine && !isSubjectLock) {
+      dispatch(
+        showAdverticesment({
+          display: true,
+          title: 'Action required',
+          message: `Please choose your subjects before ${deadLine}`,
+        }),
+      )
+    }
+  }, [deadLine, isSubjectLock])
 
   return (
     <>
@@ -121,16 +136,6 @@ const SubjectSelection = () => {
               />
             </div>
           </div>
-          {deadLine && (
-            <Alert className="mt-5 w-full border-yellow-500 bg-yellow-50 dark:border-red-400 dark:bg-red-900">
-              <div className="">
-                <AlertTitle className="flex items-center space-x-4 text-yellow-800 dark:text-white">
-                  <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-300" />
-                  <span>Decision Deadline : {deadLine} </span>
-                </AlertTitle>
-              </div>
-            </Alert>
-          )}
           {isSubjectLock == false && selectedSubjects.length > 0 && (
             <div className={`${isSubjectLock ? 'hidden' : 'block'} w-full`}>
               <Button

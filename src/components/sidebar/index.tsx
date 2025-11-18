@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { RootState } from '@data/Store'
 import { setAuth } from '@data/slices/authSlice'
 import { setClassRoomList } from '@data/slices/classRoomsSlice'
+import { DialogClose } from '@radix-ui/react-dialog'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { Home, LogOut, Menu } from 'lucide-react'
 import { useDispatch } from 'react-redux'
@@ -63,6 +64,8 @@ const Sidebar = () => {
             return navigate('/teacher-dashboard')
           case 'student':
             return navigate('/student-dashboard')
+          case 'admin':
+            return navigate('/subject/subject-select')
           default:
             navigate('/')
         }
@@ -124,6 +127,15 @@ const Sidebar = () => {
           </DialogTrigger>
           <VisuallyHidden.Root>
             <DialogContent className="max-w-[380px] rounded-md bg-[#F7F7F7] shadow-soft">
+              <DialogClose asChild>
+                <button
+                  className="absolute right-3 top-3 rounded-full p-2 transition hover:bg-gray-200"
+                  onClick={() => setOpen(false)} // ✅ Prevent card trigger
+                >
+                  ✕
+                </button>
+              </DialogClose>
+
               <div className="grid gap-4 bg-[#F7F7F7] py-4 text-black">
                 <ul className="text-black">
                   {validLinks.map((page, index) => (

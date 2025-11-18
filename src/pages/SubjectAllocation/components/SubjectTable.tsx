@@ -96,7 +96,7 @@ const SubjectTable = ({
             </TableRow>
             <TableRow>
               <TableHead className="text-center font-semibold text-black">
-                Theory
+                + Theory
               </TableHead>
               <TableHead className="text-center font-semibold text-black">
                 Lab
@@ -135,46 +135,46 @@ const SubjectTable = ({
                   onClick={() => setSelectedSubject(allocation)}
                   className="cursor-pointer hover:bg-[#F7F7F7]"
                 >
-                  <TableCell className="font-semibold text-black">
+                  <TableCell className="text-black">
                     {allocation?.subject?.subject_map?.subject_name}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation?.teacher_allocation.theory?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation?.teacher_allocation.lab?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation?.teacher_allocation.practical?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation?.teacher_allocation.tutorial?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation?.teacher_allocation.theory?.total_hours +
                       allocation?.teacher_allocation.lab?.total_hours +
                       allocation?.teacher_allocation.practical?.total_hours +
                       allocation?.teacher_allocation.tutorial?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation.teacher_allocation.theory?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation.teacher_allocation.lab?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation.teacher_allocation.practical?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation.teacher_allocation.tutorial?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation?.teacher_allocation.theory?.allocation_done +
                       allocation.teacher_allocation.lab?.allocation_done +
                       allocation.teacher_allocation.tutorial?.allocation_done +
                       allocation.teacher_allocation.practical.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="text-center text-black">
                     {allocation.teacher_allocation.tutorial.remaining_hours +
                       allocation?.teacher_allocation.theory.remaining_hours +
                       allocation.teacher_allocation.lab.remaining_hours +

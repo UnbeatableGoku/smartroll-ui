@@ -21,7 +21,7 @@ import LectureAnalytics from '@pages/TeacherDashboard/lecture-analytics'
 import LoadAllocation from '@pages/TeacherDashboard/load-allocation/pages/LoadAllocation'
 import LectureSessionHistoryPage from '@pages/TeacherDashboard/session-history/pages'
 import UnifiedSubjectChoice from '@pages/TeacherDashboard/subject-selection/pages/Subject-Choice/UnifiedSubjectChoice'
-import UploadTimeTable from '@pages/UploadTimeTable/UploadTimeTable'
+import Timetable from '@pages/UploadTimeTable/pages'
 import ErrorPage from '@pages/errorPage'
 import { createBrowserRouter } from 'react-router-dom'
 
@@ -43,12 +43,13 @@ import {
   PAGE_SUBJECT_SELECTION_CONFIRMATION,
   PAGE_TEACHER_ALLOCATION,
   PAGE_TEACHER_DASHBOARD,
-  PAGE_TIMETABLE,
   SUBJECT_ALLOCATION,
+  TIMETABLE,
 } from '@constants'
 
 import Error502 from '@components/502'
 
+// const ADMIN_ROUTES = [,]
 const router = createBrowserRouter([
   {
     path: PAGE_DASHBOARD.path,
@@ -84,22 +85,6 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute roleRequired="admin">
                 <Dashboard />
-              </ProtectedRoute>
-            ),
-          },
-        ],
-      },
-      // Admin time table route
-      {
-        path: PAGE_TIMETABLE.path,
-
-        element: <MainLayout />,
-        children: [
-          {
-            index: true,
-            element: (
-              <ProtectedRoute roleRequired="admin">
-                <UploadTimeTable />
               </ProtectedRoute>
             ),
           },
@@ -323,6 +308,21 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute roleRequired="teacher">
                 <LectureAnalytics />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: TIMETABLE.path,
+
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute roleRequired="admin">
+                <Timetable />
               </ProtectedRoute>
             ),
           },

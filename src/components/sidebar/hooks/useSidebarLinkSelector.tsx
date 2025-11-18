@@ -19,11 +19,12 @@ const useSidebarLinkSelector = () => {
   // Define the sidebar links based on user role
   const userLinks = {
     admin: [
-      //   'TIMETABLE',
       'SUBJECT-SELECT',
       'SUBJECT_SELECTION_CONFIRMATION',
       'DIVISION_CREATION',
       'TEACHER_ALLOCATION',
+      // 'TIMETABLE',
+      // 'ADMIN_ROUTES',
     ],
     teacher: [
       'LOAD_ALLOCATION_FOR_TEACHER_END',

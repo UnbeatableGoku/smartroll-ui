@@ -58,12 +58,6 @@ export const PAGE_STUDENT_DASHBOARD: Page = {
   name: 'Student Dashboard',
 }
 
-export const PAGE_TIMETABLE: Page = {
-  id: 'TIMETABLE',
-  path: '/timetable',
-  name: 'Time-Table',
-}
-
 export const PAGE_NOT_FOUND: Page = {
   id: 'NOT_FOUND',
   path: '/not-found',
@@ -94,6 +88,13 @@ export const SUBJECT_ALLOCATION: Page = {
   path: '/admin/subject-allocation',
   name: 'Subject Allocation',
 }
+
+export const TIMETABLE: Page = {
+  id: 'TIMETABLE',
+  path: '/admin/time-table',
+  name: 'time table',
+}
+
 export const LOAD_ALLOCATION_FOR_TEACHER_END: Page = {
   id: 'LOAD_ALLOCATION_FOR_TEACHER_END',
   path: '/teacher-dashboard/load-allocation',

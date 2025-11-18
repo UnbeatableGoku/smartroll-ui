@@ -4,12 +4,13 @@ import ConfirmPanel from '../component/ConfirmPanel'
 import SubjectShowCard from '../component/SubjectShowCard'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { AlertTriangle, BookOpen, GraduationCap } from 'lucide-react'
+import { showAdverticesment } from '@data/slices/adverticementBarSlice'
+import { BookOpen, GraduationCap } from 'lucide-react'
 import { Helmet } from 'react-helmet'
+import { useDispatch } from 'react-redux'
 
 import useElectiveSubject from '@hooks/useElectiveSubject'
 
-import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'
 
 // Define TypeScript interfaces for better type safety
@@ -70,6 +71,19 @@ const ElectiveSubject = () => {
     handleGetElectiveSubject()
   }, [])
 
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (deadline && !FinalChoiceLock) {
+      dispatch(
+        showAdverticesment({
+          display: true,
+          title: 'Action required',
+          message: `Please choose your subjects before ${deadline}`,
+        }),
+      )
+    }
+  }, [deadline, FinalChoiceLock])
+
   return (
     <>
       <Helmet>
@@ -99,16 +113,6 @@ const ElectiveSubject = () => {
                   {selectedSubjects.length}
                 </span>
               </Button>
-            )}
-            {deadline && !FinalChoiceLock && (
-              <Alert className="mt-5 w-full border-[#F99704] bg-white text-black shadow-soft">
-                <div className="">
-                  <AlertTitle className="flex items-center space-x-4">
-                    <AlertTriangle className="h-4 w-4 text-[#F99704]" />
-                    <span>Decision Deadline : {deadline} </span>
-                  </AlertTitle>
-                </div>
-              </Alert>
             )}
             {isSubjectSave && !FinalChoiceLock && (
               <Button

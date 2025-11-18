@@ -92,7 +92,7 @@ const useAPI = () => {
             errorMessage: {
               data: null,
               error: true,
-              message: 'Token Expired',
+              message: 'Session Expired',
               statusCode: 401,
             },
           }
@@ -141,7 +141,7 @@ const useAPI = () => {
             errorMessage: {
               data: null,
               error: true,
-              message: 'Token Expired',
+              message: 'Session Expired',
               statusCode: result.status,
             },
           }
