@@ -266,7 +266,7 @@ const TimetableLayout = (props: WeeklyTimetableProps) => {
                   {day}
                 </div>
 
-                {TIME_SLOTS.map((time, timeIndex) => {
+                {TIME_SLOTS.map((time) => {
                   const slotEvents = eventsBySlot[`${day}-${time}`] || []
                   const eventCount = slotEvents.length
                   const isSelected =
@@ -468,7 +468,7 @@ const TimetableLayout = (props: WeeklyTimetableProps) => {
 
           <div className="flex-1 space-y-3 overflow-y-auto p-4">
             {selectedSlotEvents.length > 0 ? (
-              selectedSlotEvents.map((event, index) => (
+              selectedSlotEvents.map((event) => (
                 <div
                   key={event.id}
                   draggable
