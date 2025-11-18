@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         submit: 'bg-submit text-primary-foreground shadow hover:bg-submit/90',
         'submit-outline':
-          'border border-submit bg-background shadow-sm hover:bg-blue-500/5 hover:text-accent-foreground text-black',
+          'border border-submit  shadow-sm hover:bg-blue-500/5 hover:text-accent-foreground text-black',
         'cancle-outline':
           'border border-red-500 bg-background shadow-sm hover:bg-red-500/5 hover:text-accent-foreground text-red-500',
       },

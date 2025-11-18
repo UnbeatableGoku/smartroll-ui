@@ -1,6 +1,4 @@
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { DownloadCloud } from 'lucide-react'
+import { Card } from '@/components/ui/card'
 
 interface CourseCardProps {
   toggleSubjectSelection: (subject: any) => void
@@ -101,12 +99,69 @@ const SubjectCard = ({
           </div>
         )}
 
-      <CardHeader className="mt-0 flex flex-row items-center justify-between px-3 pb-0 lg:mt-3 lg:px-6 lg:pb-3">
+      <div className="mt-0 flex flex-row items-center justify-between border-b px-3 py-3 lg:mt-3 lg:px-6">
+        <div className="flex flex-col space-y-1">
+          <span className="text-[14px] font-semibold tracking-tight text-black md:text-[16px]">
+            {subject?.subject_name}
+          </span>
+          <span className="text-xs text-gray-600">
+            {subject?.category} | {subject?.eff_from}
+          </span>
+        </div>
+      </div>
+
+      <div className="w-full space-y-2">
+        <div className="flex w-full flex-row justify-between gap-4 border-b px-3 py-3 lg:px-6 lg:py-2">
+          <div className="space-y-1">
+            <p className="text-sm text-black/60">Semester</p>
+            <p className="text-sm text-black lg:text-base">
+              {subject.sem_year}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs text-black/60 lg:text-sm">Code</p>
+            <div className="flex justify-between gap-2">
+              <p className="text-sm text-black lg:text-base">
+                {subject?.subject_code}
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs text-black/60 lg:text-sm">Type</p>
+            <p className="text-sm text-black lg:text-base">
+              {subject?.is_theory
+                ? 'Theory'
+                : subject?.is_practical
+                  ? 'Practical'
+                  : 'Semi-Practical'}
+            </p>
+          </div>
+        </div>
+        <div className="flex space-x-3 px-3 py-3 lg:px-6 lg:pb-4 lg:pt-2">
+          {/* <Button
+            variant={'submit'}
+            size={'sm'}
+            onClick={(e) => {
+              e.stopPropagation()
+              const fileUrl = `https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/Syallbus/${subject.subject_code}.pdf`
+              const link = document.createElement('a')
+              link.href = fileUrl
+              link.download = `${subject.subject_code}.pdf` // optional: specify file name
+              link.target = '_blank' // optional: open in new tab instead
+              link.click()
+            }}
+          >
+            <Download className="w-4 h-4" />
+            <span>Syllabus</span>
+          </Button> */}
+        </div>
+      </div>
+      {/* <CardHeader className="flex flex-row items-center justify-between px-3 pb-0 mt-0 lg:mt-3 lg:px-6 lg:pb-3">
         <h2 className="text-sm font-bold tracking-tight text-black md:text-xl">
           {subject?.subject_name}{' '}
         </h2>
       </CardHeader>
-      <CardContent className="space-y-2 px-3 py-3 lg:space-y-6 lg:px-6 lg:py-6">
+      <CardContent className="px-3 py-3 space-y-2 lg:space-y-6 lg:px-6 lg:py-6">
         <p className="hidden text-lg font-normal text-black sm:block md:block lg:block">
           Sem : {subject.sem_year}
         </p>
@@ -126,22 +181,22 @@ const SubjectCard = ({
               Subject Code
             </p>
             <div className="flex justify-between gap-2">
-              <p className="w-full text-right text-sm font-semibold text-black lg:text-center lg:text-xl">
+              <p className="w-full text-sm font-semibold text-right text-black lg:text-center lg:text-xl">
                 {subject?.subject_code}
               </p>
             </div>
           </div>
           <div className="hidden space-y-1 sm:block md:block lg:block">
             <p className="text-sm uppercase text-black/60">Effective Year</p>
-            <p className="text-right text-xl font-semibold text-black">
+            <p className="text-xl font-semibold text-right text-black">
               {subject?.eff_from}
             </p>
           </div>
         </div>
 
-        <div className="w-full justify-between">
+        <div className="justify-between w-full">
           <div className="w-full">
-            <div className="flex w-full flex-row gap-x-3 text-center">
+            <div className="flex flex-row w-full text-center gap-x-3">
               <div className="flex w-2/5 justify-around rounded-lg bg-[#0261BE]/10 p-2">
                 <div>
                   <p className="text-sm font-medium text-black/60">L</p>
@@ -218,7 +273,7 @@ const SubjectCard = ({
             </a>
           </Badge>
         </div>
-      </CardContent>
+      </CardContent> */}
     </Card>
   )
 }
