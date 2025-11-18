@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChevronRight, Trash, X } from 'lucide-react'
+import { ChevronRight, Download, Trash, X } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 
 import useSubjectSelectionConfirmation from '@hooks/useSubjectSelectionConfirmation'
@@ -274,16 +274,16 @@ const SubjectSelectionConfirmation = () => {
             }}
             className="w-full"
           >
-            <TabsList className="grid w-auto grid-cols-2 bg-[#F7F7F7]">
+            <TabsList className="ml-[1px] flex h-auto w-full flex-row !justify-start border-b border-border !p-0">
               <TabsTrigger
                 value="teacher"
-                className="data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
+                className="!mr-1 w-auto border border-b-0 data-[state=active]:border-submit data-[state=active]:bg-submit/5 md:w-64"
               >
                 Teachers
               </TabsTrigger>
               <TabsTrigger
                 value="student"
-                className="data-[state=active]:bg-[#0261BE] data-[state=active]:text-white"
+                className="!mr-1 w-auto border border-b-0 data-[state=active]:border-submit data-[state=active]:bg-submit/5 md:w-64"
               >
                 Students
               </TabsTrigger>
@@ -291,7 +291,7 @@ const SubjectSelectionConfirmation = () => {
             {activeTab == 'teacher' && (
               <div className="my-4 flex w-full flex-col justify-end gap-y-4 lg:flex-row lg:gap-x-3">
                 <Button
-                  className="rounded-none border border-customBlue bg-transparent font-medium text-[#0261BE] shadow-lg hover:bg-transparent"
+                  variant={'submit-outline'}
                   onClick={() => {
                     handleOnClickForLoadTeacherToSubjectMap()
                   }}
@@ -302,25 +302,27 @@ const SubjectSelectionConfirmation = () => {
                   onClick={() => {
                     handleOnClickForDownloadExcelForSubjectToTeacherMap()
                   }}
-                  className="rounded-none border border-customBlue bg-transparent font-medium text-[#0261BE] shadow-lg hover:bg-transparent"
+                  variant={'submit-outline'}
                 >
                   Subject to teacher map
                 </Button>
               </div>
             )}
-            {activeTab == 'student' && selectedSemester && (
-              <div className="my-4 flex w-full flex-col justify-center gap-y-4 lg:flex-row lg:gap-x-3">
+            {activeTab == 'student' && (
+              <div className="my-4 flex w-full flex-col justify-end gap-y-4 lg:flex-row lg:gap-x-3">
                 <Button
-                  className="w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
+                  variant={'submit-outline'}
+                  disabled={selectedSemester ? false : true}
                   onClick={() => {
                     handleOnClickForLoadStudentToSubjectMap(selectedSemester)
                   }}
                 >
-                  Student to Subject Map
+                  <Download className="h-4 w-4" />
+                  <span>Download sheet</span>
                 </Button>
               </div>
             )}
-            <div className="mt-5 flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
+            <div className="mt-5 flex w-full flex-col items-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
               {stream && (
                 <>
                   <div className="relative w-full md:w-[240px] lg:w-[320px]">

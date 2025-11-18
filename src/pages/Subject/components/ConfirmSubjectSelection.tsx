@@ -20,9 +20,9 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
 import { cn } from '@utils'
 
-import { Badge } from '@components/ui/badge'
 import { Checkbox } from '@components/ui/checkbox'
 import { ScrollArea } from '@components/ui/scroll-area'
+import { Separator } from '@components/ui/separator'
 
 const ConfirmSubjectSelection = ({
   isPanelOpen,
@@ -61,9 +61,11 @@ const ConfirmSubjectSelection = ({
       )
     } else {
       const similar_subject_slug = similarSubjects.map(
-        (subject: any) => subject.slug,
+        (subject: any) => subject.subject_obj,
       )
-      const subject_slug_lst = subjectList.map((subject: any) => subject.slug)
+      const subject_slug_lst = subjectList.map(
+        (subject: any) => subject.subject_obj,
+      )
       const final_subject_slug_lst =
         subject_slug_lst.concat(similar_subject_slug)
       save_teacher_subject_choice(final_subject_slug_lst)
@@ -83,7 +85,7 @@ const ConfirmSubjectSelection = ({
 
       {/* Sliding Panel */}
       <div
-        className={`fixed inset-y-0 right-0 z-30 w-full transform border-l bg-white shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out lg:w-full ${
+        className={`fixed inset-y-0 right-0 z-30 !mt-[0px] w-full transform border-l bg-white shadow-lg backdrop-blur-sm transition-transform duration-300 ease-in-out ${
           isPanelOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -91,7 +93,9 @@ const ConfirmSubjectSelection = ({
           <div className="border-b bg-[#F7F7F7] p-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold text-black lg:text-4xl">
-                Adjust Priority By Drag & Drop
+                {draggable
+                  ? 'Adjust Priority By Drag & Drop'
+                  : 'Selected subjects'}
               </h2>
               <Button
                 variant="ghost"
@@ -123,71 +127,43 @@ const ConfirmSubjectSelection = ({
                             draggableId={subject.slug}
                             index={index}
                           >
-                            {(provided, snapshot) => (
-                              <div
+                            {(provided) => (
+                              <Card
+                                className="group w-full bg-[#F7F7F7] !p-[0px] shadow-soft"
+                                {...provided.dragHandleProps}
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                className={`${snapshot.isDragging ? 'shadow-lg' : ''}`}
                               >
-                                <Card className="group bg-[#F7F7F7] shadow-soft">
-                                  <CardHeader className="pb-2">
-                                    <div className="flex w-full items-start justify-between">
-                                      <div className="flex w-full items-center space-x-2">
-                                        <div {...provided.dragHandleProps}>
-                                          <GripVertical className="cursor-grab text-black" />
-                                        </div>
-                                        <CardTitle className="flex w-full justify-between gap-x-2 text-lg font-bold leading-none lg:text-lg">
-                                          <div className="text-black">
-                                            {subject.subject_name}
-                                          </div>
-                                          <div>
-                                            <Badge
-                                              variant="secondary"
-                                              className={`bg-[#0261BE] text-white hover:bg-[#0261BE]/80`}
-                                            >
-                                              <span className="hidden lg:block">
-                                                Priority -{' '}
-                                              </span>{' '}
-                                              {index + 1}
-                                            </Badge>
-                                          </div>
-                                        </CardTitle>
-                                      </div>
+                                <CardContent className="flex flex-row space-x-2 !p-[0px]">
+                                  {/* // priority section */}
+                                  <div className="flex w-12 items-center justify-center rounded-bl-xl rounded-tl-xl bg-submit font-bold text-white">
+                                    {index + 1}
+                                  </div>
+                                  <div className="w-full flex-col space-y-2 py-3">
+                                    {/* // subject title section */}
+                                    <div className="text-sm font-bold leading-none lg:text-lg">
+                                      {subject.subject_name}
                                     </div>
-                                  </CardHeader>
-                                  <CardContent className="flex justify-between pb-2">
-                                    <div className="flex flex-col text-sm text-black lg:flex-row lg:space-x-4">
-                                      <span className="text-xs font-semibold text-black lg:text-sm">
-                                        Stream Code -{' '}
-                                        {subject.stream_code + '  | '}
+                                    {/* subject details  */}
+                                    <div className="flex space-x-2 text-sm text-black lg:space-x-4">
+                                      <span className="text-xs lg:text-sm">
+                                        Semster : {subject.sem_year}
                                       </span>
-                                      <span className="text-xs font-semibold text-black lg:text-sm">
-                                        Subject Code -{' '}
-                                        {subject.subject_code + '  | '}
-                                      </span>
+                                      <Separator
+                                        orientation="vertical"
+                                        decorative={true}
+                                        className="bg-black"
+                                      ></Separator>
                                       <span className="text-xs lg:text-sm">
                                         Type: {subject.category}
                                       </span>
                                     </div>
-                                    <div className="flex space-x-2">
-                                      <Badge
-                                        variant="secondary"
-                                        className={`${subject.is_technical ? 'hidden bg-[#0261BE]' : 'w-20 bg-red-500 text-white'} hover:opacity-80`}
-                                      >
-                                        {!subject.is_technical
-                                          ? 'Non-Tech.'
-                                          : ''}
-                                      </Badge>
-                                      <Badge
-                                        variant="secondary"
-                                        className="bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
-                                      >
-                                        Sem -{subject?.sem_year}
-                                      </Badge>
-                                    </div>
-                                  </CardContent>
-                                </Card>
-                              </div>
+                                  </div>
+                                  <div className="flex items-center justify-center pr-3">
+                                    <GripVertical className="cursor-grab text-black" />
+                                  </div>
+                                </CardContent>
+                              </Card>
                             )}
                           </Draggable>
                         ))}
@@ -211,7 +187,7 @@ const ConfirmSubjectSelection = ({
                               handleOnCheckForNonTechSubject(subject.slug)
                             }}
                           />
-                          <CardTitle className="text-lg font-semibold leading-none text-black">
+                          <CardTitle className="text-[16px] font-semibold leading-none text-black">
                             {subject.subject_name}
                           </CardTitle>
                         </div>
@@ -227,8 +203,13 @@ const ConfirmSubjectSelection = ({
                       </div>
                     </CardHeader>
                     <CardContent className="pb-2">
-                      <div className="flex items-center justify-between text-sm text-black">
+                      <div className="flex items-center space-x-2 text-[12px] text-black">
                         <span>Subject Code - {subject.subject_code}</span>
+                        <Separator
+                          orientation="vertical"
+                          className="h-4 w-[1px]"
+                        ></Separator>
+                        <span>Effective Year - {subject.eff_from}</span>
                       </div>
                     </CardContent>
                     <CardFooter className="text-xs text-black">

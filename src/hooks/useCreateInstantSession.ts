@@ -545,7 +545,6 @@ const useCreateInstantSession = () => {
         // Handle async operations in the background
         if (!isNetworkTooSlowRef.current) {
           try {
-
             const stopFunction = await startTeacherStreaming(
               newSocket,
               session_id,
@@ -671,7 +670,6 @@ const useCreateInstantSession = () => {
 
   const socketErrorHandler = async (message: any) => {
     const { status_code, data } = JSON.parse(message)
-    console.log(message)
     toast.error(`${status_code} - ${data}`)
     if (status_code === 409) {
       socket?.disconnect()
@@ -765,7 +763,6 @@ const useCreateInstantSession = () => {
       setAttendanceSheetOpen(true)
       sse.onmessage = (event) => {
         const data = JSON.parse(event.data)
-        console.log(data?.type)
         if (data?.status_code != 200) {
           throw new Error('something went worng, please contact support team')
         }
@@ -809,7 +806,6 @@ const useCreateInstantSession = () => {
   }
 
   const handleMarkAttendanceEvent = (data: any) => {
-    console.log(data)
     if (data) {
       setStudents((prev: any) => [data?.attendance_data, ...prev])
     }

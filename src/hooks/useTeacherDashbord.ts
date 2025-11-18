@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
-
 import Store from '@data/Store'
 import { setLoader, setReconnectionLoader } from '@data/slices/loaderSlice'
+import TeacherDashboardUtilites from '@pages/TeacherDashboard/utilites/teacherDashboard.utility'
 import { loader } from '@types'
 import axios from 'axios'
 import { get } from 'lodash'
@@ -13,7 +13,6 @@ import { toast } from 'sonner'
 import useAPI from '@hooks/useApi'
 
 import { LectureDetails } from 'types/common'
-import TeacherDashboardUtilites from '@pages/TeacherDashboard/utilites/teacherDashboard.utility'
 
 export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
@@ -43,7 +42,9 @@ export const useTeacherDashbord = () => {
   const [lectureDetails, setLectureDetails] = useState<LectureDetails[]>([])
   const [classRoomData, setClassRoomData] = useState<any | null>(null)
   const [date, setDate] = useState<any>(getWeekDates())
-  const [stopStreamFunction, setStopStreamFunction] = useState<(() => Promise<void>) | null>(null)
+  const [stopStreamFunction, setStopStreamFunction] = useState<
+    (() => Promise<void>) | null
+  >(null)
   const [stopWaveFrequency, setStopWaveFrequency] = useState<
     (() => Promise<void>) | null
   >(null)
@@ -69,7 +70,7 @@ export const useTeacherDashbord = () => {
   useEffect(() => {
     return () => {
       if (stopStreamFunction) {
-        ; (async () => {
+        ;(async () => {
           await stopStreamFunction()
           setStopStreamFunction(null)
         })()
@@ -382,7 +383,6 @@ export const useTeacherDashbord = () => {
 
   const socketErrorHandler = async (message: any) => {
     const { status_code, data } = JSON.parse(message)
-    console.log(message)
     toast.error(`${status_code} - ${data}`)
     if (status_code === 409) {
       socket?.disconnect()
@@ -654,21 +654,19 @@ export const useTeacherDashbord = () => {
         const base64 = result?.file_content
 
         // Decode base64 string to binary data
-        const byteCharacters = atob(base64);
+        const byteCharacters = atob(base64)
 
         // Convert to byte array
-        const byteNumbers = new Array(byteCharacters.length);
+        const byteNumbers = new Array(byteCharacters.length)
         for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
+          byteNumbers[i] = byteCharacters.charCodeAt(i)
         }
-        const byteArray = new Uint8Array(byteNumbers);
+        const byteArray = new Uint8Array(byteNumbers)
 
         // Create a blob for Excel MIME type
         const blob = new Blob([byteArray], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        });
-
-
+        })
 
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
@@ -745,8 +743,6 @@ export const useTeacherDashbord = () => {
 
   const handleSessionCleanUp = async () => {
     try {
-
-
       // close sse
       if (sse) {
         sse.close()

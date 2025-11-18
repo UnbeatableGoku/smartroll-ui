@@ -21,16 +21,15 @@ const Selection = ({
   optionTitle, // to display the static text in all options
 }: SelectionProps) => {
   return (
-    <Card className="h-auto w-full border-none bg-[#F7F7F7] shadow-soft">
-      <CardHeader className="space-y-0 pb-2 pt-2">
-        <div className="flex items-center justify-center">
-          <CardTitle className="text-center text-base text-black sm:text-lg">
-            {/* pass through props  */}
-            {title}
-          </CardTitle>
+    <div className="h-auto w-full rounded-sm border-none bg-[#F7F7F7] shadow-soft">
+      <div className="flex items-center px-3 py-2">
+        <div className="text-sm text-black">
+          {/* pass through props  */}
+          {title + ' : '}
         </div>
-      </CardHeader>
-      <CardContent className="p-3">
+      </div>
+
+      <div className="px-2 pb-2">
         {selectedValue2 ? (
           <Select
             value={selectedValue}
@@ -58,8 +57,8 @@ const Selection = ({
             <Skeleton className="h-10 w-full bg-[#F7F7F7] sm:h-9" />
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
 

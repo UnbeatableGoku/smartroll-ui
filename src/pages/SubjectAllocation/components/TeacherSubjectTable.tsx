@@ -72,10 +72,10 @@ const TeacherSubjectTable = ({
                   }}
                   className="cursor-pointer hover:bg-[#F7F7F7]"
                 >
-                  <TableCell className="font-bold text-black">
+                  <TableCell className="text-black">
                     {value.teacher.profile.name}
                   </TableCell>
-                  <TableCell className="text-center font-bold text-black">
+                  <TableCell className="text-center text-black">
                     {value.theory
                       ? Object.values(value.theory).reduce(
                           (sum, item) => sum + (item.hours || 0),
@@ -83,7 +83,7 @@ const TeacherSubjectTable = ({
                         )
                       : 0}
                   </TableCell>
-                  <TableCell className="text-center font-bold text-black">
+                  <TableCell className="text-center text-black">
                     {value.lab
                       ? Object.values(value.lab).reduce(
                           (sum, item) => sum + (item.hours || 0),
@@ -91,7 +91,7 @@ const TeacherSubjectTable = ({
                         )
                       : 0}
                   </TableCell>
-                  <TableCell className="text-center font-bold text-black">
+                  <TableCell className="text-center text-black">
                     {value.practical
                       ? Object.values(value.practical).reduce(
                           (sum, item) => sum + (item.hours || 0),
@@ -99,7 +99,7 @@ const TeacherSubjectTable = ({
                         )
                       : 0}
                   </TableCell>
-                  <TableCell className="text-center font-bold text-black">
+                  <TableCell className="text-center text-black">
                     {value.tutorial
                       ? Object.values(value.tutorial).reduce(
                           (sum, item) => sum + (item.hours || 0),
@@ -107,13 +107,13 @@ const TeacherSubjectTable = ({
                         )
                       : 0}
                   </TableCell>
-                  <TableCell className="text-center font-bold text-black">
+                  <TableCell className="text-center text-black">
                     {value.initial_lab_hours +
                       value.initial_practical_sub_hours +
                       value.initial_theory_hour -
                       value.total_hours_left}
                   </TableCell>
-                  <TableCell className="text-center font-bold text-black">
+                  <TableCell className="text-center text-black">
                     {value.total_hours_left}
                   </TableCell>
                 </TableRow>

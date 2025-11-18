@@ -3,10 +3,10 @@ import {
   BadgePlus,
   BarChart2,
   BookCheck,
+  CalendarSync,
   ClipboardClock,
   Eye,
   FileCheck2,
-  FileSpreadsheet,
   PlusIcon,
   SquareCheck,
   UsersRound,
@@ -16,24 +16,25 @@ import { SidebarLink } from 'types/common'
 
 import { PAGE_USER_MANAGEMENT } from './page'
 
+const ADMIN_SIDEBAR_LINKS: SidebarLink[] = [
+  {
+    id: 'TIMETABLE',
+    name: 'time table',
+    icon: <CalendarSync />,
+    path: '/admin/time-table',
+  },
+]
+
+// const TEACHER_SIDEBAR_LINK: SidebarLink[] = []
+
+// const STUDENT_SIDEBAR_LINK: SidebarLink[] = []
+
 export const SIDEBAR_LINKS: SidebarLink[] = [
   {
     id: 'DASHBOARD',
     name: 'Dashboard',
     icon: <DashboardIcon />,
     path: '/',
-  },
-  {
-    id: 'TIMETABLE',
-    name: 'Time-Table',
-    icon: (
-      <FileSpreadsheet
-        className="h-24 w-24 dark:text-[#8a8686]"
-        strokeWidth={3}
-        absoluteStrokeWidth={false}
-      />
-    ),
-    path: '/timetable',
   },
   {
     id: 'TEACHER-DASHBOARD',
@@ -193,4 +194,5 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   },
 
   { ...PAGE_USER_MANAGEMENT, icon: <UserIcon /> },
+  ...ADMIN_SIDEBAR_LINKS,
 ]

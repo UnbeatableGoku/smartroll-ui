@@ -1,15 +1,16 @@
 import { useEffect } from 'react'
 
 import SbujectDetailCard from '../../componets/SbujectDetailCard'
+import { showAdverticesment } from '@data/slices/adverticementBarSlice'
 import ConfirmSubjectSelection from '@pages/Subject/components/ConfirmSubjectSelection'
-import { AlertTriangle, BookOpen } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
 import { Helmet } from 'react-helmet'
+import { useDispatch } from 'react-redux'
 
 import useSelectionForTeacher from '@hooks/useSelectionForTeacher'
 import useSubjectSelection from '@hooks/useSubjectSelection'
 import useUnifiedSubjectChoiceForTeacher from '@hooks/useUnifiedSubjectChoiceForTeacher'
 
-import { Alert, AlertTitle } from '@components/ui/alert'
 import { Button } from '@components/ui/button'
 import { Card, CardContent, CardHeader } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'
@@ -41,6 +42,7 @@ const UnifiedSubjectChoice = () => {
     moveSubjectDrag,
   } = useUnifiedSubjectChoiceForTeacher()
 
+  const dispatch = useDispatch()
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -61,13 +63,25 @@ const UnifiedSubjectChoice = () => {
     return () => observer.disconnect()
   }, [availableSubjects])
 
+  useEffect(() => {
+    if (deadLineData && !saveSubjectFinalLock) {
+      dispatch(
+        showAdverticesment({
+          display: true,
+          title: 'Action required',
+          message: `Please choose your subjects before ${deadLineData}`,
+        }),
+      )
+    }
+  }, [deadLineData, saveSubjectFinalLock])
+
   return (
     <>
       <Helmet>
         <title>Smart Roll | Subject Choice</title>
       </Helmet>
       <div className="flex flex-col flex-wrap items-center justify-evenly space-y-5 lg:flex-col">
-        <nav className="sticky top-0 z-10 w-full border-b border-zinc-600/50 bg-[#F7F7F7]/40 p-4 text-center backdrop-blur-lg">
+        <nav className="sticky top-0 z-10 w-full bg-[#F7F7F7]/40 p-4 text-center backdrop-blur-lg">
           <div className="mx-auto flex w-full flex-wrap">
             {availableSubjects.map((item: any) => (
               <a
@@ -91,21 +105,6 @@ const UnifiedSubjectChoice = () => {
             ))}
           </div>
         </nav>
-
-        {/* <div className=''>
-            <FilterOption availableSubjects={availableSubjects}></FilterOption>
-            </div> */}
-
-        {deadLineData && !saveSubjectFinalLock && (
-          <Alert className="w-full border-[#F99704] bg-white text-black shadow-soft">
-            <div className="">
-              <AlertTitle className="flex items-center space-x-4">
-                <AlertTriangle className="h-4 w-4 text-[#F99704]" />
-                <span>Decision Deadline : {deadLineData} </span>
-              </AlertTitle>
-            </div>
-          </Alert>
-        )}
 
         {!saveSubjectFinalLock &&
           !saveSubjectDraft &&
@@ -171,7 +170,7 @@ const UnifiedSubjectChoice = () => {
             availableSubjects.map((stream: any) => (
               <div key={stream.stream} className="mb-14 rounded-sm">
                 <div
-                  className="px-2 py-10 text-center text-2xl font-extrabold text-black lg:text-4xl"
+                  className="px-2 pb-3 text-center text-xl font-extrabold text-black lg:text-2xl"
                   id={stream.stream}
                 >
                   {stream.stream}
@@ -194,26 +193,25 @@ const UnifiedSubjectChoice = () => {
             ))
           )}
         </div>
-
-        {subjectList.length > 0 && (
-          <ConfirmSubjectSelection
-            isPanelOpen={isPanelOpen}
-            setIsPanelOpen={setIsPanelOpen}
-            togglePanel={togglePanel}
-            selectedSubjects={savedSubjects}
-            handleSubjectSelection={handleSubjectSelection}
-            draggable={true}
-            onDrop={onDrop}
-            setDraggedIndex={setDraggedIndex}
-            save_teacher_subject_choice={save_teacher_subject_choice}
-            moveSubject={moveSubject}
-            similarSubjects={similarSubjects}
-            subjectList={subjectList}
-            onDragEnd={onDragEnd}
-            moveSubjectDrag={moveSubjectDrag}
-          ></ConfirmSubjectSelection>
-        )}
       </div>
+      {subjectList.length > 0 && (
+        <ConfirmSubjectSelection
+          isPanelOpen={isPanelOpen}
+          setIsPanelOpen={setIsPanelOpen}
+          togglePanel={togglePanel}
+          selectedSubjects={savedSubjects}
+          handleSubjectSelection={handleSubjectSelection}
+          draggable={true}
+          onDrop={onDrop}
+          setDraggedIndex={setDraggedIndex}
+          save_teacher_subject_choice={save_teacher_subject_choice}
+          moveSubject={moveSubject}
+          similarSubjects={similarSubjects}
+          subjectList={subjectList}
+          onDragEnd={onDragEnd}
+          moveSubjectDrag={moveSubjectDrag}
+        ></ConfirmSubjectSelection>
+      )}
     </>
   )
 }

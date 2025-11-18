@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import adverticementBarSlice from './slices/adverticementBarSlice'
 import authSlice from './slices/authSlice'
 import classRoomSlice from './slices/classRoomsSlice'
 import loaderSlice from './slices/loaderSlice'
@@ -13,7 +14,7 @@ import subjectAllocationSlice from './slices/subjectAllocation'
 const persistConfig = {
   key: 'root', // Key for localStorage
   storage, // Storage engine (e.g., localStorage)
-  blacklist: ['auth', 'loader', 'notification', 'classRoomSlice'], // <-- not persisted
+  blacklist: ['auth', 'loader', 'notification', 'classRoomSlice', 'barSlice'], // <-- not persisted
 }
 
 // Combine all reducers into a single root reducer
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   notification: notificationSlice,
   subjectAllocation: subjectAllocationSlice,
   classRoomSlice: classRoomSlice,
+  barSlice: adverticementBarSlice,
 })
 
 // Create a persisted reducer
