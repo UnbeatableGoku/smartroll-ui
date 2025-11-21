@@ -39,6 +39,7 @@ const useSubjectSelection = () => {
     setSelectedYear('')
     setSelectedSubjects([])
     setIsSubjectLock(false)
+    setDeadLine('')
     setSubject(null)
     loadSemesterByStream(value)
     setNotTechSubjects([])
@@ -90,7 +91,7 @@ const useSubjectSelection = () => {
   // function that is invoked when the user selects the year
   const handleOnValueChangeAcademicYear = (value: string) => {
     setSelectedYear(value)
-    setSelectedSubjects([])
+    // setSelectedSubjects([])
     setSubject([])
     loadSubjectsByYear(value, selectedSemester)
   }

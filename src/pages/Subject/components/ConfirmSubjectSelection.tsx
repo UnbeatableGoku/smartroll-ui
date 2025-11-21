@@ -61,10 +61,10 @@ const ConfirmSubjectSelection = ({
       )
     } else {
       const similar_subject_slug = similarSubjects.map(
-        (subject: any) => subject.subject_obj,
+        (subject: any) => subject.subject_obj_slug,
       )
       const subject_slug_lst = subjectList.map(
-        (subject: any) => subject.subject_obj,
+        (subject: any) => subject.subject_obj_slug,
       )
       const final_subject_slug_lst =
         subject_slug_lst.concat(similar_subject_slug)

@@ -155,7 +155,7 @@ const useLogin = () => {
       if (access_token) {
         const decode = jwtDecode<DecodedToken>(access_token)
         if (decode?.obj?.profile?.role === 'admin') {
-          navigate('/')
+          navigate('/subject/subject-select')
         } else if (decode?.obj?.profile?.role === 'student') {
           if (!callbackUrl || !fromApp || !deviceId) {
             return navigate('/student-dashboard')

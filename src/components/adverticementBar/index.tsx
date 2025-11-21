@@ -15,13 +15,13 @@ const AdverticementBar = () => {
   if (!state.display) return null
 
   return (
-    <div className="duration-[2000ms] flex min-h-10 w-full items-center justify-between bg-[#f9df00] p-1">
+    <div className="duration-[2000ms] flex min-h-10 w-full items-center justify-between bg-[#f9df00] p-[10px]">
       <div className="flex w-full items-center space-x-2 pl-3 md:justify-center">
         <div className="text-red-700">
-          <RiAlarmWarningFill size={22} />
+          <RiAlarmWarningFill size={20} />
         </div>
         <div className="flex flex-col pt-1 md:flex-row">
-          <span className="text-base font-semibold text-black md:text-sm">
+          <span className="text-sm font-semibold text-black md:text-sm">
             {state.title}:
           </span>
           <span className="ml-0 text-xs text-black md:ml-1 md:text-sm">
