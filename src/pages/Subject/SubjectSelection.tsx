@@ -55,12 +55,20 @@ const SubjectSelection = () => {
   }, [])
 
   useEffect(() => {
-    if (deadLine && !isSubjectLock) {
+    if (deadLine && isSubjectLock) {
       dispatch(
         showAdverticesment({
           display: true,
-          title: 'Action required',
-          message: `Please choose your subjects before ${deadLine}`,
+          title: 'Editing Window',
+          message: `Subject selection is editable until ${deadLine}. After that, subjects will be locked.`,
+        }),
+      )
+    } else {
+      dispatch(
+        showAdverticesment({
+          display: false,
+          title: '',
+          message: '',
         }),
       )
     }

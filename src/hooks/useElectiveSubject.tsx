@@ -115,7 +115,7 @@ const useElectiveSubject = () => {
     })
   }
 
-  //function:: to loak
+  //function:: to lock
   const handleStudentChoice = useCallback(
     async (selectedChoices: string[], selectedChoicesSlug: string) => {
       try {

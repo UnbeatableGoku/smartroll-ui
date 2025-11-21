@@ -18,12 +18,8 @@ const ConfirmPanel = ({
   handleSubjectSelection,
   subjectChoicesSlug,
 }: any) => {
-  // const { categorySelectionStatus } = useSubjectSelection()
   const onHandleClick = () => {
-    // const selectedChoices = selectedSubjects.subject_choices
-    alert('here')
-    const selected_slug = selectedSubjects.map((sub: any) => sub.subject.slug)
-    console.log(selectedSubjects)
+    const selected_slug = selectedSubjects.map((sub: any) => sub.subject.subject_obj_slug)
     handleSubjectSelection(selected_slug, subjectChoicesSlug)
     setIsPanelOpen(false)
   }
