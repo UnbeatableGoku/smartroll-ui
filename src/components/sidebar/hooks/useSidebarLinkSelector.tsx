@@ -27,13 +27,16 @@ const useSidebarLinkSelector = () => {
       // 'ADMIN_ROUTES',
     ],
     teacher: [
-      'LOAD_ALLOCATION_FOR_TEACHER_END',
+      // 'LOAD_ALLOCATION_FOR_TEACHER_END',
       'INSTANT_LECTURE',
       'LECTURE_SESSIONS_HISTORY',
       'LECTRUE_ANALYTICS',
       'SUBJECT-CHOICE',
     ],
-    student: ['ELECTIVE_SUBJECT', 'STUDENT_DIVISION'],
+    student: [
+      'ELECTIVE_SUBJECT',
+      // 'STUDENT_DIVISION'
+    ],
   }
 
   // Compute the sidebar links based on the user's role
