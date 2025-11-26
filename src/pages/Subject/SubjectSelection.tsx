@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 
-import { showAdverticesment } from '@data/slices/adverticementBarSlice'
+import {
+  hideAdverticement,
+  showAdverticesment,
+} from '@data/slices/adverticementBarSlice'
 import { BookOpen } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 import { useDispatch } from 'react-redux'
@@ -64,13 +67,7 @@ const SubjectSelection = () => {
         }),
       )
     } else {
-      dispatch(
-        showAdverticesment({
-          display: false,
-          title: '',
-          message: '',
-        }),
-      )
+      dispatch(hideAdverticement())
     }
   }, [deadLine, isSubjectLock])
 
