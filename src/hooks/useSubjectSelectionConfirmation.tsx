@@ -183,7 +183,7 @@ const useSubjectSelectionConfirmation = () => {
 
     const general_response_for_subject: Array<SelectionResponse> =
       finalized_subject.map((subject: any) => {
-        return { slug: subject.slug, name: subject.subject_name }
+        return { slug: subject.subject_obj_slug, name: subject.subject_name }
       })
 
     setSubjects(general_response_for_subject)

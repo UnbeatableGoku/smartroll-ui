@@ -4,6 +4,9 @@ import { IoCloseCircle } from 'react-icons/io5'
 import { RiAlarmWarningFill } from 'react-icons/ri'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+
+import { ALLOWED_ADVERTICEMENT_ROUTES } from '@constants'
 
 const AdverticementBar = () => {
   const state = useSelector((root: RootState) => root.barSlice)
@@ -11,6 +14,10 @@ const AdverticementBar = () => {
   const closeBar = () => {
     dispatch(hideAdverticement())
   }
+
+  const location = useLocation()
+
+  if (!ALLOWED_ADVERTICEMENT_ROUTES.includes(location.pathname)) return null
 
   if (!state.display) return null
 
