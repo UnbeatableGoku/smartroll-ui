@@ -288,7 +288,6 @@ const useDivisionCreation = () => {
           setTotoalStudentCount(check?.total_students)
           const subjectChoiceGroup: Group[] = check?.subject_groups.map(
             (choice: any) => {
-              console.log(choice.subjects)
               const subjects = choice.subjects.map((subject: any) => {
                 const subject_name_word = subject?.subject_name
                   .toUpperCase()
@@ -302,7 +301,6 @@ const useDivisionCreation = () => {
                   return short_form.join('')
                 }
               })
-              console.log(subjects)
               return { ...choice, subjects: subjects.join(' , ') }
             },
           )
@@ -376,7 +374,6 @@ const useDivisionCreation = () => {
         params,
       )
 
-      console.log(response_obj)
       if (response_obj.error) {
         throw new Error(response_obj.errorMessage?.message)
       }
