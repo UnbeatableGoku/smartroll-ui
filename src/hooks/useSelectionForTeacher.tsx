@@ -1,17 +1,16 @@
 import { useRef, useState } from 'react'
 
+import type { SelectionResponse } from '@/types/common'
 import axios from 'axios'
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { SelectionResponse} from 'types/common'
-
 import useStream from '@components/common/uploadTimeTable/useStream'
 
 const useSelectionForTeacher = () => {
-  const { stream} = useStream()
+  const { stream } = useStream()
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API
   const [semesters, setSemesters] = useState<Array<any>>([]) // state to store the list of the semesters
   const [academicYears, setAcademicYears] = useState<Array<any>>([]) // state to strore the list of academic years
@@ -40,7 +39,6 @@ const useSelectionForTeacher = () => {
       setselectedStream(slug)
       setselectedSemester('')
       getSlectedSubjectDataByStream(slug)
-      
     } catch (error) {
       console.error('Error fetching Semester', error)
       toast.error('Error fetching Semester. See console for more information.')
@@ -49,26 +47,26 @@ const useSelectionForTeacher = () => {
     // setSelectedSubjects([])
   }
 
-//function:: to load the selected subjects data
+  //function:: to load the selected subjects data
 
-const getSlectedSubjectDataByStream = async(streamId:string)=>{
-  try{
-    const header = {
-      'ngrok-skip-browser-warning': true,
-      Authorization: `Bearer ${StoredTokens.accessToken}`,
-    }
-    const axiosInstance = axios.create()
-    const method = 'get'
-    const endpoint = `/manage/get_saved_subjects_from_stream/${streamId}`
-    const response_obj = await CallAPI(
-      StoredTokens,
-      axiosInstance,
-      endpoint,
-      method,
-      header,
-    )
+  const getSlectedSubjectDataByStream = async (streamId: string) => {
+    try {
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+      const axiosInstance = axios.create()
+      const method = 'get'
+      const endpoint = `/manage/get_saved_subjects_from_stream/${streamId}`
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
 
-    if(response_obj.error === false){
+      if (response_obj.error === false) {
         const stream_data = response_obj?.response?.data.data
 
         if (stream_data == undefined) {
@@ -94,7 +92,10 @@ const getSlectedSubjectDataByStream = async(streamId:string)=>{
         }
 
         setIsSubjectLock(stream_data.choices_locked)
-        if ( stream_data.saved_subjects != null && stream_data.choices_saved == false) {
+        if (
+          stream_data.saved_subjects != null &&
+          stream_data.choices_saved == false
+        ) {
           const saved_subjects = stream_data.saved_subjects
           setSelectedSubjects(saved_subjects)
           setSaveAsDraft(stream_data.choices_saved)
@@ -119,18 +120,13 @@ const getSlectedSubjectDataByStream = async(streamId:string)=>{
           setIsSubjectLock(stream_data.choices_locked)
         }
         getSemensterData(streamId)
-    }
-    else{
-      toast.error(response_obj.errorMessage?.message)
+      } else {
+        toast.error(response_obj.errorMessage?.message)
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'somenting went wrong')
     }
   }
-  catch(error:any){
-    toast.error(error.message|| 'somenting went wrong')
-  }
-}
-
-
-
 
   //fucition to ge the semester data based on the stream (onValuechange of stream)
   const getSemensterData = async (slug: string) => {

@@ -1,5 +1,6 @@
 import React from 'react'
 
+import type { DecodedToken } from '@/types/common'
 import { RootState } from '@data/Store'
 import {
   setSeenNotifications,
@@ -12,8 +13,6 @@ import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-
-import { DecodedToken } from 'types/common'
 
 interface Notification {
   slug: string

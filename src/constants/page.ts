@@ -1,4 +1,4 @@
-import { Page } from 'types/common'
+import type { Page } from '@/types/common'
 
 export const PAGE_LOGIN: Page = {
   id: 'LOGIN',

@@ -23,14 +23,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { PlusCircle } from 'lucide-react'
-
-import {
+import type {
   SeparateAllocation,
   SubjectAllocation,
   SubjectToTeacherMap,
   TeacherToSubjectMap,
-} from 'types/common'
+} from '@/types/common'
+import { PlusCircle } from 'lucide-react'
 
 import { Button } from '@components/ui/button'
 import { Skeleton } from '@components/ui/skeleton'

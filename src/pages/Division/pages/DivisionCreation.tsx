@@ -3,8 +3,7 @@ import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { GripVertical } from 'lucide-react'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { DivisionState } from '@/types/division'
 
 import useDivisionCreation from '@hooks/useDivisionCreation'
 
@@ -12,6 +11,7 @@ import Selection from '@components/common/form/selectiom/Selection'
 import useStream from '@components/common/uploadTimeTable/useStream'
 import { Separator } from '@components/ui/separator'
 
+import DivisionConstrains from './DivisionConstrains'
 import DivisionCreationSuggesition from './DivisionCreationSuggesition'
 import StudentListForDivision from './StudentListForDivision'
 
@@ -33,20 +33,24 @@ const DivisionCreation = () => {
     divisionsAlreadyCreated,
     totalStudentsCount,
     isDeadllineReached,
+    studentBatchList,
+    isConstrainsOpen,
+    divisionPhase,
+    divisionSuggestiongData,
+    setIsOpen,
     setActiveTab,
     handleOnValueChangeOfStream,
     handleOnValueChangeOfSemester,
     setIsOpenSuggesition,
     handleOnClickForAcceptSuggestion,
     handleOnClickForDeclineSuggestion,
-    handleOnClickForDisplaySuggestion,
     setMaxDivisionCapacity,
     handelOnClickForSaveDivisions,
-    onDragEnd,
     updateAvailableCounts,
     setRenderStudentList,
-    studentBatchList,
     handleOnClickForDownloadExcel,
+    setDivisionConstrains,
+    getDivisionData,
   } = useDivisionCreation()
 
   useEffect(() => {
@@ -93,7 +97,8 @@ const DivisionCreation = () => {
         {renderStudentList && !divisionsAlreadyCreated && (
           <div className="flex w-full gap-x-4">
             <Button
-              className="mt-4 w-full bg-red-500 text-white hover:bg-red-600"
+              variant={'cancle-outline'}
+              className="w-full"
               onClick={() => {
                 setRenderStudentList(!renderStudentList)
               }}
@@ -101,7 +106,8 @@ const DivisionCreation = () => {
               Change division size
             </Button>
             <Button
-              className="mt-4 w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
+              variant={'submit-outline'}
+              className="w-full"
               onClick={() => handelOnClickForSaveDivisions()}
             >
               Confirm Divisions
@@ -109,67 +115,48 @@ const DivisionCreation = () => {
           </div>
         )}
         {selectedSemester && !divisionsAlreadyCreated && (
-          <DragDropContext onDragEnd={onDragEnd}>
-            <div className="flex flex-col gap-4">
-              {!renderStudentList && totalStudentsCount > 0 && (
-                <div>
-                  <h2 className="mb-2 text-xl font-semibold text-black">
-                    Subject Choice Groups
-                  </h2>
-                  <Droppable droppableId="groups">
-                    {(provided) => (
-                      <ul
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        className="space-y-2"
+          <div className="flex flex-col gap-4">
+            {!renderStudentList && totalStudentsCount > 0 && (
+              <div>
+                <h2 className="mb-2 text-xl font-semibold text-black">
+                  Subject Choice Groups
+                </h2>
+
+                <ul className="space-y-2">
+                  {sujectChoiceGroup
+                    .filter((group) => group.availableCount > 0)
+                    .map((group, index) => (
+                      <li
+                        key={group.subjects}
+                        className="flex items-center justify-between rounded bg-white p-2 shadow-soft"
                       >
-                        {sujectChoiceGroup
-                          .filter((group) => group.availableCount > 0)
-                          .map((group, index) => (
-                            <Draggable
-                              key={group.slug}
-                              draggableId={group.slug}
-                              index={index}
-                            >
-                              {(provided) => (
-                                <li
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className="flex items-center justify-between rounded bg-white p-2 shadow-soft"
-                                >
-                                  <div className="flex items-center">
-                                    <GripVertical className="mr-2 text-[#0261BE]" />
-                                    <span className="text-black">
-                                      {group.subjects}
-                                    </span>
-                                  </div>
-                                  <span className="font-semibold text-black">
-                                    {group.totalCount}
-                                  </span>
-                                </li>
-                              )}
-                            </Draggable>
-                          ))}
-                        {provided.placeholder}
-                      </ul>
-                    )}
-                  </Droppable>
-                  <Separator className="mt-4" />
-                  {totalStudentsCount > 0 && (
-                    <div className="mt-3 flex justify-between">
-                      <span className="px-4 text-xl font-bold text-black">
-                        Total Students
-                      </span>
-                      <span className="px-3 text-xl font-bold text-black">
-                        {totalStudentsCount}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </DragDropContext>
+                        <div className="flex items-center space-x-2">
+                          <span className="ml-2 text-black">
+                            {index + 1 + ' . '}{' '}
+                          </span>
+                          <span className="text-black">{group.subjects}</span>
+                        </div>
+                        <span className="font-semibold text-black">
+                          {group.totalCount}
+                        </span>
+                      </li>
+                    ))}
+                </ul>
+
+                <Separator className="mt-4" />
+              </div>
+            )}
+            {totalStudentsCount > 0 && (
+              <div className="mt-3 flex justify-between">
+                <span className="px-4 text-xl font-bold text-black">
+                  Total Students
+                </span>
+                <span className="px-3 text-xl font-bold text-black">
+                  {totalStudentsCount}
+                </span>
+              </div>
+            )}
+          </div>
         )}
 
         {selectedSemester &&
@@ -181,7 +168,7 @@ const DivisionCreation = () => {
                 <CardHeader>
                   <CardTitle>
                     <h2 className="text-xl font-semibold text-black">
-                      Set Division Capacity Range
+                      Set Division Size
                     </h2>
                   </CardTitle>
                 </CardHeader>
@@ -197,6 +184,8 @@ const DivisionCreation = () => {
                           type="number"
                           value={maxDivisionCapacity}
                           className="border-[#0261BE] bg-white text-black"
+                          min={1}
+                          max={totalStudentsCount}
                           onChange={(e) => {
                             setMaxDivisionCapacity(e.target.value)
                           }}
@@ -208,7 +197,8 @@ const DivisionCreation = () => {
                       className="w-full bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
                       onClick={(e: any) => {
                         e.preventDefault()
-                        handleOnClickForDisplaySuggestion()
+                        // handleOnClickForDisplaySuggestion()
+                        getDivisionData()
                       }}
                     >
                       Set Division Capacity
@@ -232,7 +222,7 @@ const DivisionCreation = () => {
         )}
       </div>
 
-      {divisionsData && (
+      {divisionsData && divisionPhase === DivisionState.CONFIRM_DIVISON && (
         <DivisionCreationSuggesition
           isOpenSuggesition={isOpenSuggesition}
           setIsOpenSuggesition={setIsOpenSuggesition}
@@ -241,6 +231,20 @@ const DivisionCreation = () => {
           divisionsData={divisionsData}
         ></DivisionCreationSuggesition>
       )}
+
+      {divisionSuggestiongData &&
+        divisionPhase === DivisionState.INPUT_BATCH_COUNT && (
+          <DivisionConstrains
+            isViewOpen={isConstrainsOpen}
+            closeSuggestion={() => {
+              setIsOpen(false)
+            }}
+            createDivision={(data) => {
+              setDivisionConstrains(data)
+            }}
+            divisionData={divisionSuggestiongData?.divisions ?? []}
+          />
+        )}
     </div>
   )
 }

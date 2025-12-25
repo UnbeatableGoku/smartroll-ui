@@ -1,11 +1,10 @@
 import { useState } from 'react'
 
+import type { DecodedToken } from '@/types/common'
 import { RootState } from '@data/Store'
 import { jwtDecode } from 'jwt-decode'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
-
-import { DecodedToken } from 'types/common'
 
 const useSidebarLinkSelector = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)

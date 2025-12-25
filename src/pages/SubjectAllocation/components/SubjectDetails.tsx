@@ -11,13 +11,12 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Trash } from 'lucide-react'
-
-import {
+import type {
   AllocationTypeDetails,
   SubjectAllocation,
   TeacherAllocationItem,
-} from 'types/common'
+} from '@/types/common'
+import { Trash } from 'lucide-react'
 
 import { NoSelectionFound } from '@components/404'
 import { ScrollArea } from '@components/ui/scroll-area'

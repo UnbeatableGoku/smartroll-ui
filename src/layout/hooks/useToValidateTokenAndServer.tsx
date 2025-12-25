@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import type { DecodedToken } from '@/types/common'
 import { RootState } from '@data/Store'
 import { setAuth, setUserProfile } from '@data/slices/authSlice'
 import { setClassRoomList } from '@data/slices/classRoomsSlice'
@@ -8,8 +9,6 @@ import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-
-import { DecodedToken } from 'types/common'
 
 import useNotification from '@components/sidebar/hooks/useNotification'
 

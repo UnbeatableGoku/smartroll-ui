@@ -1,13 +1,17 @@
 import { useRef, useState } from 'react'
 
+import type { SelectionResponse } from '@/types/common'
+import {
+  DivisionData,
+  DivisionState,
+  type DivisonPhase,
+} from '@/types/division'
 import axios from 'axios'
 import { get } from 'lodash'
 import { DropResult } from 'react-beautiful-dnd'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-
-import { SelectionResponse } from 'types/common'
 
 type Group = {
   slug: string
@@ -39,6 +43,13 @@ const useDivisionCreation = () => {
   const [studentBatchList, setStudentBatchList] = useState<any[]>([])
   const [totalStudentsCount, setTotoalStudentCount] = useState(0)
   const [isDeadllineReached, setDeadllineReached] = useState<boolean>(false)
+  const [isConstrainsOpen, setIsOpen] = useState<boolean>(false)
+  const [divisionPhase, setDivisionPhase] = useState<DivisonPhase>(
+    DivisionState.INITIAL,
+  )
+
+  const [divisionSuggestiongData, setDivisionSuggestionData] =
+    useState<DivisionData | null>(null)
   //custom hooks
   const [StoredTokens, CallAPI] = useAPI() // custom hooks that used to call API
   //useRef
@@ -90,6 +101,108 @@ const useDivisionCreation = () => {
       setDivisionsData(null)
       setDivisionsAlreadyCreated(false)
       setRenderStudentList(false)
+    }
+  }
+
+  //function:: set divsion constrains
+  const setDivisionConstrains = async (divisionConstraintData: any) => {
+    try {
+      const axiosInstance = axios.create()
+      const method = 'post'
+      const endpoint = `/manage/get_division_suggestion_temp2/${selectedSemester}`
+      const header = {
+        'ngrok-skip-browser-warning': true,
+        Authorization: `Bearer ${StoredTokens.accessToken}`,
+      }
+
+      if (!divisionSuggestiongData) {
+        throw new Error('Faild to load division data')
+      }
+
+      const modifiedConstraints = divisionSuggestiongData.divisions.map((d) => {
+        return {
+          ...d,
+          subjects: d.subjects.map((s) => {
+            const key = `${d.division_name}_${s.slug}`
+            return { ...s, batch_count: divisionConstraintData[key] ?? 1 }
+          }),
+        }
+      })
+
+      const body = {
+        ...divisionSuggestiongData,
+        divisions: modifiedConstraints,
+      }
+
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+        body,
+      )
+
+      if (response_obj.error === false) {
+        const check = get(response_obj, 'response.data.data', {})
+        let student_wise_batch_details: any[] = []
+
+        // Assuming `check.division` is your original data structure
+        check?.divisions.forEach((division: any) => {
+          // Initialize the division structure if it doesn't already exist
+          let division_data = student_wise_batch_details.find(
+            (data: any) => data.division_name === division.division_name,
+          )
+
+          if (!division_data) {
+            // If this division doesn't exist, create a new division structure
+            division_data = {
+              division: division.division_name,
+              students: [], // Array to store students of this division
+              total_batches: division.total_batches,
+            }
+            student_wise_batch_details.push(division_data)
+          }
+
+          // Now process the batches and students
+          division?.batches.forEach((batch: any) => {
+            batch?.students.forEach((student: any) => {
+              // Check if the student already exists in this division
+              const student_data = division_data.students.find(
+                (data: any) => data.slug === student.slug,
+              )
+
+              if (student_data) {
+                // If student exists, check if the batch is already in their list of batches
+                if (!student_data.batches.includes(batch.batch_name)) {
+                  student_data.batches.push(batch.batch_name)
+                }
+              } else {
+                // If student doesn't exist, add the student with their batch
+                division_data.students.push({
+                  slug: student.slug,
+                  profile: student.profile,
+                  enrollment: student.enrollment, // Assuming you want to store student name as well
+                  batches: [batch.batch_name],
+                })
+              }
+            })
+          })
+        })
+
+        setDivisionPhase(DivisionState.INPUT_BATCH_COUNT)
+
+        setStudentBatchList(student_wise_batch_details)
+        setDivisionsData(check)
+        setActiveTab(check.divisions[0].division_name)
+      }
+      setIsOpenSuggesition(true)
+
+      // await handleOnClickForDisplaySuggestion()
+      setDivisionPhase(DivisionState.CONFIRM_DIVISON)
+      setIsOpen(false)
+    } catch (error: any) {
+      toast.error(error.message)
     }
   }
 
@@ -162,7 +275,7 @@ const useDivisionCreation = () => {
               })
             })
           })
-
+          setDivisionPhase(DivisionState.CONFIRM_DIVISON)
           setDivisionsData(response_obj.response?.data.data)
           setStudentBatchList(student_wise_batch_details)
           setRenderStudentList(true)
@@ -175,6 +288,7 @@ const useDivisionCreation = () => {
           setTotoalStudentCount(check?.total_students)
           const subjectChoiceGroup: Group[] = check?.subject_groups.map(
             (choice: any) => {
+              console.log(choice.subjects)
               const subjects = choice.subjects.map((subject: any) => {
                 const subject_name_word = subject?.subject_name
                   .toUpperCase()
@@ -188,6 +302,7 @@ const useDivisionCreation = () => {
                   return short_form.join('')
                 }
               })
+              console.log(subjects)
               return { ...choice, subjects: subjects.join(' , ') }
             },
           )
@@ -195,6 +310,7 @@ const useDivisionCreation = () => {
           setDivisionsAlreadyCreated(false)
         }
         setDeadllineReached(true)
+        setDivisionPhase(DivisionState.INPUT_DIVISION_SIZE)
       } else {
         toast.error(response_obj.errorMessage?.message)
         setSubjectChoiceGroup([])
@@ -236,12 +352,12 @@ const useDivisionCreation = () => {
     }
   }
 
-  //fuction:: handle the display the suggestion (pannel)
-  const handleOnClickForDisplaySuggestion = async () => {
+  // function:: get division data
+  const getDivisionData = async () => {
     try {
       const axiosInstance = axios.create()
       const method = 'get'
-      const endpoint = `/manage/get_division_suggestion/${selectedSemester}`
+      const endpoint = `/manage/get_division_suggestion_temp/${selectedSemester}`
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -249,6 +365,7 @@ const useDivisionCreation = () => {
       const params = {
         max_students: maxDivisionCapacity,
       }
+
       const response_obj = await CallAPI(
         StoredTokens,
         axiosInstance,
@@ -258,58 +375,16 @@ const useDivisionCreation = () => {
         null,
         params,
       )
-      if (response_obj.error == false) {
-        const check = get(response_obj, 'response.data.data', {})
-        let student_wise_batch_details: any[] = []
 
-        // Assuming `check.division` is your original data structure
-        check?.divisions.forEach((division: any) => {
-          // Initialize the division structure if it doesn't already exist
-          let division_data = student_wise_batch_details.find(
-            (data: any) => data.division_name === division.division_name,
-          )
-
-          if (!division_data) {
-            // If this division doesn't exist, create a new division structure
-            division_data = {
-              division: division.division_name,
-              students: [], // Array to store students of this division
-              total_batches: division.total_batches,
-            }
-            student_wise_batch_details.push(division_data)
-          }
-
-          // Now process the batches and students
-          division?.batches.forEach((batch: any) => {
-            batch?.students.forEach((student: any) => {
-              // Check if the student already exists in this division
-              const student_data = division_data.students.find(
-                (data: any) => data.slug === student.slug,
-              )
-
-              if (student_data) {
-                // If student exists, check if the batch is already in their list of batches
-                if (!student_data.batches.includes(batch.batch_name)) {
-                  student_data.batches.push(batch.batch_name)
-                }
-              } else {
-                // If student doesn't exist, add the student with their batch
-                division_data.students.push({
-                  slug: student.slug,
-                  profile: student.profile,
-                  enrollment: student.enrollment, // Assuming you want to store student name as well
-                  batches: [batch.batch_name],
-                })
-              }
-            })
-          })
-        })
-
-        setStudentBatchList(student_wise_batch_details)
-        setDivisionsData(check)
-        setActiveTab(check.divisions[0].division_name)
+      console.log(response_obj)
+      if (response_obj.error) {
+        throw new Error(response_obj.errorMessage?.message)
       }
-      setIsOpenSuggesition(true)
+
+      const divisionData = response_obj.response?.data.data
+      setIsOpen(true)
+      setDivisionSuggestionData(divisionData)
+      setDivisionPhase(DivisionState.INPUT_BATCH_COUNT)
     } catch (error: any) {
       toast.error(error.message)
     }
@@ -535,6 +610,10 @@ const useDivisionCreation = () => {
     studentBatchList,
     totalStudentsCount,
     isDeadllineReached,
+    isConstrainsOpen,
+    divisionPhase,
+    divisionSuggestiongData,
+    setIsOpen,
     setActiveTab,
     setIsOpenSuggesition,
     setSubjectChoiceGroup,
@@ -543,7 +622,6 @@ const useDivisionCreation = () => {
     handleOnValueChangeOfSemester,
     handleOnClickForAcceptSuggestion,
     handleOnClickForDeclineSuggestion,
-    handleOnClickForDisplaySuggestion,
     handelOnClickForSaveDivisions,
     createDivisions,
     onDragEnd,
@@ -553,6 +631,8 @@ const useDivisionCreation = () => {
     setDivisionsAlreadyCreated,
     setRenderStudentList,
     handleOnClickForDownloadExcel,
+    setDivisionConstrains,
+    getDivisionData,
   }
 }
 

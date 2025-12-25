@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
+import type { LectureDetails } from '@/types/common'
 import Store from '@data/Store'
 import { setLoader, setReconnectionLoader } from '@data/slices/loaderSlice'
 import TeacherDashboardUtilites from '@pages/TeacherDashboard/utilites/teacherDashboard.utility'
@@ -11,8 +12,6 @@ import { Socket, io } from 'socket.io-client'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-
-import { LectureDetails } from 'types/common'
 
 export const useTeacherDashbord = () => {
   const [StoredTokens, CallAPI] = useAPI() // custom hook to call the API

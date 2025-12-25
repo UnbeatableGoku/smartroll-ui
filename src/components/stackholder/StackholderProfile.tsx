@@ -1,7 +1,6 @@
+import type { ProfileModalProps } from '@/types/common'
 import { Label } from '@radix-ui/react-label'
 import { Pencil, X } from 'lucide-react'
-
-import { ProfileModalProps } from 'types/common'
 
 import { Button } from '@components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card'

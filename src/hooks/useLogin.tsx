@@ -1,6 +1,7 @@
 //?slices
 import { useState } from 'react'
 
+import type { DecodedToken } from '@/types/common'
 import { RootState } from '@data/Store'
 import { setAuth, setUserProfile } from '@data/slices/authSlice'
 //? axios
@@ -10,8 +11,6 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-
-import { DecodedToken } from 'types/common'
 
 //? TYPES AND INTERFACES
 type UserData = {

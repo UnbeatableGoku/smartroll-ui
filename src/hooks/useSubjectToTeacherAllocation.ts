@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
 
+import type {
+  SubjectToTeacherMap,
+  TeacherAllocation,
+  TeacherToSubjectMap,
+} from '@/types/common'
 import { RootState } from '@data/Store'
 import {
   resetSubjectAllocationState,
@@ -14,12 +19,6 @@ import { toast } from 'sonner'
 import useAPI from '@hooks/useApi'
 
 import useRequestHeader from '@utils/helpers/useRequestHeader'
-
-import {
-  SubjectToTeacherMap,
-  TeacherAllocation,
-  TeacherToSubjectMap,
-} from 'types/common'
 
 const useSubjectToTeacherAllocation = () => {
   //? -------- custome hook -------------
@@ -175,7 +174,7 @@ const useSubjectToTeacherAllocation = () => {
         (d: any) => d.teacher.slug === teacher_slug,
       )
 
-      const teacher = teacherState[0][teacher_slug]
+      const teacher: Record<string, any> = teacherState[0][teacher_slug]
 
       // Validate teacher and teacher map
       if (!teacher || !teacher_map) {
@@ -216,7 +215,7 @@ const useSubjectToTeacherAllocation = () => {
           return
         }
         if (allocation_type) {
-          allocation_type[subject_slug].hours += difference_hours
+          allocation_type[subject_slug].hours += difference_hours as number
         }
         if (subject_type !== 'practical') {
           state.stats.unallocated_subject_hours_instant_allocation -=
@@ -348,7 +347,7 @@ const useSubjectToTeacherAllocation = () => {
       subject_allocation.allocation_done -= teacher_map.hours
       subject_allocation.remaining_hours += teacher_map.hours
       teacher.total_hours_left += teacher_map.hours
-      const allocation_type =
+      const allocation_type: any =
         teacher[allocation_category as keyof typeof teacher]
       delete allocation_type[subject_slug]
       const teacher_index = subject_allocation.teachers.findIndex(
@@ -466,7 +465,7 @@ const useSubjectToTeacherAllocation = () => {
           state.stats.unallocated_subject_hours_serparate_allocation -= hours
           state.stats.unallocated_teacher_hours_separate_allocation -= hours
         }
-        const allocation_type =
+        const allocation_type: any =
           teacher[allocation_category.toLowerCase() as keyof typeof teacher]
         if (subject_slug in allocation_type) {
           allocation_type[subject_slug].hours += hours
