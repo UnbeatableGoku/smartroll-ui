@@ -62,7 +62,7 @@ const DivisionCreation = () => {
   }, [divisions])
 
   return (
-    <div className="mx-auto bg-white p-4">
+    <div className="mx-auto bg-white p-4 pb-20">
       <div className="flex w-full flex-col gap-4">
         <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
           {stream && (

@@ -21,7 +21,7 @@ const useSidebarLinkSelector = () => {
       'SUBJECT-SELECT',
       'SUBJECT_SELECTION_CONFIRMATION',
       'DIVISION_CREATION',
-      // 'TEACHER_ALLOCATION',
+      'TEACHER_ALLOCATION',
       // 'TIMETABLE',
       // 'ADMIN_ROUTES',
     ],

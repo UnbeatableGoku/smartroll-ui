@@ -109,7 +109,7 @@ const useDivisionCreation = () => {
     try {
       const axiosInstance = axios.create()
       const method = 'post'
-      const endpoint = `/manage/get_division_suggestion_temp2/${selectedSemester}`
+      const endpoint = `/manage/set_division_batch_constraints/${selectedSemester}`
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
@@ -355,7 +355,7 @@ const useDivisionCreation = () => {
     try {
       const axiosInstance = axios.create()
       const method = 'get'
-      const endpoint = `/manage/get_division_suggestion_temp/${selectedSemester}`
+      const endpoint = `/manage/get_division_suggestion_data/${selectedSemester}`
       const header = {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,

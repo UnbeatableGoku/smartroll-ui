@@ -44,9 +44,9 @@ type PersonType = 'teacher' | 'student'
 const SubjectSelectionConfirmation = () => {
   const {
     selectedStream,
-    handleValueChangeOfStream,
     selectedSemester,
     handleValueChangeOfSemesterForTeacher,
+    handleValueChangeOfStream,
     semesters,
     selectedSubject,
     subjects,
@@ -93,7 +93,7 @@ const SubjectSelectionConfirmation = () => {
             ? teachers_table_header.map((header, index) => (
                 <TableHead
                   key={index}
-                  className="w-auto font-semibold text-black"
+                  className="w-auto border font-semibold text-black"
                 >
                   {header.title}
                 </TableHead>
@@ -101,7 +101,7 @@ const SubjectSelectionConfirmation = () => {
             : student_table_header.map((header, index) => (
                 <TableHead
                   key={index}
-                  className="w-auto text-center font-semibold text-black"
+                  className="w-auto border font-semibold text-black"
                 >
                   {header.title}
                 </TableHead>
@@ -113,11 +113,13 @@ const SubjectSelectionConfirmation = () => {
           data.map((teacher: any, index) => (
             <>
               <TableRow key={index} className="hover:bg-[#F7F7F7]">
-                <TableCell className="font-medium text-black">
+                <TableCell className="border font-medium text-black">
                   {teacher.profile.name}
                 </TableCell>
-                <TableCell className="text-black">{teacher.priority}</TableCell>
-                <TableCell>
+                <TableCell className="border text-black">
+                  {teacher.priority}
+                </TableCell>
+                <TableCell className="border">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -144,7 +146,7 @@ const SubjectSelectionConfirmation = () => {
               </TableRow>
               {selectedPerson?.slug === teacher.slug && (
                 <TableRow id={`subjects-${teacher.slug}`}>
-                  <TableCell colSpan={4} className="p-0">
+                  <TableCell colSpan={4} className="border p-0">
                     <div className="bg-[#F7F7F7] p-4">
                       <h3 className="mb-2 font-semibold text-black">
                         Remaining Subject Choice Of {teacher.profile.name}
@@ -174,20 +176,21 @@ const SubjectSelectionConfirmation = () => {
           data.map((student: any) => (
             <>
               <TableRow key={student?.slug} className="hover:bg-[#F7F7F7]">
-                <TableCell className="text-center font-medium text-black">
+                <TableCell className="border font-medium text-black">
                   {student.profile.enrollment}
                 </TableCell>
-                <TableCell className="text-center font-medium text-black">
+                <TableCell className="border font-medium text-black">
                   {student.profile.profile.name}
                 </TableCell>
-                <TableCell className="text-center font-medium text-black">
+                <TableCell className="border font-medium text-black">
                   {student.profile.profile.email}
                 </TableCell>
-                <TableCell className="flex justify-center space-x-3">
+                <TableCell className="border">
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-[#0261BE] hover:bg-[#0261BE]"
+                    variant="submit-outline"
+                    size={'icon'}
+                    title="view"
+                    className="mr-3"
                     onClick={() =>
                       setSelectedPerson(
                         selectedPerson?.slug === student.slug ? null : student,
@@ -202,14 +205,15 @@ const SubjectSelectionConfirmation = () => {
                       <ChevronRight className="h-4 w-4" />
                     )}
                     <span className="sr-only">
-                      {selectedPerson?.slug === student.dlug ? 'Hide' : 'Show'}{' '}
+                      {selectedPerson?.slug === student.slug ? 'Hide' : 'Show'}{' '}
                       subjects
                     </span>
                   </Button>
                   {student.choices_locked && (
                     <Button
-                      size="icon"
-                      className="bg-red-500 px-1 py-1 text-white hover:bg-red-600"
+                      size={'icon'}
+                      variant={'cancle-outline'}
+                      title="delete"
                       onClick={() => {
                         handleOnClickForDeleteSubjectOfStudent(
                           selectedSubject,
@@ -224,7 +228,7 @@ const SubjectSelectionConfirmation = () => {
               </TableRow>
               {selectedPerson?.slug === student.slug && (
                 <TableRow id={`subjects-${student.slug}`}>
-                  <TableCell colSpan={4} className="p-0">
+                  <TableCell colSpan={4} className="border p-0">
                     <div className="bg-[#F7F7F7] p-4">
                       <h3 className="mb-2 font-semibold text-black">
                         Remaining Subject Selected By{' '}
@@ -259,7 +263,7 @@ const SubjectSelectionConfirmation = () => {
       <Helmet>
         <title>Smart Roll | Subject Confirmation</title>
       </Helmet>
-      <div className="flex w-full flex-col space-y-4 bg-white">
+      <div className="flex w-full flex-col space-y-4 bg-white pb-20">
         <div className="container mx-auto p-2 lg:p-4">
           <Tabs
             value={activeTab}

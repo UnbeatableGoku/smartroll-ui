@@ -34,21 +34,21 @@ const SubjectDetails = ({
   const [activeTab, setActiveTab] = useState('theory')
 
   const renderTeacherTable = (data: AllocationTypeDetails) => (
-    <Table className="dark:text-black">
+    <Table className="border dark:text-black">
       <TableHeader>
         <TableRow>
-          <TableHead>Teacher Name</TableHead>
-          <TableHead>Hours</TableHead>
-          <TableHead>Action</TableHead>
+          <TableHead className="border">Teacher Name</TableHead>
+          <TableHead className="border">Hours</TableHead>
+          <TableHead className="border">Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.teachers.map((teacher: TeacherAllocationItem) => (
           <TableRow key={teacher.teacher.slug} className="text-black">
-            <TableCell>
+            <TableCell className="w-full border">
               {teacher.teacher.profile.name}({teacher.teacher.teacher_code})
             </TableCell>
-            <TableCell>
+            <TableCell className="border">
               <Input
                 type="number"
                 value={teacher.hours}
@@ -67,13 +67,13 @@ const SubjectDetails = ({
                 }
                 min={0}
                 step={activeTab === 'lab' ? 2 : 1}
-                className="w-20"
+                className="w-20 border-2"
                 aria-label={`${teacher.hours} for ${teacher.teacher.profile.name}`}
               />
             </TableCell>
-            <TableCell>
+            <TableCell className="border text-center">
               <Button
-                variant={'destructive'}
+                variant={'cancle-outline'}
                 size={'icon'}
                 onClick={(e: any) => {
                   e.preventDefault()
