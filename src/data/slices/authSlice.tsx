@@ -1,6 +1,5 @@
+import type { DecodedToken } from '@/types/common'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-
-import { DecodedToken } from 'types/common'
 
 interface authState {
   isAuth: boolean

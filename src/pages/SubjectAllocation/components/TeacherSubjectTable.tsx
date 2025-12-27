@@ -14,8 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-
-import { TeacherToSubjectMap } from 'types/common'
+import type { TeacherToSubjectMap } from '@/types/common'
 
 import TeacherSubjectDetails from './TeacherSubjectDetails'
 

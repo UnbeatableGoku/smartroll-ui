@@ -1,4 +1,4 @@
-import { SubjectToTeacherMap } from 'types/common'
+import type { SubjectToTeacherMap } from '@/types/common'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card'
 import { Skeleton } from '@components/ui/skeleton'

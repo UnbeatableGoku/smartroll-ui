@@ -40,58 +40,58 @@ const DivisionCreationSuggesition = ({
                   </Card>
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm sm:text-base">
-                  <div className="container mx-auto py-10">
+                  <div className="container mx-auto border py-10">
                     <Table className="shadow-soft">
                       <TableHeader>
                         <TableRow>
                           <TableHead
-                            className="w-[300px] bg-[#F7F7F7] font-semibold text-black"
+                            className="w-[300px] border bg-[#F7F7F7] font-semibold text-black"
                             rowSpan={2}
                           >
                             Subject Name
                           </TableHead>
                           <TableHead
-                            className="w-auto bg-[#F7F7F7] text-center font-semibold text-black"
+                            className="w-auto border bg-[#F7F7F7] text-center font-semibold text-black"
                             rowSpan={2}
                           >
                             No. of Divisions
                           </TableHead>
                           <TableHead
-                            className="bg-[#F7F7F7] text-center font-semibold text-black"
+                            className="border bg-[#F7F7F7] text-center font-semibold text-black"
                             colSpan={3}
                           >
                             Initial Hours
                           </TableHead>
                           <TableHead
-                            className="bg-[#F7F7F7] text-center font-semibold text-black"
+                            className="border bg-[#F7F7F7] text-center font-semibold text-black"
                             colSpan={3}
                           >
                             Final Hours
                           </TableHead>
                           <TableHead
-                            className="w-auto bg-[#F7F7F7] font-semibold text-black"
+                            className="w-auto border bg-[#F7F7F7] font-semibold text-black"
                             rowSpan={2}
                           >
                             Total
                           </TableHead>
                         </TableRow>
                         <TableRow>
-                          <TableHead className="bg-[#F7F7F7] text-center font-semibold text-black">
+                          <TableHead className="border bg-[#F7F7F7] text-center text-black">
                             Theory
                           </TableHead>
-                          <TableHead className="bg-[#F7F7F7] text-center font-semibold text-black">
+                          <TableHead className="border bg-[#F7F7F7] text-center text-black">
                             Tutorial
                           </TableHead>
-                          <TableHead className="bg-[#F7F7F7] text-center font-semibold text-black">
+                          <TableHead className="border bg-[#F7F7F7] text-center text-black">
                             Practical
                           </TableHead>
-                          <TableHead className="bg-[#F7F7F7] text-center font-semibold text-black">
+                          <TableHead className="border bg-[#F7F7F7] text-center text-black">
                             Theory
                           </TableHead>
-                          <TableHead className="bg-[#F7F7F7] text-center font-semibold text-black">
+                          <TableHead className="border bg-[#F7F7F7] text-center text-black">
                             Tutorial
                           </TableHead>
-                          <TableHead className="bg-[#F7F7F7] text-center font-semibold text-black">
+                          <TableHead className="border bg-[#F7F7F7] text-center text-black">
                             Practical
                           </TableHead>
                         </TableRow>
@@ -103,31 +103,31 @@ const DivisionCreationSuggesition = ({
                               key={subject.subject_name}
                               className="hover:bg-[#F7F7F7]"
                             >
-                              <TableCell className="font-medium text-black">
+                              <TableCell className="border font-medium text-black">
                                 {subject.subject_name}
                               </TableCell>
-                              <TableCell className="text-center font-medium text-black">
+                              <TableCell className="border text-center font-medium text-black">
                                 {subject.total_divisions}
                               </TableCell>
-                              <TableCell className="text-center text-black">
+                              <TableCell className="border text-center text-black">
                                 {subject.initial_theory_hours}
                               </TableCell>
-                              <TableCell className="text-center text-black">
+                              <TableCell className="border text-center text-black">
                                 {subject.initial_tutorial}
                               </TableCell>
-                              <TableCell className="text-center text-black">
+                              <TableCell className="border text-center text-black">
                                 {subject.initial_practical_hours}
                               </TableCell>
-                              <TableCell className="text-center text-black">
+                              <TableCell className="border text-center text-black">
                                 {subject.final_theory_hours}
                               </TableCell>
-                              <TableCell className="text-center text-black">
+                              <TableCell className="border text-center text-black">
                                 {subject.final_tutorial_hours}
                               </TableCell>
-                              <TableCell className="text-center text-black">
+                              <TableCell className="border text-center text-black">
                                 {subject.final_practical_hours}
                               </TableCell>
-                              <TableCell className="text-center text-lg font-bold text-black">
+                              <TableCell className="border text-center text-lg font-bold text-black">
                                 {subject.final_practical_hours +
                                   subject.final_tutorial_hours +
                                   subject.final_theory_hours}
@@ -136,59 +136,59 @@ const DivisionCreationSuggesition = ({
                           )
                         })}
                         <TableRow className="bg-[#F7F7F7]">
-                          <TableCell className="text-lg font-bold text-black">
+                          <TableCell className="border text-lg font-bold text-black">
                             Total
                           </TableCell>
-                          <TableCell className="text-center text-lg font-bold text-black">
+                          <TableCell className="border text-center text-lg font-bold text-black">
                             {divisionsData.hour_deviations.reduce(
                               (count: any, subject: any) =>
                                 count + subject.total_divisions,
                               0,
                             )}
                           </TableCell>
-                          <TableCell className="text-center text-lg font-bold text-black">
+                          <TableCell className="border text-center text-lg font-bold text-black">
                             {divisionsData.hour_deviations.reduce(
                               (count: any, subject: any) =>
                                 count + subject.initial_theory_hours,
                               0,
                             )}{' '}
                           </TableCell>
-                          <TableCell className="text-center text-lg font-bold text-black">
+                          <TableCell className="border text-center text-lg font-bold text-black">
                             {divisionsData.hour_deviations.reduce(
                               (count: any, subject: any) =>
                                 count + subject.initial_tutorial,
                               0,
                             )}{' '}
                           </TableCell>
-                          <TableCell className="text-center text-lg font-bold text-black">
+                          <TableCell className="border text-center text-lg font-bold text-black">
                             {divisionsData.hour_deviations.reduce(
                               (count: any, subject: any) =>
                                 count + subject.initial_practical_hours,
                               0,
                             )}{' '}
                           </TableCell>
-                          <TableCell className="text-center text-lg font-bold text-black">
+                          <TableCell className="border text-center text-lg font-bold text-black">
                             {divisionsData.hour_deviations.reduce(
                               (count: any, subject: any) =>
                                 count + subject.final_theory_hours,
                               0,
                             )}{' '}
                           </TableCell>
-                          <TableCell className="text-center text-lg font-bold text-black">
+                          <TableCell className="border text-center text-lg font-bold text-black">
                             {divisionsData.hour_deviations.reduce(
                               (count: any, subject: any) =>
                                 count + subject.final_tutorial_hours,
                               0,
                             )}{' '}
                           </TableCell>
-                          <TableCell className="text-center text-lg font-bold text-black">
+                          <TableCell className="border text-center text-lg font-bold text-black">
                             {divisionsData.hour_deviations.reduce(
                               (count: any, subject: any) =>
                                 count + subject.final_practical_hours,
                               0,
                             )}{' '}
                           </TableCell>
-                          <TableCell className="text-center text-lg font-bold text-black">
+                          <TableCell className="border text-center text-lg font-bold text-black">
                             {divisionsData.hour_deviations.reduce(
                               (count: any, subject: any) =>
                                 count +
@@ -205,7 +205,7 @@ const DivisionCreationSuggesition = ({
 
                   <div className="mt-6 flex items-center justify-end space-x-3">
                     <Button
-                      className="bg-red-500 text-white hover:bg-red-600"
+                      variant={'cancle-outline'}
                       onClick={() => {
                         setIsOpenSuggesition(!isOpenSuggesition)
                       }}
@@ -213,7 +213,7 @@ const DivisionCreationSuggesition = ({
                       <X className="mr-2 h-4 w-4" /> Close
                     </Button>
                     <Button
-                      className="bg-[#0261BE] text-white hover:bg-[#0261BE]/80"
+                      variant={'submit-outline'}
                       onClick={() => {
                         handleOnClickForAcceptSuggestion()
                       }}

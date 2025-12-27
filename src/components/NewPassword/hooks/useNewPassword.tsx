@@ -1,11 +1,10 @@
+import type { DecodedToken } from '@/types/common'
 import { setAuth, setUserProfile } from '@data/slices/authSlice'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-
-import { DecodedToken } from 'types/common'
 
 interface NewPasswordData {
   password: string

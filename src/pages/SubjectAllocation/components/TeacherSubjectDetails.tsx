@@ -13,20 +13,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 const TeacherSubjectDetails = ({ selectedTeacher }: any) => {
   const [activeTab, setActiveTab] = useState('theory')
   const renderTeacherTable = (data: any) => (
-    <Table className="dark:text-white">
+    <Table className="border">
       <TableHeader>
         <TableRow>
-          <TableHead>Subject Name</TableHead>
-          <TableHead>Stream Code</TableHead>
-          <TableHead>Hours</TableHead>
+          <TableHead className="border">Subject Name</TableHead>
+          <TableHead className="border">Stream Code</TableHead>
+          <TableHead className="border">Hours</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {Object.entries(data).map(([subjectSlug, value]: any) => (
           <TableRow key={subjectSlug} className="text-black">
-            <TableCell>{value.subject.subject_name}</TableCell>
-            <TableCell>{value.subject.stream_code}</TableCell>
-            <TableCell>{value.hours}</TableCell>
+            <TableCell className="border">
+              {value.subject.subject_map.subject_name}
+            </TableCell>
+            <TableCell className="border">
+              {value.subject.subject_map.stream_code}
+            </TableCell>
+            <TableCell className="border">{value.hours}</TableCell>
           </TableRow>
         ))}
       </TableBody>

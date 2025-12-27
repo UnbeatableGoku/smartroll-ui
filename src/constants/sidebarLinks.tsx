@@ -1,3 +1,4 @@
+import type { SidebarLink } from '@/types/common'
 import { DashboardIcon, UserIcon } from '@icons'
 import {
   BadgePlus,
@@ -11,8 +12,6 @@ import {
   SquareCheck,
   UsersRound,
 } from 'lucide-react'
-
-import { SidebarLink } from 'types/common'
 
 import { PAGE_USER_MANAGEMENT } from './page'
 

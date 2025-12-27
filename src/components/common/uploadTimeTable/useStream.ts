@@ -1,18 +1,15 @@
 import { useState } from 'react'
 
+import type { SelectionResponse, StreamInterface } from '@/types/common'
 import axios from 'axios'
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
 
-import { SelectionResponse, StreamInterface } from 'types/common'
-
-
-
 const useStream = () => {
   const [stream, setStream] = useState<SelectionResponse[]>([])
-  const [streamData,setStreamData] = useState<StreamInterface[]>([])
+  const [streamData, setStreamData] = useState<StreamInterface[]>([])
   const [StoredTokens, CallAPI] = useAPI()
 
   const handleStream = async () => {
@@ -34,8 +31,12 @@ const useStream = () => {
       )
 
       if (response_obj.error == false) {
-        const data:Array<StreamInterface> = get(response_obj, 'response.data.data', [])
-        
+        const data: Array<StreamInterface> = get(
+          response_obj,
+          'response.data.data',
+          [],
+        )
+
         setStreamData(response_obj.response?.data.data)
         const stream_lst: Array<SelectionResponse> = data.map(
           (stream: StreamInterface) => {

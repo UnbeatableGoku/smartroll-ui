@@ -1,8 +1,7 @@
+import type { SidebarLink } from '@/types/common'
 import size from 'lodash/size'
 
 import { SIDEBAR_LINKS } from '@constants'
-
-import { SidebarLink } from 'types/common'
 
 import { checkPageAccess } from './authorization'
 

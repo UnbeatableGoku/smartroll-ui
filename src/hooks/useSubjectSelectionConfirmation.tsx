@@ -1,12 +1,11 @@
 import { useRef, useState } from 'react'
 
+import type { SelectionResponse } from '@/types/common'
 import axios from 'axios'
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
 import useAPI from '@hooks/useApi'
-
-import { SelectionResponse } from 'types/common'
 
 import useSemester from '@components/common/uploadTimeTable/useSemester'
 
