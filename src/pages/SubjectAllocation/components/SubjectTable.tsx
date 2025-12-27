@@ -23,14 +23,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { PlusCircle } from 'lucide-react'
-
-import {
+import type {
   SeparateAllocation,
   SubjectAllocation,
   SubjectToTeacherMap,
   TeacherToSubjectMap,
-} from 'types/common'
+} from '@/types/common'
+import { PlusCircle } from 'lucide-react'
 
 import { Button } from '@components/ui/button'
 import { Skeleton } from '@components/ui/skeleton'
@@ -69,60 +68,69 @@ const SubjectTable = ({
   if (SubjectToTeacherAllocation) {
     return (
       <>
-        <Table className="bg-white shadow-soft">
+        <Table className="border bg-white shadow-soft">
           <TableHeader className="bg-[#F7F7F7]">
             <TableRow>
-              <TableHead rowSpan={2} className="font-semibold text-black">
+              <TableHead
+                rowSpan={2}
+                className="border font-semibold text-black"
+              >
                 Subject Name
               </TableHead>
               <TableHead
+                rowSpan={2}
+                className="border font-semibold text-black"
+              >
+                Stream Code
+              </TableHead>
+              <TableHead
                 colSpan={5}
-                className="text-center font-semibold text-black"
+                className="border text-center font-semibold text-black"
               >
                 Before Allocation
               </TableHead>
               <TableHead
                 colSpan={5}
-                className="text-center font-semibold text-black"
+                className="border text-center font-semibold text-black"
               >
                 After Allocation
               </TableHead>
               <TableHead
                 rowSpan={2}
-                className="text-center font-semibold text-black"
+                className="border text-center font-semibold text-black"
               >
                 Remaining Hours
               </TableHead>
             </TableRow>
             <TableRow>
-              <TableHead className="text-center font-semibold text-black">
-                + Theory
-              </TableHead>
-              <TableHead className="text-center font-semibold text-black">
-                Lab
-              </TableHead>
-              <TableHead className="text-center font-semibold text-black">
-                Practical
-              </TableHead>
-              <TableHead className="text-center font-semibold text-black">
-                Tutorial
-              </TableHead>
-              <TableHead className="text-center font-semibold text-black">
-                Total
-              </TableHead>
-              <TableHead className="text-center font-semibold text-black">
+              <TableHead className="border text-center font-semibold text-black">
                 Theory
               </TableHead>
-              <TableHead className="text-center font-semibold text-black">
+              <TableHead className="border text-center font-semibold text-black">
                 Lab
               </TableHead>
-              <TableHead className="text-center font-semibold text-black">
+              <TableHead className="border text-center font-semibold text-black">
                 Practical
               </TableHead>
-              <TableHead className="text-center font-semibold text-black">
+              <TableHead className="border text-center font-semibold text-black">
                 Tutorial
               </TableHead>
-              <TableHead className="text-center font-semibold text-black">
+              <TableHead className="border text-center font-semibold text-black">
+                Total
+              </TableHead>
+              <TableHead className="border text-center font-semibold text-black">
+                Theory
+              </TableHead>
+              <TableHead className="border text-center font-semibold text-black">
+                Lab
+              </TableHead>
+              <TableHead className="border text-center font-semibold text-black">
+                Practical
+              </TableHead>
+              <TableHead className="border text-center font-semibold text-black">
+                Tutorial
+              </TableHead>
+              <TableHead className="border text-center font-semibold text-black">
                 Total
               </TableHead>
             </TableRow>
@@ -135,46 +143,49 @@ const SubjectTable = ({
                   onClick={() => setSelectedSubject(allocation)}
                   className="cursor-pointer hover:bg-[#F7F7F7]"
                 >
-                  <TableCell className="text-black">
+                  <TableCell className="border text-black">
                     {allocation?.subject?.subject_map?.subject_name}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-black">
+                    {allocation?.subject?.subject_map?.stream_code}
+                  </TableCell>
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation.theory?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation.lab?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation.practical?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation.tutorial?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation.theory?.total_hours +
                       allocation?.teacher_allocation.lab?.total_hours +
                       allocation?.teacher_allocation.practical?.total_hours +
                       allocation?.teacher_allocation.tutorial?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation.teacher_allocation.theory?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation.teacher_allocation.lab?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation.teacher_allocation.practical?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation.teacher_allocation.tutorial?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation.theory?.allocation_done +
                       allocation.teacher_allocation.lab?.allocation_done +
                       allocation.teacher_allocation.tutorial?.allocation_done +
                       allocation.teacher_allocation.practical.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation.teacher_allocation.tutorial.remaining_hours +
                       allocation?.teacher_allocation.theory.remaining_hours +
                       allocation.teacher_allocation.lab.remaining_hours +
@@ -190,40 +201,43 @@ const SubjectTable = ({
                   onClick={() => setSelectedSubject(allocation)}
                   className="cursor-pointer hover:bg-[#F7F7F7]"
                 >
-                  <TableCell className="font-semibold text-black">
+                  <TableCell className="border text-black">
                     {allocation?.subject?.subject_map?.subject_name}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-black">
+                    {allocation?.subject?.subject_map?.stream_code}
+                  </TableCell>
+                  <TableCell className="border text-center text-black">
                     0
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     0
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation?.practical?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     0
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation?.practical?.total_hours}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     0
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     0
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation?.practical?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     0
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation?.practical?.allocation_done}
                   </TableCell>
-                  <TableCell className="text-center font-semibold text-black">
+                  <TableCell className="border text-center text-black">
                     {allocation?.teacher_allocation?.practical?.remaining_hours}
                   </TableCell>
                 </TableRow>
@@ -241,8 +255,14 @@ const SubjectTable = ({
         >
           <SheetContent className="w-full bg-white pb-10 sm:max-w-xl">
             <SheetHeader>
-              <SheetTitle className="text-black">
-                {selectedSubject?.subject.subject_name}
+              <SheetTitle className="flex flex-col space-y-2 text-black">
+                <span className="text-xl font-bold">
+                  {selectedSubject?.subject.subject_map?.subject_name}
+                </span>
+                <span className="text-xs font-light">
+                  stream - {selectedSubject?.subject.subject_map?.stream_code} |{' '}
+                  semester - {selectedSubject?.subject.subject_map?.sem_year}
+                </span>
               </SheetTitle>
             </SheetHeader>
             {selectedSubject && (

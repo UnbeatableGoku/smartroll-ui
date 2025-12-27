@@ -57,7 +57,7 @@ const SbujectDetailCard = ({
               return data.branch_name
             })
             alert(
-              `Same subject from\n ${stream_codes.join('\n')} \n will also be selected`,
+              `Same subject from\n ${stream_codes.join('\n')} \n will also be selected.`,
             )
           }
           toggleSubjectSelection(subject)

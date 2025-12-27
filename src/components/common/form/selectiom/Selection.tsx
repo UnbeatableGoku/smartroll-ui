@@ -5,8 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-
-import { SelectionProps } from 'types/common'
+import type { SelectionProps } from '@/types/common'
 
 import { Skeleton } from '@components/ui/skeleton'
 

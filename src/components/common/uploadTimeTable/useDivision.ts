@@ -1,12 +1,11 @@
 import { useState } from 'react'
 
+import type { SelectionResponse } from '@/types/common'
 import axios from 'axios'
 import { get } from 'lodash'
 import { toast } from 'sonner'
 
-
 import useAPI from '@hooks/useApi'
-import { SelectionResponse } from 'types/common'
 
 interface Division {
   full_name: string
@@ -16,7 +15,7 @@ interface Division {
 const useDivision = () => {
   const [division, setDivision] = useState<SelectionResponse[]>([])
 
-  const [StoredTokens,CallAPI] = useAPI()
+  const [StoredTokens, CallAPI] = useAPI()
 
   const handleDivision = async (slug: string) => {
     try {
@@ -27,18 +26,24 @@ const useDivision = () => {
         'ngrok-skip-browser-warning': true,
         Authorization: `Bearer ${StoredTokens.accessToken}`,
       }
-      const response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,header)
-      if (response_obj.error == false){
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        endpoint,
+        method,
+        header,
+      )
+      if (response_obj.error == false) {
         const data = get(response_obj, 'response.data.data', [])
-        const divisions:Array<SelectionResponse> = data.map((division:Division) =>{
-          return {slug : division.slug,name : division.full_name,}
-        })
+        const divisions: Array<SelectionResponse> = data.map(
+          (division: Division) => {
+            return { slug: division.slug, name: division.full_name }
+          },
+        )
         setDivision(divisions)
+      } else {
+        toast.error(response_obj.errorMessage?.message)
       }
-      else{
-        toast.error(response_obj.errorMessage?.message)  
-      }
-      
     } catch (e) {
       console.error('Error fetching streams', e)
       toast.error('Error fetching division. See console for more information.')

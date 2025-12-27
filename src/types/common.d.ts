@@ -35,7 +35,7 @@ export interface DecodedToken {
 }
 
 // for displaying the streams,semester and divisions and batches
-interface SelectionResponse {
+export interface SelectionResponse {
   slug: string
   name: string
 }
@@ -73,7 +73,7 @@ declare global {
   }
 }
 
-interface ProfileModalProps {
+export interface ProfileModalProps {
   isOpen: boolean
   onClose: () => void
 }
@@ -411,21 +411,21 @@ interface Teacher {
 
 
 // Teacher Allocation Item Interface
-interface TeacherAllocationItem {
+export interface TeacherAllocationItem {
   teacher: Teacher;
   hours: number;
 }
 
 // Allocation Type Details Interface
-interface AllocationTypeDetails {
+export interface AllocationTypeDetails {
   total_hours: number;
   remaining_hours: number;
-  allocation_done: numner;
+  allocation_done: number;
   teachers: TeacherAllocationItem[];
 }
 
 // Teacher Allocation Interface
-interface TeacherAllocation {
+export interface TeacherAllocation {
   theory: AllocationTypeDetails;
   lab: AllocationTypeDetails;
   tutorial: AllocationTypeDetails;
@@ -439,12 +439,12 @@ interface SeparateAllocationTeacher {
 
 
 // Instant/Separate Allocation Interface
-interface SubjectAllocation {
+export interface SubjectAllocation {
   subject: Subject;
   teacher_allocation: TeacherAllocation;
 }
 
-interface SeparateAllocation {
+export interface SeparateAllocation {
     subject: Subject
     teacher_allocation : SeparateAllocationTeacher
 }
@@ -455,11 +455,11 @@ interface SubjectSpecificAllocation {
   hours: number;    // Number of hours allocated
 }
 
-type TeacherToSubjectMap = {
+export type TeacherToSubjectMap = {
   [key: string]: {
     teacher: Teacher;
-    initial_theory_hour : numner
-    initial_lab_hours :number
+    initial_theory_hour : number
+    initial_lab_hours : number
     initial_practical_sub_hours  : number
     total_hours_left: number;
     total_theory_hours: number;
@@ -473,9 +473,6 @@ type TeacherToSubjectMap = {
   };
 };
 
-
-
-
 interface statsInterface {
   total_subject_hours_instant_allocation: number;
   total_subject_hours_separate_allocation: number;
@@ -487,14 +484,14 @@ interface statsInterface {
   unallocated_teacher_hours_separate_allocation: number;
 }
 // Subject to Teacher Mapping Interface
-interface SubjectToTeacherMap {
+export interface SubjectToTeacherMap {
   stats:statsInterface
   instant_allocations: SubjectAllocation[];
   separate_allocations: SubjectAllocation[];
 }
 
 // Main Response Interface
-interface TeacherAllocationResponse {
+export interface TeacherAllocationResponse {
   data: {
       teacher_to_subject_map: TeacherToSubjectMap;
       subject_to_teacher_map: SubjectToTeacherMap;

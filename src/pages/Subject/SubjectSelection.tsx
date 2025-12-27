@@ -76,7 +76,7 @@ const SubjectSelection = () => {
       <Helmet>
         <title>Smart Roll | Subject Selection</title>
       </Helmet>
-      <div className="flex w-full flex-col space-y-4">
+      <div className="flex w-full flex-col space-y-4 pb-20">
         {/* time table selection */}
         <div className="flex flex-col flex-wrap items-center justify-evenly p-6">
           <div className="flex w-full flex-col items-center justify-center space-y-4 md:w-auto md:flex-row md:items-start md:space-x-8 md:space-y-0 lg:space-x-12">
